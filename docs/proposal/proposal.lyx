@@ -61,7 +61,7 @@ Wim Leers
 \begin_inset Newline newline
 \end_inset
 
-December 2, 2009
+December 3, 2009
 \begin_inset Newline newline
 \end_inset
 
@@ -519,6 +519,21 @@ Recent proposals (in the last three months at the time of writing) for web
 \end_layout
 
 \begin_layout Itemize
+SPDY 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "WPO proposal SPDY"
+
+\end_inset
+
+, a new application-level protocol that learns from the mistakes of HTTP
+ (which is ten years old).
+ This protocol specification is currently in draft state, but tests of the
+ researchers (at Google) show that pages of the top 25 web sites loaded
+ up to 55% faster.
+\end_layout
+
+\begin_layout Itemize
 Resource Packages 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -587,6 +602,42 @@ key "Google page speed ranking"
  This effectively means that all companies whom have been paying for SEO
  (search engine optimization) will also have to consider page loading performanc
 e.
+\end_layout
+
+\begin_layout Standard
+I said 
+\begin_inset Quotes eld
+\end_inset
+
+likely
+\begin_inset Quotes erd
+\end_inset
+
+, but you can probably interpret that as 
+\begin_inset Quotes eld
+\end_inset
+
+definitely
+\begin_inset Quotes erd
+\end_inset
+
+, because Google has already added page load time tracking to its Webmaster
+ Tools 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Google webmaster tools page speed"
+
+\end_inset
+
+ and even announced its own DNS service (Google Public DNS ) 
+\begin_inset Quotes eld
+\end_inset
+
+to make the web faster
+\begin_inset Quotes erd
+\end_inset
+
+ just one day later!
 \end_layout
 
 \begin_layout Section
@@ -1077,6 +1128,31 @@ http://code.google.com/speed/page-speed/
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "WPO proposal SPDY"
+
+\end_inset
+
+
+\emph on
+A 2x Faster Web
+\emph default
+, The Chromium Blog, Mike Belshe, November 11, 2009, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://blog.chromium.org/2009/11/2x-faster-web.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "WPO proposal resource packages"
 
 \end_inset
@@ -1169,6 +1245,57 @@ status collapsed
 
 http://www.webpronews.com/topnews/2009/11/13/google-page-speed-may-be-a-ranking-fa
 ctor-in-2010
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Google webmaster tools page speed"
+
+\end_inset
+
+
+\emph on
+How fast is your site?
+\emph default
+, Webmaster Central Blog, Sreeram Ramachandra & Arvind Jain, December 2,
+ 2009, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://googlewebmastercentral.blogspot.com/2009/12/how-fast-is-your-site.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Google Public DNS"
+
+\end_inset
+
+
+\emph on
+Introducing Google Public DNS: A new DNS resolver from Google
+\emph default
+, Google Code Blog, Prem Ramaswami, December 3, 2009, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://googlecode.blogspot.com/2009/12/introducing-google-public-dns-new-dns.html
 \end_layout
 
 \end_inset
