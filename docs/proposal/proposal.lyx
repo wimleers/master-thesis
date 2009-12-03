@@ -425,8 +425,12 @@ key "File Conveyor"
  — the daemon that I wrote to automatically sync files to any CDN, regardlesss
  of the file transfer protocol used — when integrated with a Drupal web
  site and thus providing CDN integration for that web site, had a positive
- impact: the test web site consistently loaded about 100% faster, especially
- for visitors with slower internet connections, such as visitors from Brazil.
+ impact: the test web site consistently loaded about 
+\emph on
+twice as fast
+\emph default
+, especially for visitors with slower internet connections, such as visitors
+ from Brazil.
  Without this proof-of-concept implementation, I would never have been able
  to prove the positive impact on performance.
 \end_layout
@@ -629,7 +633,14 @@ key "Google webmaster tools page speed"
 
 \end_inset
 
- and even announced its own DNS service (Google Public DNS ) 
+ and even announced its own DNS service (Google Public DNS 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Google Public DNS"
+
+\end_inset
+
+) 
 \begin_inset Quotes eld
 \end_inset
 
