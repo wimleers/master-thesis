@@ -1,0 +1,2630 @@
+#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+\lyxformat 345
+\begin_document
+\begin_header
+\textclass article
+\begin_preamble
+\pagenumbering{roman}
+\let\myTOC\tableofcontents
+\renewcommand\tableofcontents{%
+\myTOC
+\clearpage
+\pagenumbering{arabic}
+}
+\setcounter{page}{0}
+\end_preamble
+\use_default_options true
+\language english
+\inputencoding auto
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\paperfontsize 12
+\spacing single
+\use_hyperref false
+\papersize a4paper
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\cite_engine basic
+\use_bibtopic false
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation skip
+\defskip medskip
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\author "" 
+\author "" 
+\end_header
+
+\begin_body
+
+\begin_layout Title
+Web Performance Optimization: Analytics
+\end_layout
+
+\begin_layout Author
+Wim Leers
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+Literature study proposed to achieve the degree of master
+\begin_inset Newline newline
+\end_inset
+
+in computer science/ICT/knowledge technology
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\shape italic
+
+\begin_inset Newline newline
+\end_inset
+
+Promotor
+\shape default
+: Prof.
+ dr.
+ Jan Van den Bussche
+\end_layout
+
+\begin_layout Date
+Hasselt University
+\begin_inset Newline newline
+\end_inset
+
+Academic year 2009-2010
+\end_layout
+
+\begin_layout Section*
+\begin_inset Newpage clearpage
+\end_inset
+
+Abstract
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
+Preface
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset toc
+LatexCommand tableofcontents
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Terminology
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Terminology"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+categorical
+\begin_inset space ~
+\end_inset
+
+attributes also known as qualitative attributes; attributes without numeric
+ properties: they should be treated like 
+\emph on
+symbols
+\emph default
+; subclasses of this type of attribute are nominal and ordinal attributes
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 25-27
+\end_layout
+
+\begin_layout Description
+quantitative
+\begin_inset space ~
+\end_inset
+
+attributes also known as numeric attributes; attributes that can be represented
+ as numbers and have most of the properties of numbers; either integer-valued
+ or continuous; subclasses of this type of attribute are interval and ratio
+ attributes
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 25-27
+\end_layout
+
+\begin_layout Description
+DBMS a computer program that aids in controlling the creation, usage and
+ maintenance of a database
+\end_layout
+
+\begin_layout Description
+RDBMS a relational DBMS that is based on the relational model, as introduced
+ by Codd.
+ Examples are MySQL, PostgreSQL, SQL Server, Oracle …
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Goals & Justification of Literature Study Subjects
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Goals-justification"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+OLAP
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:OLAP"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+OLAP — short for On-Line Analytical Processing — is an approach designed
+ to be able to quickly answer queries about multidimensional data.
+\end_layout
+
+\begin_layout Standard
+Some of the terminology and capabilities of OLAP systems can be found in
+ today's spreadsheet applications, so it's in fact very likely that you're
+ already familiar with OLAP principles! OLAP systems are designed to make
+ interactive analysis of (multidimensional) data possible and typically
+ provide extensive visualization and summary capabilities.
+\end_layout
+
+\begin_layout Subsection
+Multidimensional Data
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:Multidimensional-Data"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The starting point typically is a 
+\emph on
+fact table
+\emph default
+: a tabular representation of the data.
+ To represent this input data as a multidimensional array, two steps are
+ necessary:
+\end_layout
+
+\begin_layout Enumerate
+identification of the dimensions (or 
+\emph on
+functional attributes
+\emph default
+); these must be 
+\emph on
+categorical attributes
+\end_layout
+
+\begin_layout Enumerate
+identification of the attribute that will be analyzed (the 
+\emph on
+measure attribute
+\emph default
+) — this attribute is called the 
+\emph on
+target quantity
+\emph default
+; this must be a 
+\emph on
+quantitative attribute
+\end_layout
+
+\begin_layout Standard
+The dimensions are categorical attributes, or continuous attributes that
+ have been converted to categorical attributes.
+ The range of different values of an attribute serve as the indices of the
+ dimension corresponding to that attribute; the size of this dimension is
+ equal to the number of different values for this attribute.
+\end_layout
+
+\begin_layout Standard
+Each combination of attribute values (one for each attribute) defines a
+ cell in the multidimensional array; each cell contains the value of the
+ target quantity.
+ The target attribute is a quantitative attribute because typically the
+ goal is to look at aggregate quantities (total, average, minimum, maximum,
+ standard deviation …; the list can go on endlessly when adding domain-specific
+ functions for physics, financial analysis, etc.).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Example?
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Data Cube
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The data cube (or just 
+\emph on
+cube
+\emph default
+) operator generalizes the following constructs:
+\end_layout
+
+\begin_layout Itemize
+histogram
+\end_layout
+
+\begin_layout Itemize
+cross tabulation 
+\emph on
+(
+\begin_inset Quotes eld
+\end_inset
+
+cross tab
+\begin_inset Quotes erd
+\end_inset
+
+)
+\end_layout
+
+\begin_layout Itemize
+roll-up & drill-down
+\end_layout
+
+\begin_layout Itemize
+sub-total
+\end_layout
+
+\begin_layout Subsubsection*
+Constructs explained
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:constructs"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A histogram is a graphical display of tabular frequencies, shown as adjacent
+ rectangles, with each rectangle spanning a certain interval (the width,
+ if you will) that corresponds to a certain frequency and the height being
+ equal to the frequency density.
+\end_layout
+
+\begin_layout Standard
+A cross tabulation displays the joint distribution of two or more variables.
+\end_layout
+
+\begin_layout Standard
+A roll-up is the aggregation of values 
+\emph on
+within
+\emph default
+ a dimension — not across the entire dimension!
+\end_layout
+
+\begin_layout Quote
+For example, given sales data with entries for each date, we can 
+\emph on
+roll up
+\emph default
+ (aggregate) the data across all dates in a month, resulting in monthly
+ sales totals.
+ This is aggregation within a dimension; aggregation across a dimension
+ would have given us the total of all sales ever recorded.
+\end_layout
+
+\begin_layout Standard
+A drill-down can be considered the inverse of a roll-up: instead of viewing
+ the data 
+\begin_inset Quotes eld
+\end_inset
+
+at a higher level
+\begin_inset Quotes erd
+\end_inset
+
+, the data will be viewed with more granularity — 
+\begin_inset Quotes eld
+\end_inset
+
+at a lower level
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Quote
+Continuing on the example for roll-up, a drill-down would for example split
+ monthly sales totals into daily sales totals.
+ For the desired drill-downs to be possible, it is of course a necessity
+ that the underlying data is sufficiently granular.
+\end_layout
+
+\begin_layout Subsubsection
+Problems with 
+\family typewriter
+GROUP BY
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:problems"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Typically, data is stored in a relational database system.
+ To calculate the above constructs, the 
+\family typewriter
+GROUP BY
+\family default
+ operator always has to be used.
+ This operator partitions the relation into disjoint tuple sets (based on
+ one or more attributes that are common amongst the tuples in each tuple
+ set) and then aggregates over each set.
+\end_layout
+
+\begin_layout Standard
+However, there are some problems with using the 
+\family typewriter
+GROUP BY
+\family default
+ operator 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+histogram The standard SQL 
+\family typewriter
+GROUP BY
+\family default
+ operator does not allow for a direct construction of histograms (aggregation
+ over computed categories), because it does now allow functions to be used
+ in the 
+\family typewriter
+GROUP BY
+\family default
+ clause
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Not in SQL-92, which was available at the time of writing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+ (SQL3 was in development at the time of writing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+ and was to later become the SQL:1999 standard) and still not in SQL:2008
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "SQL:2008"
+
+\end_inset
+
+, which is the latest SQL standard at the time of writing this text.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+roll-up To calculate a roll-up over 
+\begin_inset Formula $n$
+\end_inset
+
+ dimensions requires 
+\begin_inset Formula $n$
+\end_inset
+
+ unions.
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+cross
+\begin_inset space ~
+\end_inset
+
+tab Roll-ups are asymmetric, cross tabulations are symmetric and require
+ even more unions: 
+\begin_inset Formula $2^{n}$
+\end_inset
+
+ unions!
+\end_layout
+
+\begin_layout Subsubsection
+The Data CUBE Operator
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:operator"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The generalization of the aforementioned constructs seems obvious.
+ It is simply another 'level' of aggregation.
+ Schematically, it could be described as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Box Boxed
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+aggregate (
+\begin_inset Formula $\equiv$
+\end_inset
+
+ 0D data cube)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\subset$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family typewriter
+GROUP BY
+\family default
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+(
+\begin_inset Formula $\equiv$
+\end_inset
+
+ 1D data cube)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\subset$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\noun off
+\color none
+cross tab
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+(
+\begin_inset Formula $\equiv$
+\end_inset
+
+ 2D data cube)
+\family default
+\series default
+\shape default
+\size default
+\emph default
+\bar default
+\noun default
+\color inherit
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\subset$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+3D data cube
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $\vdots$
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Formula $n$
+\end_inset
+
+D data cube
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset VSpace bigskip
+\end_inset
+
+To ensure that you understand this, the following illustration makes it
+ very clear in a graphical manner:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/data cube generalization.png
+	scale 60
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The date cube is the 
+\begin_inset Formula $n$
+\end_inset
+
+-dimensional generalization of more simple aggregation functions.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+.)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To support the data cube operator, SQL's 
+\family typewriter
+SELECT
+\family default
+-
+\family typewriter
+GROUP
+\family default
+-
+\family typewriter
+BY
+\family default
+-
+\family typewriter
+HAVING
+\family default
+ syntax was extended to support histograms, decorations
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Decorations are columns that do not appear in the GROUP BY list — and that
+ are therefore not allowed to be projected (be in the 
+\family typewriter
+SELECT
+\family default
+ list) in traditional SQL — but that are functionally dependent on the grouping
+ columns
+\end_layout
+
+\end_inset
+
+ and the 
+\family typewriter
+CUBE
+\family default
+ operator (as well as the 
+\family typewriter
+ROLLUP
+\family default
+ operator
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Modern RDBMSes such as MySQL 5.0 support this 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "MySQL WITH ROLLUP"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\end_inset
+
+).
+\begin_inset Newline newline
+\end_inset
+
+Microsoft pioneered this in their SQL Server RDBMS product 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Implementation Challenges
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:Implementation-Challenges"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+One key demand of OLAP applications is that queries be answered quickly.
+ This is of course not a demand that is unique for OLAP: no database or
+ even any software has a requirement to respond slowly.
+ But OLAP's requirements are fairly stringent.
+\begin_inset Newline newline
+\end_inset
+
+Fortunately, the multidimensional data model of OLAP is structured enough
+ to allow this key demand to be approached.
+ So in this section, we will look deeper into that aspect.
+\end_layout
+
+\begin_layout Standard
+If there is one key property to OLAP or multidimensional data analysis,
+ then it is the ability to simultaneously aggregate across many dimensions.
+ As we've discussed previously, this translates to many simultaneous 
+\family typewriter
+GROUP BY
+\family default
+s in SQL, which can result in a performance bottleneck.
+\begin_inset Newline newline
+\end_inset
+
+More efficient schemes to perform these calculations have been researched
+ by the University of Wisconsin-Madison 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cubing Algorithms"
+
+\end_inset
+
+, amongst others.
+ Initially, they have focused on efficient algorithms to compute the cube
+ operator, using the standard RDMBS techniques of sorting and hashing.
+ As always, precomputing frequently used data can be used to speed up computer
+ programs.
+ In terms of multidimensional data analysis, aggregates on some subsets
+ of dimensions can be precomputed.
+ However, it's impossible to precompute everything, and we may end up precomputi
+ng unneeded aggregates.
+ And because of the hierarchical nature, it's possible that the increase
+ in required storage space may be unreasonable.
+\end_layout
+
+\begin_layout Subsubsection*
+Efficient Cubing
+\end_layout
+
+\begin_layout Standard
+The key to efficient cubing of relational tables is understanding how the
+ cuboids
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Each combination of aggregates is called a 
+\emph on
+cuboid
+\emph default
+, and all these cuboids together form the cube.
+\end_layout
+
+\end_inset
+
+ are related to each other.
+ Then, one can exploit these relationships to minimize the number of calculation
+s, and, more importantly (as virtually always for database systems): less
+ I/O.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cubing Algorithms"
+
+\end_inset
+
+ suggests an approach based on a hierarchical structure.
+ They explore a class of sorting-based methods that attempt to minimize
+ the number sorting steps by overlapping the computations of the various
+ cuboids (and hence minimize the number of disk I/Os).
+ This approach 
+\emph on
+always
+\emph default
+ performs significantly better than the prototype method referenced in section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:problems"
+
+\end_inset
+
+, which simply computes all required 
+\family typewriter
+GROUP BY
+\family default
+ statements in sequence.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+May require more detail.
+ See link to paper with more detail at 97MAR-CD.pdf, page 5, end of section
+ 2.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Precomputing for Speed: Storage Explosion
+\end_layout
+
+\begin_layout Standard
+The more aggregates that are precomputed, the faster queries can be answered.
+ However, it's difficult to say in advance how much space (storage) will
+ be required for a certain amount of precomputation.
+ There are different methods (discussed in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cubing Algorithms"
+
+\end_inset
+
+) to estimate this:
+\end_layout
+
+\begin_layout Enumerate
+It is assumed that the data is 
+\emph on
+uniformly distributed
+\emph default
+.
+ This assumption allows for a mathematical approximation of the number of
+ tuples that will appear in the result of the cube computation.
+ This is simple statistics:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Box Frameless
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "100col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Quote
+If 
+\begin_inset Formula $r$
+\end_inset
+
+ elements are chosen uniformly and at random from a set of 
+\begin_inset Formula $n$
+\end_inset
+
+ elements, the expected number of distinct elements obtained is 
+\begin_inset Formula $n-n(1-1/n)^{r}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+— Feller in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Probability Theory"
+
+\end_inset
+
+, page 241
+\begin_inset VSpace bigskip
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+This can then be used to calculate the upper bound on the size of the cube.
+ 
+\begin_inset Formula $n$
+\end_inset
+
+ is the product of the distinct number of values of all attributes on which
+ is being grouped and 
+\begin_inset Formula $r$
+\end_inset
+
+ the number of tuples in the relation.
+\end_layout
+
+\begin_layout Enumerate
+The second method uses a simple 
+\emph on
+sampling-based
+\emph default
+ algorithm: take a random subset of the table, compute the cube on that
+ subset.
+ Then estimate the size of the actual cube by linearly scaling the size
+ of the cube of the sample by the 
+\begin_inset Formula $\frac{data\, size}{sample\, size}$
+\end_inset
+
+ ratio.
+ Clearly, if the random sample is biased, then our estimate will be skewed.
+\begin_inset Newline newline
+\end_inset
+
+The potential advantage over the first method (based on the uniform distribution
+ assumption) is that this method examines a statistical subset, instead
+ of just relying on cardinalities.
+\end_layout
+
+\begin_layout Enumerate
+While the first two methods are simple applications of well-known statistics
+ methods, the third tries to exploit the nature of the process that is being
+ applied — essentially, data is being grouped according to the distinct
+ values within the dimensions.
+ This method therefore estimates the number of tuples in each grouping by
+ estimating the number of distinct values in each particular grouping.
+\begin_inset Newline newline
+\end_inset
+
+A suitable 
+\emph on
+probabilistic algorithm
+\emph default
+ is 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Probabilistic Counting Algos for DB apps"
+
+\end_inset
+
+: it counts the number of distinct values in a multi-set, and makes the
+ estimate after a single pass through the database, using only a fixed amount
+ of memory.
+ Hence this algorithm is a good starting point (single pass and fixed amount
+ of memory are very desirable).
+\end_layout
+
+\begin_layout Standard
+When comparing these three methods, the first method was only works well
+ when the data is approximately uniformly distributed (no surprise there),
+ the sampling-based method is strongly dependent on the number of duplicates,
+ and the probabilistic method performs very well under various degrees of
+ skew.
+ Hence the latter provides the most reliable, accurate and predictable estimate
+ of the three considered algorithms.
+\end_layout
+
+\begin_layout Subsubsection*
+The Impact of the Data Structure
+\end_layout
+
+\begin_layout Standard
+While OLAP is the 'container term', there are actually many variants; including
+ ROLAP (relational OLAP) and MOLAP (multidimensional OLAP).
+ MOLAP stores the data in an optimized multidimensional array, whereas ROLAP
+ stores the data in a relational database.
+ Both have their advantages and disadvantages, but in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Cubing Algorithms"
+
+\end_inset
+
+, they found that it was surprisingly efficient to take the data set from
+ a table in a relational database, convert this to a multidimensional arrays,
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cube
+\begin_inset Quotes erd
+\end_inset
+
+ the array and store it back in a database — this has been found to be more
+ efficient than 
+\begin_inset Quotes eld
+\end_inset
+
+cubing
+\begin_inset Quotes erd
+\end_inset
+
+ the table directly!
+\end_layout
+
+\begin_layout Subsubsection*
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Clearly, there's much more to the cube operator than meets the eye: a straightfo
+rward implementation is likely unable to attain the desired performance;
+ optimizations on multiple levels are necessary.
+ Precomputing parts seems an obvious optimization, but may require too much
+ storage; estimating how much storage this will require is also not trivial.
+ The data structures used should be carefully selected, since the performance
+ impact can be tremendous.
+ And, while complex, attempts to minimize overlapping computations can also
+ help significantly.
+\end_layout
+
+\begin_layout Subsection
+Updating Data Cubes
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:updates"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For many applications (businesses), batch updates that are executed overnight
+ are sufficient.
+ However, in many cases, it is a necessity to have more frequent updates:
+\end_layout
+
+\begin_layout Itemize
+For decision support and stock trading applications, instantaneous updates
+ are crucial.
+\end_layout
+
+\begin_layout Itemize
+OLAP implies 
+\emph on
+interactive
+\emph default
+ data analysis.
+ Interactivity requires fast updates.
+\end_layout
+
+\begin_layout Itemize
+Batch updates may have a low 
+\emph on
+average
+\emph default
+ cost per update, but performing the complete batch may take a considerable
+ amount of time.
+ For companies that can shut down every night, this might not be a problem,
+ but for multinational companies, this poses a problem: at all times, the
+ access to the data is required somewhere around the world.
+\end_layout
+
+\begin_layout Standard
+So, the ability to perform more frequent updates would enable other types
+ of applications and applications that don't really need it automatically
+ get greater flexibility and 24 hour availability.
+\end_layout
+
+\begin_layout Standard
+In the remainder of this section, three techniques are discussed: the first
+ is an example of an technique that allows for fast range-sum queries that
+ unfortunately can have very slow updates; the second improves upon this
+ first by speeding up updates; the third makes fast data cube updates possible
+ in all cases.
+\end_layout
+
+\begin_layout Subsubsection
+Prefix Sum
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:updates:prefix-sum"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The essential idea of the Prefix Sum method is to precompute many prefix
+ sums of the data cube, which can then be used to answer any range-sum query
+ in constant time.
+ The downside is a large update cost — in the worst case, an array needs
+ to be rebuilt that has the same size as the data cube itself.
+\end_layout
+
+\begin_layout Standard
+Because of the nature of a prefix sum, particular updates have the potential
+ to cause enormous cascading updates.
+ This becomes instantly obvious when shown the data that the Prefix Sum
+ method stores.
+ Therefore, an example has been included: please see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:prefix-sum-example"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/prefix sum.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The original array (
+\begin_inset Formula $A$
+\end_inset
+
+) on the left and the cumulative array used for the Prefix Sum method (
+\begin_inset Formula $P$
+\end_inset
+
+) on the right.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:prefix-sum-example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Discussing all details would lead us to far — if interested, it is recommended
+ to consult the original paper 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data cube updates: Prefix Sum"
+
+\end_inset
+
+.
+ The worst case update cost is 
+\begin_inset Formula $O(n^{d})$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Relative Prefix Sum
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:updates:relative-prefix-sum"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This method provides constant time queries with reduced update complexity
+ (when compared to the Prefix Sum technique explained in on which it builds).
+ Therefore this method is more suitable for applications where constant
+ time queries are a necessity but updates are more frequent than the Prefix
+ Sum method allows.
+\end_layout
+
+\begin_layout Standard
+The essence of the Relative Prefix Sum approach is to limit the cascading
+ updates that result in poor update performance.
+ It achieves this by partitioning the array that is to be updated into fixed
+ size regions called 
+\emph on
+overlay boxes
+\emph default
+.
+ For each overlay box, there is an overlay (
+\begin_inset Formula $OL$
+\end_inset
+
+) that stores information on the sums of the 
+\begin_inset Quotes eld
+\end_inset
+
+preceding
+\begin_inset Quotes erd
+\end_inset
+
+ regions (i.e.
+ in the typical 2D array: more to the left and to the top).
+ Also for every overlay box, there is a relative-prefix array (
+\begin_inset Formula $RP$
+\end_inset
+
+) that stores information on the relative prefix sums 
+\emph on
+within
+\emph default
+ that overlay box.
+ By combining the information in both components (
+\begin_inset Formula $OL$
+\end_inset
+
+ and 
+\begin_inset Formula $RP$
+\end_inset
+
+), prefix sums can be constructed 
+\begin_inset Quotes eld
+\end_inset
+
+on the fly
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This too, can be made more clear through the use of figures.
+ First look again at the right-hand side of figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:prefix-sum-example"
+
+\end_inset
+
+.
+ Then look at figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:relative-prefix-sum-example"
+
+\end_inset
+
+, which contains an example of the 
+\begin_inset Formula $OL$
+\end_inset
+
+ and 
+\begin_inset Formula $RP$
+\end_inset
+
+ components for figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:prefix-sum-example"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+It is clear that each cell in the array on the right-hand side of figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:prefix-sum-example"
+
+\end_inset
+
+ can be calculated from the 
+\begin_inset Formula $OL$
+\end_inset
+
+ and 
+\begin_inset Formula $RP$
+\end_inset
+
+ components by adding the corresponding values stored in the 
+\begin_inset Formula $OL$
+\end_inset
+
+ and the 
+\begin_inset Formula $RP$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Quote
+For example, to calculate 
+\begin_inset Formula $SUM(A[0,0]:A[7,7])$
+\end_inset
+
+, we must add 
+\begin_inset Formula $OL[6,6]$
+\end_inset
+
+, 
+\begin_inset Formula $OL[6,7]$
+\end_inset
+
+, 
+\begin_inset Formula $OL[7,6]$
+\end_inset
+
+ and 
+\begin_inset Formula $RP[7,7]$
+\end_inset
+
+.
+ The result is 
+\begin_inset Formula $179+14+20+16=229$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/relative prefix sum.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The overlay array (
+\begin_inset Formula $OL$
+\end_inset
+
+) on the left and the relative prefix array (
+\begin_inset Formula $RP$
+\end_inset
+
+) on the right.
+ The overlay boxes are drawn in thick lines for reference.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:relative-prefix-sum-example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The goal of the Relative Prefix Sum method is to reduce the amount of update
+ cascade.
+ Now that has been demonstrated how this method works, it is time to look
+ at the update performance.
+ Suppose that 
+\begin_inset Formula $A[1,5]$
+\end_inset
+
+ is updated from the value 
+\begin_inset Formula $3$
+\end_inset
+
+ to the value 
+\begin_inset Formula $5$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Since the 
+\begin_inset Formula $OL$
+\end_inset
+
+ contains the sums of the 
+\begin_inset Quotes eld
+\end_inset
+
+preceding
+\begin_inset Quotes erd
+\end_inset
+
+ regions, all values to the right and those in the first row below need
+ to be updated.
+ In the running example, these are cells 
+\begin_inset Formula $OL[3,5]$
+\end_inset
+
+ and 
+\begin_inset Formula $OL[6,5]$
+\end_inset
+
+ to the right and cells 
+\begin_inset Formula $OL[1,6]$
+\end_inset
+
+, 
+\begin_inset Formula $OL[2,6]$
+\end_inset
+
+, 
+\begin_inset Formula $OL[3.6]$
+\end_inset
+
+ and 
+\begin_inset Formula $OL6,6]$
+\end_inset
+
+ in the row below.
+ This is demonstrated in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:relative-prefix-sum-update-example"
+
+\end_inset
+
+.
+ And since the 
+\begin_inset Formula $RP$
+\end_inset
+
+ contains relative prefix sums only for cells within the same overlay box,
+ only cells 
+\begin_inset Formula $RP[1,5]$
+\end_inset
+
+ and 
+\begin_inset Formula $RP[2,5]$
+\end_inset
+
+ need to be updated (again, see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:relative-prefix-sum-update-example"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/relative prefix sum update.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Effects of an update to the cell with coordinates 
+\begin_inset Formula $(1,5)$
+\end_inset
+
+ — marked with an asterisk on the left.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:relative-prefix-sum-update-example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Discussing all details would again lead us to far, for a detailed analysis
+ it is recommended to read 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+, but here it suffices to say that in the worst case, 
+\begin_inset Formula $(\frac{n}{k}+k-2)^{d}$
+\end_inset
+
+ cells need to be updated (with 
+\begin_inset Formula $d$
+\end_inset
+
+ the dimensionality, 
+\begin_inset Formula $n$
+\end_inset
+
+ the number of possible attribute values and 
+\begin_inset Formula $k$
+\end_inset
+
+ the length of the overlay box in each dimension).
+ The worst case update cost has been limited to 
+\begin_inset Formula $O(n^{\frac{d}{2}})$
+\end_inset
+
+, which is significantly less than for the Prefix Sum method (see section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:updates:prefix-sum"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection
+The Dynamic Data Cube
+\end_layout
+
+\begin_layout Standard
+Like the Relative Prefix Sum method, this method also uses overlay boxes.
+ But it uses multiple levels of overlay boxes, arranged in a hierarchy (more
+ specifically: a tree structure).
+ Through this particular structure (that will be explained more in-depth
+ later on), the Dynamic Data Cube method is able to provide sub-linear performan
+ce (
+\begin_inset Formula $O(\log^{d}n)$
+\end_inset
+
+, with 
+\begin_inset Formula $d$
+\end_inset
+
+ again the dimensionality) for both range sum queries and updates on the
+ data cube.
+\end_layout
+
+\begin_layout Subsubsection*
+Overlay Boxes
+\end_layout
+
+\begin_layout Standard
+The overlay boxes are similar to the ones used in the Relative Prefix Sum
+ method, but they differ in the values they store, and in the number of
+ overlay boxes.
+ 
+\end_layout
+
+\begin_layout Standard
+The values that they store can best be explained through the help of a figure:
+ see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:ddc-partitioning"
+
+\end_inset
+
+.
+ Each box stores 
+\begin_inset Formula $k^{d}-(k-1)^{d}$
+\end_inset
+
+ values; these values provide sums of regions 
+\emph on
+within
+\emph default
+ the overlay box.
+ E.g., 
+\begin_inset Formula $y_{1}$
+\end_inset
+
+ contains the sum of all the values of that row.
+ Also, because sums of regions within the overlay box are stored, 
+\begin_inset Formula $y_{2}$
+\end_inset
+
+ includes the value of 
+\begin_inset Formula $y_{1},$
+\end_inset
+
+ etc.
+ 
+\begin_inset Formula $S$
+\end_inset
+
+ is the cell that contains the subtotal for that overlay box.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/ddc partitioning.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Partitioning of an array into overlay boxes and calculation of overlay values..
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:ddc-partitioning"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Construction
+\end_layout
+
+\begin_layout Standard
+As stated before, overlay boxes are organized in a tree structure that recursive
+ly partitions the array.
+ This tree structure is the reason that the number of overlay boxes differs
+ from that of the Relative Prefix Sum method.
+\begin_inset Newline newline
+\end_inset
+
+The root node of the tree contains the complete range of the array, in overlay
+ boxes of size 
+\begin_inset Formula $k=\frac{n}{2}$
+\end_inset
+
+.
+ Each overlay box is again divided in half.
+ This recursive partitioning continues until the leaf level, where 
+\begin_inset Formula $k=1$
+\end_inset
+
+ and each overlay box contains a single cell.
+ At that point the leaf level contains the values stored in the original
+ array.
+ For a graphical explanation, see the three different levels, from root
+ to leaf level, as illustrated in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:ddc-levels"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Because the overlay boxes are stored in special structures, sublinear query
+ and update times can be guaranteed.
+ For two-dimensional overlays (
+\begin_inset Formula $d=2$
+\end_inset
+
+), overlay boxes are not stored in arrays, but in a specialized hierarchical
+ structure with an access and update cost of 
+\begin_inset Formula $O(\log n)$
+\end_inset
+
+; for details on that see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dynamic Data Cube - specialized hierarchical structure"
+
+\end_inset
+
+.
+ When the data cubes have a higher dimension (
+\begin_inset Formula $d>2$
+\end_inset
+
+), the overlay box values of a 
+\begin_inset Formula $d$
+\end_inset
+
+-dimensional data cube can be stored as 
+\begin_inset Formula $(d-1)$
+\end_inset
+
+-dimensional data cubes in a recursive manner
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+The surfaces containing the overlay values of a 
+\begin_inset Formula $d$
+\end_inset
+
+-dimensional overlay box are 
+\begin_inset Formula $(d-1)$
+\end_inset
+
+-dimensional.
+\end_layout
+
+\end_inset
+
+ — the recursion of course stops for 
+\begin_inset Formula $d=2$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/ddc levels.png
+	scale 35
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Dynamic Data Cube: all levels of the tree.
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:ddc-levels"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Queries & Updates
+\end_layout
+
+\begin_layout Standard
+The range sum for any query can be calculated by retrieving only overlay
+ box values.
+ The query begins at the root node of the tree and includes every overlay
+ box that is 
+\begin_inset Quotes eld
+\end_inset
+
+covered in every dimension
+\begin_inset Quotes erd
+\end_inset
+
+ by the coordinates of the cell whose range sum we're calculating (i.e.
+ if that cell's index is greater than or equal to the overlay box' index
+ in every dimension), i.e.
+ the included overlay boxes contribute their subtotals to the sum.
+ If the cell intersects the overlay box, then the box contributes the correspond
+ing overlay value (a row sum value in a 2D data cube, such as 
+\begin_inset Formula $y2$
+\end_inset
+
+ in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:ddc-partitioning"
+
+\end_inset
+
+).
+ Then, we go to a deeper level in the tree until we reach the leaf level.
+\begin_inset Newline newline
+\end_inset
+
+Since overlay boxes at the same tree level do not intersect, at most one
+ child will be traversed down.
+ The same algorithm is applied again.
+\begin_inset Newline newline
+\end_inset
+
+Thanks to this recursive nature, less values need to be retrieved, resulting
+ in an overall query cost of 
+\begin_inset Formula $O(\log^{d}n)$
+\end_inset
+
+ — for details see again 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dynamic Data Cube - specialized hierarchical structure"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+The same descent down the tree must be made when performing an update instead
+ of a request, resulting in a worst case update cost that is identical to
+ the overall query cost.
+ Again, see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Dynamic Data Cube - specialized hierarchical structure"
+
+\end_inset
+
+ for details.
+\end_layout
+
+\begin_layout Subsubsection*
+Dynamic Growth
+\end_layout
+
+\begin_layout Standard
+Neither the Prefix Sum nor the Relative Prefix Sum methods carry optimizations
+ to limit growth of the data cube.
+ Instead, they assume that the size of each dimension is known a priori.
+ For some cases, it's more convenient (and space efficient) to grow the
+ size of the data cube dynamically, just enough to suit the size of the
+ data.
+ For example, the number of possible values of an attribute could be large,
+ but the number of 
+\emph on
+actual
+\emph default
+ different values that are taken is low (i.e.
+ low 
+\emph on
+entropy
+\emph default
+ 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+verify that this claim is correct
+\end_layout
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The Prefix Sum and Relative Prefix Sum methods would need to grow new rows
+ (for lack of a better term in >3D; more exact: expansion in a specific
+ dimension) for even a single cell in a previously non-existing area — see
+ figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:ddc-growth"
+
+\end_inset
+
+ for an example.
+ The Dynamic Data Cube, on the other hand, could just grow into the required
+ direction, affecting just one overlay box at each tree level.
+\end_layout
+
+\begin_layout Standard
+This makes the Dynamic Data Cube a natural fit for data that contains large
+ non-populated regions: where there is no data, the overlay boxes will simply
+ not be created.
+ In other words: the Dynamic Data Cube 
+\emph on
+avoids the storage of empty regions
+\emph default
+, unlike the Prefix Sum and Relative Prefix Sum methods.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+An exact numerical example could be added here, based on the example in
+ the conclusion (page 42 of 99DEC-CD.pdf).
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/ddc growth.png
+	scale 40
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Growth of a Dynamic Data Cube — shaded areas don't store values..
+\begin_inset Newline newline
+\end_inset
+
+ 
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:ddc-growth"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Other OLAP Operations
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:other-ops"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Other (simple, yet important) OLAP-related techniques are pivoting, slicing
+ and dicing.
+ In this section, they're explained very briefly.
+\end_layout
+
+\begin_layout Standard
+Pivoting refers to aggregating over all dimensions except two.
+ A two-dimensional cross tabulation is the result, with the two chosen dimension
+s as the only remaining dimensions.
+\end_layout
+
+\begin_layout Standard
+Slicing and dicing are both very straightforward.
+ Slicing requires a specific value to be specified for one or more dimensions.
+ Dicing does not require a single specific value to be chosen, but allows
+ a 
+\emph on
+range
+\emph default
+ of attribute values to be specified.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Intro to Data Mining"
+
+\end_inset
+
+
+\emph on
+Introduction to Data Mining
+\emph default
+, Pang-Ning Tan; Michael Steinbach; Vipin Kumar, 2006
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Web Data Mining"
+
+\end_inset
+
+
+\emph on
+Web Data Mining
+\emph default
+, Bing Liu, 2008
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Data Cube"
+
+\end_inset
+
+
+\emph on
+Data Cube: A Relational Aggregation Operator Generalizing Group-By, Cross-Tab,
+ and Sub-Totals
+\emph default
+, Jim Gray (Microsoft); Adam Bosworth (Microsoft); Andrew Layman (Microsoft);
+ Hamid Pirahesh (IBM); 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "SQL:2008"
+
+\end_inset
+
+
+\emph on
+ISO/IEC 9075-1:2008
+\emph default
+, 2009, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://www.iso.org/iso/iso_catalogue/catalogue_tc/catalogue_detail.htm?csnumber=454
+98
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "MySQL WITH ROLLUP"
+
+\end_inset
+
+
+\family typewriter
+\emph on
+GROUP BY
+\family default
+ Modifiers
+\emph default
+, MySQL 5.0 Reference Manual, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://dev.mysql.com/doc/refman/5.0/en/group-by-modifiers.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Cubing Algorithms"
+
+\end_inset
+
+
+\emph on
+Cubing Algorithms, Storage Estimation, and Storage and Processing Alternatives
+ for OLAP
+\emph default
+, Prasad M.
+ Deshpande; Jeffrey F.
+ Naughton; Karthikeyan Ramasamy; Amit Shukla; Kristin Tufte; Yihong Zhao,
+ University of Wisconsin-Madison, 1997
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Intro to Probability Theory"
+
+\end_inset
+
+
+\emph on
+An Introduction to Probability Theory and Its Applications
+\emph default
+, W.
+ Feller, 1957
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Probabilistic Counting Algos for DB apps"
+
+\end_inset
+
+
+\emph on
+Probabilistic Counting Algorithms for Database Applications
+\emph default
+, P.
+ Flajolet; G.N.
+ Martin, Journal of Computer and System Sciences, 31(2): 182-209, 1985.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+
+\emph on
+Data Cubes in Dynamic Environments
+\emph default
+, Steven P.
+ Geffner; Mirek Riedewald; Divyakant Agrawal; Amr El Abbadi, University
+ of California, 1999
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "data cube updates: Prefix Sum"
+
+\end_inset
+
+
+\emph on
+Range Queries in OLAP Data Cubes
+\emph default
+, C.
+ Ho; R.
+ Agrawal; N.
+ Megiddo; R.
+ Srikant, 1997
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Dynamic Data Cube - specialized hierarchical structure"
+
+\end_inset
+
+
+\emph on
+The dynamic data cube
+\emph default
+, S.
+ Geffner; D.
+ Agrawal; A.
+ El Abbadi, 2000
+\end_layout
+
+\end_body
+\end_document
