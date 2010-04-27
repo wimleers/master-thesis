@@ -476,19 +476,6 @@ quantities
  analysis, etc.).
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Example?
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsection
 Data Cube
 \begin_inset CommandInset label
@@ -599,7 +586,7 @@ reference "tab:datacube-iris-example"
 \begin_inset Float table
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -1040,16 +1027,8 @@ Virginica
 \begin_inset Caption
 
 \begin_layout Plain Layout
-The 
-\begin_inset Quotes eld
-\end_inset
-
-Iris
-\begin_inset Quotes erd
-\end_inset
-
- data set: number of flowers having a particular combination of petal width,
- petal length and species type.
+The Iris data set: number of flowers having a particular combination of
+ petal width, petal length and species type.
 \begin_inset CommandInset label
 LatexCommand label
 name "tab:datacube-iris-example"
@@ -1106,15 +1085,7 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-A data cube representation of the 
-\begin_inset Quotes eld
-\end_inset
-
-Iris
-\begin_inset Quotes erd
-\end_inset
-
- data set.
+A data cube representation of the Iris data set.
 \begin_inset Newline newline
 \end_inset
 
@@ -2221,6 +2192,15 @@ GROUP BY
  This operator partitions the relation into disjoint tuple sets (based on
  one or more attributes that are common amongst the tuples in each tuple
  set) and then aggregates over each set.
+ In other words, using the 
+\family typewriter
+GROUP BY
+\family default
+ construct allows a table to be crated of many aggregate values, 
+\emph on
+indexed by a set of attributes
+\emph default
+.
 \end_layout
 
 \begin_layout Standard
@@ -2628,6 +2608,1265 @@ key "Data Cube"
 \end_layout
 
 \begin_layout Subsubsection
+Elaborate data cube example
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:elaborate-example"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Continuing with the Iris data set (see table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-iris-example"
+
+\end_inset
+
+), a sample query that utilizes the newly introduced data cube operator:
+\end_layout
+
+\begin_layout Quotation
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+SELECT PetalLength, PetalWidth, SpeciesType, Count
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY PetalLength,
+\end_layout
+
+\begin_layout Plain Layout
+
+         PetalWidth,
+\end_layout
+
+\begin_layout Plain Layout
+
+         SpeciesType,
+\end_layout
+
+\begin_layout Plain Layout
+
+         COUNT(*) AS Count
+\end_layout
+
+\begin_layout Plain Layout
+
+	WITH CUBE;
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The semantics of the 
+\family typewriter
+CUBE
+\family default
+ operator are that it first aggregates over all the attributes in the 
+\family typewriter
+<select list>
+\family default
+, as is the case in a standard 
+\family typewriter
+GROUP BY
+\family default
+.
+ Then, it 
+\family typewriter
+UNION
+\family default
+s in each super-aggregate of the global cube — substituting 
+\family typewriter
+ALL
+\family default
+ for the aggregation columns.
+ If there are 
+\begin_inset Formula $N$
+\end_inset
+
+ attributes in the select list, there will be 
+\begin_inset Formula $2^{n}-1$
+\end_inset
+
+ super-aggregate values and thus a total of 
+\begin_inset Formula $2^{n}$
+\end_inset
+
+
+\family typewriter
+ UNION
+\family default
+ed 
+\family typewriter
+GROUP BY
+\family default
+ queries: a standard 
+\family typewriter
+GROUP BY
+\family default
+ query, and 
+\begin_inset Formula $2^{n}-1$
+\end_inset
+
+ 
+\family typewriter
+UNION
+\family default
+ed in super-aggregate queries.
+\end_layout
+
+\begin_layout Standard
+Each 
+\family typewriter
+ALL
+\family default
+ value is in fact an alias for a set: the set over which the aggregate is
+ computed.
+ In this example, these respective sets are:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+ALL(speciesType) = {'Setosa', 'Versicolour', 'Virginica'}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+ALL(petalLength) = {'low', 'medium', 'high'}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+ALL(petalWidth) = {'low', 'medium', 'high'}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thinking of the 
+\family typewriter
+ALL
+\family default
+ value as an alias of these sets, makes it easier to understand and is how
+ it operates internally.
+ The 
+\family typewriter
+ALL
+\family default
+ string really is just for display.
+\end_layout
+
+\begin_layout Standard
+If the cardinality of the 
+\begin_inset Formula $n$
+\end_inset
+
+ attributes are 
+\begin_inset Formula $C_{1},C_{2},\text{…},C_{n}$
+\end_inset
+
+, then the cardinality of the resulting cube relation is 
+\begin_inset Formula $\prod(C_{i}+1)$
+\end_inset
+
+.
+ The extra value in each attribute domain is 
+\family typewriter
+ALL
+\family default
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Data cube of 2D data
+\end_layout
+
+\begin_layout Standard
+In this section, let us ignore the Species Type column in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-iris-example"
+
+\end_inset
+
+.
+ Then we're left with two categorical attributes and thus 2D data, therefore
+ we would need 
+\begin_inset Formula $1+(2^{2}-1)=1+3=4$
+\end_inset
+
+ 
+\family typewriter
+UNION
+\family default
+ed queries.
+ This is the case:
+\end_layout
+
+\begin_layout Quotation
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Standard GROUP BY.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, PetalWidth, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength, PetalWidth
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalWidth.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, ALL, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate on PetalLength.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, PetalWidth, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalWidth
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalLength and PetalWidth.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, ALL, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The result is displayed in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-example-2D-output"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Moreover, both categorical attributes may assume 3 different values (
+\begin_inset Quotes eld
+\end_inset
+
+low
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+medium
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+high
+\begin_inset Quotes erd
+\end_inset
+
+), thus 
+\begin_inset Formula $C_{1}=C_{2}=3$
+\end_inset
+
+.
+ This implies that the cardinality of the resulting data cube should be
+ 
+\begin_inset Formula $(C_{1}+1)\times(C_{2}+1)=4\times4=16$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This can also be checked by examining table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-example-2D-output"
+
+\end_inset
+
+: its cardinality is 14.
+ Note that 16 was the 
+\emph on
+maximum
+\emph default
+ cardinality of the resulting data cube — indeed, it is possible to have
+ a lower cardinality when not all possible combinations are made.
+ In this case, the combinations 
+\family typewriter
+(low, high)
+\family default
+ and 
+\family typewriter
+(high, low)
+\family default
+ (being 
+\family typewriter
+(Petal Length, Petal Width)
+\family default
+ tuples) do not exist and justify the difference.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="15" columns="3">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Petal Length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Petal Width
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Count
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+43
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+48
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+51
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+51
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+48
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+52
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+150
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The result of the data cube operator on 2D data.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:datacube-example-2D-output"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Data cube of 3D data
+\end_layout
+
+\begin_layout Standard
+In this section, we again consider all three categorical attribues of table
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-iris-example"
+
+\end_inset
+
+: Petal Length, Petal Width and Species Type.
+ By the same logic, this is 3D data and we will need 
+\begin_inset Formula $1+(2^{3}-1)=1+7=8$
+\end_inset
+
+ 
+\family typewriter
+UNION
+\family default
+ed queries.
+ Again, this is correct:
+\end_layout
+
+\begin_layout Quotation
+\begin_inset listings
+lstparams "basicstyle={\small\ttfamily},language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Standard GROUP BY.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, PetalWidth, SpeciesType, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength, PetalWidth, SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of SpeciesType.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, PetalWidth, ALL, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength, PetalWidth
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalWidth.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, ALL, SpeciesType, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength, SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate on PetalLength.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, PetalWidth, SpeciesType, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalWidth, SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalWidth and Speciestype.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT PetalLength, ALL, ALL COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalLength
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalLength and PetalWidth.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, ALL, SpeciesType, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalLength and Speciestype.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, PetalWidth, ALL, COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+	GROUP BY PetalWidth
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\begin_layout Plain Layout
+
+UNION
+\end_layout
+
+\begin_layout Plain Layout
+
+(
+\end_layout
+
+\begin_layout Plain Layout
+
+	-- Super-aggregate of PetalLength, PetalWidth and Speciestype.
+\end_layout
+
+\begin_layout Plain Layout
+
+	SELECT ALL, ALL, ALL COUNT(*)
+\end_layout
+
+\begin_layout Plain Layout
+
+	FROM Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Calculating the output of this example and checking its cardinality is left
+ as an exercise to the reader.
+\end_layout
+
+\begin_layout Subsubsection
 Implementation Challenges
 \begin_inset CommandInset label
 LatexCommand label
@@ -2661,14 +3900,21 @@ reference "sub:OLAP:data-cube:problems"
 
 \end_inset
 
+) and observed in full detail (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:elaborate-example"
+
+\end_inset
+
 ), this translates to many simultaneous 
 \family typewriter
 GROUP BY
 \family default
  statements in SQL, which can result in a performance bottleneck.
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
 More efficient schemes to perform these calculations have been researched
  by the University of Wisconsin-Madison 
 \begin_inset CommandInset citation
@@ -3838,7 +5084,7 @@ status collapsed
 
 \begin_layout Plain Layout
 \noindent
-\align center
+\align left
 \begin_inset Caption
 
 \begin_layout Plain Layout
