@@ -230,128 +230,6 @@ LatexCommand tableofcontents
 \end_layout
 
 \begin_layout Section
-Terminology
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:Terminology"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Description
-categorical
-\begin_inset space ~
-\end_inset
-
-attributes also known as qualitative attributes; attributes without numeric
- properties: they should be treated like 
-\emph on
-symbols
-\emph default
-; subclasses of this type of attribute are nominal and ordinal attributes
-\begin_inset Newline newline
-\end_inset
-
-— based on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Intro to Data Mining"
-
-\end_inset
-
-, pages 25—27
-\end_layout
-
-\begin_layout Description
-quantitative
-\begin_inset space ~
-\end_inset
-
-attributes also known as numeric attributes; attributes that can be represented
- as numbers and have most of the properties of numbers; either integer-valued
- or continuous; subclasses of this type of attribute are interval and ratio
- attributes
-\begin_inset Newline newline
-\end_inset
-
-— based on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Intro to Data Mining"
-
-\end_inset
-
-, pages 25—27
-\end_layout
-
-\begin_layout Description
-discretization some kinds of processing data require categorical attributes;
- if these need to be applied on a continuous attribute, this continuous
- attribute may need to be transformed into a categorical attribute: this
- is called 
-\emph on
-discretization
-\emph default
-.
- Additionally, if the resulting categorical attribute has a large number
- of values (categories), it may be useful to reduce the number of categories
- by combining some of them.
-\begin_inset Newline newline
-\end_inset
-
-This is necessary for e.g.
- histograms.
-\begin_inset Newline newline
-\end_inset
-
-— based on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Intro to Data Mining"
-
-\end_inset
-
-, pages 57—63
-\end_layout
-
-\begin_layout Description
-binarization similar to discretization, but instead of transforming into
- categorical attributes, transformations into one or more binary attributes
- are made
-\begin_inset Newline newline
-\end_inset
-
-— based on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Intro to Data Mining"
-
-\end_inset
-
-, pages 57—63
-\end_layout
-
-\begin_layout Description
-DBMS a computer program that aids in controlling the creation, usage and
- maintenance of a database
-\end_layout
-
-\begin_layout Description
-RDBMS a relational DBMS that is based on the relational model, as introduced
- by Codd.
- Examples are MySQL, PostgreSQL, SQL Server, Oracle …
-\end_layout
-
-\begin_layout Standard
-\begin_inset Newpage clearpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
 Goals & Justification of Literature Study Subjects
 \begin_inset CommandInset label
 LatexCommand label
@@ -5396,7 +5274,140 @@ http://portal.acm.org/citation.cfm?id=1504102
 
 \end_inset
 
+, 
+\begin_inset Flex URL
+status collapsed
 
+\begin_layout Plain Layout
+
+http://portal.acm.org/citation.cfm?id=1646304&dl=ACM
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Glossary
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:Glossary"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Description
+categorical
+\begin_inset space ~
+\end_inset
+
+attributes also known as qualitative attributes; attributes without numeric
+ properties: they should be treated like 
+\emph on
+symbols
+\emph default
+; subclasses of this type of attribute are nominal and ordinal attributes
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 25—27
+\end_layout
+
+\begin_layout Description
+quantitative
+\begin_inset space ~
+\end_inset
+
+attributes also known as numeric attributes; attributes that can be represented
+ as numbers and have most of the properties of numbers; either integer-valued
+ or continuous; subclasses of this type of attribute are interval and ratio
+ attributes
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 25—27
+\end_layout
+
+\begin_layout Description
+discretization some kinds of processing data require categorical attributes;
+ if these need to be applied on a continuous attribute, this continuous
+ attribute may need to be transformed into a categorical attribute: this
+ is called 
+\emph on
+discretization
+\emph default
+.
+ Additionally, if the resulting categorical attribute has a large number
+ of values (categories), it may be useful to reduce the number of categories
+ by combining some of them.
+\begin_inset Newline newline
+\end_inset
+
+This is necessary for e.g.
+ histograms.
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 57—63
+\end_layout
+
+\begin_layout Description
+binarization similar to discretization, but instead of transforming into
+ categorical attributes, transformations into one or more binary attributes
+ are made
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 57—63
+\end_layout
+
+\begin_layout Description
+DBMS a computer program that aids in controlling the creation, usage and
+ maintenance of a database
+\end_layout
+
+\begin_layout Description
+RDBMS a relational DBMS that is based on the relational model, as introduced
+ by Codd.
+ Examples are MySQL, PostgreSQL, SQL Server, Oracle …
 \end_layout
 
 \begin_layout Standard
