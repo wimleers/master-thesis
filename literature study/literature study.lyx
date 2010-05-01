@@ -279,8 +279,8 @@ OLAP — short for On-Line Analytical Processing — is an approach designed
 \begin_layout Standard
 Some of the terminology and capabilities of OLAP systems can be found in
  today's spreadsheet applications, so it's in fact very likely that you're
- already familiar with OLAP principles! OLAP systems are designed to make
- interactive analysis of (multidimensional) data possible and typically
+ already (unwittingly) familiar with OLAP principles! OLAP systems are designed
+ to make interactive analysis of (multidimensional) data possible and typically
  provide extensive visualization and summarization capabilities.
 \end_layout
 
@@ -300,82 +300,41 @@ The starting point typically is a
 \emph on
 fact table
 \emph default
-: a tabular representation of the data.
- To represent this input data as a multidimensional array, two steps are
- necessary:
-\end_layout
-
-\begin_layout Enumerate
-identification of the dimensions (or 
-\emph on
-functional attributes
-\emph default
-); these must be 
-\emph on
-categorical attributes
-\end_layout
-
-\begin_layout Enumerate
-identification of the attribute that will be analyzed (the 
-\emph on
-measure attribute
-\emph default
-) — this attribute is called the 
-\emph on
-target quantity
-\emph default
-; this must be a 
-\emph on
-quantitative attribute
+: a tabular representation of the data set.
 \end_layout
 
 \begin_layout Standard
-The dimensions are categorical attributes, or continuous attributes that
- have been converted to categorical attributes.
- The range of different values of an attribute serve as the indices of the
- dimension corresponding to that attribute; the size of this dimension is
- equal to the number of different values for this attribute.
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Subsubsection*
+The Iris data set
 \end_layout
 
-\begin_layout Standard
-Each combination of attribute values (one for each attribute) defines a
- cell in the multidimensional array; each cell contains the value of the
- target quantity.
- The target attribute is a 
-\emph on
-quantitative
-\emph default
- attribute because typically the goal is to look at aggregate 
-\emph on
-quantities
-\emph default
- (total, average, minimum, maximum, standard deviation …; the list can go
- on endlessly when adding domain-specific functions for physics, financial
- analysis, etc.).
-\end_layout
-
-\begin_layout Subsection
-Data Cube
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:OLAP:data-cube"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Before going into details about the data cube, let's start with an example
- — it will immediately be clear how a data cube can be used.
- In table 
+\begin_layout Plain Layout
+In table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:datacube-iris-example"
 
 \end_inset
 
-, a table representation of the multidimensional 
+, a 
+\emph on
+fact table
+\emph default
+ of the multidimensional 
 \begin_inset Quotes eld
 \end_inset
 
@@ -401,24 +360,80 @@ key "Iris data set source"
 
 \end_inset
 
- can be found, albeit with two attributes omitted: sepal length and sepal
- width.
+ can be found.
+ It has been simplified
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Two attributes have been omitted: sepal length and sepal width.
 \end_layout
 
-\begin_layout Standard
-For each of the three types of Irises that have been reviewed (Setosa, Versicolo
-ur and Virginica), the petal length and petal width were analyzed.
+\end_inset
+
+ to serve as a simple, easy-to-grasp example that will be used throughout
+ the OLAP section to demonstrate data transformations and manipulations.
+\end_layout
+
+\begin_layout Plain Layout
+For each of the 3 types of Irises that have been reviewed (Setosa, Versicolour
+ and Virginica), the petal length and petal width have been analyzed.
  The lengths and widths that were found have then been marked
 \begin_inset Foot
 status collapsed
 
 \begin_layout Plain Layout
-More accurately, the numeric (continuous) attributes petal length and petal
- width have been 
+More accurately, the continuous attributes petal length and petal width
+ have been 
 \emph on
 discretized
 \emph default
 .
+ They were numbers in the range 
+\begin_inset Formula $[0,\infty[$
+\end_inset
+
+ with a unit of 
+\emph on
+centimers
+\emph default
+ that have been discretized to the intervals 
+\begin_inset Formula $[0,0.75]$
+\end_inset
+
+, 
+\begin_inset Formula $[0.75,1.75]$
+\end_inset
+
+ and 
+\begin_inset Formula $[1.75,\infty[$
+\end_inset
+
+ for 
+\begin_inset Quotes eld
+\end_inset
+
+low
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+medium
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+high
+\begin_inset Quotes erd
+\end_inset
+
+, respectively.
 \end_layout
 
 \end_inset
@@ -451,26 +466,35 @@ high
  50 flowers of each species were analyzed.
  For each combination of petal length, petal width and species type, a count
  has been kept.
- This is what can be found in table 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "tab:datacube-iris-example"
-
-\end_inset
-
-.
 \begin_inset Newline newline
 \end_inset
 
-As you can see, this table is visually separated in three parts, one for
- each species.
- And since 50 flowers of each species were analyzed, each of these parts'
- counts sums up to a total of 50.
+The table is visually separated in three parts, one for each species (thus
+ each of these parts' counts sums up to a total of 50).
+\end_layout
+
+\begin_layout Plain Layout
+In the remainder of this section, you will often see boxes much like this
+ one (with a double frame).
+ Each of those apply the explanations in the preceding piece of text to
+ the Iris data set.
+ This should help the reader in gaining a deeper understanding much faster.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the remainder of this section, you will often see this boxes much like
+ this one (with a double frame).
+ Each of those apply the preceding piece of text to the Iris data set.
+ This should help the reader in gaining a deeper understanding much faster.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float table
-placement H
 wide false
 sideways false
 status collapsed
@@ -1590,12 +1614,219 @@ name "tab:datacube-iris-example"
 
 \end_layout
 
+\begin_layout Subsubsection
+Representation as a multidimensional array
+\end_layout
+
 \begin_layout Standard
+To represent this input data as a multidimensional array, two steps are
+ necessary:
+\end_layout
+
+\begin_layout Enumerate
+identification of the dimensions (or 
+\emph on
+functional attributes
+\emph default
+); these must be 
+\emph on
+categorical attributes
+\emph default
+
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Obviously, any attribute can be transformed into a categorical attribute
+ by means of discretization.
+ This is also what has been done for the example: the petal length and petal
+ width examples have been discretized.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+identification of the attribute that is the focus of the analysis (the 
+\emph on
+measure attribute
+\emph default
+) — this attribute is called the 
+\emph on
+target quantity
+\emph default
+; this must be a 
+\emph on
+quantitative attribute
+\end_layout
+
+\begin_layout Standard
+Note that it is possible to have multiple target quantities (i.e.
+ analyze multiple quantitative attributes simultaneously).
+ However, to keep the reasoning straightforward, we will impose a limit
+ of a single target quantity.
+\begin_inset Newline newline
+\end_inset
+
+One could simply analyze each target quantity separately, or apply an arbitrary
+ formula to combine multiple quantitative attributes into a single target
+ quantity.
+\end_layout
+
+\begin_layout Standard
+The dimensions are categorical attributes.
+ The values of an attribute serve as the indices into the array for the
+ dimension corresponding to that attribute; the size of this dimension is
+ equal to the number of different values for this attribute.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Subsubsection*
+Dimensions of a multidimensional array
+\end_layout
+
+\begin_layout Plain Layout
+In the case of the Iris data set (see table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:datacube-iris-example"
+
+\end_inset
+
+), there are a single quantitative attribute (count) and 3 categorical attribute
+s:
+\end_layout
+
+\begin_layout Enumerate
+petal length
+\end_layout
+
+\begin_layout Enumerate
+petal width
+\end_layout
+
+\begin_layout Enumerate
+species type
+\end_layout
+
+\begin_layout Plain Layout
+Petal length and petal width range
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+As already mentioned before, petal length and petal width originally also
+ were quantitative attributes.
+\end_layout
+
+\end_inset
+
+ over the same 3 values: 
+\begin_inset Quotes eld
+\end_inset
+
+low
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+medium
+\begin_inset Quotes erd
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+high
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Hence 3 is the size of both the petal length dimension and the petal width
+ dimension.
+\end_layout
+
+\begin_layout Plain Layout
+There are 3 different species and thus the species type dimension is also
+ of size 3.
+\end_layout
+
+\begin_layout Plain Layout
+Hence there are 
+\begin_inset Formula $3\times3\times3$
+\end_inset
+
+ indices, with 27 corresponding values.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Each combination of attribute values (one for each attribute) defines a
+ cell in the multidimensional array; each cell contains the value of the
+ target quantity.
+ The target attribute is a 
+\emph on
+quantitative
+\emph default
+ attribute because typically the goal is to look at aggregate 
+\emph on
+quantities
+\emph default
+ (total, average, minimum, maximum, standard deviation …; the list can go
+ on endlessly when adding domain-specific functions for physics, financial
+ analysis, etc.).
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status collapsed
+
+\begin_layout Subsubsection*
+Multidimensional array representation.
+\end_layout
+
+\begin_layout Plain Layout
 There are three categorical attributes: petal length, petal width and species
  type.
  There is one quantitative attribute: the corresponding count.
  Since there are three categorical attributes, this can be represented in
- a three-dimensional array: a data cube! See figure 
+ a three-dimensional array.
+ See figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:datacube-iris-example"
@@ -1603,14 +1834,36 @@ reference "fig:datacube-iris-example"
 \end_inset
 
 .
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
-Note that this is just a data cube 
+\begin_layout Plain Layout
+Note that this is 
 \emph on
-representation
+not
 \emph default
-, which is not the same as the result of the data cube 
+ a data cube: it's merely a multidimensional representation.
+ It has 3 dimensions and therefore it looks like and 
+\emph on
+is
+\emph default
+ a cube, but 
+\emph on
+not 
+\emph default
+a 
+\emph on
+data cube
+\emph default
+.
+ As long as there are no aggregates, it is not a data cube!
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+OLD STUFF: , which is not the same as the result of the data cube 
 \emph on
 operator
 \emph default
@@ -1631,7 +1884,12 @@ are
  required.
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 \begin_inset Float figure
 placement H
 wide false
@@ -1642,7 +1900,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename figures/OLAP/data cube/iris data cube.png
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/iris data cube.png
 	width 60text%
 
 \end_inset
@@ -1654,7 +1912,8 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-A data cube representation of the Iris data set.
+A multidimensional representation of the Iris data set — but not a data
+ cube!
 \begin_inset Newline newline
 \end_inset
 
@@ -1683,13 +1942,31 @@ name "fig:datacube-iris-example"
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Data Cube
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Before going into details about the data cube, let's start with an example
+ — it will immediately be clear how a data cube can be used.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -6134,7 +6411,7 @@ key "Iris data set source"
 UCI Machine Learning Repository
 \emph default
 , R.A.
- Fisher, 
+ Fisher, 1936, 
 \begin_inset Flex URL
 status collapsed
 
