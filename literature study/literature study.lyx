@@ -28,7 +28,16 @@
 \graphics default
 \paperfontsize 12
 \spacing single
-\use_hyperref false
+\use_hyperref true
+\pdf_bookmarks true
+\pdf_bookmarksnumbered false
+\pdf_bookmarksopen false
+\pdf_bookmarksopenlevel 1
+\pdf_breaklinks true
+\pdf_pdfborder true
+\pdf_colorlinks true
+\pdf_backref false
+\pdf_pdfusetitle true
 \papersize a4paper
 \use_geometry false
 \use_amsmath 1
@@ -285,7 +294,7 @@ Some of the terminology and capabilities of OLAP systems can be found in
 \end_layout
 
 \begin_layout Subsection
-Multidimensional Data
+Multidimensional Data Representation
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:OLAP:Multidimensional-Data"
@@ -293,6 +302,10 @@ name "sub:OLAP:Multidimensional-Data"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+Fact Table
 \end_layout
 
 \begin_layout Standard
@@ -316,7 +329,7 @@ width "85col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status collapsed
+status open
 
 \begin_layout Subsubsection*
 The Iris data set
@@ -334,15 +347,7 @@ reference "tab:datacube-iris-example"
 \emph on
 fact table
 \emph default
- of the multidimensional 
-\begin_inset Quotes eld
-\end_inset
-
-Iris
-\begin_inset Quotes erd
-\end_inset
-
- data set
+ of the multidimensional Iris data set
 \begin_inset Foot
 status collapsed
 
@@ -393,47 +398,19 @@ discretized
 \begin_inset Formula $[0,\infty[$
 \end_inset
 
- with a unit of 
-\emph on
-centimers
-\emph default
- that have been discretized to the intervals 
-\begin_inset Formula $[0,0.75]$
+ (in centimers) that have been discretized to the intervals 
+\begin_inset Formula $[0,0.75]\rightarrow"low"$
 \end_inset
 
 , 
-\begin_inset Formula $[0.75,1.75]$
+\begin_inset Formula $[0.75,1.75]\rightarrow"medium"$
 \end_inset
 
  and 
-\begin_inset Formula $[1.75,\infty[$
+\begin_inset Formula $[1.75,\infty[\rightarrow"high"$
 \end_inset
 
- for 
-\begin_inset Quotes eld
-\end_inset
-
-low
-\begin_inset Quotes erd
-\end_inset
-
-, 
-\begin_inset Quotes eld
-\end_inset
-
-medium
-\begin_inset Quotes erd
-\end_inset
-
- and 
-\begin_inset Quotes eld
-\end_inset
-
-high
-\begin_inset Quotes erd
-\end_inset
-
-, respectively.
+.
 \end_layout
 
 \end_inset
@@ -464,37 +441,29 @@ high
 
 .
  50 flowers of each species were analyzed.
- For each combination of petal length, petal width and species type, a count
- has been kept.
 \begin_inset Newline newline
 \end_inset
 
-The table is visually separated in three parts, one for each species (thus
- each of these parts' counts sums up to a total of 50).
+The table is split in three parts, one for each species (thus each of these
+ parts' counts sums up to a total of 50).
 \end_layout
 
 \begin_layout Plain Layout
-In the remainder of this section, you will often see boxes much like this
- one (with a double frame).
+In the remainder of this section, you will often see boxes like this one
+ (with a double frame).
  Each of those apply the explanations in the preceding piece of text to
  the Iris data set.
- This should help the reader in gaining a deeper understanding much faster.
+ This should help the reader gain a deeper understanding much faster.
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-In the remainder of this section, you will often see this boxes much like
- this one (with a double frame).
- Each of those apply the preceding piece of text to the Iris data set.
- This should help the reader in gaining a deeper understanding much faster.
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float table
+placement H
 wide false
 sideways false
 status collapsed
@@ -516,7 +485,7 @@ status collapsed
 \begin_layout Plain Layout
 
 \emph on
-Petal Length
+petal length
 \end_layout
 
 \end_inset
@@ -527,7 +496,7 @@ Petal Length
 \begin_layout Plain Layout
 
 \emph on
-Petal Width
+petal width
 \end_layout
 
 \end_inset
@@ -538,7 +507,7 @@ Petal Width
 \begin_layout Plain Layout
 
 \emph on
-Species Type
+species type
 \end_layout
 
 \end_inset
@@ -549,7 +518,7 @@ Species Type
 \begin_layout Plain Layout
 
 \emph on
-Count
+count
 \end_layout
 
 \end_inset
@@ -1615,7 +1584,17 @@ name "tab:datacube-iris-example"
 \end_layout
 
 \begin_layout Subsubsection
-Representation as a multidimensional array
+Multidimensional Array
+\end_layout
+
+\begin_layout Standard
+A key motivation for using a multidimensional viewpoint of data is the importanc
+e of aggregating data from various perspectives.
+ In sales, you might want to find totals for a specific product per year
+ and per location for example.
+ Or per day.
+ Or for all products per location.
+ Anything is possible.
 \end_layout
 
 \begin_layout Standard
@@ -1695,10 +1674,10 @@ width "85col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status collapsed
+status open
 
 \begin_layout Subsubsection*
-Dimensions of a multidimensional array
+Dimensions of a multidimensional array representation
 \end_layout
 
 \begin_layout Plain Layout
@@ -1769,10 +1748,7 @@ high
 \begin_layout Plain Layout
 There are 3 different species and thus the species type dimension is also
  of size 3.
-\end_layout
-
-\begin_layout Plain Layout
-Hence there are 
+ Hence there are 
 \begin_inset Formula $3\times3\times3$
 \end_inset
 
@@ -1814,10 +1790,10 @@ width "85col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status collapsed
+status open
 
 \begin_layout Subsubsection*
-Multidimensional array representation.
+Multidimensional array representation
 \end_layout
 
 \begin_layout Plain Layout
@@ -1829,7 +1805,7 @@ There are three categorical attributes: petal length, petal width and species
  See figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:datacube-iris-example"
+reference "fig:iris:multidimensional-representation"
 
 \end_inset
 
@@ -1855,38 +1831,26 @@ a
 data cube
 \emph default
 .
- As long as there are no aggregates, it is not a data cube!
-\end_layout
+ As long as there are no aggregates, it is not a data cube! At least in
+ OLAP context.
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Plain Layout
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-OLD STUFF: , which is not the same as the result of the data cube 
+It may be called a 
+\emph on
+data cube representation
+\emph default
+ though: it is just a way to represent a data set — no calculations are
+ required.
+ For the result of the data cube 
 \emph on
 operator
 \emph default
- (see section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:OLAP:data-cube:operator"
-
-\end_inset
-
-).
- A representation is just one particular way to represent a data set — no
- calculations are required.
- For the result of the data cube operator, calculations 
+, calculations 
 \emph on
 are
 \emph default
  required.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Plain Layout
@@ -1901,7 +1865,7 @@ status collapsed
 \align center
 \begin_inset Graphics
 	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/iris data cube.png
-	width 60text%
+	width 80text%
 
 \end_inset
 
@@ -1912,8 +1876,15 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-A multidimensional representation of the Iris data set — but not a data
- cube!
+A multidimensional 
+\emph on
+representation
+\emph default
+ of the Iris data set — but 
+\emph on
+not
+\emph default
+ a data cube!
 \begin_inset Newline newline
 \end_inset
 
@@ -1930,7 +1901,1248 @@ key "Intro to Data Mining"
 .)
 \begin_inset CommandInset label
 LatexCommand label
-name "fig:datacube-iris-example"
+name "fig:iris:multidimensional-representation"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Slicing and Dicing
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:slicing-dicing"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Slicing
+\emph default
+ and 
+\emph on
+dicing
+\emph default
+ are both very straightforward.
+ Slicing requires a specific value to be specified for one or more dimensions.
+ Dicing does not require a single specific value to be chosen, but allows
+ a 
+\emph on
+range
+\emph default
+ of attribute values to be specified.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Subsubsection*
+Slicing
+\end_layout
+
+\begin_layout Plain Layout
+In the context of the Iris data set example: the 
+\begin_inset Quotes eld
+\end_inset
+
+front
+\begin_inset Quotes erd
+\end_inset
+
+ of the multidimensional representation (figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:iris:multidimensional-representation"
+
+\end_inset
+
+) is one of the three displayed slices (table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:slice:setosa"
+
+\end_inset
+
+), the other two possible slices (tables 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:slice:versicolour"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:slice:virginica"
+
+\end_inset
+
+) are the 
+\begin_inset Quotes eld
+\end_inset
+
+deeper
+\begin_inset Quotes erd
+\end_inset
+
+ slices, when looking at the multidimensional representation from the same
+ perspective.
+\end_layout
+
+\begin_layout Quotation
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Setosa
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Setosa
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:iris:slice:setosa"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Versicolour
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+43
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Versicolour
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:iris:slice:versicolour"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Virginica
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+44
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Virginica
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:iris:slice:virginica"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Subsubsection*
+Dicing
+\end_layout
+
+\begin_layout Plain Layout
+A possible dice for the Iris data set can be seen in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:dice"
+
+\end_inset
+
+: it is a 
+\emph on
+subset
+\emph default
+ of the 
+\begin_inset Quotes eld
+\end_inset
+
+front
+\begin_inset Quotes erd
+\end_inset
+
+ of the multidimensional representation (figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:iris:multidimensional-representation"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Quotation
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Setosa
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+high
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+medium
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Setosa
+\begin_inset Quotes erd
+\end_inset
+
+ and petal length 
+\begin_inset Quotes eld
+\end_inset
+
+low
+\begin_inset Quotes erd
+\end_inset
+
+ have been selected.
+\begin_inset CommandInset label
+LatexCommand label
+name "tab:iris:dice"
 
 \end_inset
 
@@ -1966,7 +3178,20 @@ name "sub:OLAP:data-cube"
 \begin_layout Standard
 Before going into details about the data cube, let's start with an example
  — it will immediately be clear how a data cube can be used.
- 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO: draw a datacube for the Iris dataset, based on the already created
+ cross-tabulations.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1982,36 +3207,19 @@ histogram
 \end_layout
 
 \begin_layout Itemize
-cross tabulation 
-\emph on
-(
-\begin_inset Quotes eld
-\end_inset
-
-cross tab
-\begin_inset Quotes erd
-\end_inset
-
-)
+cross tabulation
 \end_layout
 
 \begin_layout Itemize
-roll-up & drill-down
+roll-up
 \end_layout
 
 \begin_layout Itemize
-sub-total
+drill-down
 \end_layout
 
 \begin_layout Subsubsection
-Constructs explained
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:OLAP:data-cube:constructs"
-
-\end_inset
-
-
+Constructs Explained
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2019,13 +3227,30 @@ Histogram
 \end_layout
 
 \begin_layout Standard
-A histogram is a graphical display of tabular frequencies, shown as adjacent
- rectangles, with each rectangle spanning a certain interval (the width,
- if you will) that corresponds to a certain frequency and the height being
- equal to the frequency density.
+A histogram is a bar chart representing a frequency distribution; heights
+ of the bars represent observed frequencies.
 \end_layout
 
-\begin_layout Quotation
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Subsubsection*
+Histogram
+\end_layout
+
+\begin_layout Plain Layout
 In figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -2061,10 +3286,10 @@ high
 \end_inset
 
 ) as they were previously.
- Instead, they were discretized in numerical ranges.
+ Instead, they were discretized into numerical ranges.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset Float figure
 placement H
 wide false
@@ -2178,7 +3403,8 @@ name "fig:sample-histograms-iris"
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
 
@@ -2192,55 +3418,95 @@ Cross tabulation
 \end_layout
 
 \begin_layout Standard
-A cross tabulation displays the joint distribution of two or more variables.
+A cross tabulation 
+\emph on
+(
+\begin_inset Quotes eld
+\end_inset
+
+cross tab
+\begin_inset Quotes erd
+\end_inset
+
+)
+\emph default
+ displays the joint distribution of two or more variables, along with the
+ marginal totals.
+ In the case of two variables, these are the row and sum totals.
+\begin_inset Newline newline
+\end_inset
+
+Note: a cross-tabulation over exactly two dimensions is also called a 
+\emph on
+pivot
+\emph default
+.
 \end_layout
 
-\begin_layout Quotation
-In the context of the Iris data set example: the 
-\begin_inset Quotes eld
-\end_inset
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
 
-front
-\begin_inset Quotes erd
-\end_inset
+\begin_layout Subsubsection*
+Cross-tabulation
+\end_layout
 
- of the data cube (figure 
+\begin_layout Plain Layout
+Cross-tabulation are slices, with added marginal totals.
+ Table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:datacube-iris-example"
+reference "tab:iris:cross-tabulation:setosa"
 
 \end_inset
 
-) is one of the three displayed cross tabulations (table 
+ is the cross-tabulation for the slice in table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:cross-tabulation:setosa"
+reference "tab:iris:slice:setosa"
 
 \end_inset
 
-), the other two cross tabulations (tables 
+, as is table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:cross-tabulation:versicolour"
+reference "tab:iris:cross-tabulation:versicolour"
 
 \end_inset
 
- and 
+ the cross-tabulation for table 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "tab:cross-tabulation:virginica"
+reference "tab:iris:slice:versicolour"
 
 \end_inset
 
-) are the other 
-\begin_inset Quotes eld
+ and table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:cross-tabulation:virginica"
+
 \end_inset
 
-slices
-\begin_inset Quotes erd
+ the cross-tabulation for the slice in table 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "tab:iris:slice:virginica"
+
 \end_inset
 
- from the same perspective.
+.
 \end_layout
 
 \begin_layout Quotation
@@ -2254,8 +3520,10 @@ status collapsed
 \noindent
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="4">
+<lyxtabular version="3" rows="6" columns="6">
 <features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -2272,11 +3540,20 @@ Setosa
 
 \end_inset
 </cell>
-<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-Width
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
 \end_layout
 
 \end_inset
@@ -2299,8 +3576,26 @@ Width
 
 \end_inset
 </cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
@@ -2328,7 +3623,7 @@ medium
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2337,8 +3632,28 @@ low
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2366,6 +3681,15 @@ high
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -2377,6 +3701,15 @@ high
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2404,6 +3737,15 @@ medium
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -2415,11 +3757,78 @@ medium
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
 low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+48
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
 \end_layout
 
 \end_inset
@@ -2442,11 +3851,20 @@ low
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+48
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-46
+50
 \end_layout
 
 \end_inset
@@ -2463,11 +3881,18 @@ low
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross tabulation of flowers according to petal length and width for flowers
- of the Setosa species.
+Cross-tabulation of the slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Setosa
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:cross-tabulation:setosa"
+name "tab:iris:cross-tabulation:setosa"
 
 \end_inset
 
@@ -2492,8 +3917,10 @@ status collapsed
 \noindent
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="4">
+<lyxtabular version="3" rows="6" columns="6">
 <features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -2510,11 +3937,29 @@ Versicolour
 
 \end_inset
 </cell>
-<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-Width
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
@@ -2539,6 +3984,15 @@ Width
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
@@ -2566,7 +4020,7 @@ medium
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2575,8 +4029,28 @@ low
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2604,7 +4078,7 @@ high
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2613,8 +4087,26 @@ high
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2642,6 +4134,71 @@ medium
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+46
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -2653,11 +4210,11 @@ medium
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-low
+
 \end_layout
 
 \end_inset
@@ -2666,7 +4223,27 @@ low
 \begin_inset Text
 
 \begin_layout Plain Layout
-0
+
+\emph on
+total
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+45
 \end_layout
 
 \end_inset
@@ -2684,7 +4261,7 @@ low
 \begin_inset Text
 
 \begin_layout Plain Layout
-0
+50
 \end_layout
 
 \end_inset
@@ -2701,11 +4278,18 @@ low
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross tabulation of flowers according to petal length and width for flowers
- of the Versicolour species.
+Cross-tabulation of the slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Versicolour
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:cross-tabulation:versicolour"
+name "tab:iris:cross-tabulation:versicolour"
 
 \end_inset
 
@@ -2730,8 +4314,10 @@ status collapsed
 \noindent
 \align center
 \begin_inset Tabular
-<lyxtabular version="3" rows="5" columns="4">
+<lyxtabular version="3" rows="6" columns="6">
 <features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -2748,11 +4334,20 @@ Virginica
 
 \end_inset
 </cell>
-<cell multicolumn="1" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-Width
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal width
 \end_layout
 
 \end_inset
@@ -2775,8 +4370,26 @@ Width
 
 \end_inset
 </cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" bottomline="true" usebox="none">
 \begin_inset Text
 
@@ -2804,7 +4417,7 @@ medium
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2813,8 +4426,28 @@ low
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2842,7 +4475,7 @@ high
 
 \end_inset
 </cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -2851,8 +4484,26 @@ high
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+47
+\end_layout
+
+\end_inset
+</cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+petal length
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -2880,6 +4531,71 @@ medium
 
 \end_inset
 </cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+low
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
@@ -2891,11 +4607,11 @@ medium
 </cell>
 </row>
 <row>
-<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+<cell alignment="center" valignment="top" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
-low
+
 \end_layout
 
 \end_inset
@@ -2904,7 +4620,27 @@ low
 \begin_inset Text
 
 \begin_layout Plain Layout
-0
+
+\emph on
+total
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+47
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
 \end_layout
 
 \end_inset
@@ -2922,7 +4658,7 @@ low
 \begin_inset Text
 
 \begin_layout Plain Layout
-0
+50
 \end_layout
 
 \end_inset
@@ -2939,11 +4675,23 @@ low
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross tabulation of flowers according to petal length and width for flowers
- of the Virginica species.
+Cross-tabulation of the slice where the species 
+\begin_inset Quotes eld
+\end_inset
+
+Virginica
+\begin_inset Quotes erd
+\end_inset
+
+ has been selected.
 \begin_inset CommandInset label
 LatexCommand label
-name "tab:cross-tabulation:virginica"
+name "tab:iris:cross-tabulation:virginica"
+
+\end_inset
+
+
+\end_layout
 
 \end_inset
 
@@ -2970,9 +4718,40 @@ A roll-up is the aggregation of values
 within
 \emph default
  a dimension — not across an entire dimension!
+\begin_inset Newline newline
+\end_inset
+
+Note: this requires that the attribute that is being rolled up can be considered
+ hierarchical in some sense, i.e., that it can be viewed with different levels
+ of granularity.
 \end_layout
 
-\begin_layout Quote
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Subsubsection*
+Roll-up
+\end_layout
+
+\begin_layout Plain Layout
+Since the Iris data set does not contain any hierarchical data, we cannot
+ apply roll-up to it.
+ So, another example is presented.
+\end_layout
+
+\begin_layout Plain Layout
 For example, given sales data with entries for each date, we can 
 \emph on
 roll up
@@ -2981,6 +4760,11 @@ roll up
  sales totals.
  This is aggregation within a dimension; aggregation across a dimension
  would have given us the total of all sales ever recorded.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection*
@@ -3006,147 +4790,53 @@ at a lower level
 \end_inset
 
 .
+\begin_inset Newline newline
+\end_inset
+
+Note: this requires that the attribute that is being rolled up can be considered
+ hierarchical in some sense, i.e., that it can be viewed with different levels
+ of granularity.
 \end_layout
 
-\begin_layout Quote
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Subsubsection*
+Drill-down
+\end_layout
+
+\begin_layout Plain Layout
+Since the Iris data set does not contain any hierarchical data, we cannot
+ apply drill-down to it.
+ So, another example is presented.
+\end_layout
+
+\begin_layout Plain Layout
 Continuing on the example for roll-up, a drill-down would for example split
  monthly sales totals into daily sales totals.
  For such drill-downs to be possible, it is of course a necessity that the
  underlying data is sufficiently granular.
 \end_layout
 
-\begin_layout Subsubsection
-Problems with 
-\family typewriter
-GROUP BY
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:OLAP:data-cube:problems"
-
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Typically, data is stored in an RDBMS.
- To calculate the above constructs, the 
-\family typewriter
-GROUP BY
-\family default
- operator is necessary.
- This operator partitions the relation into disjoint tuple sets (based on
- one or more attributes that are common amongst the tuples in each tuple
- set) and then aggregates over each set.
- In other words, using the 
-\family typewriter
-GROUP BY
-\family default
- construct allows a table to be crated of many aggregate values, 
-\emph on
-indexed by a set of attributes
-\emph default
-.
-\end_layout
-
-\begin_layout Standard
-However, there are some problems with using the 
-\family typewriter
-GROUP BY
-\family default
- operator 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Data Cube"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout List
-\labelwidthstring 00.00.0000
-histogram The standard SQL 
-\family typewriter
-GROUP BY
-\family default
- operator does not allow for a direct construction of histograms (aggregation
- over computed categories), because it does now allow functions to be used
- in the 
-\family typewriter
-GROUP BY
-\family default
- clause
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-Not in SQL-92, which was available at the time of writing 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Data Cube"
-
-\end_inset
-
- (SQL3 was in development at the time of writing 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Data Cube"
-
-\end_inset
-
- and was to later become the SQL:1999 standard) and still not in SQL:2008
- 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "SQL:2008"
-
-\end_inset
-
-, which is the latest SQL standard at the time of writing this text.
-\end_layout
-
-\end_inset
-
-.
-\end_layout
-
-\begin_layout List
-\labelwidthstring 00.00.0000
-roll-up To calculate a roll-up over 
-\begin_inset Formula $n$
-\end_inset
-
- dimensions requires 
-\begin_inset Formula $n$
-\end_inset
-
- unions.
-\end_layout
-
-\begin_layout List
-\labelwidthstring 00.00.0000
-cross
-\begin_inset space ~
-\end_inset
-
-tab Roll-ups are asymmetric, cross tabulations are symmetric and require
- even more unions: 
-\begin_inset Formula $2^{n}$
-\end_inset
-
- unions!
 \end_layout
 
 \begin_layout Subsubsection
-The Data CUBE Operator
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:OLAP:data-cube:operator"
-
-\end_inset
-
-
+Generalization explained
 \end_layout
 
 \begin_layout Standard
@@ -3166,7 +4856,7 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -3326,14 +5016,14 @@ To ensure that you understand this, the following illustration makes it
 placement H
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
 \align center
 \begin_inset Graphics
 	filename figures/OLAP/data cube/data cube generalization.png
-	scale 60
+	width 70text%
 
 \end_inset
 
@@ -3370,6 +5060,140 @@ key "Data Cube"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+The Data CUBE Operator
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:operator"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+needs work
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Typically, data is stored in an RDBMS.
+ To calculate the above constructs, the 
+\family typewriter
+GROUP BY
+\family default
+ operator is necessary.
+ This operator partitions the relation into disjoint tuple sets (based on
+ one or more attributes that are common amongst the tuples in each tuple
+ set) and then aggregates over each set.
+ In other words, using the 
+\family typewriter
+GROUP BY
+\family default
+ construct allows a table to be created of many aggregate values, 
+\emph on
+indexed by a set of attributes
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+However, there are some problems with using the 
+\family typewriter
+GROUP BY
+\family default
+ operator 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+histogram The standard SQL 
+\family typewriter
+GROUP BY
+\family default
+ operator does not allow for a direct construction of histograms (aggregation
+ over computed categories), because it does now allow functions to be used
+ in the 
+\family typewriter
+GROUP BY
+\family default
+ clause
+\begin_inset Foot
+status collapsed
+
+\begin_layout Plain Layout
+Not in SQL-92, which was available at the time of writing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+ (SQL3 was in development at the time of writing 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cube"
+
+\end_inset
+
+ and was to later become the SQL:1999 standard) and still not in SQL:2008
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "SQL:2008"
+
+\end_inset
+
+, which is the latest SQL standard at the time of writing this text.
+\end_layout
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+roll-up To calculate a roll-up over 
+\begin_inset Formula $n$
+\end_inset
+
+ dimensions requires 
+\begin_inset Formula $n$
+\end_inset
+
+ unions.
+\end_layout
+
+\begin_layout List
+\labelwidthstring 00.00.0000
+cross
+\begin_inset space ~
+\end_inset
+
+tab Roll-ups are asymmetric, cross tabulations are symmetric and require
+ even more unions: 
+\begin_inset Formula $2^{n}$
+\end_inset
+
+ unions!
 \end_layout
 
 \begin_layout Standard
@@ -5060,40 +6884,6 @@ rward implementation is likely unable to attain the desired performance;
  impact can be tremendous.
  And, while complex, attempts to minimize overlapping computations can also
  help significantly.
-\end_layout
-
-\begin_layout Subsection
-Other OLAP Operations
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:OLAP:other-ops"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Other (simple, yet important) OLAP-related techniques are pivoting, slicing
- and dicing.
- In this section, they're explained very briefly.
-\end_layout
-
-\begin_layout Standard
-Pivoting refers to aggregating over all dimensions except two.
- A two-dimensional cross tabulation is the result, with the two chosen dimension
-s as the only remaining dimensions.
-\end_layout
-
-\begin_layout Standard
-Slicing and dicing are both very straightforward.
- Slicing requires a specific value to be specified for one or more dimensions.
- Dicing does not require a single specific value to be chosen, but allows
- a 
-\emph on
-range
-\emph default
- of attribute values to be specified.
 \end_layout
 
 \begin_layout Subsection
