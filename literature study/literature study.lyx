@@ -3459,11 +3459,11 @@ height_special "totalheight"
 status open
 
 \begin_layout Subsubsection*
-Cross-tabulation
+Cross tabulation
 \end_layout
 
 \begin_layout Plain Layout
-Cross-tabulation are slices, with added marginal totals.
+Cross tabulation are slices, with added marginal totals.
  Table 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -3485,7 +3485,7 @@ reference "tab:iris:cross-tabulation:versicolour"
 
 \end_inset
 
- the cross-tabulation for table 
+ the cross tabulation for table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:iris:slice:versicolour"
@@ -3499,7 +3499,7 @@ reference "tab:iris:cross-tabulation:virginica"
 
 \end_inset
 
- the cross-tabulation for the slice in table 
+ the cross tabulation for the slice in table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:iris:slice:virginica"
@@ -3881,7 +3881,7 @@ total
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross-tabulation of the slice where the species 
+Cross tabulation of the slice where the species 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4278,7 +4278,7 @@ total
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross-tabulation of the slice where the species 
+Cross tabulation of the slice where the species 
 \begin_inset Quotes eld
 \end_inset
 
@@ -4675,7 +4675,7 @@ total
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Cross-tabulation of the slice where the species 
+Cross tabulation of the slice where the species 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5016,7 +5016,7 @@ To ensure that you understand this, the following illustration makes it
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -5074,19 +5074,6 @@ name "sub:OLAP:data-cube:operator"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-needs work
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 Typically, data is stored in an RDBMS.
  To calculate the above constructs, the 
 \family typewriter
@@ -5119,18 +5106,24 @@ key "Data Cube"
 
 \end_inset
 
-:
+.
 \end_layout
 
-\begin_layout List
-\labelwidthstring 00.00.0000
-histogram The standard SQL 
+\begin_layout Subsubsection*
+Histogram
+\end_layout
+
+\begin_layout Standard
+The standard SQL 
 \family typewriter
 GROUP BY
 \family default
- operator does not allow for a direct construction of histograms (aggregation
- over computed categories), because it does now allow functions to be used
- in the 
+ operator does not allow for 
+\emph on
+easy
+\emph default
+ construction of histograms (aggregation over computed categories), because
+ it does not allow functions to be used in the 
 \family typewriter
 GROUP BY
 \family default
@@ -5167,11 +5160,136 @@ key "SQL:2008"
 \end_inset
 
 .
+ 
 \end_layout
 
-\begin_layout List
-\labelwidthstring 00.00.0000
-roll-up To calculate a roll-up over 
+\begin_layout Standard
+But that doesn't mean it can't be expressed at all: SQL is Turing complete
+ and therefore it can be expressed.
+ It just can't be expressed very 
+\emph on
+elegantly
+\emph default
+ or succinctly.
+ A SQL statement of the type 
+\family typewriter
+GROUP BY F()
+\family default
+ is disallowed, but one can still achieve a group by on a function by applying
+ the function in a subquery and performing the group by over the result.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+For example, it is desirable to be able to write:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+SELECT		avgPetalLength, SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM		Iris
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY	AVG(PetalLength) AS avgPetalLength,
+\end_layout
+
+\begin_layout Plain Layout
+
+			SpeciesType
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+But instead, we're forced to use a subquery:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset listings
+lstparams "language=SQL,tabsize=4"
+inline false
+status open
+
+\begin_layout Plain Layout
+
+SELECT		avgPetalLength, SpeciesType
+\end_layout
+
+\begin_layout Plain Layout
+
+FROM		(SELECT AVG(PetalLength)
+\end_layout
+
+\begin_layout Plain Layout
+
+						AS avgPetalLength,
+\end_layout
+
+\begin_layout Plain Layout
+
+					Speciestype
+\end_layout
+
+\begin_layout Plain Layout
+
+			FROM Iris) AS sub
+\end_layout
+
+\begin_layout Plain Layout
+
+GROUP BY	avgPetalLength,
+\end_layout
+
+\begin_layout Plain Layout
+
+			SpeciesType
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Roll-up & drill-down
+\end_layout
+
+\begin_layout Standard
+To calculate a roll-up over 
 \begin_inset Formula $n$
 \end_inset
 
@@ -5179,21 +5297,1013 @@ roll-up To calculate a roll-up over
 \begin_inset Formula $n$
 \end_inset
 
- unions.
-\end_layout
-
-\begin_layout List
-\labelwidthstring 00.00.0000
-cross
-\begin_inset space ~
+ unions: 
+\begin_inset Formula $n$
 \end_inset
 
-tab Roll-ups are asymmetric, cross tabulations are symmetric and require
- even more unions: 
+ group by SQL statements need to be unioned together — 1 per dimension that
+ is being rolled up.
+\end_layout
+
+\begin_layout Standard
+The drill-down case is analogous to that for roll-up.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+Since the Iris data set does not contain any hierarchical data, we cannot
+ apply drill-down to it.
+ So, another example is presented.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Suppose car sales data is being collected in a 
+\family typewriter
+Car(Model, Year, Color, Sales)
+\family default
+ table.
+ Then it is likely that one would like to create a roll up of 
+\family typewriter
+Sales
+\family default
+ by 
+\family typewriter
+Model
+\family default
+ by 
+\family typewriter
+Year
+\family default
+ by 
+\family typewriter
+Color
+\family default
+, i.e.
+ descending down the 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+Model
+\family default
+-
+\family typewriter
+Year
+\family default
+-
+\family typewriter
+Color
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+ hierarchy, to increase granularity at each step.
+\begin_inset Newline newline
+\end_inset
+
+This would require the union of a group by on 
+\family typewriter
+Model
+\family default
+, then a group by on 
+\family typewriter
+Model
+\family default
+, 
+\family typewriter
+Year
+\family default
+ and finally a group by on 
+\family typewriter
+Model
+\family default
+, 
+\family typewriter
+Year
+\family default
+, 
+\family typewriter
+Color
+\family default
+.
+ We now have a roll-up over 3 dimensions, which required the union of 3
+ group by statements.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+The end result looks like this:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="8" columns="4">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Year
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Color
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sales
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1994
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+black
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1994
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+white
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+40
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1994
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+black
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+white
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+115
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+200
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+290
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Sample roll-up result.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Cross tabulation
+\end_layout
+
+\begin_layout Standard
+Roll-ups are asymmetric, cross tabulations are symmetric and require even
+ more unions: 
 \begin_inset Formula $2^{n}$
 \end_inset
 
  unions!
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
+This example continues on the roll-up example above.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Suppose we wanted to show the cross tabulation of the sales for a specific
+ model, with the range of values for 
+\family typewriter
+Year
+\family default
+ as columns and the range of values for 
+\family typewriter
+Color
+\family default
+ as the rows.
+ Then we can reuse the results for the roll-up example.
+ But for roll-up, we didn't aggregate sales by color — this is why roll-up
+ is called assymetric.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+So we lack the rows that aggregate sales by color.
+ These rows are generated by one additional unioned in group by statement,
+ and contain:
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="3" columns="4">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Model
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Year
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Color
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Sales
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+black
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+135
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+white
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+155
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Rows generated by aggregating by color.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Combined, we now have a symmetric aggregation result, from which we can
+ construct a cross tabulation:
+\end_layout
+
+\begin_layout Quotation
+\begin_inset Float table
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="5">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="1" alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Year
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell multicolumn="2" alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" bottomline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1994
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
+\emph default
+ (
+\family typewriter
+ALL
+\family default
+)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+black
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+50
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+135
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Color
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+white
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+10
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+75
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\emph on
+total
+\emph default
+ (
+\family typewriter
+ALL
+\family default
+)
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+60
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+160
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+220
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Cross tabulation by Year and Color.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Solution: data cube operator
 \end_layout
 
 \begin_layout Standard
@@ -5277,6 +6387,16 @@ key "Data Cube"
 .
 \end_layout
 
+\begin_layout Standard
+As should be clear by now, the data cube operator was not absolutely necessary
+ in the strictest sense: anything that can be achieved with the data cube
+ operator can be achieved without it.
+ But thanks to the data cube operator, it is no longer necessary to apply
+ the same patterns repeatingly: the SQL statements become easier to read.
+ And because the exact logic behind it is now abstracted away in the SQL
+ language syntax, it paved the way for possible future optimizations.
+\end_layout
+
 \begin_layout Subsubsection
 Elaborate data cube example
 \begin_inset CommandInset label
@@ -5296,7 +6416,8 @@ reference "tab:datacube-iris-example"
 
 \end_inset
 
-), a sample query that utilizes the newly introduced data cube operator:
+), a sample query that utilizes the newly introduced data cube operator
+ is listed below:
 \end_layout
 
 \begin_layout Quotation
@@ -8397,7 +9518,8 @@ Range Queries in OLAP Data Cubes
  Megiddo; R.
  Srikant, 
 \emph on
-Proc.ACMSIGMOD
+Proc.
+ ACMSIGMOD
 \emph default
 , 1997
 \end_layout
