@@ -8314,7 +8314,13 @@ Cubing Algorithms, Storage Estimation, and Storage and Processing Alternatives
 , Prasad M.
  Deshpande; Jeffrey F.
  Naughton; Karthikeyan Ramasamy; Amit Shukla; Kristin Tufte; Yihong Zhao,
- University of Wisconsin-Madison, 1997
+ University of Wisconsin-Madison, 
+\emph on
+Bulletin of the Technical Committee on Data Engineering
+\emph default
+ Vol.
+ 20 No.
+ 1, 1997
 \end_layout
 
 \begin_layout Bibliography
@@ -8345,7 +8351,11 @@ Probabilistic Counting Algorithms for Database Applications
 \emph default
 , P.
  Flajolet; G.N.
- Martin, Journal of Computer and System Sciences, 31(2): 182-209, 1985.
+ Martin, Journal of Computer and System Sciences, 
+\emph on
+Journal of Computer and System Sciences
+\emph default
+ 31(2): 182-209, 1985.
 \end_layout
 
 \begin_layout Bibliography
@@ -8361,7 +8371,13 @@ Data Cubes in Dynamic Environments
 \emph default
 , Steven P.
  Geffner; Mirek Riedewald; Divyakant Agrawal; Amr El Abbadi, University
- of California, 1999
+ of California, 
+\emph on
+Bulletin of the Technical Committee on Data Engineering
+\emph default
+ Vol.
+ 22 No.
+ 4, 1999
 \end_layout
 
 \begin_layout Bibliography
