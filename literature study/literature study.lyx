@@ -8395,7 +8395,11 @@ Range Queries in OLAP Data Cubes
  Ho; R.
  Agrawal; N.
  Megiddo; R.
- Srikant, 1997
+ Srikant, 
+\emph on
+Proc.ACMSIGMOD
+\emph default
+, 1997
 \end_layout
 
 \begin_layout Bibliography
@@ -8412,7 +8416,12 @@ The dynamic data cube
 , S.
  Geffner; D.
  Agrawal; A.
- El Abbadi, 2000
+ El Abbadi,
+\emph on
+ Proc.
+ EDBT
+\emph default
+, 2000
 \end_layout
 
 \end_body
