@@ -3196,6 +3196,13 @@ TODO: draw a datacube for the Iris dataset, based on the already created
 
 \begin_layout Subsubsection*
 Definition
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:Definition"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -3337,6 +3344,18 @@ with
 \end_layout
 
 \begin_layout Standard
+(In the above, each 
+\family typewriter
+ALL
+\family default
+ value is in fact an alias for a set: the set of 
+\emph on
+all
+\emph default
+ values of the attribute over which an aggregate is computed.)
+\end_layout
+
+\begin_layout Standard
 Each 
 \begin_inset Formula $Q_{\mathtt{S}}$
 \end_inset
@@ -3360,7 +3379,7 @@ Each
 \begin_inset Formula $2^{n}$
 \end_inset
 
-subsets 
+ subsets 
 \begin_inset Formula $\mathtt{S}$
 \end_inset
 
@@ -3369,6 +3388,32 @@ subsets
 \end_inset
 
  aggregation attributes).
+\end_layout
+
+\begin_layout Standard
+If the cardinality of the 
+\begin_inset Formula $n$
+\end_inset
+
+ attributes are 
+\begin_inset Formula $C_{1},C_{2},\text{…},C_{n}$
+\end_inset
+
+ (i.e.
+ 
+\begin_inset Formula $cardinality(\mathtt{A_{i}})=C_{i}$
+\end_inset
+
+), then the cardinality of the resulting cube relation is 
+\begin_inset Formula $\prod(C_{i}+1)$
+\end_inset
+
+.
+ The extra value in each attribute domain is the 
+\family typewriter
+ALL
+\family default
+ value, which represents the set of values over which the aggregate is computed.
 \end_layout
 
 \begin_layout Subsubsection
@@ -6684,64 +6729,25 @@ GROUP BY PetalLength,
 \end_layout
 
 \begin_layout Standard
-The semantics of the 
-\family typewriter
-CUBE
-\family default
- operator are that it first aggregates over all the attributes in the 
-\family typewriter
-<select list>
-\family default
-, as is the case in a standard 
-\family typewriter
-GROUP BY
-\family default
+For the semantics behind this query, see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:Definition"
+
+\end_inset
+
 .
- Then, it 
-\family typewriter
-UNION
-\family default
-s in each super-aggregate of the global cube — substituting 
-\family typewriter
-ALL
-\family default
- for the aggregation columns.
- If there are 
-\begin_inset Formula $N$
-\end_inset
-
- attributes in the select list, there will be 
-\begin_inset Formula $2^{n}-1$
-\end_inset
-
- super-aggregate values and thus a total of 
-\begin_inset Formula $2^{n}$
-\end_inset
-
-
-\family typewriter
- UNION
-\family default
-ed 
-\family typewriter
-GROUP BY
-\family default
- queries: a standard 
-\family typewriter
-GROUP BY
-\family default
- query, and 
-\begin_inset Formula $2^{n}-1$
-\end_inset
-
- 
-\family typewriter
-UNION
-\family default
-ed in super-aggregate queries.
 \end_layout
 
 \begin_layout Standard
+It might be helpful to give you a deeper understanding of 
+\family typewriter
+ALL
+\family default
+ values, in the context of this example.
+\begin_inset Newline newline
+\end_inset
+
 Each 
 \family typewriter
 ALL
@@ -6811,27 +6817,6 @@ ALL
 ALL
 \family default
  string really is just for display.
-\end_layout
-
-\begin_layout Standard
-If the cardinality of the 
-\begin_inset Formula $n$
-\end_inset
-
- attributes are 
-\begin_inset Formula $C_{1},C_{2},\text{…},C_{n}$
-\end_inset
-
-, then the cardinality of the resulting cube relation is 
-\begin_inset Formula $\prod(C_{i}+1)$
-\end_inset
-
-.
- The extra value in each attribute domain is 
-\family typewriter
-ALL
-\family default
-.
 \end_layout
 
 \begin_layout Subsubsection*
