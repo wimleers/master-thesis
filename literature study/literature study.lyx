@@ -1868,7 +1868,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/iris data cube.png
+	filename figures/OLAP/data cube/iris dataset data cube representation.png
 	width 80text%
 
 \end_inset
@@ -1922,6 +1922,13 @@ name "fig:iris:multidimensional-representation"
 
 \end_layout
 
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
 \end_inset
 
 
@@ -3168,6 +3175,13 @@ name "tab:iris:dice"
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Data Cube
 \begin_inset CommandInset label
@@ -3185,12 +3199,36 @@ Before going into details about the data cube, let's start with an example
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
+\begin_inset Float figure
+placement H
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-TODO: draw a datacube for the Iris dataset, based on the already created
- cross-tabulations.
+\begin_inset Graphics
+	filename figures/OLAP/data cube/annotated data cube.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Annotated data cube.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
 \end_layout
 
 \end_inset
