@@ -10673,7 +10673,14 @@ overlay boxes
 \begin_inset Formula $k^{d}$
 \end_inset
 
- cells.
+ cells, with 
+\begin_inset Formula $d$
+\end_inset
+
+ the number of dimensions.
+ The explanations below are for the 2D case, because that's easier to explain
+ and visualize, but the same techniques can be applied to arrays of any
+ number of dimensions.
 \end_layout
 
 \begin_layout Standard
@@ -10726,7 +10733,7 @@ preceding
 \begin_inset Quotes eld
 \end_inset
 
-preciding
+preceding
 \begin_inset Quotes erd
 \end_inset
 
@@ -10736,12 +10743,51 @@ preciding
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
+In the two-dimensional example in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:OLAP:data-cube:relative-prefix-sum:overlay-calculation"
+
+\end_inset
+
+, the cells in the top row and leftmost column contain the sums of the values
+ in the corresponding shaded cells: those overlay cells aggregate the correspond
+ing shaded cells.
+ The other, empty cells in the overlay array are not needed and would therefore
+ not be stored in an actual implementation.
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/OLAP/data cube/relative prefix sum overlay calculation.png
+	width 100text%
+
+\end_inset
+
 
 \end_layout
 
@@ -10749,7 +10795,32 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Calculation of overlay values as the sum of the cells in the shaded areas.
+Calculation of overlay array values as the sum of the cells in the shaded
+ cells.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Data Cubes in Dynamic Environments"
+
+\end_inset
+
+.)
+\size default
+\emph default
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:OLAP:data-cube:relative-prefix-sum:overlay-calculation"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -10757,7 +10828,8 @@ Calculation of overlay values as the sum of the cells in the shaded areas.
 
 \end_layout
 
-\begin_layout Plain Layout
+\end_inset
+
 
 \end_layout
 
@@ -10767,20 +10839,106 @@ Calculation of overlay values as the sum of the cells in the shaded areas.
 \end_layout
 
 \begin_layout Standard
-The overlay array 
+More formally, the overlay array 
 \begin_inset Formula $OL$
 \end_inset
 
- is defined as follows:
+ for the overlay box 
+\begin_inset Formula $B$
+\end_inset
+
+, anchored at (i.e.
+ with its anchor cell at) 
+\begin_inset Formula $(b_{1},\text{…},b_{d})$
+\end_inset
+
+ aggregates 
+\begin_inset Formula $k^{d}$
+\end_inset
+
+ overlay cells 
+\begin_inset Formula $O=(o_{1},\text{…},o_{i},\text{…},o_{d})$
+\end_inset
+
+, which are those cells that satisfy for each dimension 
+\begin_inset Formula $i$
+\end_inset
+
+: 
+\begin_inset Formula $b_{i}\leq o_{i}\leq b_{i}+k$
+\end_inset
+
+, namely all cells in the overlay box 
+\begin_inset Formula $B$
+\end_inset
+
+.
+ Of those cells, only 
+\begin_inset Formula $k^{d}-(k-1)^{d}$
+\end_inset
+
+ are used, namely those in the top row and the leftmost column.
+ Then each cell in the overlay array is defined as follows:
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula \[
-OL[i,j]=\sum_{0\leq k\leq i;\,0\leq l\leq j}A[k,l]\]
+\begin_inset Formula \begin{eqnarray*}
+OL[o_{1},\text{…},o_{d}] & = & (\sum_{a_{1}=l_{1}}^{u_{1}}\text{…}\sum_{a_{d}=l_{d}}^{u_{d}}A[a_{1},\text{…},a_{d}])\\
+ &  & -(\sum_{a_{1}=m_{1}}^{v_{1}}\text{…}\sum_{a_{d}=m_{d}}^{v_{d}}A[a_{1},\text{…},a_{d}])\end{eqnarray*}
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+with for all dimensions 
+\begin_inset Formula $i$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+if 
+\begin_inset Formula $o_{i}=b_{i}$
+\end_inset
+
+: 
+\begin_inset Formula $\begin{cases}
+l_{i}=0\\
+u_{i}=b_{i}\\
+m_{i}=b_{i}\\
+v_{i}=b_{i}\end{cases}$
+\end_inset
+
+, and if 
+\begin_inset Formula $o_{i}>b_{i}$
+\end_inset
+
+: 
+\begin_inset Formula $\begin{cases}
+l_{i}=b_{i}+1\\
+u_{i}=o_{i}\\
+m_{i}=b_{i}+1\\
+v_{i}=o_{i}\end{cases}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Formula $o_{i}=b_{i}$
+\end_inset
+
+ case calculates the value for the anchor cell.
+ The 
+\begin_inset Formula $o_{i}>b_{i}$
+\end_inset
+
+ case calculates the other cells with values: those in the top row and the
+ leftmost column.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -10796,7 +10954,42 @@ The relative-prefix array (
 \emph on
 within
 \emph default
- that overlay box.
+ each overlay box.
+ Each region in 
+\begin_inset Formula $RP$
+\end_inset
+
+ contains prefix sums that are relative to the 
+\end_layout
+
+\begin_layout Standard
+More formally, the relative-prefix array 
+\begin_inset Formula $RP$
+\end_inset
+
+ for the overlay box 
+\begin_inset Formula $B$
+\end_inset
+
+, anchored at (i.e.
+ with its anchor cell at) 
+\begin_inset Formula $(b_{1},\text{…},b_{d})$
+\end_inset
+
+ , each cell in the relative-prefix array is defined as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+RP[i_{1},\text{…},i_{d}]=\sum_{a_{1}=b_{1}}^{b_{1}+k}\text{…}\sum_{a_{d}=b_{d}}^{b_{d}+k}A[a_{1},\text{…},a_{d}]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Combining the overlay array and relative-prefix arrays
 \end_layout
 
 \begin_layout Standard
@@ -10890,32 +11083,79 @@ height_special "totalheight"
 status open
 
 \begin_layout Plain Layout
-For example, to calculate 
-\begin_inset Formula $SUM(A[0,0]:A[7,7])$
+To calculate 
+\begin_inset Formula $SUM(A[0,0]:A[8,7])$
 \end_inset
 
 , we must add 
 \begin_inset Formula $OL[6,6]$
 \end_inset
 
-, 
+ (the anchor cell), 
+\begin_inset Formula $OL[8,6]$
+\end_inset
+
+ (because our target cell is in column 8 and the anchor cell was in column
+ 6, we need the value in the overlay array for column 8 as well), 
 \begin_inset Formula $OL[6,7]$
 \end_inset
 
-, 
-\begin_inset Formula $OL[7,6]$
+ (analogously to the explanation for 
+\begin_inset Formula $OL[8,6]$
 \end_inset
 
- and 
-\begin_inset Formula $RP[7,7]$
+) and 
+\begin_inset Formula $RP[8,7]$
 \end_inset
 
-.
+ (since that's our target cell).
  The result is 
-\begin_inset Formula $179+14+20+16=229$
+\begin_inset Formula $179+40+14+23=256$
 \end_inset
 
 .
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+Other examples: 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula \begin{eqnarray*}
+SUM(A[0,0]:A[4,0]) & = & OL[3,0]+OL[4,0]+RP[4,0]\\
+ & = & 9+0+4=13\end{eqnarray*}
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula \begin{eqnarray*}
+SUM(A[0,0]:A[3,5]) & = & OL[3,3]+OL[3,5]+RP[3,5]\\
+ & = & 46+15+14=75\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Formula \begin{eqnarray*}
+SUM(A[0,0]:A[6,3]) & = & OL[6,3]+RP[6,3]\\
+ & = & 97+2=99\end{eqnarray*}
+
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -10988,6 +11228,10 @@ name "fig:OLAP:data-cube:relative-prefix-sum-example"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection*
+Update performance
 \end_layout
 
 \begin_layout Standard
