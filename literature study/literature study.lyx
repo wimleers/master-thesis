@@ -270,7 +270,7 @@ TODO
 \end_layout
 
 \begin_layout Section
-OLAP
+OLAP: Data Cube
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:OLAP"
@@ -3236,7 +3236,7 @@ Annotated data cube.
 
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Definition
 \begin_inset CommandInset label
 LatexCommand label
@@ -3458,7 +3458,7 @@ ALL
  value, which represents the set of values over which the aggregate is computed.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Generalized constructs
 \end_layout
 
@@ -3486,7 +3486,7 @@ roll-up
 drill-down
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Histogram
 \end_layout
 
@@ -3677,7 +3677,7 @@ name "fig:sample-histograms-iris"
 
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Cross tabulation
 \end_layout
 
@@ -4972,7 +4972,7 @@ name "tab:iris:cross-tabulation:virginica"
 
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Roll-up
 \end_layout
 
@@ -5031,7 +5031,7 @@ roll up
 
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Drill-down
 \end_layout
 
@@ -5326,8 +5326,8 @@ key "Data Cube"
 
 \end_layout
 
-\begin_layout Subsubsection
-The Data CUBE Operator
+\begin_layout Subsection
+The Data Cube Operator
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:OLAP:data-cube:operator"
@@ -6701,7 +6701,7 @@ key "Data Cube"
 .
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsection
 Elaborate data cube example
 \begin_inset CommandInset label
 LatexCommand label
@@ -10045,11 +10045,11 @@ ALL
 
 \end_layout
 
-\begin_layout Subsubsection
-Implementation Challenges
+\begin_layout Subsection
+Performance
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:OLAP:data-cube:Implementation-Challenges"
+name "sub:OLAP:data-cube:performance"
 
 \end_inset
 
@@ -10115,7 +10115,7 @@ ng unneeded aggregates.
  that the increase in required storage space may be unreasonable.
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Efficient Cubing
 \end_layout
 
@@ -10184,8 +10184,15 @@ May require more detail.
 
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Precomputing for Speed: Storage Explosion
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:OLAP:data-cube:storage-explosion"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -10225,7 +10232,7 @@ width "100col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status open
+status collapsed
 
 \begin_layout Quote
 If 
@@ -10337,7 +10344,7 @@ based method is strongly dependent on the number of duplicates, and the
  of the three considered algorithms.
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 The Impact of the Data Structure
 \end_layout
 
@@ -10367,7 +10374,7 @@ cube
  efficient than cubing the table directly!
 \end_layout
 
-\begin_layout Subsubsection*
+\begin_layout Subsubsection
 Conclusion
 \end_layout
 
@@ -10384,7 +10391,7 @@ rward implementation is likely unable to attain the desired performance;
 \end_layout
 
 \begin_layout Subsection
-Updating Data Cubes
+Performance for range-sum queries and updates 
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:OLAP:data-cube:updates"
@@ -10433,12 +10440,33 @@ So, the ability to perform more frequent updates would enable other types
  get greater flexibility and 24 hour availability.
 \end_layout
 
+\begin_layout Subsubsection*
+Discussed techniques
+\end_layout
+
 \begin_layout Standard
 In the remainder of this section, three techniques are discussed: the first
  is an example of an technique that allows for fast range-sum queries that
  unfortunately can have very slow updates; the second improves upon this
  first by speeding up updates; the third makes fast data cube updates possible
  in all cases.
+\end_layout
+
+\begin_layout Standard
+All are applicable only to range-sum queries, which is a specific type of
+ query, but a very common one.
+\end_layout
+
+\begin_layout Standard
+Finally, also all of the techniques below rely on precomputation and therefore
+ section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:storage-explosion"
+
+\end_inset
+
+ should be kept into account as well.
 \end_layout
 
 \begin_layout Subsubsection
@@ -10458,6 +10486,28 @@ The essential idea of the Prefix Sum method is to precompute many prefix
  in constant time.
  The downside is a large update cost — in the worst case, an array needs
  to be rebuilt that has the same size as the data cube itself.
+\end_layout
+
+\begin_layout Standard
+One could describe the prefix array by the following (very simple) formula,
+ with 
+\begin_inset Formula $P$
+\end_inset
+
+ the prefix array and 
+\begin_inset Formula $A$
+\end_inset
+
+ the original array:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+P[i,j]=\sum_{0\leq k\leq i;\,0\leq l\leq j}A[k,l]\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
