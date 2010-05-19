@@ -11080,7 +11080,7 @@ width "85col%"
 special "none"
 height "1in"
 height_special "totalheight"
-status open
+status collapsed
 
 \begin_layout Plain Layout
 To calculate 
@@ -11426,6 +11426,10 @@ reference "sub:OLAP:data-cube:updates:prefix-sum"
 \end_inset
 
 ).
+\begin_inset Newpage clearpage
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -11471,7 +11475,7 @@ reference "fig:OLAP:data-cube:ddc-partitioning"
 \end_inset
 
 .
- Each box stores 
+ Each box stores — just like the Relative Prefix Sum method — 
 \begin_inset Formula $k^{d}-(k-1)^{d}$
 \end_inset
 
@@ -11504,6 +11508,40 @@ within
 \end_inset
 
  is the cell that contains the subtotal for that overlay box.
+\end_layout
+
+\begin_layout Standard
+Most importantly, each overlay box is 
+\emph on
+independent
+\emph default
+ from the other ones at the same level in the hierarchy.
+ This is different from the Relative Prefix Sum method, where each overlay
+ box also contains the values for the 
+\begin_inset Quotes eld
+\end_inset
+
+preceding
+\begin_inset Quotes erd
+\end_inset
+
+ regions.
+\begin_inset Newline newline
+\end_inset
+
+This also explains why the Dynamic Data Cube method uses the bottom row
+ and rightmost column: it contains the subtotal for each region.
+ Whereas the Relative Prefix Sum method uses the top row and leftmost column
+ to store totals for the 
+\begin_inset Quotes eld
+\end_inset
+
+preceding
+\begin_inset Quotes erd
+\end_inset
+
+ regions in its overlay arrays and then uses the relative-prefix array to
+ be able to calculate the other cells in that overlay box.
 \end_layout
 
 \begin_layout Standard
@@ -11582,16 +11620,23 @@ The root node of the tree contains the complete range of the array, in overlay
 \end_inset
 
 .
- Each overlay box is again divided in half.
+ Each overlay box is again divided in half (so now 
+\begin_inset Formula $k=\frac{n}{4}$
+\end_inset
+
+), and so on.
  This recursive partitioning continues until the leaf level, where 
 \begin_inset Formula $k=1$
 \end_inset
 
  and each overlay box contains a single cell.
- At that point the leaf level contains the values stored in the original
+ At that point, the leaf level contains the values stored in the original
  array.
- For a graphical explanation, see the three different levels, from root
- to leaf level, as illustrated in figure 
+\begin_inset Newline newline
+\end_inset
+
+For a graphical explanation, see the three different levels, from root to
+ leaf level, as illustrated in figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:OLAP:data-cube:ddc-levels"
@@ -11599,9 +11644,9 @@ reference "fig:OLAP:data-cube:ddc-levels"
 \end_inset
 
 .
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
 Because the overlay boxes are stored in special structures, sub-linear query
  and update times can be guaranteed.
  For two-dimensional overlays (
@@ -11795,7 +11840,8 @@ Dynamic Growth
 \begin_layout Standard
 Neither the Prefix Sum nor the Relative Prefix Sum methods carry optimizations
  to limit growth of the data cube.
- Instead, they assume that the size of each dimension is known a priori.
+ Instead, they assume that the size of each dimension is known a priori,
+ or simply that size is not an issue.
  For some cases, it's more convenient (and space efficient) to grow the
  size of the data cube dynamically, just enough to suit the size of the
  data.
@@ -11804,27 +11850,12 @@ Neither the Prefix Sum nor the Relative Prefix Sum methods carry optimizations
 \emph on
 actual
 \emph default
- different values that are taken is low (i.e.
- low 
-\emph on
-entropy
-\emph default
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-verify that this claim is correct
-\end_layout
-
-\end_inset
-
-).
+ different values that are taken is low.
 \end_layout
 
 \begin_layout Standard
 The Prefix Sum and Relative Prefix Sum methods would need to grow new rows
- (for lack of a better term in >3D; more exact: expansion in a specific
+ (for lack of a better term in >3D; more accurately: expansion in a specific
  dimension) for even a single cell in a previously non-existing area — see
  figure 
 \begin_inset CommandInset ref
