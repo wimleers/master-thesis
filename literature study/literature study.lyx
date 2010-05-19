@@ -3203,7 +3203,7 @@ Before going into details about the data cube, let's start with an example
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -10038,6 +10038,13 @@ ALL
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsubsection
 Implementation Challenges
 \begin_inset CommandInset label
@@ -10059,7 +10066,6 @@ One key demand of OLAP applications is that queries be answered quickly.
 
 Fortunately, the multidimensional data model of OLAP is structured enough
  to allow this key demand to be approached.
- So in this section, we will look deeper into that aspect.
 \end_layout
 
 \begin_layout Standard
@@ -10068,7 +10074,7 @@ If there is one key property to OLAP or multidimensional data analysis,
  As we've discussed before (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:OLAP:data-cube:problems"
+reference "sub:OLAP:data-cube:operator"
 
 \end_inset
 
@@ -10104,8 +10110,9 @@ key "Cubing Algorithms"
  of dimensions can be precomputed.
  However, it's impossible to precompute everything, and we may end up precomputi
 ng unneeded aggregates.
- And because of the hierarchical nature, it's possible that the increase
- in required storage space may be unreasonable.
+ And because of the hierarchical nature (i.e.
+ one subset of dimensions may be a subset of another subset), it's possible
+ that the increase in required storage space may be unreasonable.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -10151,7 +10158,7 @@ always
  
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:OLAP:data-cube:problems"
+reference "sub:OLAP:data-cube:operator"
 
 \end_inset
 
@@ -10263,7 +10270,8 @@ This can then be used to calculate the upper bound on the size of the cube.
 \end_inset
 
  is the product of the distinct number of values of all attributes on which
- is being grouped and 
+ is being grouped (i.e.
+ the number of all possible different combinations of values) and 
 \begin_inset Formula $r$
 \end_inset
 
@@ -10304,9 +10312,9 @@ While the first two methods are simple applications of well-known statistics
 
 A suitable 
 \emph on
-probabilistic algorithm
+probabilistic 
 \emph default
- is 
+algorithm is 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Probabilistic Counting Algos for DB apps"
@@ -10317,15 +10325,14 @@ key "Probabilistic Counting Algos for DB apps"
  estimate after a single pass through the database, using only a fixed amount
  of memory.
  Hence this algorithm is a good starting point (single pass and fixed amount
- of memory are very desirable).
+ of memory are very desirable properties).
 \end_layout
 
 \begin_layout Standard
-When comparing these three methods, the first method was only works well
- when the data is approximately uniformly distributed (no surprise there),
- the sampling-based method is strongly dependent on the number of duplicates,
- and the probabilistic method performs very well under various degrees of
- skew.
+When comparing these three methods, the first method only works well when
+ the data is approximately uniformly distributed (unsurprisingly), the sampling-
+based method is strongly dependent on the number of duplicates, and the
+ probabilistic method performs very well under various degrees of skew.
  Hence the latter provides the most reliable, accurate and predictable estimate
  of the three considered algorithms.
 \end_layout
@@ -10351,25 +10358,13 @@ key "Cubing Algorithms"
 \end_inset
 
 , they found that it was surprisingly efficient to take the data set from
- a table in a relational database, convert this to a multidimensional arrays,
- 
-\begin_inset Quotes eld
-\end_inset
-
+ a table in a relational database, convert this into a multidimensional
+ array, 
+\emph on
 cube
-\begin_inset Quotes erd
-\end_inset
-
+\emph default
  the array and store it back in a database — this has been found to be more
- efficient than 
-\begin_inset Quotes eld
-\end_inset
-
-cubing
-\begin_inset Quotes erd
-\end_inset
-
- the table directly!
+ efficient than cubing the table directly!
 \end_layout
 
 \begin_layout Subsubsection*
