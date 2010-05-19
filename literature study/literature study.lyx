@@ -1836,7 +1836,8 @@ data cube
 all 
 \emph default
 aggregates are there, it is not a data cube! (Note that there is for example
- no aggregate count for all flowers by species type.) At least in OLAP context.
+ no aggregate count for all flowers by species type, amongst others.) At
+ least in OLAP context.
 \begin_inset Newline newline
 \end_inset
 
@@ -5460,9 +5461,6 @@ status open
 
 \begin_layout Plain Layout
 For example, it is desirable to be able to write:
-\end_layout
-
-\begin_layout Plain Layout
 \begin_inset listings
 lstparams "language=SQL,tabsize=4"
 inline false
@@ -5494,10 +5492,7 @@ GROUP BY	AVG(PetalLength) AS avgPetalLength,
 \end_layout
 
 \begin_layout Plain Layout
-But instead, we're forced to use a subquery:
-\end_layout
-
-\begin_layout Plain Layout
+But instead, we're forced to use a subquery, which is less concise:
 \begin_inset listings
 lstparams "language=SQL,tabsize=4"
 inline false
@@ -5525,7 +5520,7 @@ FROM		(SELECT AVG(PetalLength)
 
 \begin_layout Plain Layout
 
-			FROM Iris) AS sub
+		  	FROM Iris) AS sub
 \end_layout
 
 \begin_layout Plain Layout
@@ -5621,7 +5616,7 @@ Year
 Color
 \family default
 , i.e.
- descending down the 
+ ascending up the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -5641,7 +5636,7 @@ Color
 \begin_inset Quotes erd
 \end_inset
 
- hierarchy, to increase granularity at each step.
+ hierarchy, to decrease granularity at each step.
 \begin_inset Newline newline
 \end_inset
 
@@ -5704,6 +5699,8 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Model
 \end_layout
 
@@ -5713,6 +5710,8 @@ Model
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Year
 \end_layout
 
@@ -5722,6 +5721,8 @@ Year
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Color
 \end_layout
 
@@ -5731,45 +5732,9 @@ Color
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Sales
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Chevy
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1994
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-black
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-50
 \end_layout
 
 \end_inset
@@ -5836,46 +5801,6 @@ Chevy
 \begin_inset Text
 
 \begin_layout Plain Layout
-
-\family typewriter
-ALL
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-90
-\end_layout
-
-\end_inset
-</cell>
-</row>
-<row>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-Chevy
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
-1995
-\end_layout
-
-\end_inset
-</cell>
-<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
-\begin_inset Text
-
-\begin_layout Plain Layout
 black
 \end_layout
 
@@ -5885,7 +5810,7 @@ black
 \begin_inset Text
 
 \begin_layout Plain Layout
-85
+50
 \end_layout
 
 \end_inset
@@ -5930,6 +5855,44 @@ white
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+black
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+85
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -5943,7 +5906,7 @@ Chevy
 \begin_inset Text
 
 \begin_layout Plain Layout
-1995
+1994
 \end_layout
 
 \end_inset
@@ -5960,6 +5923,46 @@ ALL
 \end_inset
 </cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+90
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Chevy
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1995
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ALL
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
 \begin_inset Text
 
 \begin_layout Plain Layout
@@ -6023,6 +6026,8 @@ ALL
 
 \begin_layout Plain Layout
 Sample roll-up result.
+ Granularity decreases from top to bottom, as we roll up by more attributes
+ in the hierarchy.
 \end_layout
 
 \end_inset
@@ -6128,6 +6133,8 @@ status open
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Model
 \end_layout
 
@@ -6137,6 +6144,8 @@ Model
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Year
 \end_layout
 
@@ -6146,6 +6155,8 @@ Year
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Color
 \end_layout
 
@@ -6155,6 +6166,8 @@ Color
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\emph on
 Sales
 \end_layout
 
@@ -6186,7 +6199,7 @@ ALL
 \begin_inset Text
 
 \begin_layout Plain Layout
-black
+white
 \end_layout
 
 \end_inset
@@ -6195,7 +6208,7 @@ black
 \begin_inset Text
 
 \begin_layout Plain Layout
-135
+155
 \end_layout
 
 \end_inset
@@ -6226,7 +6239,7 @@ ALL
 \begin_inset Text
 
 \begin_layout Plain Layout
-white
+black
 \end_layout
 
 \end_inset
@@ -6235,7 +6248,7 @@ white
 \begin_inset Text
 
 \begin_layout Plain Layout
-155
+135
 \end_layout
 
 \end_inset
@@ -6252,7 +6265,11 @@ white
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Rows generated by aggregating by color.
+Rows generated by aggregating by 
+\family typewriter
+Color
+\family default
+.
 \end_layout
 
 \end_inset
@@ -6732,7 +6749,7 @@ status open
 
 \begin_layout Plain Layout
 
-SELECT PetalLength, PetalWidth, SpeciesType, CCount
+SELECT PetalLength, PetalWidth, SpeciesType, COUNT(*) AS CCount
 \end_layout
 
 \begin_layout Plain Layout
@@ -6752,12 +6769,7 @@ GROUP BY PetalLength,
 
 \begin_layout Plain Layout
 
-         SpeciesType,
-\end_layout
-
-\begin_layout Plain Layout
-
-         COUNT(*) AS CCount
+         SpeciesType
 \end_layout
 
 \begin_layout Plain Layout
@@ -6771,7 +6783,7 @@ GROUP BY PetalLength,
 \end_layout
 
 \begin_layout Standard
-For the semantics behind this query, see 
+For the semantics behind this query, see the definition in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:OLAP:data-cube:Definition"
@@ -6786,7 +6798,7 @@ It might be helpful to give you a deeper understanding of
 \family typewriter
 ALL
 \family default
- values, in the context of this example.
+ values (again, see the definition), in the context of this example.
 \begin_inset Newline newline
 \end_inset
 
