@@ -466,7 +466,7 @@ In the remainder of this section, you will often see boxes like this one
 placement H
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -10458,7 +10458,7 @@ All are applicable only to range-sum queries, which is a specific type of
 \end_layout
 
 \begin_layout Standard
-Finally, also all of the techniques below rely on precomputation and therefore
+Finally, all of the techniques below rely on precomputation and therefore
  section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -10618,6 +10618,16 @@ key "data cube updates: Prefix Sum"
 \end_inset
 
 .
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Remove or substantiate cost.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -10654,12 +10664,56 @@ The essence of the Relative Prefix Sum approach is to limit the cascading
 \emph on
 overlay boxes
 \emph default
+, these are of equal size: 
+\begin_inset Formula $k$
+\end_inset
+
+ in each dimension.
+ Thus each overlay box contains 
+\begin_inset Formula $k^{d}$
+\end_inset
+
+ cells.
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+anchor
+\emph default
+ cell is the 
+\begin_inset Quotes eld
+\end_inset
+
+upper left
+\begin_inset Quotes erd
+\end_inset
+
+ cell of each overlay box.
+\end_layout
+
+\begin_layout Standard
+For each overlay box, there is an 
+\emph on
+overlay array
+\emph default
+ and a 
+\emph on
+relative-prefix array
+\emph default
 .
- For each overlay box, there is an overlay (
+\end_layout
+
+\begin_layout Subsubsection*
+Overlay array
+\end_layout
+
+\begin_layout Standard
+The overlay array (
 \begin_inset Formula $OL$
 \end_inset
 
-) that stores information on the sums of the 
+) stores information on the sums of the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10667,19 +10721,86 @@ preceding
 \begin_inset Quotes erd
 \end_inset
 
- regions (i.e.
- in the typical 2D array: those regions that are more to the left and to
- the top).
- Also for every overlay box, there is a relative-prefix array (
+ regions.
+ By 
+\begin_inset Quotes eld
+\end_inset
+
+preciding
+\begin_inset Quotes erd
+\end_inset
+
+, those regions that are more to the left and to the top in a typical 2D
+ array are meant, that is, the regions on which it depends for its range
+ sums.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Calculation of overlay values as the sum of the cells in the shaded areas.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The overlay array 
+\begin_inset Formula $OL$
+\end_inset
+
+ is defined as follows:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+OL[i,j]=\sum_{0\leq k\leq i;\,0\leq l\leq j}A[k,l]\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Relative-prefix array
+\end_layout
+
+\begin_layout Standard
+The relative-prefix array (
 \begin_inset Formula $RP$
 \end_inset
 
-) that stores information on the relative prefix sums 
+) stores information on the relative prefix sums 
 \emph on
 within
 \emph default
  that overlay box.
- By combining the information in both components (
+\end_layout
+
+\begin_layout Standard
+By combining the information in both components (
 \begin_inset Formula $OL$
 \end_inset
 
@@ -10687,15 +10808,7 @@ within
 \begin_inset Formula $RP$
 \end_inset
 
-), prefix sums can be constructed 
-\begin_inset Quotes eld
-\end_inset
-
-on the fly
-\begin_inset Quotes erd
-\end_inset
-
-.
+), prefix sums can be constructed on the fly.
 \end_layout
 
 \begin_layout Standard
@@ -10761,7 +10874,22 @@ reference "fig:OLAP:data-cube:prefix-sum-example"
 .
 \end_layout
 
-\begin_layout Quote
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Box Doublebox
+position "t"
+hor_pos "c"
+has_inner_box 1
+inner_pos "t"
+use_parbox 0
+width "85col%"
+special "none"
+height "1in"
+height_special "totalheight"
+status open
+
+\begin_layout Plain Layout
 For example, to calculate 
 \begin_inset Formula $SUM(A[0,0]:A[7,7])$
 \end_inset
@@ -10788,6 +10916,11 @@ For example, to calculate
 \end_inset
 
 .
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
