@@ -3378,8 +3378,8 @@ with
 \begin_layout Standard
 \begin_inset Formula \[
 \mathtt{\hat{A}_{i}}=\begin{cases}
-\mathtt{A_{i}} & \Leftrightarrow\mathtt{A_{i}}\in\mathtt{S}\\
-\mathnormal{\mathbf{\mathtt{ALL}}} & \Leftrightarrow\mathtt{A_{i}}\notin\mathtt{S}\end{cases}\]
+\mathtt{A_{i}} & if\,\mathtt{A_{i}}\in\mathtt{S}\\
+\mathnormal{\mathbf{\mathtt{ALL}}} & otherwise\end{cases}\]
 
 \end_inset
 
@@ -10402,6 +10402,13 @@ rward implementation is likely unable to attain the desired performance;
  help significantly.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Performance for range-sum queries and updates 
 \begin_inset CommandInset label
@@ -10457,11 +10464,35 @@ Discussed techniques
 \end_layout
 
 \begin_layout Standard
-In the remainder of this section, three techniques are discussed: the first
- is an example of an technique that allows for fast range-sum queries that
- unfortunately can have very slow updates; the second improves upon this
- first by speeding up updates; the third makes fast data cube updates possible
- in all cases.
+In the remainder of this section, three techniques are discussed:
+\end_layout
+
+\begin_layout Enumerate
+Prefix Sum: this is an example of a technique that allows for fast range-sum
+ queries that unfortunately can have very slow updates.
+ It is very trivial, anybody with basic math skills could come up with it.
+\end_layout
+
+\begin_layout Enumerate
+Relative Prefix Sum: this method is essentially the same as Prefix Sum,
+ but stores its data in a smarter manner, to speed up updates.
+\end_layout
+
+\begin_layout Enumerate
+Dynamic Data Cube: the third and last method is slightly inspired by (Relative)
+ Prefix Sum but has as goal to have sub-linear performance, both for queries
+ and updates! It is also far more efficient storage-wise: empty regions
+ simply are 
+\emph on
+not
+\emph default
+ stored at all, whereas they would need to be created for the Prefix Sum
+ and Relative Prefix Sum methods.
+\begin_inset Newline newline
+\end_inset
+
+It achieves all this by using a hierarchical (tree) structure, with each
+ deeper level accessing more granular data.
 \end_layout
 
 \begin_layout Standard
@@ -10971,7 +11002,8 @@ within
 \begin_inset Formula $RP$
 \end_inset
 
- contains prefix sums that are relative to the 
+ contains prefix sums that are relative to the to the region enclosed by
+ the box, that is, it is independent of other regions.
 \end_layout
 
 \begin_layout Standard
@@ -11910,7 +11942,7 @@ An exact numerical example could be added here, based on the example in
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -11930,7 +11962,7 @@ status collapsed
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Growth of a Dynamic Data Cube — shaded areas don't store values..
+Growth of a Dynamic Data Cube — shaded areas don't store values.
 \begin_inset Newline newline
 \end_inset
 
