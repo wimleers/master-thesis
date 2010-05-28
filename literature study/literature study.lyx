@@ -483,12 +483,14 @@ TODO
 
 \begin_layout Standard
 The additional information that is virtually always included in web server
- log files, such as IP address, date and time and browser can then be used
- to apply page loading performance analysis: IP addresses can be mapped
+ log files, such as IP address, date and time and user agent can then be
+ used to apply page loading performance analysis: IP addresses can be mapped
  to locations/ISPs to pinpoint bad performance to a specific location/ISP,
  date and time can be used to detect bad performance during specific times
  during the day (indicating overloaded web or application servers) and finally
- the browser can be used to detect performance issues with a specific browser.
+ the browser and operating system can be used to detect performance issues
+ with a specific browser, possibly a specific version of that browser and
+ even on a specific operating system.
 \end_layout
 
 \begin_layout Standard
@@ -622,7 +624,10 @@ A sample Episodes log file
 \begin_layout Standard
 As explained before, essentially the goal of this thesis is analyzing Episodes
  log files.
- Each log entry is of the following format:
+ Each log entry is stored in a format which has been optimized to store
+ only the information necessary for Episodes log mining instead of regular
+ web usage mining.
+ The format is as follows:
 \end_layout
 
 \begin_layout Standard
@@ -679,6 +684,15 @@ fields
 IP address: 
 \family typewriter
 211.138.37.206
+\family default
+.
+ The IP address can be mapped to a location (e.g.
+ Hasselt, Belgium) and resolved into a hostname (e.g.
+
+\family typewriter
+ 211-138-37-206.access.telenet.be
+\family default
+, although this is impossible sometimes).
 \end_layout
 
 \begin_layout Itemize
@@ -706,6 +720,244 @@ Changelog:0,gaTrackerAttach:16,DrupalBehaviors:47,frontend:8015"
 \end_inset
 
 
+\family default
+From this, the following episode names and durations can be parsed:
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Newline newline
+\end_inset
+
+
+\begin_inset Tabular
+<lyxtabular version="3" rows="10" columns="2">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Episode name
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Episode duration (in milliseconds)
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+css
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+63
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+headerjs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+4453
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+footerjs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+domready
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+7359
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+tabs
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+31
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+ToThePointShowHideChangelog
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+gaTrackerAttach
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+DrupalBehaviors
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+16
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\family typewriter
+frontend
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8015
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -715,16 +967,61 @@ HTTP status code:
 \end_layout
 
 \begin_layout Itemize
-HTTP referer (i.e.
+HTTP referrer (i.e.
  the page for which the collected episodes are being logged): 
 \family typewriter
 "http:// driverpacks.net/applications"
+\family default
+.
+\begin_inset Newline newline
+\end_inset
+
+Note that typically the referrer is the page through which the end user
+ ended up on the current page (for which a log entry was made).
+ However, in Episodes logs, this is no longer true: the referer is now the
+ page for which the episodes were recorded (since that is the page making
+ the request to the Episodes logging server).
 \end_layout
 
 \begin_layout Itemize
-User-agent: 
+User agent: 
 \family typewriter
 "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.50727)"
+\family default
+.
+ From this seemingly poorly structured string of data, it is possible to
+ derive the end user's browser and operating system, which is Internet Explorer
+ 6 in this example, running on Windows 2000, XP or Server 2003 (all of which
+ use the Windows NT 5.1 kernel).
+\begin_inset Newline newline
+\end_inset
+
+Note that it in typical web usage mining 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "KDnuggets Web Mining Course"
+
+\end_inset
+
+, it is is necessary to detect bots and crawlers
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Such as as GoogleBot, which is used by Google to index the world wide web.
+\end_layout
+
+\end_inset
+
+, because one wants to analyze end user behavior, and a bot or crawler obviously
+ is not an end user.
+ However, bots only download the (X)HTML.
+ Possibly, they also download the associated resources (CSS, JavaScript,
+ fonts, images …), but if they do, it is only because they want to store
+ it, not because they want to render the page.
+ Hence the Episodes JavaScript does not get executed and therefore no log
+ entries will appear for bots in the Episodes log file.
+ Conclusion: bots are a non-issue for Episodes log mining!
 \end_layout
 
 \begin_layout Itemize
@@ -737,7 +1034,14 @@ Host (i.e.
 
 \begin_layout Standard
 For the sake of completeness, this is what the Episodes log format looks
- like when configuring Apache:
+ like when configuring Apache (consult 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Apache log files"
+
+\end_inset
+
+ for detailed explanations about the syntax):
 \end_layout
 
 \begin_layout Standard
@@ -12756,6 +13060,27 @@ status collapsed
 \begin_layout Plain Layout
 
 http://www.kdnuggets.com/web_mining_course/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Apache log files"
+
+\end_inset
+
+Log Files — Apache HTTP Server, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://httpd.apache.org/docs/1.3/logs.html
 \end_layout
 
 \end_inset
