@@ -1088,6 +1088,220 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 \end_layout
 
 \begin_layout Subsection
+Detecting page loading performance issues
+\end_layout
+
+\begin_layout Standard
+The goal of this thesis is to automate the detection of page loading performance
+ issues.
+ This can be achieved through 
+\emph on
+Episodes log mining
+\emph default
+, as discusssed above.
+\end_layout
+
+\begin_layout Subsubsection
+Discretization: information loss
+\end_layout
+
+\begin_layout Standard
+A traditional data mining approach would be to use the classical association
+ rule framework 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mining association rules between sets of items in large databases"
+
+\end_inset
+
+.
+ However, this is not adequate to deal with numerical data directly.
+ Typically, the approach to association rule mining for numerical attributes
+ are based on discretization (see e.g.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mining quantitative association rules in large relational tables"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+However, discretization has several serious disadvantages:
+\end_layout
+
+\begin_layout Enumerate
+it 
+\emph on
+always
+\emph default
+ implies information loss
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+values in the same bucket become indistinguishable from one another,
+\end_layout
+
+\begin_layout Enumerate
+small differences become unnoticeable
+\end_layout
+
+\begin_layout Enumerate
+values close to a discretization border may result in very large (unjustifiably
+ so) changes in the set of active rules
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+if there are too many dicretization intervals:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+discovered rules are duplicated for multiple intervals
+\end_layout
+
+\begin_layout Enumerate
+this makes overall trends hard to spot
+\end_layout
+
+\begin_layout Enumerate
+it is possible that rules will not be accepted because they don't meet the
+ minimum support count (which is exactly because they're spread over too
+ many discretization intervals)
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Clearly, it is desirable to not apply discretization to the collected Episodes
+ durations, to avoid information loss and the consequential problems.
+\end_layout
+
+\begin_layout Subsubsection
+Rank-correlated sets of numerical attributes
+\end_layout
+
+\begin_layout Standard
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mining Rank-Correlated Sets of Numerical Attributes"
+
+\end_inset
+
+, an alternative mining method is proposed, which discerns itself by not
+ requiring discretization.
+ They propose a new technique based on well-established statistical studies
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rank Correlation Methods,Measures of Association"
+
+\end_inset
+
+ of rank correlation measures.
+\end_layout
+
+\begin_layout Standard
+They propose to compare attributes by the rank of their values, through
+ three new support measures for sets of numerical attributes:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $supp_{\tau}$
+\end_inset
+
+, based on Kendall's 
+\begin_inset Formula $\tau$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $supp_{\rho}$
+\end_inset
+
+, based on Spearman's 
+\begin_inset Formula $\rho$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $supp_{F}$
+\end_inset
+
+, based on Spearman's Footrule 
+\begin_inset Formula $F$
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Rank Correlation Methods,Measures of Association"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+By using these new support measures and techniques they've developed to
+ combine the mining of sets of numerical attributes with ordinal and categorical
+ attributes, it is possible to form association rules.
+\end_layout
+
+\begin_layout Standard
+In their case, they've applied it to meteorological data, which allowed
+ them to discover association rules such as:
+\end_layout
+
+\begin_layout Quote
+
+\emph on
+If the altitude of the sun in 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ is higher than in 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+, then the temperature is likely to be higher as well.
+\end_layout
+
+\begin_layout Quote
+
+\emph on
+If 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ comes from a weather station in Antwerp, and 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+ from Brussels, and wind speed in 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ is higher than in 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+, then it is likely that cloudiness is higher as well.
+\end_layout
+
+\begin_layout Subsubsection*
+Rank-based support measures
+\end_layout
+
+\begin_layout Subsection
 Advanced page loading performance improvements
 \end_layout
 
@@ -1179,7 +1393,7 @@ resource deltas
 
 ).
  Then load these resources after the page has finished loading.
- Combined with 
+ Possibly limit to resources 
 \end_layout
 
 \begin_layout Enumerate
@@ -13220,7 +13434,11 @@ key "Apache log files"
 
 \end_inset
 
-Log Files — Apache HTTP Server, 
+
+\emph on
+Log Files — Apache HTTP Server
+\emph default
+, 
 \begin_inset Flex URL
 status collapsed
 
@@ -13232,6 +13450,101 @@ http://httpd.apache.org/docs/1.3/logs.html
 \end_inset
 
 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Mining association rules between sets of items in large databases"
+
+\end_inset
+
+
+\emph on
+Mining association rules between sets of items in large databases
+\emph default
+, R.
+ Agrawal; T.
+ Imielinski; A.N.
+ Swami, 
+\emph on
+Proc.
+ ACM SIGMOD, pages 207–216
+\emph default
+, 1993
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Mining quantitative association rules in large relational tables"
+
+\end_inset
+
+
+\emph on
+Mining quantitative association rules in large relational tables
+\emph default
+, R.
+ Srikant; R.
+ Agrawal, 
+\emph on
+Proc.
+ ACM SIGMOD
+\emph default
+, 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Mining Rank-Correlated Sets of Numerical Attributes"
+
+\end_inset
+
+
+\emph on
+Mining Rank-Correlated Sets of Numerical Attributes
+\emph default
+, Toon Calders (University of Antwerp); Bart Goethals (Szczecin University
+ of Technology), 
+\emph on
+Proc.
+ KDD'06
+\end_layout
+
+\begin_layout Bibliography
+
+\emph on
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Rank Correlation Methods"
+
+\end_inset
+
+Rank Correlation Methods
+\emph default
+, M.
+ Kendall, Oxford University Press, 1990
+\end_layout
+
+\begin_layout Bibliography
+
+\emph on
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Measures of Association"
+
+\end_inset
+
+Measures of Association
+\emph default
+, A.M.
+ Liebetrau, 
+\emph on
+volume 32 of Quantitative Applications in the Social Sciences
+\emph default
+, Sage Publications, 1983
 \end_layout
 
 \begin_layout Bibliography
