@@ -305,7 +305,7 @@ js:484,tabs: 63,ToThePointShowHideChangelog:0,gaTrackerAttach:0,DrupalBehaviors:
 \end_layout
 
 \begin_layout Section
-Episodes log mining
+Episodes Log Mining
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:web-log-mining"
@@ -320,7 +320,7 @@ Introduction
 \end_layout
 
 \begin_layout Subsubsection
-Web usage mining
+Web Usage Mining
 \end_layout
 
 \begin_layout Standard
@@ -435,7 +435,7 @@ that are frequently accessed by groups of users with common needs or interests
 \end_layout
 
 \begin_layout Subsubsection
-Episodes log mining
+Episodes Log Mining
 \end_layout
 
 \begin_layout Standard
@@ -477,7 +477,8 @@ TODO
  of the page and when the page has finished loading, it sends this information
  to a web server log.
  It does this by means of a specially formatted URL — the URL contains the
- names and durations of the recorded episodes as a single long GET parameter.
+ names and durations of the recorded episodes (in order of being recorded
+ and occurrence) as a single long GET parameter.
  This GET parameter can then be parsed to easily extract the episodes that
  were recorded.
 \end_layout
@@ -502,8 +503,54 @@ And, of course, any page loading performance issues that are a combination
  a badly configured web proxy server).
 \end_layout
 
+\begin_layout Standard
+Examples of page loading performance issues that need to be detected automatical
+ly are, for example:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/
+\series default
+ is slow in 
+\series bold
+Belgium
+\series default
+, for users of the ISP 
+\series bold
+Telenet
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path/a
+\series default
+ has slowly loading 
+\series bold
+CSS
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path/b
+\series default
+ has slowly loading 
+\series bold
+JS
+\series default
+ for visitors that use the browser 
+\series bold
+Internet Explorer 6 or 7
+\end_layout
+
 \begin_layout Subsubsection
-The mining process
+The Mining Process
 \end_layout
 
 \begin_layout Standard
@@ -619,7 +666,7 @@ Simultaneously, this overview of course also gives a high-level idea of
 \end_layout
 
 \begin_layout Subsection
-A sample Episodes log file
+A Sample Episodes Log File
 \end_layout
 
 \begin_layout Standard
@@ -742,11 +789,21 @@ From this, the following episode names and durations can be parsed:
 
 
 \begin_inset Tabular
-<lyxtabular version="3" rows="10" columns="2">
+<lyxtabular version="3" rows="10" columns="3">
 <features>
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
 <row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Order
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -760,13 +817,22 @@ Episode name
 \begin_inset Text
 
 \begin_layout Plain Layout
-Episode duration (in milliseconds)
+Episode duration (ms)
 \end_layout
 
 \end_inset
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -793,6 +859,15 @@ css
 \begin_inset Text
 
 \begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \family typewriter
 headerjs
@@ -811,6 +886,15 @@ headerjs
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+3
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -838,7 +922,19 @@ footerjs
 
 \begin_layout Plain Layout
 
+\series bold
+4
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \family typewriter
+\series bold
 domready
 \end_layout
 
@@ -848,6 +944,8 @@ domready
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 7359
 \end_layout
 
@@ -855,6 +953,15 @@ domready
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+5
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -881,6 +988,15 @@ tabs
 \begin_inset Text
 
 \begin_layout Plain Layout
+6
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \family typewriter
 ToThePointShowHideChangelog
@@ -903,6 +1019,15 @@ ToThePointShowHideChangelog
 \begin_inset Text
 
 \begin_layout Plain Layout
+7
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
 
 \family typewriter
 gaTrackerAttach
@@ -921,6 +1046,15 @@ gaTrackerAttach
 </cell>
 </row>
 <row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+8
+\end_layout
+
+\end_inset
+</cell>
 <cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
 \begin_inset Text
 
@@ -948,7 +1082,19 @@ DrupalBehaviors
 
 \begin_layout Plain Layout
 
+\series bold
+9
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
 \family typewriter
+\series bold
 frontend
 \end_layout
 
@@ -958,6 +1104,8 @@ frontend
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\series bold
 8015
 \end_layout
 
@@ -969,12 +1117,62 @@ frontend
 \end_inset
 
 
+\begin_inset Newline newline
+\end_inset
+
+
+\series bold
+\bar under
+
+\begin_inset Newline newline
+\end_inset
+
+Important note:
+\series default
+\bar default
+ episodes are not necessarily disjoint! In the above example for example,
+ 
+\family typewriter
+frontend
+\family default
+ is the set that contains all other episodes and domready is a subset of
+ 
+\family typewriter
+frontend
+\family default
+ that contains 
+\family typewriter
+css
+\family default
+, 
+\family typewriter
+headerjs
+\family default
+, and 
+\family typewriter
+footerjs
+\family default
+.
+ In other words: certain episodes may in fact be container episodes.
+ I.e.:
+\begin_inset Formula \begin{eqnarray*}
+\mathtt{domready} & = & \{\mathtt{css},\mathtt{headerjs},\mathtt{footerjs}\}\\
+\mathtt{frontend} & = & \mathtt{domready}\cup\{\mathtt{tabs},\mathtt{ToThePointShowHideChangelog},\\
+ &  & \mathtt{gaTrackerAttach},\mathtt{DrupalBehaviors}\}\end{eqnarray*}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
 HTTP status code: 
 \family typewriter
 200
+\family default
+.
+ The status code will rarely be useful for Episodes log mining and thus
+ can be ignored for the scope of this thesis.
 \end_layout
 
 \begin_layout Itemize
@@ -1087,8 +1285,291 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 
 \end_layout
 
+\begin_layout Subsubsection
+The Extractable Categorical Attributes
+\end_layout
+
+\begin_layout Standard
+Several categorical attributes can be extracted from an Episodes log file,
+ preferably in a hierarchical manner because that would allow for more easily
+ human-interpretable results.
+ E.g.
+ if a problem exists for all ISPs in a country, then there likely is a problem
+ with network connections to that country, and it'd be better to show a
+ single page loading performance issue marking the country as problematic,
+ instead of many issues with one for each ISP in that country.
+\end_layout
+
+\begin_layout Itemize
+IP address
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+location
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical: 
+\family typewriter
+continent 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ country 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ state/province 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ city
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+e.g.
+ Europe 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Belgium 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Limburg 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Hasselt
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing just the country is
+ likely the best alternative.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+ISP
+\end_layout
+
+\begin_layout Itemize
+IP range
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+date and time
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+date
+\end_layout
+
+\begin_layout Itemize
+time
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+HTTP referrer
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+path
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical: dir1 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ dir2 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ dir3 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ file
+\begin_inset Newline newline
+\end_inset
+
+e.g.: 
+\family typewriter
+http://example.com/foo/bar/baz.html
+\family default
+ would be stored as 
+\family typewriter
+foo 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ bar 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ baz.html
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing the entire relative
+ path is likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+e.g.: 
+\family typewriter
+http://example.com/foo/bar/baz.html
+\family default
+ would be stored as 
+\family typewriter
+/foo/bar/baz.html
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Itemize
+User agent
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+operating system
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical: 
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing the operating system
+ product name is likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+e.g.: Windows XP, Windows 7 x64, Mac OS X Snow Leopard, Ubuntu 10.04
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+browser
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing both each x.0 browser
+ version and eaxh x.y.z.
+ browser version is likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+e.g.
+ store both Firefox 3 and Firefox 3.6.1, Chrome 5 and Chrome 5.0.375.55, etc.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+user agent
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+store the full user agent string.
+\end_layout
+
+\end_deeper
+\end_deeper
+\begin_layout Subsubsection
+applied to sample rules
+\end_layout
+
+\begin_layout Standard
+If we now apply this more detailed information to the three example page
+ loading performance issues mentioned before, then we can gain more insight
+ in how this can be detected:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/
+\series default
+ is slow in 
+\series bold
+Belgium
+\series default
+, for users of the ISP 
+\series bold
+Telenet
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The IP address needs to be mapped to a hierarchical location, 
+\end_layout
+
+\begin_layout Itemize
+The IP address needs to be mapped to an ISP, e.g.
+ Telenet.
+ If this is not possible (i.e.
+ because the IP address does not resolve to a hostname), then IP ranges
+ can be used.
+ To be able to detect associated IP ranges, IP addresses need to be stored
+ (or at leas interpreted) in a hierarchical manner and not simply as strings.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path/a
+\series default
+ has slowly loading 
+\series bold
+CSS
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path/b
+\series default
+ has slowly loading 
+\series bold
+JS
+\series default
+ for visitors that use the browser 
+\series bold
+Internet Explorer 6 or 7
+\end_layout
+
+\begin_layout Standard
+Overall, we can see that we need to detect associations between a single
+ numerical attribute — relatively high durations of an episode, i.e.
+ relative to all durations of this episode — and one or more of the categorical
+ attributes — date, time, location, ISP, IP range, path, operating system,
+ browser, browser version and user agent.
+\end_layout
+
 \begin_layout Subsection
-Detecting page loading performance issues
+Detecting Page Loading Performance Issues
 \end_layout
 
 \begin_layout Standard
@@ -1102,7 +1583,7 @@ Episodes log mining
 \end_layout
 
 \begin_layout Subsubsection
-Discretization: information loss
+Discretization: Information Loss
 \end_layout
 
 \begin_layout Standard
@@ -1181,7 +1662,7 @@ Clearly, it is desirable to not apply discretization to the collected Episodes
 \end_layout
 
 \begin_layout Subsubsection
-Rank-correlated sets of numerical attributes
+Rank-Correlated Sets of Numerical Attributes
 \end_layout
 
 \begin_layout Standard
@@ -1298,7 +1779,60 @@ If
 \end_layout
 
 \begin_layout Subsubsection*
-Rank-based support measures
+Rank Correlation Measures
+\end_layout
+
+\begin_layout Standard
+First, it is assumed that all values of numerical attributes are distinct;
+ later, situations with tied values are taken into account.
+\end_layout
+
+\begin_layout Standard
+blahblah
+\end_layout
+
+\begin_layout Standard
+The three proposed support measures are in fact on three well-known rank
+ correlation measures.
+ Let 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $B$
+\end_inset
+
+ be two numerical attributes, then:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray*}
+\rho(A,B) & = & 1-\frac{6\sum_{t\in D}(r_{t}.A-r_{t}.B)^{2}}{\left|D\right|^{3}-\left|D\right|}\\
+F(A,B) & = & 1-\frac{4\sum_{t\in D}\left|r_{t}.A-r_{t}.B\right|}{\left|D\right|^{2}}\\
+\tau(A,B) & = & \frac{4\left|\{s,t)\in D^{2}\mid s.A<t.A\wedge s.B<t.B\}\right|}{\left|D\right|(\left|D\right|-1)}-1\end{eqnarray*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(Copy the explanations from section 2.1 of the paper?)
+\end_layout
+
+\begin_layout Subsubsection*
+Rank-Based Support Measures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \begin{eqnarray}
+supp_{\rho}(I) & = & 1-\frac{\sum_{t\in D}(max_{A\in I}r_{t}.A-min_{A\in I}r_{t}.A)^{2}}{\left|D\right|(\left|D\right|-1)^{2}}\nonumber \\
+supp_{F}(I) & = & 1-\frac{\sum_{t\in D}(max_{A\in I}r_{t}.A-min_{A\in I}r_{t}.A)}{\left|D\right|(\left|D\right|-1)}\\
+supp_{\tau}(I) & = & \frac{\left|\{(s,t)\in D^{2}\mid\forall A\in I:s.A<t.a\}\right|}{\left(_{\,2}^{\left|D\right|}\right)}\nonumber \end{eqnarray}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
