@@ -454,7 +454,8 @@ While that is interesting in itself and
 \emph on
 can
 \emph default
- be useful for suggesting page loading performance improvements (e.g.
+ be useful for suggesting advanced page loading performance improvements
+ (e.g.
  preload images of typical next pages in typical navigation paths), it doesn't
  provide enough information to be able to perform page loading performance
  analysis.
@@ -669,7 +670,7 @@ DrupalBehaviors:47,frontend:8015" 200 "http:// driverpacks.net/applications"
 \end_layout
 
 \begin_layout Standard
-Here is a complete list of the 
+A complete list of the 
 \begin_inset Quotes eld
 \end_inset
 
@@ -677,7 +678,17 @@ fields
 \begin_inset Quotes erd
 \end_inset
 
- in the above sample log entry:
+ in the above sample log entry is provided below.
+ Note that the available fields differ slightly from those for typical web
+ usage mining (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "KDnuggets Web Mining Course"
+
+\end_inset
+
+) and that the semantics may also differ slightly (see the per-field explanation
+s below).
 \end_layout
 
 \begin_layout Itemize
@@ -1074,6 +1085,141 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsection
+Advanced page loading performance improvements
+\end_layout
+
+\begin_layout Subsubsection
+Preloading of resources based on typical navigation paths
+\end_layout
+
+\begin_layout Standard
+Step 1: user identification
+\end_layout
+
+\begin_layout Standard
+You can only know which paths are typical if you can identify the navigation
+ of a single user
+\end_layout
+
+\begin_layout Standard
+Step 2: sessionization
+\end_layout
+
+\begin_layout Standard
+page a as the last viewed page on day 1 and page b as the first viewed page
+ on day 2, by the same user, do not form a navigation path, since they occur
+ in different sessions.
+ Hence sessionization is necessary.
+\end_layout
+
+\begin_layout Standard
+Step 3: path completion
+\end_layout
+
+\begin_layout Standard
+pages in the navigation path may be cached in the end user's browser and
+ therefore their browser may not make any request at all to the web server,
+ and thus it may not show up in the web server log.
+ (The solution is path inference by looking at the referers.) This is true
+ for typical web usage mining, but not for Episodes log mining, since Episodes
+ also runs on cached pages and thus logs the recorded episodes and thus
+ all page loads show up in the logs.
+ Hence path completion is a non-issue here (the typical solution, path inference
+ through referrers would also not work since the referrer field has a different
+ semantic in the context of Episodes logs).
+\end_layout
+
+\begin_layout Standard
+How to calculate the navigation paths
+\end_layout
+
+\begin_layout Standard
+Thoughts
+\end_layout
+
+\begin_layout Standard
+When typical navigation paths have been found, they can be exported in a
+ simple format, e.g.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+path1
+\begin_inset space ~
+\end_inset
+
+path2
+\begin_inset Quotes erd
+\end_inset
+
+ (spaces are not allowed in URLs).
+ This information can then be used by the web site to automatically preload
+ resources on other pages.
+ Of course, this could also be done manually, but then it's easy to become
+ outdated.
+\end_layout
+
+\begin_layout Standard
+There are three ways a web site can implement this:
+\end_layout
+
+\begin_layout Enumerate
+crawl the pages in typical navigational paths and detect which resources
+ are new in comparison with previous pages in the paths (i.e.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+resource deltas
+\begin_inset Quotes erd
+\end_inset
+
+).
+ Then load these resources after the page has finished loading.
+ Combined with 
+\end_layout
+
+\begin_layout Enumerate
+the CMS has a built-in API to list resources on each page, which would then
+ allow for easy detection of resource deltas.
+ Then load these resources after the page has finished loading.
+\end_layout
+
+\begin_layout Enumerate
+simply do the following in JS: download the html of the next page, insert
+ it in the current DOM tree but with display:none and all resources on that
+ page will get loaded.
+ Or: use a hidden iframe.
+ Or: use jQuery(window).load(preloadURL) (only works for the same domain,
+ even loading a page from a subdomain doesn't work, due to the same origin
+ policy of browsers!)
+\begin_inset Newline newline
+\end_inset
+
+While very simple to implement, the downside is that the entire HTML will
+ be loaded and parsed, and the JS will also execute.
+ This also means that this will be counted as a true pageview.
+ Episodes will not run again though (it is triggered on specific page load
+ events that are not triggered again because in fact the 
+\begin_inset Quotes eld
+\end_inset
+
+main page
+\begin_inset Quotes erd
+\end_inset
+
+ has already been loaded).
+\begin_inset Newline newline
+\end_inset
+
+Also see http://www.phpied.com/preload-cssjavascript-without-execution/
+\begin_inset Newline newline
+\end_inset
+
+http://www.phpied.com/the-art-and-craft-of-postload-preloads/
 \end_layout
 
 \begin_layout Standard
