@@ -2492,6 +2492,13 @@ Overall, we can see that we need to detect associations between a single
 
 \begin_layout Subsection
 Detecting Page Loading Performance Issues
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:detection"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -2506,6 +2513,13 @@ Episodes log mining
 
 \begin_layout Subsubsection
 Efficient & Accurate Numerical Data Mining
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:detection:numerical-mining"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2731,6 +2745,112 @@ reference "sub:episodes-log-mining:attributes:pre-processing"
 \begin_layout Standard
 It is clear that these association rules would be absolutely useless.
  Therefore it was decided to stop looking into numerical data mining.
+\end_layout
+
+\begin_layout Subsubsection
+A Goal-Optimized Form of Categorical Data Mining
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:detection:categorical-mining"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+It has been explained why numerical data mining has been ruled out.
+ All other attributes (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:attributes:pre-processing"
+
+\end_inset
+
+) are hierarchically categorical.
+ Thus, this leaves data mining on hierarchical categories, which already
+ has been explained conceptually in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:attributes:concept-hierarchies"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+What we actually want is to associate one or more of the hierarchical categories
+ with the speed (
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+, but also 
+\begin_inset Quotes eld
+\end_inset
+
+acceptable
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+fast
+\begin_inset Quotes erd
+\end_inset
+
+ or any other possible user-defined speed) of each episode.
+\end_layout
+
+\begin_layout Standard
+To achieve this, it is necessary to first classify each episode's duration
+ as its corresponding speed.
+ This effectively is a form of discretization.
+\end_layout
+
+\begin_layout Standard
+After this has happened, all we are left with are categorical attributes,
+ some of which are hierarchical.
+ We can then apply well-known association rule mining algorithms such as
+ Apriori or FP-growth 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, but then adapted to work with concept hierarchies (again, see section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:attributes:concept-hierarchies"
+
+\end_inset
+
+, but also 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining,Mining Generalized Association Rules"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Through this process, we estimate to achieve usable page loading performance
+ issues detection.
+ More refinement is only possible after an implementation has been completed,
+ i.e.
+ after we can actually look at the results of this suggested process.
 \end_layout
 
 \begin_layout Subsection
