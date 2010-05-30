@@ -442,7 +442,7 @@ Web Usage Mining Versus Episodes Log Mining
 However, in the context of page loading performance (what this thesis is
  about), typical web server logs are not sufficient: they only capture which
  resources were requested by user agents and some metadata (date and time,
- IP address, referer, etc.).
+ IP address, referrer, etc.).
  That is by itself not enough information on how the actual page loading
  performance of the browser as perceived by the end user was.
  It only provides sufficient information for other kinds of analysis, such
@@ -639,6 +639,8 @@ The overall web usage mining process (and therefore Episodes log mining,
 \end_layout
 
 \begin_layout Enumerate
+
+\series bold
 data collection and pre-processing
 \end_layout
 
@@ -690,6 +692,8 @@ key "Improving Drupal's page loading performance"
 
 \end_deeper
 \begin_layout Enumerate
+
+\series bold
 pattern discovery
 \end_layout
 
@@ -721,6 +725,8 @@ The discovery of these patterns will be implemented as part of this master
 
 \end_deeper
 \begin_layout Enumerate
+
+\series bold
 pattern analysis
 \end_layout
 
@@ -839,7 +845,7 @@ TODO
 \end_layout
 
 \begin_layout Subsection
-A Sample Episodes Log File
+Episodes Log Mining: Details
 \end_layout
 
 \begin_layout Standard
@@ -1364,8 +1370,8 @@ HTTP referrer (i.e.
 
 Note that typically the referrer is the page through which the end user
  ended up on the current page (for which a log entry was made).
- However, in Episodes logs, this is no longer true: the referer is now the
- page for which the episodes were recorded (since that is the page making
+ However, in Episodes logs, this is no longer true: the referrer is now
+ the page for which the episodes were recorded (since that is the page making
  the request to the Episodes logging server).
 \end_layout
 
@@ -1444,7 +1450,7 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 \backslash
 " %>s 
 \backslash
-"%{Referer}i
+"%{Referrer}i
 \backslash
 " 
 \backslash
@@ -1477,62 +1483,30 @@ name "sub:episodes-log-mining:sample:pre-processing"
 Several categorical attributes can be extracted from an Episodes log file,
  preferably in a hierarchical manner because that would allow for more easily
  human-interpretable results.
+\begin_inset Newline newline
+\end_inset
+
+For example, if a problem exists for all ISPs in a country, then there likely
+ is a problem with network connections to that country, and it'd be better
+ to show a single page loading performance issue marking the country as
+ problematic, instead of many issues with one for each ISP in that country:
+ this would make it more easily human-interpretable.
+\begin_inset Newline newline
+\end_inset
+
+In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:sample:concept-hierarchies"
+
+\end_inset
+
+, it is explained how this can be implemented.
 \end_layout
 
 \begin_layout Standard
-E.g.
- if a problem exists for all ISPs in a country, then there likely is a problem
- with network connections to that country, and it'd be better to show a
- single page loading performance issue marking the country as problematic,
- instead of many issues with one for each ISP in that country.
-\end_layout
-
-\begin_layout Standard
-However, hierarchical categorical attributes require the use of a concept
- hierarchy.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Write about concept hierarchies, pages 426-428 in DM course text book.
- At the end of writing, refer to 
-\begin_inset Quotes eld
-\end_inset
-
-Mining Generalized Association Rules
-\begin_inset Quotes erd
-\end_inset
-
- by Srikant for more details (
-\begin_inset Quotes eld
-\end_inset
-
-mining with concept hierarchies
-\begin_inset Quotes erd
-\end_inset
-
- = 
-\begin_inset Quotes eld
-\end_inset
-
-mining generalized association rules
-\begin_inset Quotes erd
-\end_inset
-
-, with 
-\begin_inset Quotes eld
-\end_inset
-
-generalization
-\begin_inset Quotes erd
-\end_inset
-
- being a higher level in the hierarchy).
-\end_layout
-
-\end_inset
-
-
+Here is an overview of how each field in the Episode slog file should be
+ mapped to a (hierarchical) categorical attribute:
 \end_layout
 
 \begin_layout Itemize
@@ -2025,6 +1999,353 @@ Overall, we can see that we need to detect associations between a single
  browser, browser version and user agent.
 \end_layout
 
+\begin_layout Subsubsection
+Mining with Concept Hierarchies
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:sample:concept-hierarchies"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:sample:pre-processing"
+
+\end_inset
+
+, it is indicated repeatedly that each categorical attribute is preferably
+ hierarchical, because that makes it possible to provide more easily interpretab
+le results for us humans.
+\end_layout
+
+\begin_layout Standard
+However, hierarchical categorical attributes require the use of a 
+\emph on
+concept hierarchy
+\emph default
+ (sometimes also called a 
+\emph on
+taxonomy
+\emph default
+ or 
+\emph on
+item taxonomy
+\emph default
+).
+\end_layout
+
+\begin_layout Quotation
+
+\series bold
+A concept hierarchy is a multilevel organization of the various entities
+ or concepts defined in a particular domain.
+
+\series default
+ For example, in market basket analysis, a concept hierarchy has the form
+ of an item taxonomy describing the 
+\series bold
+
+\begin_inset Quotes eld
+\end_inset
+
+is-a
+\begin_inset Quotes erd
+\end_inset
+
+ relationships
+\series default
+ among items sold at a grocery store — e.g., milk is a kind of food and DVD
+ is a kind of home electronics equipment.
+\end_layout
+
+\begin_layout Standard
+A concept hierarchy can be represented through a directed acyclic graph.
+ For the example in the above definition, it would look like figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:mining:concept-hierarchy"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/mining/concept hierarchy.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Example of a concept hierarchy.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+.)
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:mining:concept-hierarchy"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+For more details, consult 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Mining Generalized Association Rules"
+
+\end_inset
+
+, which describes the 
+\begin_inset Quotes eld
+\end_inset
+
+mining of generalized association rules
+\begin_inset Quotes erd
+\end_inset
+
+, which is just another way for saying 
+\begin_inset Quotes eld
+\end_inset
+
+mining with concept hierarchies
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+New Possibilities by Using a Concept Hierarchy
+\end_layout
+
+\begin_layout Standard
+When one uses a concept hierarchy in association rule mining, some new possibili
+ties open up:
+\end_layout
+
+\begin_layout Enumerate
+Support counts of items at the lower levels of the hierarchy can be summed
+ for their parent items.
+ This means that while many low items in the concept hierarchy may have
+ a low support count (and thus not meet the minimum support count), their
+ parent nodes may have a sufficiently high support count and thus result
+ in an association rule, that would not have been found without the use
+ of a concept hierarchy.
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+E.g.: both printers and scanners may be sold in limited numbers, but their
+ combined sales are summed as computer accessories, and these might be high,
+ which would result in an association rule that would otherwise not have
+ been found.
+\end_layout
+
+\begin_layout Enumerate
+Applied to Episodes log mining: assume the number of Episodes log entries
+ is low for the operating systems Mac OS X 10.4, Mac OS X 10.5 and Mac OS
+ X 10.6.
+ Hence their support count is low and does not meet the minimum support
+ count.
+ However, combined they do meet the minimum support count.
+ And thus a rule 
+\begin_inset Quotes eld
+\end_inset
+
+http://example.com/ is slow for visitors that use the operating system Mac
+ OS X 10.4
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+would not 
+\emph default
+be found, nor for any other versions of the operating system, but a rule
+ 
+\begin_inset Quotes eld
+\end_inset
+
+http://example.com/ is slow for visitors that use the operating system Mac
+ OS X
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\emph on
+would
+\emph default
+ be found.
+\end_layout
+
+\end_deeper
+\begin_layout Enumerate
+Similarly, association rules involving items at the lower levels of a concept
+ hierarchy can be very specific and may thus be of less interest than rules
+ at the higher levels.
+ When using a concept hierarchy, it is possible to summarize these very
+ specific association rules into more general association rules, making
+ the results more easily interpretable and likely also more useful.
+\end_layout
+
+\begin_layout Subsubsection*
+Implementation Notes
+\end_layout
+
+\begin_layout Standard
+Standard association rule mining can be adapted to incorporate concept hierarchi
+es fairly easily.
+ Each transaction 
+\begin_inset Formula $t$
+\end_inset
+
+ is replaced with its 
+\emph on
+extended transaction
+\emph default
+ 
+\begin_inset Formula $t'$
+\end_inset
+
+, which contains all the items in 
+\begin_inset Formula $t$
+\end_inset
+
+, plus the corresponding ancestors.
+ For example, when the user agent string would be 
+\begin_inset Quotes eld
+\end_inset
+
+
+\family typewriter
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.50727)
+\family default
+
+\begin_inset Quotes erd
+\end_inset
+
+, then the following ancestors would be added: Internet Explorer 6.0, Internet
+ Explorer 6, Internet Explorer, Windows XP Service Pack 1 x86, Windows XP
+ Service Pack 1, Windows x86, Windows.
+\end_layout
+
+\begin_layout Standard
+Thanks to this approach, existing association rule mining algorithms such
+ as 
+\emph on
+Apriori
+\emph default
+ or 
+\emph on
+FP-growth
+\emph default
+ can be applied to the extended transactions, to find rules over multiple
+ levels of the concept hierarchy.
+ While this is obviously trivial to implement, there are also several equally
+ obvious limitations:
+\end_layout
+
+\begin_layout Enumerate
+If the minimum support count is set too high, then only association rules
+ that involve the items at the higher levels are discovered.
+ Analogously, if the minimum support count is set too low, then too many
+ association rules (many of which may be redundant) will be generated and
+ the number of required computations may rise too high.
+\end_layout
+
+\begin_layout Enumerate
+This is in fact a consequent of the previous point: redundant association
+ rules may be generated.
+ A rule 
+\begin_inset Formula $A\rightarrow B$
+\end_inset
+
+ is redundant if a more general rule 
+\begin_inset Formula $\hat{A}\rightarrow\hat{B}$
+\end_inset
+
+ exists, where 
+\begin_inset Formula $\hat{A}$
+\end_inset
+
+ is an ancestor of 
+\begin_inset Formula $A$
+\end_inset
+
+ and 
+\begin_inset Formula $\hat{B}$
+\end_inset
+
+ is an ancestor of 
+\begin_inset Formula $B$
+\end_inset
+
+ and both rules have similar confidence.
+ If confidence differs, then it it's possible that a more specific rule
+ occurs with a higher confidence than the general rule.
+ This would suggest that while the association exists for the more general
+ rule, that it is more pronounced in the more specific rule.
+\begin_inset Newline newline
+\end_inset
+
+Fortunately, it is easy to eliminate redundant itemsets during frequent
+ itemset generation, given that the concept hierarchy is known.
+\end_layout
+
+\begin_layout Enumerate
+Because all transactions are increased in size (i.e.
+ they're extended with ancestor items), the number of candidate frequent
+ item sets and frequent itemsets will also grow.
+ Depending on the form of the concept hierarchy, this growth may even be
+ exponential.
+\end_layout
+
 \begin_layout Subsection
 Detecting Page Loading Performance Issues
 \end_layout
@@ -2328,7 +2649,7 @@ Step 3: path completion
 pages in the navigation path may be cached in the end user's browser and
  therefore their browser may not make any request at all to the web server,
  and thus it may not show up in the web server log.
- (The solution is path inference by looking at the referers.) This is true
+ (The solution is path inference by looking at the referrers.) This is true
  for typical web usage mining, but not for Episodes log mining, since Episodes
  also runs on cached pages and thus logs the recorded episodes and thus
  all page loads show up in the logs.
@@ -14509,6 +14830,24 @@ Proc.
  ACM SIGMOD
 \emph default
 , 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Mining Generalized Association Rules"
+
+\end_inset
+
+
+\emph on
+Mining Generalized Association Rules
+\emph default
+, Ramakrishnan Srikant; Rakesh Agrawal
+\emph on
+, Proceedings of the 21th International Conference on Very Large Data Bases
+\emph default
+, p.407-419, September 11-15, 1995
 \end_layout
 
 \begin_layout Bibliography
