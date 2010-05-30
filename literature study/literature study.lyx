@@ -503,6 +503,10 @@ And, of course, any page loading performance issues that are a combination
  a badly configured web proxy server).
 \end_layout
 
+\begin_layout Subsubsection*
+Examples
+\end_layout
+
 \begin_layout Standard
 Examples of page loading performance issues that need to be detected automatical
 ly are, for example:
@@ -549,6 +553,86 @@ JS
 Internet Explorer 6 or 7
 \end_layout
 
+\begin_layout Subsubsection*
+The Definition of 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Of course, 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+ is a subjective quality.
+ There are multiple methods for defining 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+The top 
+\begin_inset Formula $x$
+\end_inset
+
+ percent slowest episodes are considered 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\begin_inset Formula $x$
+\end_inset
+
+ would be configurable by the user.
+\end_layout
+
+\begin_layout Enumerate
+There's a threshold 
+\begin_inset Formula $y$
+\end_inset
+
+ defined for each episode; durations for this episode higher than 
+\begin_inset Formula $y$
+\end_inset
+
+ would be marked slow.
+\end_layout
+
+\begin_layout Standard
+Analogously, one could define multiple 
+\begin_inset Quotes eld
+\end_inset
+
+speeds
+\begin_inset Quotes erd
+\end_inset
+
+: very slow — slow — acceptable — fast — very fast, for example.
+ This would need to come with sane defaults, but should be configurable
+ by the user in the end.
+\end_layout
+
 \begin_layout Subsubsection
 The Mining Process
 \end_layout
@@ -585,7 +669,29 @@ Episodes log mining:
  here, it is quite different: data collection is not an issue; and pre-processin
 g consists of mapping the IP address of each log entry to a location and
  an ISP (if possible), extracting the various episodes from the specially
- formatted URL and normalizing the user agent string.
+ formatted URL, normalizing the user agent string, and so on.
+ See section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:sample:pre-processing"
+
+\end_inset
+
+ for more details.
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+The data collection has already been implemented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Improving Drupal's page loading performance"
+
+\end_inset
+
+.
+ The pre-processing will be implemented as part of this master thesis.
 \end_layout
 
 \end_deeper
@@ -714,6 +820,10 @@ DrupalBehaviors:47,frontend:8015" 200 "http:// driverpacks.net/applications"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Subsubsection
+All Fields Explained
 \end_layout
 
 \begin_layout Standard
@@ -1286,18 +1396,76 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 \end_layout
 
 \begin_layout Subsubsection
-The Extractable Categorical Attributes
+Pre-processing Fields into (Hierarchical) Categorical Attributes
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:sample:pre-processing"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 Several categorical attributes can be extracted from an Episodes log file,
  preferably in a hierarchical manner because that would allow for more easily
  human-interpretable results.
- E.g.
+\end_layout
+
+\begin_layout Standard
+E.g.
  if a problem exists for all ISPs in a country, then there likely is a problem
  with network connections to that country, and it'd be better to show a
  single page loading performance issue marking the country as problematic,
  instead of many issues with one for each ISP in that country.
+\end_layout
+
+\begin_layout Standard
+However, hierarchical categorical attributes require the use of a concept
+ hierarchy.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Write about concept hierarchy, pages 426-428 in DM course text book.
+ At the end of writing, refer to 
+\begin_inset Quotes eld
+\end_inset
+
+Mining Generalized Association Rules
+\begin_inset Quotes erd
+\end_inset
+
+ by Srikant for more details (
+\begin_inset Quotes eld
+\end_inset
+
+mining with concept hierarchies
+\begin_inset Quotes erd
+\end_inset
+
+ = 
+\begin_inset Quotes eld
+\end_inset
+
+mining generalized association rules
+\begin_inset Quotes erd
+\end_inset
+
+, with 
+\begin_inset Quotes eld
+\end_inset
+
+generalization
+\begin_inset Quotes erd
+\end_inset
+
+ being a higher level in the hierarchy).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Itemize
@@ -1331,6 +1499,8 @@ continent
 \begin_inset Newline newline
 \end_inset
 
+
+\emph on
 e.g.
  Europe 
 \begin_inset Formula $\rightarrow$
@@ -1349,7 +1519,14 @@ e.g.
 
 \begin_layout Itemize
 if a hierarchical value is not feasible, then storing just the country is
- likely the best alternative.
+ likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.
+ Belgium
 \end_layout
 
 \end_deeper
@@ -1357,10 +1534,52 @@ if a hierarchical value is not feasible, then storing just the country is
 ISP
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+can be retrieved by resolving the IP address to a hostname.
+ Based on the hostname, the ISP can be guessed fairly easily.
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.
+ from
+\family typewriter
+ 211-138-37-206.access.telenet.be
+\family default
+, it is easy to extract the domain name (
+\family typewriter
+telenet.be
+\family default
+), which translates roughly to an actual ISP.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 IP range
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+requires the IP address to be stored in a hierarchical manner
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.
+ 
+\family typewriter
+\emph default
+211.138.37.206
+\family default
+ would need to be stored as a binary number (or at least loaded as such
+ into memory at processing time) and not as a string, to allow for IP range
+ detection.
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Itemize
 date and time
@@ -1371,10 +1590,102 @@ date and time
 date
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical: 
+\family typewriter
+YYYY 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ MM 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ DD
+\begin_inset Newline newline
+\end_inset
+
+
+\family default
+\emph on
+e.g.: 
+\family typewriter
+2009 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 06 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 21
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing the entire date as
+ a string is likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.: 
+\family typewriter
+2009-06-21
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 time
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+preferably hierarchical: 
+\family typewriter
+HH 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ MM 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+
+\family default
+\emph on
+ SS
+\begin_inset Newline newline
+\end_inset
+
+e.g.: 
+\family typewriter
+06 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 23 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 37
+\end_layout
+
+\begin_layout Itemize
+if a hierarchical value is not feasible, then storing the entire date as
+ a string is likely the best alternative
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.: 
+\family typewriter
+06:23:37
+\end_layout
+
+\end_deeper
 \end_deeper
 \begin_layout Itemize
 HTTP referrer
@@ -1387,7 +1698,9 @@ path
 
 \begin_deeper
 \begin_layout Itemize
-preferably hierarchical: dir1 
+preferably hierarchical: 
+\family typewriter
+dir1 
 \begin_inset Formula $\rightarrow$
 \end_inset
 
@@ -1400,9 +1713,13 @@ preferably hierarchical: dir1
 \end_inset
 
  file
+\family default
+
 \begin_inset Newline newline
 \end_inset
 
+
+\emph on
 e.g.: 
 \family typewriter
 http://example.com/foo/bar/baz.html
@@ -1426,6 +1743,8 @@ if a hierarchical value is not feasible, then storing the entire relative
 \begin_inset Newline newline
 \end_inset
 
+
+\emph on
 e.g.: 
 \family typewriter
 http://example.com/foo/bar/baz.html
@@ -1449,6 +1768,40 @@ operating system
 \begin_deeper
 \begin_layout Itemize
 preferably hierarchical: 
+\family typewriter
+operating system 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ major version 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ minor version 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ architecture 
+\family default
+
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.: Windows 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ 7 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ Service Pack 1 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ x64
 \end_layout
 
 \begin_layout Itemize
@@ -1457,6 +1810,8 @@ if a hierarchical value is not feasible, then storing the operating system
 \begin_inset Newline newline
 \end_inset
 
+
+\emph on
 e.g.: Windows XP, Windows 7 x64, Mac OS X Snow Leopard, Ubuntu 10.04
 \end_layout
 
@@ -1467,18 +1822,45 @@ browser
 
 \begin_deeper
 \begin_layout Itemize
-preferably hierarchical
+preferably hierarchical: 
+\family typewriter
+browser 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ major version 
+\begin_inset Formula $\rightarrow$
+\end_inset
+
+ minor version
 \end_layout
 
 \begin_layout Itemize
-if a hierarchical value is not feasible, then storing both each x.0 browser
- version and eaxh x.y.z.
- browser version is likely the best alternative
+if a hierarchical value is not feasible, then storing both each major (x.0)
+ browser version and each minor (x.y.z) browser version — as 2 separate categorica
+l attributes — is likely the best alternative
 \begin_inset Newline newline
 \end_inset
 
-e.g.
- store both Firefox 3 and Firefox 3.6.1, Chrome 5 and Chrome 5.0.375.55, etc.
+
+\emph on
+e.g.: store both 
+\family typewriter
+Firefox 3
+\family default
+ and 
+\family typewriter
+Firefox 3.6.1
+\family default
+, 
+\family typewriter
+Chrome 5
+\family default
+ and 
+\family typewriter
+Chrome 5.0.375.55
+\family default
+, etc.
 \end_layout
 
 \end_deeper
@@ -1488,13 +1870,21 @@ user agent
 
 \begin_deeper
 \begin_layout Itemize
-store the full user agent string.
+the full user agent string
+\begin_inset Newline newline
+\end_inset
+
+
+\emph on
+e.g.: 
+\family typewriter
+Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.50727)
 \end_layout
 
 \end_deeper
 \end_deeper
-\begin_layout Subsubsection
-applied to sample rules
+\begin_layout Subsubsection*
+Applied to Sample Page Loading Performance Issues
 \end_layout
 
 \begin_layout Standard
@@ -13979,6 +14369,31 @@ status collapsed
 \begin_layout Plain Layout
 
 http://httpd.apache.org/docs/1.3/logs.html
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Improving Drupal's page loading performance"
+
+\end_inset
+
+
+\emph on
+Improving Drupal's page loading performance
+\emph default
+, Wim Leers, Universiteit Hasselt, 2009, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://wimleers.com/blog/finished-my-bachelor-degree
 \end_layout
 
 \end_inset
