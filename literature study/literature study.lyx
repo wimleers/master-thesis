@@ -14825,6 +14825,29 @@ name "sec:Glossary"
 \end_layout
 
 \begin_layout Description
+binarization similar to discretization, but instead of transforming into
+ categorical attributes, transformations into one or more binary attributes
+ are made
+\begin_inset Newline newline
+\end_inset
+
+— based on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, pages 57—63
+\end_layout
+
+\begin_layout Description
+browser A web browser is an application that runs on end user computers
+ to view web sites (which live on the World Wide Web).
+ Examples are Firefox, Internet Explorer, Safari and Opera.
+\end_layout
+
+\begin_layout Description
 categorical
 \begin_inset space ~
 \end_inset
@@ -14849,25 +14872,22 @@ key "Intro to Data Mining"
 \end_layout
 
 \begin_layout Description
-quantitative
-\begin_inset space ~
-\end_inset
+CDN A content delivery network (CDN) is a collection of web servers distributed
+ across multiple locations to deliver content more efficiently to users.
+ The server selected for delivering content to a specific user is typically
+ based on a measure of network proximity.
+ 
+\end_layout
 
-attributes also known as numeric attributes; attributes that can be represented
- as numbers and have most of the properties of numbers; either integer-valued
- or continuous; subclasses of this type of attribute are interval and ratio
- attributes
-\begin_inset Newline newline
-\end_inset
+\begin_layout Description
+component A component of a web page, this can be a CSS style sheet, a JavaScript
+ file, an image, a font, a movie file, et cetera.
+ Synonyms: resource, web resource.
+\end_layout
 
-— based on 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Intro to Data Mining"
-
-\end_inset
-
-, pages 25—27
+\begin_layout Description
+DBMS a computer program that aids in controlling the creation, usage and
+ maintenance of a database
 \end_layout
 
 \begin_layout Description
@@ -14901,9 +14921,58 @@ key "Intro to Data Mining"
 \end_layout
 
 \begin_layout Description
-binarization similar to discretization, but instead of transforming into
- categorical attributes, transformations into one or more binary attributes
- are made
+episode An episode in the page loading sequence.
+\end_layout
+
+\begin_layout Description
+Episodes The Episodes framework 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Episodes home page"
+
+\end_inset
+
+ (note the capital 'e').
+\end_layout
+
+\begin_layout Description
+page
+\begin_inset space ~
+\end_inset
+
+loading
+\begin_inset space ~
+\end_inset
+
+performance The time it takes to load a web page and all its components.
+\end_layout
+
+\begin_layout Description
+page
+\begin_inset space ~
+\end_inset
+
+rendering
+\begin_inset space ~
+\end_inset
+
+performance The time the server needs to render a web page.
+\end_layout
+
+\begin_layout Description
+PoP A Point of Presence is an access point to the internet where multiple
+ Internet Service Providers connect with each other.
+\end_layout
+
+\begin_layout Description
+quantitative
+\begin_inset space ~
+\end_inset
+
+attributes also known as numeric attributes; attributes that can be represented
+ as numbers and have most of the properties of numbers; either integer-valued
+ or continuous; subclasses of this type of attribute are interval and ratio
+ attributes
 \begin_inset Newline newline
 \end_inset
 
@@ -14914,18 +14983,21 @@ key "Intro to Data Mining"
 
 \end_inset
 
-, pages 57—63
-\end_layout
-
-\begin_layout Description
-DBMS a computer program that aids in controlling the creation, usage and
- maintenance of a database
+, pages 25—27
 \end_layout
 
 \begin_layout Description
 RDBMS a relational DBMS that is based on the relational model, as introduced
  by Codd.
  Examples are MySQL, PostgreSQL, SQL Server, Oracle …
+\end_layout
+
+\begin_layout Description
+web
+\begin_inset space ~
+\end_inset
+
+page An (X)HTML document that potentially references components.
 \end_layout
 
 \begin_layout Standard
