@@ -397,7 +397,7 @@ status collapsed
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/intro/episodes analysis - episodes.png
+	filename figures/motivation/episodes analysis - episodes.png
 	width 100text%
 
 \end_inset
@@ -434,12 +434,12 @@ name "fig:Episodes-chart-episodes"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/intro/episodes analysis - page loading performance.png
+	filename figures/motivation/episodes analysis - page loading performance.png
 	height 98theight%
 
 \end_inset
