@@ -435,7 +435,7 @@ that are frequently accessed by groups of users with common needs or interests
 \end_layout
 
 \begin_layout Subsubsection
-Episodes Log Mining
+Web Usage Mining Versus Episodes Log Mining
 \end_layout
 
 \begin_layout Standard
@@ -554,15 +554,7 @@ Internet Explorer 6 or 7
 \end_layout
 
 \begin_layout Subsubsection*
-The Definition of 
-\begin_inset Quotes eld
-\end_inset
-
-slow
-\begin_inset Quotes erd
-\end_inset
-
-
+The Definition of 'Slow'
 \end_layout
 
 \begin_layout Standard
@@ -575,7 +567,7 @@ slow
 \end_inset
 
  is a subjective quality.
- There are multiple methods for defining 
+ There are many possible methods for defining 
 \begin_inset Quotes eld
 \end_inset
 
@@ -583,7 +575,9 @@ slow
 \begin_inset Quotes erd
 \end_inset
 
-:
+.
+ Here are two examples (which I would like to support both in the implementation
+ that will accompany this thesis):
 \end_layout
 
 \begin_layout Enumerate
@@ -769,6 +763,79 @@ reference "sec:OLAP"
 \begin_layout Standard
 Simultaneously, this overview of course also gives a high-level idea of
  what the implementation that will accompany this thesis will entail.
+\end_layout
+
+\begin_layout Subsubsection
+Evolution over Time
+\end_layout
+
+\begin_layout Standard
+- when improvements are implemented, 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+ can become redefined
+\end_layout
+
+\begin_layout Standard
+- when monitoring the 
+\begin_inset Quotes eld
+\end_inset
+
+live page loading performance
+\begin_inset Quotes erd
+\end_inset
+
+, one probably only wants to look at the last year, month, week, day, hour
+ or fifteen minutes and compare the page loading performance for these periods,
+ to verify stability or improvements and detect regressions.
+ Compare this to typical data mining, which operates on the entire data
+ set.
+ Here, we want to apply data mining on subsets.
+ And possibly even data mining on a live stream, to monitor the 
+\begin_inset Quotes eld
+\end_inset
+
+truly live page loading performance
+\begin_inset Quotes erd
+\end_inset
+
+ and possibly show the overall variance, the variance per country, etc.,
+ compared to the last year/month/week/day/hour.
+ But then when is 
+\begin_inset Quotes eld
+\end_inset
+
+the last hour
+\begin_inset Quotes erd
+\end_inset
+
+ updated? Every hour? Every fifteen minutes? Every minute? Live?
+\end_layout
+
+\begin_layout Standard
+- …
+\end_layout
+
+\begin_layout Standard
+How to handle this?
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
@@ -1427,7 +1494,7 @@ However, hierarchical categorical attributes require the use of a concept
 status open
 
 \begin_layout Plain Layout
-Write about concept hierarchy, pages 426-428 in DM course text book.
+Write about concept hierarchies, pages 426-428 in DM course text book.
  At the end of writing, refer to 
 \begin_inset Quotes eld
 \end_inset
