@@ -308,7 +308,7 @@ js:484,tabs: 63,ToThePointShowHideChangelog:0,gaTrackerAttach:0,DrupalBehaviors:
 Episodes Log Mining
 \begin_inset CommandInset label
 LatexCommand label
-name "sec:web-log-mining"
+name "sec:episodes-log-mining"
 
 \end_inset
 
@@ -317,10 +317,24 @@ name "sec:web-log-mining"
 
 \begin_layout Subsection
 Introduction
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:intro"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 Web Usage Mining
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:intro:web-usage-mining"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -436,6 +450,13 @@ that are frequently accessed by groups of users with common needs or interests
 
 \begin_layout Subsubsection
 Web Usage Mining Versus Episodes Log Mining
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:intro:web-usage-mining-vs-episodes-log-mining"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -629,6 +650,13 @@ speeds
 
 \begin_layout Subsubsection
 The Mining Process
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:intro:the-mining-process"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -669,7 +697,7 @@ g consists of mapping the IP address of each log entry to a location and
  See section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:episodes-log-mining:sample:pre-processing"
+reference "sub:episodes-log-mining:attributes:pre-processing"
 
 \end_inset
 
@@ -846,6 +874,13 @@ TODO
 
 \begin_layout Subsection
 The Attributes
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:attributes"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -904,6 +939,13 @@ In this section, a more in-depth look is given at the various attributes
 
 \begin_layout Subsubsection
 All Fields Explained
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:attributes:fields-explained"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1479,7 +1521,7 @@ LogFormat "%h %{[%A, %d-%b-%Y %H:%M:%S %z]}t
 Pre-processing Fields into Numerical and (Hierarchical) Categorical Attributes
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:episodes-log-mining:sample:pre-processing"
+name "sub:episodes-log-mining:attributes:pre-processing"
 
 \end_inset
 
@@ -1510,7 +1552,7 @@ For example, if a problem exists for all ISPs in a country, then there likely
 In section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:episodes-log-mining:sample:concept-hierarchies"
+reference "sub:episodes-log-mining:attributes:concept-hierarchies"
 
 \end_inset
 
@@ -1625,7 +1667,6 @@ requires the IP address to be stored in a hierarchical manner
 e.g.
  
 \family typewriter
-\emph default
 211.138.37.206
 \family default
  would need to be stored as a binary number (or at least loaded as such
@@ -1636,6 +1677,8 @@ e.g.
 status open
 
 \begin_layout Plain Layout
+
+\emph on
 Classless Inter-Domain Routing
 \end_layout
 
@@ -1983,7 +2026,7 @@ simply the host string is sufficient,
 Mining with Concept Hierarchies
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:episodes-log-mining:sample:concept-hierarchies"
+name "sub:episodes-log-mining:attributes:concept-hierarchies"
 
 \end_inset
 
@@ -1994,7 +2037,7 @@ name "sub:episodes-log-mining:sample:concept-hierarchies"
 In section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:episodes-log-mining:sample:pre-processing"
+reference "sub:episodes-log-mining:attributes:pre-processing"
 
 \end_inset
 
@@ -2462,6 +2505,10 @@ Episodes log mining
 \end_layout
 
 \begin_layout Subsubsection
+Efficient & Accurate Numerical Data Mining
+\end_layout
+
+\begin_layout Subsubsection*
 Discretization: Information Loss
 \end_layout
 
@@ -2540,7 +2587,7 @@ Clearly, it is desirable to not apply discretization to the collected Episodes
  durations, to avoid information loss and the consequential problems.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Rank-Correlated Sets of Numerical Attributes
 \end_layout
 
@@ -2553,7 +2600,7 @@ key "Mining Rank-Correlated Sets of Numerical Attributes"
 \end_inset
 
 , an alternative mining method is proposed, which discerns itself by not
- requiring discretization.
+ requiring discretization and thus not incurring information loss.
  They propose a new technique based on well-established statistical studies
  
 \begin_inset CommandInset citation
@@ -2658,60 +2705,32 @@ If
 \end_layout
 
 \begin_layout Subsubsection*
-Rank Correlation Measures
+Applicability
 \end_layout
 
 \begin_layout Standard
-First, it is assumed that all values of numerical attributes are distinct;
- later, situations with tied values are taken into account.
-\end_layout
-
-\begin_layout Standard
-blahblah
-\end_layout
-
-\begin_layout Standard
-The three proposed support measures are in fact on three well-known rank
- correlation measures.
- Let 
-\begin_inset Formula $A$
-\end_inset
-
- and 
-\begin_inset Formula $B$
-\end_inset
-
- be two numerical attributes, then:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray*}
-\rho(A,B) & = & 1-\frac{6\sum_{t\in D}(r_{t}.A-r_{t}.B)^{2}}{\left|D\right|^{3}-\left|D\right|}\\
-F(A,B) & = & 1-\frac{4\sum_{t\in D}\left|r_{t}.A-r_{t}.B\right|}{\left|D\right|^{2}}\\
-\tau(A,B) & = & \frac{4\left|\{s,t)\in D^{2}\mid s.A<t.A\wedge s.B<t.B\}\right|}{\left|D\right|(\left|D\right|-1)}-1\end{eqnarray*}
+At first, it appeared that this technique could prove useful to find more
+ accurate association rules for the numerical attributes in Episodes log
+ mining.
+ However, as explained in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:attributes:pre-processing"
 
 \end_inset
 
-
+, the only numerical attributes are those for the episodes.
+ And unfortunately, it is quite useless to apply numerical data mining to
+ just the episode durations: clearly, when one episode takes longer, its
+ container episodes will also take longer, and often it will be the case
+ that if one episode is slow, then the next (independent) episode will also
+ be slow (this can be due to a variety of factors: internet connection speed,
+ browser, hardware, CPU load, etc.).
 \end_layout
 
 \begin_layout Standard
-(Copy the explanations from section 2.1 of the paper?)
-\end_layout
-
-\begin_layout Subsubsection*
-Rank-Based Support Measures
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula \begin{eqnarray}
-supp_{\rho}(I) & = & 1-\frac{\sum_{t\in D}(max_{A\in I}r_{t}.A-min_{A\in I}r_{t}.A)^{2}}{\left|D\right|(\left|D\right|-1)^{2}}\nonumber \\
-supp_{F}(I) & = & 1-\frac{\sum_{t\in D}(max_{A\in I}r_{t}.A-min_{A\in I}r_{t}.A)}{\left|D\right|(\left|D\right|-1)}\\
-supp_{\tau}(I) & = & \frac{\left|\{(s,t)\in D^{2}\mid\forall A\in I:s.A<t.a\}\right|}{\left(_{\,2}^{\left|D\right|}\right)}\nonumber \end{eqnarray}
-
-\end_inset
-
-
+It is clear that these association rules would be absolutely useless.
+ Therefore it was decided to stop looking into numerical data mining.
 \end_layout
 
 \begin_layout Subsection
