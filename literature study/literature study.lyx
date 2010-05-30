@@ -1631,6 +1631,24 @@ e.g.
  would need to be stored as a binary number (or at least loaded as such
  into memory at processing time) and not as a string, to allow for IP range
  detection.
+ This is possible thanks to CIDR
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Classless Inter-Domain Routing
+\end_layout
+
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Computer Networking Top-Down,CIDR Wikipedia"
+
+\end_inset
+
+.
 \end_layout
 
 \end_deeper
@@ -1988,7 +2006,21 @@ Telenet
 
 \begin_deeper
 \begin_layout Itemize
-The IP address needs to be mapped to a hierarchical location, 
+The IP address needs to be mapped to a hierarchical location.
+ Since 
+\begin_inset Quotes eld
+\end_inset
+
+Belgium
+\begin_inset Quotes erd
+\end_inset
+
+ is shown and not one or more specific cities, it is apparently the case
+ that this page is slow 
+\emph on
+everywhere
+\emph default
+ in Belgium.
 \end_layout
 
 \begin_layout Itemize
@@ -1997,8 +2029,7 @@ The IP address needs to be mapped to an ISP, e.g.
  If this is not possible (i.e.
  because the IP address does not resolve to a hostname), then IP ranges
  can be used.
- To be able to detect associated IP ranges, IP addresses need to be stored
- (or at leas interpreted) in a hierarchical manner and not simply as strings.
+ 
 \end_layout
 
 \end_deeper
@@ -2452,7 +2483,7 @@ values close to a discretization border may result in very large (unjustifiably
 
 \end_deeper
 \begin_layout Enumerate
-if there are too many dicretization intervals:
+if there are too many discretization intervals:
 \end_layout
 
 \begin_deeper
@@ -14708,7 +14739,8 @@ key "Intro to Data Mining"
 \emph on
 Introduction to Data Mining
 \emph default
-, Pang-Ning Tan; Michael Steinbach; Vipin Kumar, 2006
+, Pang-Ning Tan; Michael Steinbach; Vipin Kumar, Pearson-Addison Wesley,
+ 2006
 \end_layout
 
 \begin_layout Bibliography
@@ -14829,6 +14861,47 @@ http://wimleers.com/blog/finished-my-bachelor-degree
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
+key "Computer Networking Top-Down"
+
+\end_inset
+
+
+\emph on
+Computer Networking: A Top-Down Approach (4th Edition)
+\emph default
+, James F.
+ Kurose; Keith W.
+ Ross, Addison Wesley, 2007
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "CIDR Wikipedia"
+
+\end_inset
+
+
+\emph on
+Classless Inter-Domain Routing
+\emph default
+, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
 key "Mining association rules between sets of items in large databases"
 
 \end_inset
@@ -14839,7 +14912,8 @@ Mining association rules between sets of items in large databases
 \emph default
 , R.
  Agrawal; T.
- Imielinski; A.N.
+ Imielinski; A.
+ N.
  Swami, 
 \emph on
 Proc.
@@ -14906,14 +14980,14 @@ Proc.
 \end_layout
 
 \begin_layout Bibliography
-
-\emph on
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
 key "Rank Correlation Methods"
 
 \end_inset
 
+
+\emph on
 Rank Correlation Methods
 \emph default
 , M.
@@ -14921,14 +14995,14 @@ Rank Correlation Methods
 \end_layout
 
 \begin_layout Bibliography
-
-\emph on
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
 key "Measures of Association"
 
 \end_inset
 
+
+\emph on
 Measures of Association
 \emph default
 , A.M.
