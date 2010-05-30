@@ -531,9 +531,9 @@ Telenet
 
 \series bold
 \emph on
-http://example.com/path/a
+http://example.com/path
 \series default
- has slowly loading 
+ and all pages in this directory have slowly loading 
 \series bold
 CSS
 \end_layout
@@ -1979,94 +1979,6 @@ simply the host string is sufficient,
 
 \end_deeper
 \end_deeper
-\begin_layout Subsubsection*
-Applied to Sample Page Loading Performance Issues
-\end_layout
-
-\begin_layout Standard
-If we now apply this more detailed information to the three example page
- loading performance issues mentioned before, then we can gain more insight
- in how this can be detected:
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-\emph on
-http://example.com/
-\series default
- is slow in 
-\series bold
-Belgium
-\series default
-, for users of the ISP 
-\series bold
-Telenet
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-The IP address needs to be mapped to a hierarchical location.
- Since 
-\begin_inset Quotes eld
-\end_inset
-
-Belgium
-\begin_inset Quotes erd
-\end_inset
-
- is shown and not one or more specific cities, it is apparently the case
- that this page is slow 
-\emph on
-everywhere
-\emph default
- in Belgium.
-\end_layout
-
-\begin_layout Itemize
-The IP address needs to be mapped to an ISP, e.g.
- Telenet.
- If this is not possible (i.e.
- because the IP address does not resolve to a hostname), then IP ranges
- can be used.
- 
-\end_layout
-
-\end_deeper
-\begin_layout Itemize
-
-\series bold
-\emph on
-http://example.com/path/a
-\series default
- has slowly loading 
-\series bold
-CSS
-\end_layout
-
-\begin_layout Itemize
-
-\series bold
-\emph on
-http://example.com/path/b
-\series default
- has slowly loading 
-\series bold
-JS
-\series default
- for visitors that use the browser 
-\series bold
-Internet Explorer 6 or 7
-\end_layout
-
-\begin_layout Standard
-Overall, we can see that we need to detect associations between a single
- numerical attribute — relatively high durations of an episode, i.e.
- relative to all durations of this episode — and one or more of the categorical
- attributes — date, time, location, ISP, IP range, path, operating system,
- browser, browser version and user agent.
-\end_layout
-
 \begin_layout Subsubsection
 Mining with Concept Hierarchies
 \begin_inset CommandInset label
@@ -2412,6 +2324,127 @@ Because all transactions are increased in size (i.e.
  item sets and frequent itemsets will also grow.
  Depending on the form of the concept hierarchy, this growth may even be
  exponential.
+\end_layout
+
+\begin_layout Subsubsection*
+Applied to Sample Page Loading Performance Issues
+\end_layout
+
+\begin_layout Standard
+If we now apply this more detailed information to the three example page
+ loading performance issues mentioned before, then we can gain more insight
+ in how this can be detected:
+\end_layout
+
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/
+\series default
+ is slow in 
+\series bold
+Belgium
+\series default
+, for users of the ISP 
+\series bold
+Telenet
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+The IP address needs to be mapped to a hierarchical location.
+ Since 
+\begin_inset Quotes eld
+\end_inset
+
+Belgium
+\begin_inset Quotes erd
+\end_inset
+
+ is shown and not one or more specific cities, it is apparently the case
+ that this page is slow 
+\emph on
+everywhere
+\emph default
+ in Belgium.
+\end_layout
+
+\begin_layout Itemize
+The IP address needs to be mapped to an ISP, e.g.
+ Telenet.
+ If this is not possible (i.e.
+ because the IP address does not resolve to a hostname), then IP ranges
+ can be used.
+ 
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path
+\series default
+ and all pages in this directory have slowly loading 
+\series bold
+CSS
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+If the path (extracted from the HTTP referrer field) were not stored in
+ a hierarchical manner, we would get a list of pages, instead of the parent
+ page (
+\family typewriter
+/path
+\family default
+), which nicely summarizes the association rules.
+ It would still be possible to expand this association to provide more details.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\series bold
+\emph on
+http://example.com/path/b
+\series default
+ has slowly loading 
+\series bold
+JS
+\series default
+ for visitors that use the browser 
+\series bold
+Internet Explorer 6 or 7
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+Without hierarchical categorical attributes for the user agent field, but
+ just the exact user agent string, it is likely that nothing would be detected.
+ Even with specific browser versions, it's possible that nothing would be
+ detected, or there might be too much information (e.g.
+ a very long list with exact versions of Internet Explorer), but thanks
+ to hierarchical attributes, it's possible to provide the very understandable
+ 
+\begin_inset Quotes eld
+\end_inset
+
+Internet Explorer 6 or 7
+\begin_inset Quotes erd
+\end_inset
+
+ in the association rule.
+\end_layout
+
+\end_deeper
+\begin_layout Standard
+Overall, we can see that we need to detect associations between a single
+ numerical attribute — relatively high durations of an episode, i.e.
+ relative to all durations of this episode — and one or more of the categorical
+ attributes — date, time, location, ISP, IP range, path, operating system,
+ browser, browser version and user agent.
 \end_layout
 
 \begin_layout Subsection
