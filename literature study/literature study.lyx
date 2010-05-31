@@ -823,6 +823,13 @@ e.
 
 \begin_layout Section
 The Process
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:process"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -1909,7 +1916,8 @@ key "Drupal Episodes module"
 
 \end_inset
 
- to make the integration of the Episodes library into a web site trivial.
+ to make the integration of the Episodes library into a Drupal web site
+ trivial.
 \end_layout
 
 \begin_layout Standard
@@ -1950,14 +1958,15 @@ reference "sec:episodes-log-mining"
 
 \end_inset
 
-), I've used from 
+), I've used 
 \emph on
 web usage mining
 \emph default
  as a basis.
  This led to concluding that numerical data mining was not going to be part
- of this thesis, but that normal categorical association rule mining would
- not suffice; concept hierarchies would need to be used (this is also called
+ of this thesis, and that normal categorical association rule mining would
+ not suffice; hierarchically categorical association rule mining was necessary,
+ for which concept hierarchies would need to be used (this is also called
  
 \emph on
 generalized association rule mining
@@ -2081,7 +2090,7 @@ ot purely an application of traditional data mining due to the hetereogeneity
 .
  Many new mining tasks and algorithms were invented in the past decade.
  Based on the primary kinds of data used in the mining process, web mining
- tasks can e categorized into three types: web structure mining, web content
+ tasks can be categorized into three types: web structure mining, web content
  mining and 
 \series bold
 web usage mining
@@ -2115,7 +2124,11 @@ key "Web Data Mining"
 
 \end_inset
 
-, web usage mining is:
+, web 
+\emph on
+usage
+\emph default
+ mining is:
 \end_layout
 
 \begin_layout Quotation
@@ -2158,10 +2171,10 @@ name "sub:episodes-log-mining:intro:web-usage-mining-vs-episodes-log-mining"
 \end_layout
 
 \begin_layout Standard
-However, in the context of page loading performance (what this thesis is
- about), typical web server logs are not sufficient: they only capture which
- resources were requested by user agents and some metadata (date and time,
- IP address, referrer, etc.).
+However, in the context of web performance optimization analytics (which
+ is what this thesis is about), typical web server logs are not sufficient:
+ they only capture which resources were requested by user agents and some
+ metadata (date and time, IP address, referrer, etc.).
  That is by itself not enough information on how the actual page loading
  performance of the browser as perceived by the end user was.
  It only provides sufficient information for other kinds of analysis, such
@@ -2175,9 +2188,16 @@ can
 \emph default
  be useful for suggesting advanced page loading performance improvements
  (e.g.
- preload images of typical next pages in typical navigation paths), it doesn't
- provide enough information to be able to perform page loading performance
- analysis.
+ preloading images of next pages in typical navigation paths, see section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:detection-advanced:preloading-typical-navigation-paths"
+
+\end_inset
+
+), it doesn't provide enough information to be able to perform page loading
+ performance analysis.
 \end_layout
 
 \begin_layout Standard
@@ -2205,9 +2225,9 @@ TODO
 \begin_layout Standard
 The additional information that is virtually always included in web server
  log files, such as IP address, date and time and user agent can then be
- used to apply page loading performance analysis: IP addresses can be mapped
- to locations/ISPs to pinpoint bad performance to a specific location/ISP,
- date and time can be used to detect bad performance during specific times
+ used to apply web performance optimization analysis: IP addresses can be
+ mapped to locations/ISPs to pinpoint bad performance to a specific location/ISP
+, date and time can be used to detect bad performance during specific times
  during the day (indicating overloaded web or application servers) and finally
  the browser and operating system can be used to detect performance issues
  with a specific browser, possibly a specific version of that browser and
@@ -2215,11 +2235,10 @@ The additional information that is virtually always included in web server
 \end_layout
 
 \begin_layout Standard
-And, of course, any page loading performance issues that are a combination
- of the above can also be detected: page loading performance problems that
- only occur for a specific browser/ISP combination, for example (which might
- be caused by e.g.
- a badly configured web proxy server).
+And, of course, any web performance issues that are a combination of the
+ above can also be detected: web performance problems that only occur for
+ a specific browser/ISP combination, for example (which might be caused
+ by a badly configured web proxy server for example).
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2227,8 +2246,8 @@ Examples
 \end_layout
 
 \begin_layout Standard
-Examples of page loading performance issues that need to be detected automatical
-ly are, for example:
+Examples of web performance issues that need to be detected automatically
+ are, for example:
 \end_layout
 
 \begin_layout Itemize
@@ -2295,8 +2314,12 @@ slow
 \end_inset
 
 .
- Here are two examples (which I would like to support both in the implementation
- that will accompany this thesis):
+ Here are two examples (
+\emph on
+both
+\emph default
+ of which I would like to support in the implementation that will accompany
+ this thesis):
 \end_layout
 
 \begin_layout Enumerate
@@ -2333,7 +2356,11 @@ There's a threshold
 \end_layout
 
 \begin_layout Standard
-Analogously, one could define multiple 
+Analogously, one could define 
+\emph on
+multiple
+\emph default
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -2388,7 +2415,7 @@ name "sub:episodes-log-mining:intro:the-mining-process"
 \begin_layout Standard
 The overall web usage mining process (and therefore Episodes log mining,
  which is merely a specialization) can be seen as a three-stage process.
- Below, I've provided a high-level comparison of the differences between
+ Below I've provided a high-level comparison of the differences between
  web usage mining and Episodes log mining.
 \end_layout
 
@@ -2440,7 +2467,14 @@ key "Improving Drupal's page loading performance"
 
 \end_inset
 
-.
+ (as already indicated in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:process"
+
+\end_inset
+
+).
  The pre-processing will be implemented as part of this master thesis.
 \end_layout
 
@@ -2458,7 +2492,7 @@ pattern discovery
 Web usage mining:
 \bar default
  find hidden patterns reflecting typical behavior of users and generate
- summary statistics on web resources, sessions and users.
+ summary statistics on components, sessions and users.
 \end_layout
 
 \begin_layout Itemize
@@ -2466,7 +2500,7 @@ Web usage mining:
 \bar under
 Episodes log mining:
 \bar default
- find hidden patterns related to page loading performance and summary statistics
+ find hidden patterns related to web performance and summary statistics
  such as average page loading time per country or browser.
 \begin_inset Newline newline
 \end_inset
@@ -2502,7 +2536,7 @@ Episodes log mining:
 \bar default
  the discovered patterns and statistics are displayed in a tool that provides
  visualizations and automatically makes suggestions as how to solve automaticall
-y detected page loading performance issues.
+y detected web performance issues.
 \begin_inset Newline newline
 \end_inset
 
@@ -2540,8 +2574,8 @@ name "sub:episodes-log-mining:attributes"
 As explained before, essentially the goal of this thesis is analyzing Episodes
  log files.
  Each log entry is stored in a format which has been optimized to store
- only the information necessary for Episodes log mining instead of regular
- web usage mining.
+ only the information that ever might be useful for Episodes log mining
+ instead of regular web usage mining.
  The format is as follows:
 \end_layout
 
@@ -2587,7 +2621,7 @@ DrupalBehaviors:47,frontend:8015" 200 "http:// driverpacks.net/applications"
 In this section, a more in-depth look is given at the various attributes
  in an Episodes log file, what they mean, how they should be generated from
  the fields in each log entry and how they should be used to provide meaningful
- insight into page loading performance issues for the end user.
+ insight into web performance issues for the end user.
 \end_layout
 
 \begin_layout Subsubsection
@@ -2642,6 +2676,8 @@ IP address:
 Date and time (including timezone): 
 \family typewriter
 [Sunday, 21-Jun-2009 06:23:37 +0200]
+\family default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -3020,8 +3056,11 @@ Important note:
 \family typewriter
 frontend
 \family default
- is the set that contains all other episodes and domready is a subset of
- 
+ is the set that contains all other episodes and 
+\family typewriter
+domready
+\family default
+ is a subset of 
 \family typewriter
 frontend
 \family default
@@ -3038,7 +3077,11 @@ headerjs
 footerjs
 \family default
 .
- In other words: certain episodes may in fact be container episodes.
+ In other words: certain episodes may in fact be 
+\emph on
+container episodes
+\emph default
+.
  I.e.:
 \begin_inset Formula \begin{eqnarray*}
 \mathtt{domready} & = & \{\mathtt{css},\mathtt{headerjs},\mathtt{footerjs}\}\\
@@ -3056,13 +3099,10 @@ HTTP status code:
 200
 \family default
 .
- The status code will rarely be useful for Episodes log mining and thus
- can be ignored for the scope of this thesis.
 \end_layout
 
 \begin_layout Itemize
-HTTP referrer (i.e.
- the page for which the collected episodes are being logged): 
+HTTP referrer: 
 \family typewriter
 "http:// driverpacks.net/applications"
 \family default
@@ -3115,7 +3155,9 @@ Such as as GoogleBot, which is used by Google to index the world wide web.
  it, not because they want to render the page.
  Hence the Episodes JavaScript does not get executed and therefore no log
  entries will appear for bots in the Episodes log file.
- Conclusion: bots are a non-issue for Episodes log mining!
+ Conclusion: 
+\emph on
+bots are a non-issue for Episodes log mining!
 \end_layout
 
 \begin_layout Itemize
@@ -3124,6 +3166,8 @@ Host (i.e.
  use the same logging server): 
 \family typewriter
 "driverpacks.net"
+\family default
+.
 \end_layout
 
 \begin_layout Standard
@@ -3188,17 +3232,17 @@ A single field in each Episodes log entry contains numerical attributes:
 \end_layout
 
 \begin_layout Standard
-Several categorical attributes can be extracted from an Episodes log entry,
- preferably in a hierarchical manner because that would allow for more easily
- human-interpretable results.
+Many categorical attributes can be extracted from the other fields of an
+ Episodes log entry, preferably in a hierarchical manner because that would
+ allow for more easily human-interpretable results.
 \begin_inset Newline newline
 \end_inset
 
 For example, if a problem exists for all ISPs in a country, then there likely
  is a problem with network connections to that country, and it'd be better
- to show a single page loading performance issue marking the country as
- problematic, instead of many issues with one for each ISP in that country:
- this would make it more easily human-interpretable.
+ to show a single web performance issue marking the country as problematic,
+ instead of many issues with one for each ISP in that country: this would
+ make it easier for the end user to interpret.
 \begin_inset Newline newline
 \end_inset
 
@@ -3301,7 +3345,7 @@ e.g.
 \family typewriter
 telenet.be
 \family default
-), which translates roughly to an actual ISP.
+), which roughly translates to an actual ISP.
 \end_layout
 
 \end_deeper
@@ -3350,12 +3394,12 @@ key "Computer Networking Top-Down,CIDR Wikipedia"
 \end_deeper
 \end_deeper
 \begin_layout Itemize
-date and time
+Date and time
 \end_layout
 
 \begin_deeper
 \begin_layout Itemize
-date
+Date
 \end_layout
 
 \begin_deeper
@@ -3405,7 +3449,7 @@ e.g.:
 
 \end_deeper
 \begin_layout Itemize
-time
+Time
 \end_layout
 
 \begin_deeper
@@ -3423,7 +3467,13 @@ HH
 
 \family default
 \emph on
- SS
+ 
+\family typewriter
+\emph default
+SS
+\family default
+\emph on
+
 \begin_inset Newline newline
 \end_inset
 
@@ -3456,11 +3506,12 @@ e.g.:
 \end_deeper
 \end_deeper
 \begin_layout Itemize
-Query string: numerical attributes
+Query string: numerical attributes.
 \end_layout
 
 \begin_layout Itemize
-HTTP status code: ignored
+HTTP status code: simply storing the status code as a number (but as a categoric
+al attribute!) is sufficient.
 \end_layout
 
 \begin_layout Itemize
@@ -3660,21 +3711,9 @@ Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.5
 \end_deeper
 \end_deeper
 \begin_layout Itemize
-Host
+Host: simply storing the host string is sufficient.
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-the site on which Episodes is running
-\end_layout
-
-\begin_deeper
-\begin_layout Itemize
-simply the host string is sufficient,
-\end_layout
-
-\end_deeper
-\end_deeper
 \begin_layout Subsubsection
 Mining with Concept Hierarchies
 \begin_inset CommandInset label
@@ -3700,9 +3739,9 @@ le results for us humans.
 \end_layout
 
 \begin_layout Standard
-However, hierarchical categorical attributes require the use of a 
+However, hierarchical categorical attributes require the use of 
 \emph on
-concept hierarchy
+concept hierarchies
 \emph default
  (sometimes also called a 
 \emph on
@@ -3741,7 +3780,7 @@ is-a
 
 \begin_layout Standard
 A concept hierarchy can be represented through a directed acyclic graph.
- For the example in the above definition, it would look like figure 
+ For the example in the above definition, that would look like figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:mining:concept-hierarchy"
@@ -3842,7 +3881,14 @@ New Possibilities by Using Concept Hierarchies
 
 \begin_layout Standard
 When one uses concept hierarchies in association rule mining, some new possibili
-ties open up:
+ties open up 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Enumerate
@@ -3897,7 +3943,7 @@ http://example.com/ is slow for visitors that use the operating system Mac
 \emph on
 would
 \emph default
- be found.
+ be found, thanks to the use of concept hierarchies.
 \end_layout
 
 \end_deeper
@@ -3964,7 +4010,14 @@ FP-growth
  can be applied to the extended transactions, to find rules over multiple
  levels of the concept hierarchy.
  While this is obviously trivial to implement, there are also several equally
- obvious limitations:
+ obvious limitations 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Enumerate
@@ -4011,7 +4064,9 @@ This is in fact a consequent of the previous point: redundant association
 \end_inset
 
 Fortunately, it is easy to eliminate redundant itemsets during frequent
- itemset generation, given that the concept hierarchy is known.
+ itemset generation, given that the concept hierarchy is known: remove frequent
+ itemsets that would result in more specific rules when there is a frequent
+ itemset with similar confidence that would result in a more general rule.
 \end_layout
 
 \begin_layout Enumerate
@@ -4023,13 +4078,13 @@ Because all transactions are increased in size (i.e.
 \end_layout
 
 \begin_layout Subsubsection*
-Applied to Sample Page Loading Performance Issues
+Applied to Sample Web Performance Issues
 \end_layout
 
 \begin_layout Standard
-If we now apply this more detailed information to the three example page
- loading performance issues mentioned before, then we can gain more insight
- in how this can be detected:
+If we now apply this more detailed information to the three sample web performan
+ce issues mentioned before, then we can gain more insight in how this can
+ be detected:
 \end_layout
 
 \begin_layout Itemize
@@ -4143,8 +4198,15 @@ Overall, we can see that we need to detect associations between a single
  browser, browser version and user agent.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
-Detecting Page Loading Performance Issues
+Detecting Web Performance Issues
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:episodes-log-mining:detection"
@@ -4155,8 +4217,7 @@ name "sub:episodes-log-mining:detection"
 \end_layout
 
 \begin_layout Standard
-The goal of this thesis is to automate the detection of page loading performance
- issues.
+The goal of this thesis is to automate the detection ofweb performance issues.
  This can be achieved through 
 \emph on
 Episodes log mining
@@ -4224,8 +4285,8 @@ small differences become unnoticeable
 \end_layout
 
 \begin_layout Enumerate
-values close to a discretization border may result in very large (unjustifiably
- so) changes in the set of active rules
+values close to a discretization border may result in very large (unjustifiable)
+ changes in the set of active rules
 \end_layout
 
 \end_deeper
@@ -4332,7 +4393,15 @@ By using these new support measures and techniques they've developed to
 
 \begin_layout Standard
 In their case, they've applied it to meteorological data, which allowed
- them to discover association rules such as:
+ them to discover association rules such as (with 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+ being records):
 \end_layout
 
 \begin_layout Quote
@@ -4435,7 +4504,7 @@ reference "sub:episodes-log-mining:attributes:concept-hierarchies"
 \begin_layout Standard
 
 \emph on
-What we actually want is to associate one or more of the hierarchical categories
+What we want, is to associate one or more of the hierarchical categories
  with the speed (
 \begin_inset Quotes eld
 \end_inset
@@ -4499,8 +4568,8 @@ key "Intro to Data Mining,Mining Generalized Association Rules"
 \end_layout
 
 \begin_layout Standard
-Through this process, we estimate to achieve usable page loading performance
- issues detection.
+Through this process, we estimate to achieve usable web performance issues
+ detection.
  More refinement is only possible after an implementation has been completed,
  i.e.
  after we can actually look at the results of this suggested process.
@@ -4570,7 +4639,7 @@ the last hour
 \end_layout
 
 \begin_layout Standard
-How to handle this?
+How to handle this? Data mining data streams.
 \end_layout
 
 \begin_layout Standard
@@ -4586,12 +4655,33 @@ TODO
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
-Detecting Advanced Page Loading Performance Issues
+Detecting Advanced Web Performance Issues
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:detection-advanced"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
 Preloading of Components Based on Typical Navigation Paths
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:episodes-log-mining:detection-advanced:preloading-typical-navigation-paths"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection*
@@ -4600,7 +4690,7 @@ Step 1: User Identification
 
 \begin_layout Standard
 User identification is necessary: one can only discover which paths are
- typical if you can identify the navigation of a single user.
+ typical if one can identify the navigation history of a single user.
 \end_layout
 
 \begin_layout Standard
@@ -4646,11 +4736,11 @@ A
 B
 \family default
  was the first viewed page on day 2, by the same user.
- But they should not form a navigation path, since they occurred in different
- sessions.
+ However, they should not form a navigation path, since they occurred in
+ different sessions.
  This can only be detected when both page views actually are considered
- part of two different sessions: hence sessionization is a necessity as
- well.
+ to be part of two different sessions: hence sessionization is a necessity
+ as well.
 \end_layout
 
 \begin_layout Standard
@@ -4731,8 +4821,8 @@ Step 3: Path Completion
 \begin_layout Standard
 Pages in the navigation path may be cached in the end user's browser (or
  in an intermediate proxy server) and therefore their browser may not make
- any request at all to the web server, and thus it may not show up in the
- web server log 
+ any request at all to the web server, and thus some page views may not
+ show up in the web server log 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Web Data Mining"
@@ -4743,13 +4833,17 @@ key "Web Data Mining"
 \end_layout
 
 \begin_layout Standard
-This is true for typical web usage mining, but not for Episodes log mining,
- since Episodes also runs on cached pages and thus logs the recorded episodes
- and thus all page loads show up in the Episode log file.
+This is true for typical web usage mining, but 
+\emph on
+not
+\emph default
+ for Episodes log mining, since Episodes also runs on cached pages and thus
+ logs the recorded episodes and thus all page loads show up in the Episode
+ log file.
  Hence path completion is a non-issue.
  The typical solution, path inference through referrers would also not work
- since the HTTP referrer field has a different semantic in the context of
- Episodes logs and the actual HTTP referrer data is lost.
+ since the HTTP referrer field has different semantics in the context of
+ Episodes logs; the actual HTTP referrer data is lost.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -4772,7 +4866,8 @@ typical
 More advanced techniques, such as cluster analysis, probabilistic latent
  semantic analysis, association rule mining, collaborative filtering and
  so on could also be applied, but seem overkill given that the above simple
- measure is likely to be sufficiently effective.
+ measure is likely to be sufficiently effective and far less computationally
+ intensive than these advanced techniques.
  Consult 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -4803,8 +4898,7 @@ reference "sub:episodes-log-mining:intro:web-usage-mining-vs-episodes-log-mining
 \begin_inset Formula $x$
 \end_inset
 
- percent may gradually change as the log file is updated with new log entries.es
- are being added.
+ percent may gradually change as the log file is updated with new log entries.
  This too, is addressed in section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -4846,7 +4940,8 @@ n
 \family default
 ) (this is a valid format since spaces and newlines are not allowed in URLs).
  This file can then be used by the web site to automatically preload components
- on other pages.
+ that will likely be needed, and thus improve the overall perceived page
+ loading performance.
  Of course, this could also be done manually, but then it's easy to become
  outdated.
 \end_layout
@@ -4854,7 +4949,7 @@ n
 \begin_layout Standard
 There are several methods a web site can use to decide which components
  should be preloaded (i.e.
- what components are new in comparison with the previous page in the path:
+ which components are new in comparison with the previous page in the path:
  the 
 \emph on
 component delta
@@ -4938,8 +5033,8 @@ key "Same Origin Policy"
 \end_inset
 
 While very simple to implement, the downside is that the entire (X)HTML
- will be loaded and parsed, and the JavaScript code will also execute (again
- see 
+ will be downloaded and parsed, and the JavaScript code will also execute
+ (again see 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "postload preloads,preload css/js without executation"
