@@ -334,8 +334,8 @@ key "Gomez web site,Keynote web site,WebMetrics web site,Pingdom web site"
 
  require simulations, which implies they're also only suitable for simulating
  traffic on a new version of a web site before it goes live — they required
- simulations when I wrote my bachelor thesis in 2009, and still at the time
- of writing this, in May 2010);
+ simulations when I wrote my bachelor thesis in 2009, and still do at the
+ time of writing this, in May 2010);
 \end_layout
 
 \begin_layout Itemize
@@ -358,7 +358,7 @@ key "Drupal Episodes module"
 \end_layout
 
 \begin_layout Quotation
-About 100 MB worth of statistics had been logged.
+About two weeks, or 100 MB worth of statistics, had been logged.
  These were then imported on June 25, resulting in a database table of 642.4
  MB.
  More than 2.7 million episodes were collected over more than 260,000 page
@@ -471,11 +471,12 @@ name "fig:Episodes-chart-plp"
 
 \begin_layout Standard
 That is of course largely due to the fact that the database schema used
- is extremely inefficient: it is in fact a verbatim copy of the log file.
+ was extremely inefficient: it was in fact a verbatim copy of the log file.
  The database schema should be optimized for the queries that are necessary
  to generate the charts.
- In its current incarnation, multiple full table scans are required, which
- is a worst case scenario.
+ In that implementation, multiple full table scans were required, which
+ is something that should be absolutely avoided when building an application
+ on top of an RDBMS, because it guarantees poor performance.
 \end_layout
 
 \begin_layout Standard
@@ -523,11 +524,10 @@ However, simply implementing all known tricks is not enough, because using
 
 \emph on
 Continuous Profiling means that you are continuously monitoring your real-world
- page loading performance: you must track the page loading characteristics
- of 
-\emph default
+ web performance: you must track the page loading characteristics of 
+\bar under
 each
-\emph on
+\bar default
  loaded page! 
 \emph default
 That by itself is easy: all it requires is to integrate Episodes with your
@@ -555,21 +555,21 @@ PoP
 Hence, that is what the goal is of this thesis: to build something like
  Google Analytics, but for 
 \emph on
-page loading performance
+web performance (page loading performance)
 \emph default
  instead of just 
 \emph on
 page loads
 \emph default
 .
- An analytics suite for tracking page loading performance.
+ An analytics suite for tracking web performance.
  An application that can automatically extract conclusions out of Episodes
  logs and visualize them.
  This application should be very scalable (as the number of recorded episodes
  is typically an order of magnitude higher than the number of page views)
  and possibly also distributed.
  You should also be able to go back to any point in the past and view the
- page loading performance at that time.
+ web performance at that time.
  Thus, efficient storage is also a requirement.
  Finally, it should be an open source application that can be developed
  further by others after I finish my master thesis.
@@ -577,8 +577,8 @@ page loads
 
 \begin_layout Standard
 I told Steve Souders about my idea for my master thesis — he is the most
- prominent speaker, researcher and evangelizer in the page loading performance
- scene and on Google's payroll to push this forward — and asked him for
+ prominent speaker, researcher and evangelizer in the web performance optimizati
+on scene and on Google's payroll to push this forward — and asked him for
  feedback.
  His response:
 \end_layout
@@ -595,7 +595,7 @@ I did a mini performance conference in LA last month and heard three big
  Users could take the code and spin up their own instance — for free! You
  could also host a shared instance.
  I will say that the work […] on AppEngine has been hard because of the
- datastore - my officemate does the programming and it's taken him months
+ datastore — my officemate does the programming and it's taken him months
  to do what I did in a few days on the LAMP stack.
 \end_layout
 
@@ -643,7 +643,7 @@ web presence
 \emph default
  are paying attention to page loading performance: the well-known ones such
  as Microsoft, Yahoo, Google, but also big companies that are not technology
- companies such as Amazon, White Pages, Shopzilla, Edmunds, Netflix ….
+ companies such as Amazon, White Pages, Shopzilla, Edmunds, Netflix …
 \end_layout
 
 \begin_layout Subsection*
@@ -757,18 +757,21 @@ key "WPO proposal web timing"
  partially, to get rid of the latency of loading Episodes' JavaScript and
  the relatively inaccurate time measurements of JavaScript.
  It would also allow us to get a complete picture of the end-to-end latency,
- which is impossible to do with Episodes (which can only rely upon what
- JavaScript itself can do).
+ which is impossible to do with Episodes (which can only rely on what JavaScript
+ can do).
  This proposal is only a working draft and requires interacting with browser
  vendors to ensure all current major browsers will implement this.
- Even in the best case scenario, it will take years until the majority of
- the installed browsers will support this.
+ Even in the best case scenario, it will take 
+\emph on
+years
+\emph default
+ until the majority of the installed browsers will support this.
  Until then, we will be limited in what we can measure.
  Hence this proposal should move forward as fast as possible.
 \end_layout
 
 \begin_layout Standard
-Both would severely affect browser implementations, which indicates the
+Both would strongly affect browser implementations, which indicates the
  willingness and likeliness to change the way data is transferred over the
  internet to make web sites load faster.
 \end_layout
@@ -778,9 +781,9 @@ Search Engine Ranking
 \end_layout
 
 \begin_layout Standard
-The importance of page loading performance is lifted to an even higher level
- by the fact that Google is now using the page loading performance (they
- call it 
+The importance of web performance is lifted to an even higher level by the
+ fact that Google is now using the page loading performance (they call it
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -810,8 +813,8 @@ key "Google page speed ranking"
 
  and activated it in April 2010.
  This effectively means that all companies whom have been paying for SEO
- (search engine optimization) will also have to consider page loading performanc
-e.
+ (search engine optimization) will also have to consider web performance
+ optimization.
 \end_layout
 
 \begin_layout Standard
