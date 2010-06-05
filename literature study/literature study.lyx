@@ -5082,6 +5082,820 @@ main page
 \end_layout
 
 \begin_layout Section
+Data stream mining
+\end_layout
+
+\begin_layout Standard
+In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:episodes-log-mining"
+
+\end_inset
+
+, Episodes log mining has been explained in detail.
+ However, it only deals with mining entire Episodes log files.
+ In practice, it will be necessary to process all incoming data immediately,
+ so that the live status of the system can be calculated — and displayed
+ to the end-user.
+\end_layout
+
+\begin_layout Standard
+To achieve this, we must dive deeper into the field of 
+\emph on
+data stream mining
+\emph default
+.
+ The goals are the same as for data mining, but the difference is that we
+ do not operate on a fixed set of data, but on a 
+\emph on
+stream
+\emph default
+ of incoming data, that is generated 
+\emph on
+continuously
+\emph default
+, and with varying update rates.
+ Data streams are 
+\emph on
+temporally ordered
+\emph default
+, 
+\emph on
+fast changing
+\emph default
+, 
+\emph on
+massive
+\emph default
+, and 
+\emph on
+potentially infinite
+\emph default
+.
+ Because not all data is known before starting the mining process, and because
+ the size of the (stream of) data is potentially infinite, this implies
+ that we can no longer use algorithms that require multiple scans: instead,
+ it is necesary to use single-scan algorithms (it may even be impossible
+ to store the entire data stream).
+\begin_inset Newline newline
+\end_inset
+
+Even for non-stream data this may be necessary: if the dataset is so enormous
+ that it is not feasible to perform multiple scans (e.g.
+ when one needs to perform Episodes log mining on months worth of Episodes
+ logs), then algorithms developed for data streams are equally applicable.
+\end_layout
+
+\begin_layout Subsection
+Methodologies for Stream Data Processing
+\end_layout
+
+\begin_layout Standard
+As discussed before, it is impractical (or even unrealistic) to scan through
+ an entire data stream multiple times — sometimes it even might be impossible
+ to evaluate every element of the stream due to the update rate.
+ The size of the data is not the only problem: the universes
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+A universe is the domain of possible values for an attribute.
+\end_layout
+
+\end_inset
+
+ that need to be tracked can be very large as well (e.g.
+ the universe of all IP addresses is enormous).
+\end_layout
+
+\begin_layout Standard
+Clearly, new data structures, techniques and algorithms are needed for effective
+ processing of stream data.
+ Because it is impossible to store all stream data (which would require
+ an infinite amount of storage space), it is often necessary to consider
+ a trade-off: accuracy versus storage.
+ In other words: approximate instead of exact answers are often sufficiently
+ accurate.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+Synopses
+\emph default
+ can be used to calculate approximate answers, by providing 
+\emph on
+summaries
+\emph default
+ of data: they use 
+\emph on
+synopsis data structures
+\emph default
+, which are data structures that are significantly smaller than their base
+ data set (here: stream data).
+ We want our algorithms to be efficient both in space and time.
+ Instead of storing all elements seen so far (requires 
+\begin_inset Formula $O(N)$
+\end_inset
+
+ space), it is more desirable to only use polylogarithmic space (
+\begin_inset Formula $O(\log^{k}N)$
+\end_inset
+
+ ).
+\end_layout
+
+\begin_layout Standard
+The synopses 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques,Models and issues in data stream systems"
+
+\end_inset
+
+ below are explained succinctly, either because they're fairly easy to comprehen
+d or because explaining them in-depth would lead us too far.
+\end_layout
+
+\begin_layout Subsubsection
+Random sampling
+\end_layout
+
+\begin_layout Standard
+Rather than storing (and processing) the entire data stream, another option
+ is to sample the stream at periodic intervals.
+ However, to obtain an unbiased sampling of the data, it is necessary to
+ know the length of the stream in advance, to determine the periodic interval.
+ But for many data streams it is impossible to know the lenght, or indeed
+ it will be infinite.
+ Hence another approach is necessary.
+\end_layout
+
+\begin_layout Standard
+An alternative method is 
+\emph on
+reservoir sampling
+\emph default
+: it achieves an unbiased sample by selecting 
+\begin_inset Formula $s$
+\end_inset
+
+ elements randomly and without replacement.
+ In reservoir sampling, a sample of size 
+\emph on
+at least
+\emph default
+ 
+\begin_inset Formula $s$
+\end_inset
+
+ is maintained, which is called the reservoir.
+ From this reservoir, a random sample of size 
+\begin_inset Formula $s$
+\end_inset
+
+ can be generated.
+ To avoid the cost of generating a sample from the possibly large reservoir,
+ a set of 
+\begin_inset Formula $s$
+\end_inset
+
+ 
+\emph on
+candidates
+\emph default
+ in the reservoir is maintained.
+ These candidates form a true random sample of the elements seen so far
+ in the stream.
+\end_layout
+
+\begin_layout Standard
+As new data flows in from the data stream, every new element in the stream
+ can replace a random old element in the reservoir with the probability
+ 
+\begin_inset Formula $\frac{s}{N}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection
+Sliding Windows
+\end_layout
+
+\begin_layout Standard
+Instead of working with all data ever flown in through the data stream,
+ we make decisions based only on 
+\emph on
+recent data
+\emph default
+.
+ More formally: the element that arrives at time 
+\begin_inset Formula $t$
+\end_inset
+
+ expires at time 
+\begin_inset Formula $t+w$
+\end_inset
+
+, with 
+\begin_inset Formula $w$
+\end_inset
+
+ the window size.
+\end_layout
+
+\begin_layout Subsubsection
+Histograms
+\end_layout
+
+\begin_layout Standard
+A histogram is a synopsis data structure, which can be used to approximate
+ the frequency distribution of element values in a a stream.
+ It partitions the data into a set of contiguous buckets.
+ Various partition rules are possible, among which 
+\emph on
+equal-width
+\emph default
+ (equal value range for all buckets) and 
+\emph on
+V-Optimal
+\emph default
+ (minimizes the frequency variance within each bucket, which better captures
+ the distribution of the data).
+\end_layout
+
+\begin_layout Standard
+However, histograms require at least two passes: at least one to decide
+ the size of the buckets and then another to associate each value with a
+ bucket.
+ This makes histograms unsuitable for use with data streams.
+\end_layout
+
+\begin_layout Subsubsection
+Multiresolution methods
+\end_layout
+
+\begin_layout Standard
+A multiresolution method is an example of a data reduction method — a data
+ reduction method can be used to achieve smaller data storage requirements,
+ yet closely maintain the integrity of the original data.
+\begin_inset Newline newline
+\end_inset
+
+Multiresolution methods also offer, on top of the aforementioned, the ability
+ to look at the data stream in multiple levels of detail, which may be a
+ desirable property when processing a data stream.
+\end_layout
+
+\begin_layout Subsubsection*
+Balanced binary trees
+\end_layout
+
+\begin_layout Standard
+In a balanced binary tree, each level of the tree provides a different resolutio
+n: the deeper in the tree (i.e.
+ further away from the root node), the more detailed the resolution becomes.
+ The 
+\begin_inset Quotes eld
+\end_inset
+
+balanced
+\begin_inset Quotes erd
+\end_inset
+
+ part in the data structure name refers to the fact that the tree is kept
+ in balance automatically as new elements are added or removed.
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+Note:
+\bar default
+ in databases, B+ trees 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "B+ tree"
+
+\end_inset
+
+ are often used, especially for indexes.
+\end_layout
+
+\begin_layout Subsubsection*
+Microclusters
+\end_layout
+
+\begin_layout Standard
+A more sophisticated method than balanced binary trees to store multiple
+ resolutions is to use a clustering method, to organize stream data into
+ a hierarchical structure of trees.
+ A hierarchical clustering data structure such as BIRCH's CF-tree 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "BIRCH"
+
+\end_inset
+
+ can be used to form a hierarchy of 
+\emph on
+microclusters
+\emph default
+.
+ This allows us to update summary statistics of data streams incrementally
+ in this his hierarchy.
+ Information in these microclusters can then be aggregated into larger 
+\emph on
+macroclusters
+\emph default
+ depending on the multiresolution requirements.
+\end_layout
+
+\begin_layout Subsubsection*
+Wavelets
+\end_layout
+
+\begin_layout Standard
+Wavelets are a technique from the field of signal processing, but can also
+ be used to build a multiresolution hierarchy over a signal, which would
+ be the data stream in our case.
+ Wavelets coefficients are projections of the given signal (again, the data
+ stream in our case) onto an orthogal set of basis vector.
+ The choice of basis vectors determines the type of wavelets used.
+ Using the Haar wavelet (often chosen for their ease of computation) for
+ example, we can recursively perform averaging and differencing at multiple
+ levels of resolution.
+\end_layout
+
+\begin_layout Standard
+Wavelets have been used as approximations to histograms for query optimizations
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "wavelets query approximation"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Unfortunately, wavelets also require multiple passes, rendering them too
+ unsuitable for use with data streams.
+\end_layout
+
+\begin_layout Subsubsection
+Sketches
+\end_layout
+
+\begin_layout Standard
+The aforementioned techniques either focus on a small partition of the data
+ (sampling & sliding windows) or summarize the entire data (histograms),
+ possibly at multiple resolutions (balanced binary trees, microclusters
+ and wavelets).
+\end_layout
+
+\begin_layout Standard
+A histogram requires multiple passes and stores only a single resolution.
+ A wavelet is an approximation of a histogram also requires multiple passes
+ but can store multiple resolutions.
+ Next in that row is a 
+\emph on
+sketch
+\emph default
+: it can maintain an approximation of a full histogram in a single pass,
+ and if desired can be used to store multiple resolutions.
+\end_layout
+
+\begin_layout Standard
+A sketch can be used to maintain the full histogram over the universe of
+ elements in a data stream in a single pass.
+ Define the universe as 
+\begin_inset Formula $U=\{1,2,\text{…},v\}$
+\end_inset
+
+ (with 
+\begin_inset Formula $v$
+\end_inset
+
+ the universe size) and the elements in the datastream as 
+\begin_inset Formula $A=\{a_{1},a_{2},\text{…},a_{N}\}$
+\end_inset
+
+ (with possibly 
+\begin_inset Formula $N=\infty$
+\end_inset
+
+).
+ For each value 
+\begin_inset Formula $i$
+\end_inset
+
+ in the universe, we want to maintain the frequency of 
+\begin_inset Formula $i$
+\end_inset
+
+ in the sequence of elements 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ If the universe is large, the required amount of storage can be large as
+ well.
+ To achieve a smaller representation, we consider the 
+\emph on
+frequency moments
+\emph default
+ of 
+\begin_inset Formula $A$
+\end_inset
+
+.
+ These are the numbers 
+\begin_inset Formula $F_{k}$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+F_{k}=\sum_{i=1}^{v}m_{i}^{k}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $m_{i}$
+\end_inset
+
+ is the frequency of 
+\begin_inset Formula $i$
+\end_inset
+
+ in the sequence and 
+\begin_inset Formula $k\geq0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+This can be interpreted as follows:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $F_{0}$
+\end_inset
+
+ is the number of distinct elements in the sequence, i.e.: 
+\begin_inset Formula $0\leq F_{0}\leq v$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $F_{1}$
+\end_inset
+
+ is the length of the sequence, i.e.: 
+\begin_inset Formula $F_{1}=N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ is the so-called 
+\emph on
+self-join size
+\emph default
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+The self-join size 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ is also used to estimate the join size for RDBMSes in limited space, see
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "join and self-join size estimation"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+, or also known as 
+\emph on
+repeat rate
+\emph default
+ or 
+\emph on
+Gini's index of homogeneity
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+The frequency moments of a data stream (or any data set of fixed size) provide
+ useful information about this data for database applications, one of which
+ is the 
+\emph on
+skew
+\emph default
+ (or assymmetry) of the data.
+ The skew can be used to decide how to partition the data set for parallel
+ or distributed database systems.
+\end_layout
+
+\begin_layout Standard
+When the amount of available memory is smaller than 
+\begin_inset Formula $v$
+\end_inset
+
+ (the universe size), we need to employ a synopsis.
+ The estimation of the frequency moments can be performed by 
+\emph on
+sketches
+\emph default
+, which build a summary (requiring less space) for a distribution vector
+ (e.g.
+ a histogram) using randomized linear projections (i.e.
+ linear hash functions) of the data they are fed (i.e.
+ the data stream).
+\begin_inset Newline newline
+\end_inset
+
+Sketches provide probabilistic guarantees on the quality of the approximate
+ answer.
+ For example: the answer to the given query is 12±1 with a 90% probability.
+ Given 
+\begin_inset Formula $N$
+\end_inset
+
+ elements and a universe 
+\begin_inset Formula $U$
+\end_inset
+
+ of 
+\begin_inset Formula $v$
+\end_inset
+
+ values, such sketches can approximate 
+\begin_inset Formula $F_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $F_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ in 
+\begin_inset Formula $O(\log v+\log N)$
+\end_inset
+
+ space (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "frequency moments space complexity"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+The most complex and interesting sketch is the one for approximating 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+, thus only that one will be explained more in-depth here.
+\begin_inset Newline newline
+\end_inset
+
+The key idea behind the 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ sketching technique is as follows:
+\emph on
+ every element 
+\begin_inset Formula $i$
+\end_inset
+
+ in the domain 
+\begin_inset Formula $D$
+\end_inset
+
+ is hashed uniformly at random onto a value 
+\begin_inset Formula $z_{i}\in\{-1,+1\}$
+\end_inset
+
+.
+ Define the random variable 
+\begin_inset Formula $X=\sum_{i}m_{i}z_{i}$
+\end_inset
+
+ and return 
+\begin_inset Formula $X^{2}$
+\end_inset
+
+ as the estimator of 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+.
+
+\emph default
+ Clearly, this estimator can be calculated in a single pass.
+\begin_inset Newline newline
+\end_inset
+
+To explain why this works, we can think of hashing elements to either 
+\begin_inset Formula $-1$
+\end_inset
+
+ or 
+\begin_inset Formula $+1$
+\end_inset
+
+ as assigning each element value to an arbitrary side of a tug of war.
+ When we sum up to get 
+\begin_inset Formula $X$
+\end_inset
+
+, we can think of measuring the displacement of the rope from the center
+ point.
+ By squaring 
+\begin_inset Formula $X$
+\end_inset
+
+, we square this displacement, thereby capturing the data skew 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The sketching technique to compute 
+\begin_inset Formula $F_{0}$
+\end_inset
+
+ was presented in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Probabilistic Counting Algos for DB apps"
+
+\end_inset
+
+ (which is referenced again in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:storage-explosion"
+
+\end_inset
+
+), however, this required explicit families of hash functions with very
+ strong independence properties.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "frequency moments space complexity"
+
+\end_inset
+
+, this requirement was relaxed; it explains how 
+\begin_inset Formula $F_{0}$
+\end_inset
+
+, 
+\begin_inset Formula $F_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ can be approximated in logarithmic space by using linear hash functions
+ (which is why sketches hold an advantage over wavelets in terms of storage).
+ A single pass algorithm for calculating the 
+\begin_inset Formula $k$
+\end_inset
+
+-th frequency moment of a data stream for any real 
+\begin_inset Formula $k>2$
+\end_inset
+
+ is given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "frequency moments optimal approximations"
+
+\end_inset
+
+, with an update time of 
+\begin_inset Formula $O(1)$
+\end_inset
+
+.
+ Finally, in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "frequency moments simpler algorithm"
+
+\end_inset
+
+, a simpler algorithm (but with the same properties) is given.
+ Another interesting sketching method is given in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "count-min sketch"
+
+\end_inset
+
+.
+\begin_inset Formula \[
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection
+Randomized Algorithms
+\end_layout
+
+\begin_layout Standard
+Random sampling and sketching are examples of randomized algorithms.
+\end_layout
+
+\begin_layout Standard
+Randomized algorithms that always return the correct answer but whose running
+ times vary are known as 
+\emph on
+Las Vegas algorithms
+\emph default
+.
+ In contrast, there are also randomized algorithms that are bounded on running
+ time but may not return the correct answer; these are called 
+\emph on
+Monte Carlo
+\emph default
+ algorithms.
+\end_layout
+
+\begin_layout Standard
+In the context of data stream mining, where the time to process incoming
+ data is obviously limited, we consider mainly Monte Carlo algorithms.
+ A randomized algorithm can be thought of as simply a probability distribution
+ over a set of deterministic algorithms.
+\end_layout
+
+\begin_layout Subsection
+Frequent Pattern Mining
+\end_layout
+
+\begin_layout Subsubsection
+Lossy Counting
+\end_layout
+
+\begin_layout Subsubsection
+Probabilistic Lossy Counting
+\end_layout
+
+\begin_layout Subsubsection
+Stanford's buffer + trie + subsetgen
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 OLAP: Data Cube
 \begin_inset CommandInset label
 LatexCommand label
@@ -17996,6 +18810,214 @@ http://www.w3.org/Security/wiki/Same_Origin_Policy
 \end_inset
 
 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "data mining concepts techniques"
+
+\end_inset
+
+
+\emph on
+Data Mining: Concepts and Techniques
+\emph default
+, Jiawei Han; Micheline Kamber, 
+\emph on
+Morgan Kaufmann
+\emph default
+, 2006
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "B+ tree"
+
+\end_inset
+
+
+\emph on
+The Ubiquitous B-Tree
+\emph default
+, Douglas Comer, 
+\emph on
+ACM Computing Surveys
+\emph default
+ 
+\emph on
+11(2)
+\emph default
+, pages 121–137, 1979
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "wavelets query approximation"
+
+\end_inset
+
+
+\emph on
+Approximate Query Processing Using Wavelets
+\emph default
+, K.
+ Chakrabarti; M.
+ Garofalakis; R.
+ Rastogi; K.
+ Shim, Proceedings of the International Conference on Very Large Databases,
+ 2000
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "BIRCH"
+
+\end_inset
+
+
+\emph on
+BIRCH: an efficient data clustering method for very large databases
+\emph default
+, T Zhang; R Ramakrishnan; M Livny, 
+\emph on
+ACM SIGMOD Record
+\emph default
+, 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "frequency moments space complexity"
+
+\end_inset
+
+
+\emph on
+The space complexity of approximating the frequency moments
+\emph default
+, N.
+ Alon; Y.
+ Matias; M.
+ Szegedy, 
+\emph on
+Proceedings of the Twenty-Eighth Annual ACM Symposium on theory of Computing
+\emph default
+, 1996
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "frequency moments optimal approximations"
+
+\end_inset
+
+
+\emph on
+Optimal approximations of the frequency moments of data streams
+\emph default
+, P.
+ Indyk; D.
+ Woodruff, 
+\emph on
+Proceedings of the thirty-seventh annual ACM symposium on Theory of computing
+\emph default
+, 2005
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "frequency moments simpler algorithm"
+
+\end_inset
+
+
+\emph on
+Simpler algorithm for estimating frequency moments of data streams
+\emph default
+, L.
+ Bhuvanagiri, S.
+ Ganguly; D.
+ Kesh; C.
+ Saha, 
+\emph on
+Proceedings of the seventeenth annual ACM-SIAM symposium on Discrete algorithm
+\emph default
+, 2006
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Models and issues in data stream systems"
+
+\end_inset
+
+
+\emph on
+Models and issues in data stream systems
+\emph default
+, B.
+ Babcock; S.
+ Babu; M.
+ Datar; R.
+ Motwani; J.
+ Widom, 
+\emph on
+Proceedings of the twenty-first ACM SIGMOD-SIGACT-SIGART symposium on Principles
+ of database systems
+\emph default
+, 2002
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "join and self-join size estimation"
+
+\end_inset
+
+
+\emph on
+Tracking join and self-join sizes in limited storage
+\emph default
+, N.
+ Alon, P.
+ Gibbons; Y.
+ Matias; M.
+ Szegedy, 
+\emph on
+Proc.
+ of the 1999 ACM Symp.
+ on Principles of Database Systems, pages 10–20
+\emph default
+, 1999.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "count-min sketch"
+
+\end_inset
+
+
+\emph on
+An Improved Data Stream Summary: The Count-Min Sketch and Its Applications
+\emph default
+, G.
+ Cormode; S.
+ Muthukrishnan, 
+\emph on
+LECTURE NOTES IN COMPUTER SCIENCE 2004, issue 2976, pages 29-38
+\emph default
+, 2004
 \end_layout
 
 \begin_layout Bibliography
