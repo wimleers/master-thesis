@@ -7507,6 +7507,129 @@ DSM-FI (2003, An Efficient Algorithm for Mining Frequent Itemests over the
 \end_layout
 
 \begin_layout Section
+Anomaly Detection
+\end_layout
+
+\begin_layout Subsection
+What are Anomalies?
+\end_layout
+
+\begin_layout Subsection
+Types of Anomalies
+\end_layout
+
+\begin_layout Subsubsection
+Point Anomalies
+\end_layout
+
+\begin_layout Subsubsection
+Contextual Anomalies
+\end_layout
+
+\begin_layout Subsubsection
+Collective Anomalies
+\end_layout
+
+\begin_layout Subsection
+Anomaly Detection Modes
+\end_layout
+
+\begin_layout Subsubsection
+Supervised Anomaly Detection
+\end_layout
+
+\begin_layout Subsubsection
+Semi-Supervised Anomaly Detection
+\end_layout
+
+\begin_layout Subsubsection
+Unsupervised Anomaly Detection
+\end_layout
+
+\begin_layout Subsection
+Anomaly Detection Output
+\end_layout
+
+\begin_layout Subsubsection
+Scores
+\end_layout
+
+\begin_layout Subsubsection
+Labels
+\end_layout
+
+\begin_layout Subsection
+Contextual Anomaly In Detail
+\end_layout
+
+\begin_layout Standard
+Contextual attributes:
+\end_layout
+
+\begin_layout Enumerate
+Spatial
+\end_layout
+
+\begin_layout Enumerate
+Graphs
+\end_layout
+
+\begin_layout Enumerate
+Sequential
+\begin_inset Newline newline
+\end_inset
+
+Time series vs event sequence: time series = even inter-arrival time, event
+ sequence = uneven interarrival time.
+ In context of this thesis: we cannot assume an even inter-arrival time,
+ hence we need to look at event sequence only.
+\end_layout
+
+\begin_layout Enumerate
+Profile
+\end_layout
+
+\begin_layout Standard
+Two categories: reduction to point anomaly detection problem, or model the
+ structure of the data and then use this model to detect anomalies.
+\end_layout
+
+\begin_layout Subsubsection
+Reduction to Point Anomaly Detection Problem
+\end_layout
+
+\begin_layout Subsubsection
+Utilizing the Structure in Data
+\end_layout
+
+\begin_layout Subsubsection
+Computational Complexity
+\end_layout
+
+\begin_layout Subsubsection
+Advantages and Disadvantages of Contextual Anomaly Detection Techniques
+\end_layout
+
+\begin_layout Subsection
+Contextual Anomaly Algorithms
+\end_layout
+
+\begin_layout Subsubsection
+Learning to Predict Rare Events in Event Sequences
+\end_layout
+
+\begin_layout Subsubsection
+Predicting Rare Events In Temporal Domains (frequent itemset based!)
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 OLAP: Data Cube
 \begin_inset CommandInset label
 LatexCommand label
