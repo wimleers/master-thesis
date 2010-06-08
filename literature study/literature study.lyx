@@ -6005,8 +6005,27 @@ and
  So how can we perform incremental updates of frequent itemsets, while an
  infrequent itemset can become frequent at a later point in the data stream,
  and vice versa? The number of infrequent itemsets also is exponential,
- which makes it impossible to track all of them — a synopsis data structure
- (as explained in section 
+ which makes it impossible to track all of them
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+It has been shown 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "The space complexity of approximating the frequency moments"
+
+\end_inset
+
+ that it is impossible to find the exact frequency of frequent items using
+ an amount of memory resources that is sublinear to the number of distinct
+ elements.
+\end_layout
+
+\end_inset
+
+.
+ Thus, a synopsis data structure (as explained in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:methodologies"
@@ -6645,7 +6664,7 @@ We say that the algorithm maintains an
 \end_layout
 
 \begin_layout Subsubsection*
-Example
+Guarantees Example
 \end_layout
 
 \begin_layout Standard
@@ -6825,6 +6844,10 @@ When a user requests a list of items with threshold
 .
 \end_layout
 
+\begin_layout Subsubsection*
+Space
+\end_layout
+
 \begin_layout Standard
 Its name is derived from the analogy with a magnet: 
 \begin_inset Formula $\mathcal{L}$
@@ -6875,8 +6898,8 @@ name "sub:stream-mining:frequent-item-mining:lc"
 \end_layout
 
 \begin_layout Standard
-First solution that is guaranteed to require no more than one pass over
- the entire database.
+Lossy counting is the first solution that is guaranteed to require no more
+ than one pass over the entire data set.
 \end_layout
 
 \begin_layout Standard
@@ -6893,12 +6916,515 @@ key "Approximate frequency counts over data streams"
 \end_inset
 
 .
+ It uses at most 
+\begin_inset Formula $\frac{1}{\epsilon}\log(\epsilon N)$
+\end_inset
+
+ space, where 
+\begin_inset Formula $N$
+\end_inset
+
+ denotes the length of the stream so far —contrary to the sticky sampling
+ algorithm described in the previous section, this algorithm is 
+\emph on
+not independent
+\emph default
+ of 
+\begin_inset Formula $N$
+\end_inset
+
+.
+ This algorithm performs better than sticky smpaling 
+\emph on
+in practice
+\emph default
+, although 
+\emph on
+in theory
+\emph default
+, it's worst-case space complexity is worse.
+\end_layout
+
+\begin_layout Subsubsection*
+Guarantees
+\end_layout
+
+\begin_layout Standard
+A very clear set of guarantees is given for this algorithm:
+\end_layout
+
+\begin_layout Enumerate
+All items whose true frequency exceeds 
+\begin_inset Formula $sN$
+\end_inset
+
+ are output.
+ There are 
+\emph on
+no false negatives
+\emph default
+.
+\end_layout
+
+\begin_layout Enumerate
+No items whose true frequency is less than 
+\begin_inset Formula $(s-\epsilon)N$
+\end_inset
+
+ is output.
+\end_layout
+
+\begin_layout Enumerate
+Estimated frequencies are 
+\emph on
+less
+\emph default
+ than the true frequencies 
+\emph on
+by at most 
+\emph default
+
+\begin_inset Formula $\epsilon N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We say that the algorithm maintains an 
+\emph on
+
+\begin_inset Formula $\epsilon$
+\end_inset
+
+-deficient synopsis
+\emph default
+ if its output satisfies these guarantees.
+\end_layout
+
+\begin_layout Standard
+Note that guarantee 3, unlike the third guarantee for 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:sticky-sampling"
+
+\end_inset
+
+, does not have a failure probability.
+\end_layout
+
+\begin_layout Subsubsection*
+Guarantees Example
+\end_layout
+
+\begin_layout Standard
+The same guarantees example as for sticky sampling applies to lossy counting.
+\end_layout
+
+\begin_layout Subsubsection*
+Definitions
+\end_layout
+
+\begin_layout Standard
+The incoming stream is conceptually divided into 
+\emph on
+buckets
+\emph default
+ of width 
+\begin_inset Formula $w=\left\lceil \frac{1}{\epsilon}\right\rceil $
+\end_inset
+
+ transactions each.
+ Buckets are labeled with 
+\emph on
+bucket ids
+\emph default
+, starting from 1.
+ The 
+\emph on
+current bucket id
+\emph default
+ is denoted by 
+\begin_inset Formula $b_{current}$
+\end_inset
+
+, whose value is 
+\begin_inset Formula $\left\lceil \frac{N}{w}\right\rceil $
+\end_inset
+
+, with 
+\begin_inset Formula $N$
+\end_inset
+
+ again the length of the data stream so far.
+ For an element 
+\begin_inset Formula $e$
+\end_inset
+
+, we denote its true frequency in the stream so far by 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Note that 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ and 
+\begin_inset Formula $w$
+\end_inset
+
+ are fixed while 
+\begin_inset Formula $N$
+\end_inset
+
+, 
+\begin_inset Formula $b_{current}$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{e}$
+\end_inset
+
+ are variables whose values change as the stream flows in.
+\end_layout
+
+\begin_layout Standard
+Our data structure 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ is a set of entries of the form 
+\begin_inset Formula $(e,f,\Delta)$
+\end_inset
+
+, where 
+\begin_inset Formula $e$
+\end_inset
+
+ is an element in the stream, 
+\begin_inset Formula $f$
+\end_inset
+
+ is an integer representing the estimated frequency of 
+\begin_inset Formula $e$
+\end_inset
+
+, and 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is the maximum possible error in 
+\begin_inset Formula $f$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+In this algorithm, the stream is divided into buckets, but in other algorithms
+ they are typically called 
+\emph on
+windows
+\emph default
+: in the context of this algorithm, they are equivalent concepts.
+\end_layout
+
+\begin_layout Subsubsection*
+Algorithm
+\end_layout
+
+\begin_layout Standard
+Initially, 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ is empty.
+\end_layout
+
+\begin_layout Standard
+Whenever a new element 
+\begin_inset Formula $e$
+\end_inset
+
+ arrives, we first scan 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ to check if an entry for 
+\begin_inset Formula $e$
+\end_inset
+
+ already exists or not.
+ If an entry is found, we update it by incrementing its frequency 
+\begin_inset Formula $f$
+\end_inset
+
+ by one.
+ Otherwise, we create a new entry of the form 
+\begin_inset Formula $(e,1,b_{current}-1)$
+\end_inset
+
+.
+ Why the value for 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is being set to 
+\begin_inset Formula $b_{current}-1$
+\end_inset
+
+ will be explained later on.
+\begin_inset Newline newline
+\end_inset
+
+So far, the frequency counts hold the actual frequencies rather than approximati
+ons.
+ They will become approximations because of the next step.
+\end_layout
+
+\begin_layout Standard
+We also prune 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ by deleting some of its entries at bucket boundaries, i.e.: whenever 
+\begin_inset Formula $N\equiv0$
+\end_inset
+
+
+\begin_inset space ~
+\end_inset
+
+mod
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset Formula $w$
+\end_inset
+
+.
+ In other words: we prune 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ when the next bucket in the stream begins.
+ The rule for deletion is simple: an entry 
+\begin_inset Formula $(e,f,\Delta)$
+\end_inset
+
+ is deleted if 
+\begin_inset Formula $f+\Delta\leq b_{current}$
+\end_inset
+
+.
+ In other words: elements with a small frequency are deleted.
+\begin_inset Newline newline
+\end_inset
+
+Because of this step, the frequency counts now contain approximations of
+ the actual frequencies.
+ Note that these approximations will 
+\emph on
+always
+\emph default
+ be 
+\emph on
+underestimations.
 \end_layout
 
 \begin_layout Standard
 At any point of time, the algorithm can be asked to produce a list of items,
  along with their estimated frequencies.
- The answers produced by the algorithms will have 
+ When such a request is made by the user, we output those entries in 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ where 
+\begin_inset Formula $f\geq(s-\epsilon)N$
+\end_inset
+
+.
+ This condition guarantees that 
+\emph on
+all
+\emph default
+ items whose true frequency exceeds 
+\begin_inset Formula $sN$
+\end_inset
+
+ are output, but allows for 
+\emph on
+some
+\emph default
+ false positives to leak through, although they have a frequency that is
+ almost high enough to qualify as truly frequent.
+\end_layout
+
+\begin_layout Subsubsection*
+Insight in How the Algorithm Works
+\end_layout
+
+\begin_layout Standard
+For an entry 
+\begin_inset Formula $(e,f,\Delta)$
+\end_inset
+
+, 
+\begin_inset Formula $f$
+\end_inset
+
+ represents the exact frequency count of 
+\begin_inset Formula $e$
+\end_inset
+
+ ever since this entry was 
+\emph on
+last
+\emph default
+ inserted into 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+.
+ The value of 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ assigned to a new entry is the maximum number of times 
+\begin_inset Formula $e$
+\end_inset
+
+ could have occurred in the first 
+\begin_inset Formula $b_{current}-1$
+\end_inset
+
+ buckets.
+ This value is exactly 
+\begin_inset Formula $b_{current}-1$
+\end_inset
+
+.
+ Once an entry is inserted into 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+, its 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ value remains unchanged.
+\end_layout
+
+\begin_layout Standard
+Upon insertion, 
+\begin_inset Formula $\Delta$
+\end_inset
+
+ is being set to 
+\begin_inset Formula $b_{current}-1$
+\end_inset
+
+, which is the maximum number of times 
+\begin_inset Formula $e$
+\end_inset
+
+ 
+\emph on
+could
+\emph default
+ have occurred in the first 
+\begin_inset Formula $b_{current}-1$
+\end_inset
+
+ buckets, but was deleted at some point in the past because its maximum
+ frequency (
+\begin_inset Formula $f+\Delta$
+\end_inset
+
+) was not sufficiently high (
+\begin_inset Formula $f+\Delta\ngtr b_{current}$
+\end_inset
+
+).
+ Therefore, the average frequency of 
+\begin_inset Formula $e$
+\end_inset
+
+ over the past buckets must have been less than 1: 
+\begin_inset Formula $\frac{f_{e}}{b_{current}}\leq1$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+We can deduct this mimimum average occurrence from the fact that the deletion
+ rule is 
+\begin_inset Formula $f+\Delta\leq b_{current}$
+\end_inset
+
+: this is not satisfied as soon as the 
+\begin_inset Formula $f$
+\end_inset
+
+ is incremented by at least one for every observed bucket.
+ This effectively means that this algorithm will store all elements which
+ occur more than once per bucket on average.
+\begin_inset Newline newline
+\end_inset
+
+Since an element is deleted when 
+\begin_inset Formula $f+\Delta\leq b_{current}$
+\end_inset
+
+, and we know that 
+\begin_inset Formula $b\leq\frac{N}{w}=\frac{N}{\frac{1}{\epsilon}}=\epsilon N$
+\end_inset
+
+, we can conclude that an item can be underestimated at most by 
+\begin_inset Formula $\epsilon N$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Space
+\end_layout
+
+\begin_layout Standard
+Lossy counting uses at most 
+\begin_inset Formula $\frac{1}{\epsilon}\log(\epsilon N)$
+\end_inset
+
+ entries, where 
+\begin_inset Formula $N$
+\end_inset
+
+ is again the current stream length.
+ If elements with very low frequency (at most 
+\begin_inset Formula $\frac{\epsilon N}{2}$
+\end_inset
+
+) tend to occur more or less uniformly at random, then lossy counting requires
+ no more than 
+\begin_inset Formula $\frac{7}{\epsilon}$
+\end_inset
+
+ space.
+ Proofs can be found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Approximate frequency counts over data streams"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsubsection
@@ -20083,6 +20609,27 @@ Proc.
  on Principles of Database Systems, pages 10–20
 \emph default
 , 1999.
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "The space complexity of approximating the frequency moments"
+
+\end_inset
+
+
+\emph on
+The space complexity of approximating the frequency moments
+\emph default
+, N.
+ Alon; Y.
+ Matias; M.
+ Szegedy, 
+\emph on
+Proceedings of the twenty-eighth annual ACM symposium on Theory of computing
+\emph default
+, 1996
 \end_layout
 
 \begin_layout Bibliography
