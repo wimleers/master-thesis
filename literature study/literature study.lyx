@@ -5936,10 +5936,10 @@ In the context of data stream mining, where the time to process incoming
 \end_layout
 
 \begin_layout Subsection
-Frequent Item Counting
+Frequent Item Mining
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting"
+name "sub:stream-mining:frequent-item-mining"
 
 \end_inset
 
@@ -6043,11 +6043,11 @@ approximate
 Now, an itemset of course consists of items.
  Hence we will focus in 
 \emph on
-frequent item counting
+frequent item mining
 \emph default
  algorithms in this section and then look into 
 \emph on
-frequent itemset counting
+frequent itemset mining
 \emph default
  algorithms in the next.
  Note that by 
@@ -6077,7 +6077,7 @@ key "probabilistic lossy counting"
 
 , so 
 \emph on
-frequent item counting algorithms
+frequent item mining algorithms
 \emph default
  can actually also be called 
 \emph on
@@ -6121,21 +6121,21 @@ key "Synopsis data structures for massive data sets,Finding Frequent Items in Da
 Counting: lossy counting (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:lc"
+reference "sub:stream-mining:frequent-item-mining:lc"
 
 \end_inset
 
 ), Karp/Demaine algorithm (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:karp-demaine"
+reference "sub:stream-mining:frequent-item-mining:karp-demaine"
 
 \end_inset
 
 ), probabilistic lossy counting (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:plc"
+reference "sub:stream-mining:frequent-item-mining:plc"
 
 \end_inset
 
@@ -6155,14 +6155,14 @@ Counting algorithms have low per-element overhead, as they only require
 Hashing: count sketch (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:count-sketch"
+reference "sub:stream-mining:frequent-item-mining:count-sketch"
 
 \end_inset
 
 ), min-count sketch (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:min-count-sketch"
+reference "sub:stream-mining:frequent-item-mining:min-count-sketch"
 
 \end_inset
 
@@ -6182,17 +6182,31 @@ Hashing algorithms use fixed memory resources to estimate the frequency
 \end_layout
 
 \begin_layout Itemize
-Sampling: sampling in general (
+Sampling: basic sampling (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:sampling"
+reference "sub:stream-mining:frequent-item-mining:basic-sampling"
+
+\end_inset
+
+), concise sampling(
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:concise-sampling"
+
+\end_inset
+
+), counting sampling (
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:counting-sampling"
 
 \end_inset
 
 ), sticky sampling (
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:sticky-sampling"
+reference "sub:stream-mining:frequent-item-mining:sticky-sampling"
 
 \end_inset
 
@@ -6206,20 +6220,22 @@ Sampling algorithms reduce the required memory resources and the processing
 \end_layout
 
 \begin_layout Standard
-S
-\end_layout
-
-\begin_layout Standard
 The algorithms are explained in the next subsections, in order of being
- published — with the goal of giving an (approximation of) the timeline
- of invention of better algorithms.
+ published — with the additional goal of providing an (approximation of)
+ the timeline over which new, improved algorithms have been invented.
+\begin_inset Newline newline
+\end_inset
+
+By including the older algorithms upon which the newer ones are based, it
+ also becomes more clear how we ended up with the current state-of-the-art
+ algorithms.
 \end_layout
 
 \begin_layout Subsubsection
-Sampling
+Basic Sampling
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:sampling"
+name "sub:stream-mining:frequent-item-mining:basic-sampling"
 
 \end_inset
 
@@ -6237,36 +6253,43 @@ key "Finding Frequent Items in Data Streams"
  and that other algorithms such as concise sampling (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:concise-sampling"
+reference "sub:stream-mining:frequent-item-mining:concise-sampling"
 
 \end_inset
 
 ), count sampling (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:counting-sampling"
+reference "sub:stream-mining:frequent-item-mining:counting-sampling"
 
 \end_inset
 
 ) and sticky sampling (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:sticky-sampling"
+reference "sub:stream-mining:frequent-item-mining:sticky-sampling"
 
 \end_inset
 
 ) build upon it.
- It requires the size of the dataset to be known in advance, which renders
+ It requires the size of the data set to be known in advance, which renders
  it useless for use with data streams.
  It's only listed here fore reference.
 \end_layout
 
 \begin_layout Standard
-The most straightforward solution for counting item frequencies is to keep
- a uniform random sample of the elements, stored as a list of items, with
- a counter for each item.
+This algorithm is the most straightforward solution for counting item frequencie
+s: it keeps a uniform random sample of the elements, stored as a list 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ of items, with a counter for each item.
  If the same element is added multiple times, its counter is incremented
- (the element is not added multiple times to the list).
+ (the element is not added multiple times to 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Standard
@@ -6275,12 +6298,20 @@ If
 \end_inset
 
  is the size of the sample (counting repetitions) and 
-\begin_inset Formula $n$
+\begin_inset Formula $N$
 \end_inset
 
  the size of the data set, then the probability of being included in the
  sample is 
-\begin_inset Formula $\frac{x}{n}$
+\begin_inset Formula $\frac{x}{N}$
+\end_inset
+
+, the count of an element 
+\begin_inset Formula $k$
+\end_inset
+
+ is denoted 
+\begin_inset Formula $n_{k}$
 \end_inset
 
  and the frequency of an element 
@@ -6291,17 +6322,21 @@ If
 \begin_inset Formula $f_{k}$
 \end_inset
 
-.
+ (indeed, 
+\begin_inset Formula $f_{k}=\frac{n_{k}}{N}$
+\end_inset
+
+).
  To guarantee that all top 
 \begin_inset Formula $k$
 \end_inset
 
  elements will be in the sample, we need 
-\begin_inset Formula $\frac{x}{n}>O(\log\frac{n}{n_{k}})$
+\begin_inset Formula $\frac{x}{N}>O(\log\frac{N}{n_{k}})$
 \end_inset
 
 , thus 
-\begin_inset Formula $x>O(\log\frac{n}{f_{k}})$
+\begin_inset Formula $x>O(\log\frac{N}{f_{k}})$
 \end_inset
 
 .
@@ -6311,7 +6346,7 @@ If
 Concise Sampling
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:concise-sampling"
+name "sub:stream-mining:frequent-item-mining:concise-sampling"
 
 \end_inset
 
@@ -6319,10 +6354,10 @@ name "sub:stream-mining:frequent-item-counting:concise-sampling"
 \end_layout
 
 \begin_layout Standard
-This is a variant of the basic sampling algorithm given in 
+This is a variant of the basic sampling algorithm given in section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:sampling"
+reference "sub:stream-mining:frequent-item-mining:basic-sampling"
 
 \end_inset
 
@@ -6338,20 +6373,24 @@ key "New Sampling-Based Summary Statistics for Improving Approximate Query Answe
 \end_inset
 
 , the concise sampling algorithm keeps a uniformly random sample of the
- data, but does not assume that the length of the data stream is known beforehan
-d (which the general sampling algorithm of section 
+ data, but does not assume that the length of the data set is known beforehand
+ (which the general sampling algorithm of section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:stream-mining:frequent-item-counting:sampling"
+reference "sub:stream-mining:frequent-item-mining:basic-sampling"
 
 \end_inset
 
- does assume).
+ does assume), hence making this algorithm suitable for use with data streams.
 \end_layout
 
 \begin_layout Standard
 Again a list of items with a counter for each item is kept, i.e.
- a list of 
+ a list 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ of 
 \begin_inset Formula $(e,c)$
 \end_inset
 
@@ -6376,12 +6415,12 @@ It begins optimistically, assuming that we can include elements in the sample
 \begin_inset Formula $\frac{1}{r}$
 \end_inset
 
-, with 
+, with threshold 
 \begin_inset Formula $r=1$
 \end_inset
 
 .
- As it runs out of space, 
+ As it runs out of space, the threshold 
 \begin_inset Formula $r$
 \end_inset
 
@@ -6389,8 +6428,12 @@ It begins optimistically, assuming that we can include elements in the sample
 \begin_inset Formula $r'$
 \end_inset
 
-repeatedly; until some element is deleted from the sample: each of the sample
- points is evicted with probability 
+ repeatedly; until some element is deleted from the sample: each of the
+ sample points in 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ is evicted with probability 
 \begin_inset Formula $\frac{r}{r'}$
 \end_inset
 
@@ -6405,14 +6448,14 @@ repeatedly; until some element is deleted from the sample: each of the sample
 \begin_layout Standard
 The invariant of the algorithm is that at any point, each item is in the
  sample with the current probability 
-\begin_inset Formula $r_{c}$
+\begin_inset Formula $\frac{1}{r_{c}}$
 \end_inset
 
 .
  At the end of the algorithm (i.e.
  the end of the data stream, if there is an end), there is some final probabilit
 y 
-\begin_inset Formula $r_{f}$
+\begin_inset Formula $\frac{1}{r_{f}}$
 \end_inset
 
 .
@@ -6448,7 +6491,7 @@ key "Run-Length Encoding"
 Counting Sampling
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:counting-sampling"
+name "sub:stream-mining:frequent-item-mining:counting-sampling"
 
 \end_inset
 
@@ -6487,7 +6530,7 @@ Since this is only an optimization and the essence of the concise sampling
 Sticky Sampling
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:sticky-sampling"
+name "sub:stream-mining:frequent-item-mining:sticky-sampling"
 
 \end_inset
 
@@ -6505,7 +6548,7 @@ sticky sampling
 \end_inset
 
  increases logarithmically, proportional to the size of the stream.
- Additionally, it guarantees to produce all items whose frequency exceeds
+ Additionally, it guarantees to produce all items whose frequency exceed
  a user-specified minimum support parameter 
 \begin_inset Formula $s$
 \end_inset
@@ -6515,7 +6558,15 @@ sticky sampling
 \end_inset
 
 .
- 
+ The user can also specify an acceptable error margin 
+\begin_inset Formula $\epsilon\in[0,1]$
+\end_inset
+
+ and an acceptable probability of failure 
+\begin_inset Formula $\delta\in[0,1]$
+\end_inset
+
+ to meet this error margin.
 \begin_inset Newline newline
 \end_inset
 
@@ -6574,6 +6625,10 @@ by at most
 \begin_inset Formula $\epsilon N$
 \end_inset
 
+ with probability 
+\begin_inset Formula $1-\delta$
+\end_inset
+
 .
 \end_layout
 
@@ -6587,6 +6642,10 @@ We say that the algorithm maintains an
 -deficient synopsis
 \emph default
  if its output satisfies these guarantees.
+\end_layout
+
+\begin_layout Subsubsection*
+Example
 \end_layout
 
 \begin_layout Standard
@@ -6645,7 +6704,7 @@ For example, if the goal is to identify all items whose frequency is at
 
 \begin_layout Standard
 The approximation in this algorithm has two kinds of errors: 1) false positives
- still have high frequencies, 2) individual frequncies have small errors.
+ still have high frequencies, 2) individual frequencies have small errors.
  Both kinds of errors are tolerable in the context of frequent item mining.
 \end_layout
 
@@ -6654,14 +6713,161 @@ Algorithm
 \end_layout
 
 \begin_layout Standard
-TODO
+The algorithm
+\emph on
+ in se
+\emph default
+ is the same as the one for concise sampling, with a different method for
+ changing the sampling rate 
+\begin_inset Formula $r$
+\end_inset
+
+: it increases logarithmically.
+ Formally: let 
+\begin_inset Formula $t=\frac{1}{\epsilon}\log(s^{-1}\delta^{-1})$
+\end_inset
+
+.
+ The first 
+\begin_inset Formula $2t$
+\end_inset
+
+ elements are sampled at 
+\begin_inset Formula $r=1$
+\end_inset
+
+, the next 
+\begin_inset Formula $2t$
+\end_inset
+
+ elements are sampled at rate 
+\begin_inset Formula $r=2$
+\end_inset
+
+, the next 
+\begin_inset Formula $4t$
+\end_inset
+
+ at 
+\begin_inset Formula $r=4$
+\end_inset
+
+, and so on.
+\end_layout
+
+\begin_layout Standard
+Whenever the sample rate changes, we also scan 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+'s entries and update them as follows: for each entry 
+\begin_inset Formula $(e,c)$
+\end_inset
+
+, we repeatedly toss an unbiased coin until the coin toss is successful,
+ diminishing 
+\begin_inset Formula $c$
+\end_inset
+
+ by one for every unsuccessful outcome.
+ If 
+\begin_inset Formula $c$
+\end_inset
+
+ becomes 0 during this process, we delete the entry from 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+.
+ The number of unsuccessful coin tosses follows a geometric distribution,
+ which can be efficiently computed 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Random sampling with a reservoir"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Effectively, this will have transformed 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ to the state it would have been in if we had been sampling with the new
+ rate from the start.
+\end_layout
+
+\begin_layout Standard
+When a user requests a list of items with threshold 
+\begin_inset Formula $s$
+\end_inset
+
+, we output the entries in 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ where 
+\begin_inset Formula $c\geq(s-\epsilon)N$
+\end_inset
+
+.
+ The true supports of these frequent items are underestimated by at most
+ 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ with probability 
+\begin_inset Formula $1-\delta$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Its name is derived from the analogy with a magnet: 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ sweeps over the data stream like a magnet, attracting all elements which
+ already have an entry in 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+.
+ Note that the space complexity of sticky sampling is 
+\emph on
+independent
+\emph default
+ of 
+\begin_inset Formula $N$
+\end_inset
+
+: the space requirements are 
+\begin_inset Formula $2t$
+\end_inset
+
+ as said before, t is known, thus the space bound is 
+\begin_inset Formula $O(\frac{2}{\epsilon}\log(s^{-1}\delta^{-1})$
+\end_inset
+
+.
+ Consult 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Approximate frequency counts over data streams"
+
+\end_inset
+
+ for the proof.
 \end_layout
 
 \begin_layout Subsubsection
 Lossy Counting
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:lc"
+name "sub:stream-mining:frequent-item-mining:lc"
 
 \end_inset
 
@@ -6699,7 +6905,7 @@ At any point of time, the algorithm can be asked to produce a list of items,
 Count Sketch (2002)
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:count-sketch"
+name "sub:stream-mining:frequent-item-mining:count-sketch"
 
 \end_inset
 
@@ -6710,7 +6916,7 @@ name "sub:stream-mining:frequent-item-counting:count-sketch"
 Min-Count Sketch (????)
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:min-count-sketch"
+name "sub:stream-mining:frequent-item-mining:min-count-sketch"
 
 \end_inset
 
@@ -6721,7 +6927,7 @@ name "sub:stream-mining:frequent-item-counting:min-count-sketch"
 Karp/Demaine algorithm (2003)
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:karp-demaine"
+name "sub:stream-mining:frequent-item-mining:karp-demaine"
 
 \end_inset
 
@@ -6732,7 +6938,7 @@ name "sub:stream-mining:frequent-item-counting:karp-demaine"
 Probabilistic Lossy Counting (2008)
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:plc"
+name "sub:stream-mining:frequent-item-mining:plc"
 
 \end_inset
 
@@ -19982,6 +20188,26 @@ Approximate frequency counts over data streams
 Proceedings of the 28th international conference on Very Large Data Bases
 \emph default
 , 2002
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Random sampling with a reservoir"
+
+\end_inset
+
+
+\emph on
+Random sampling with a reservoir
+\emph default
+, J.
+ S.
+ Vitter, 
+\emph on
+ACM Transactions on Mathematical Software (TOMS)
+\emph default
+, 1985
 \end_layout
 
 \begin_layout Bibliography
