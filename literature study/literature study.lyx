@@ -6628,7 +6628,7 @@ No items whose true frequency is less than
 \begin_inset Formula $(s-\epsilon)N$
 \end_inset
 
- qre output.
+ are output.
 \end_layout
 
 \begin_layout Enumerate
@@ -7891,7 +7891,7 @@ is a random variable that denotes the true frequency of an element, then
 \end_layout
 
 \begin_layout Standard
-|We still need to calculate 
+We still need to calculate 
 \begin_inset Formula $\beta$
 \end_inset
 
@@ -7922,8 +7922,8 @@ Pr(Y>y|Y>b_{current}-1)=\frac{Pr(Y>y)}{Pr(Y>b_{current}-1)}=\frac{y^{\beta}}{(b_
 \end_layout
 
 \begin_layout Standard
-Note that this frequency distribution also follows a poer-law with the same
- parameter 
+Note that this frequency distribution also follows a power-law with the
+ same parameter 
 \begin_inset Formula $\beta$
 \end_inset
 
@@ -8010,13 +8010,23 @@ name "sub:stream-mining:frequent-itemset-mining"
 A data stream consist of elements, which arrive in a particular order over
  time.
  There are several ways one can deal with this sequence nature, existing
- models are:
+ models are 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream,DSM-FI"
+
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Enumerate
-The landmark model: frequent patterns are mined in data streams by assuming
- the patterns are measured from the begining of the stream until the current
- moment.
+The 
+\emph on
+landmark
+\emph default
+ model: frequent patterns are mined in data streams by assuming the patterns
+ are measured from the begining of the stream until the current moment.
 \begin_inset Newline newline
 \end_inset
 
@@ -8036,8 +8046,11 @@ ting due to fashion, seasonal changes, and so on.
 \end_layout
 
 \begin_layout Enumerate
-The sliding window model: frequent patterns are mined over only the last
- 
+The 
+\emph on
+sliding window
+\emph default
+ model: frequent patterns are mined over only the last 
 \begin_inset Formula $w$
 \end_inset
 
@@ -8049,12 +8062,16 @@ The sliding window model: frequent patterns are mined over only the last
 \end_layout
 
 \begin_layout Enumerate
-The damped window model: a decay function is applied to the data stream,
- to give more weight to recent data than to old data.
+The 
+\emph on
+damped window
+\emph default
+ model: a decay function is applied to the data stream, to give more weight
+ to recent data than to old data.
 \end_layout
 
 \begin_layout Subsubsection
-Lossy Counting For Frequent Itemsets
+Lossy Counting for Frequent Itemsets
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:stream-mining:frequent-itemset-mining:lc"
@@ -8065,8 +8082,11 @@ name "sub:stream-mining:frequent-itemset-mining:lc"
 \end_layout
 
 \begin_layout Standard
-This algorithm builds upon the lossy counting (LC) algorithm (see section
- 
+This algorithm (which is one of the 
+\emph on
+landmark
+\emph default
+ model) builds upon the lossy counting (LC) algorithm (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:frequent-item-mining:lc"
@@ -8246,23 +8266,6 @@ It is important that
 \end_layout
 
 \begin_layout Subsubsection*
-Limitation
-\end_layout
-
-\begin_layout Standard
-This algorithm is a simple but effective for finding frequent itemsets approxima
-tely, but has a major limitation: the output is based on all the previous
- data.
- This makes it unsuitable for use cases where recent data is more important
- than the remote past.
-\begin_inset Newline newline
-\end_inset
-
-Note that a tilted time frame model with different time granularities can
- be integrated with LC to emphasize recency.
-\end_layout
-
-\begin_layout Subsubsection*
 Implementation
 \end_layout
 
@@ -8298,6 +8301,1052 @@ name "sub:stream-mining:frequent-itemset-mining:fp-stream"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+FP-stream, published in 2003 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+, is designed to mine time-sensitive data streams.
+ It actively maintains frequent 
+\emph on
+patterns
+\emph default
+
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+, frequent itemsets are called frequent 
+\emph on
+patterns
+\emph default
+, a name that was kept throughout this section on FP-stream for clarity
+ because some FP-stream-specific structures include 
+\begin_inset Quotes eld
+\end_inset
+
+pattern
+\begin_inset Quotes erd
+\end_inset
+
+ in their names.
+\end_layout
+
+\end_inset
+
+ under a tilted-time window framework (explained a couple of paragraphs
+ further) in order to answer time-sensitive queries.
+ The frequent patterns are compressed and stored using a tree structure
+ similar to FP-tree
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+It is assumed the reader is already familiar with the FP-growth algorithm
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-Growth"
+
+\end_inset
+
+ — if not, that should be read first; note that a very clear explanation
+ of FP-growth is available in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Intro to Data Mining"
+
+\end_inset
+
+, including excellent figures to explain the data structures it uses.
+\end_layout
+
+\end_inset
+
+, and updated incrementally as new data flows in.
+\end_layout
+
+\begin_layout Standard
+The task FP-stream wants to solve is to 
+\emph on
+find the complete set of frequent patterns in a data stream
+\emph default
+, with the limitation that one can only see a limited set of transactions
+ (those in the current window) at any moment.
+\end_layout
+
+\begin_layout Standard
+In the FP-growth algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-Growth"
+
+\end_inset
+
+, the FP-tree provides a structure to facilitate mining in a static data
+ set environment (or a data set that is updated in batches).
+\begin_inset Newline newline
+\end_inset
+
+In the FP-stream algorithm, two datastructures are used:
+\end_layout
+
+\begin_layout Enumerate
+A 
+\emph on
+FP-tree
+\emph default
+ in main memory for storing transactions of the 
+\emph on
+current
+\emph default
+ 
+\emph on
+window
+\emph default
+.
+\end_layout
+
+\begin_layout Enumerate
+A 
+\emph on
+pattern-tree
+\emph default
+, which is a tree structure similar to an FP-tree, but with tilted-time
+ windows embedded in it, for storing frequent patterns of the 
+\emph on
+windows in the past
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Incremental updates can be performed on both of these parts.
+ Incremental updates occur when some infrequent patterns become subfrequent
+ or frequent, or vice versa.
+ At any point in time, the set of frequent patterns over a period can be
+ obtained from the pattern-tree in main memory.
+\end_layout
+
+\begin_layout Subsubsection*
+Tilted-Time Window
+\end_layout
+
+\begin_layout Standard
+The design of the tilted-time window is based on the fact that often the
+ 
+\emph on
+details
+\emph default
+ of recent changes are interesting, but over a longer period, 
+\emph on
+less detail is necessary
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Several ways exist to designed a tilted-time window.
+ Here are two common examples:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Natural tilted-time window model.
+ 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques,FP-stream"
+
+\end_inset
+
+ The time window is structured in multiple granularities, based on the 
+\begin_inset Quotes eld
+\end_inset
+
+natural
+\begin_inset Quotes erd
+\end_inset
+
+ (for humans) time scale: the most recent 4 quarters of an hour, then the
+ last 24 hours, 31 days and then 12 months.
+ This can of course vary, depending on the application.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stream-mining:frequent-itemset-mining:fp-stream:natural-tilted-time-window"
+
+\end_inset
+
+ for an example of what that looks like.
+\begin_inset Newline newline
+\end_inset
+
+Based on this model, we can compute frequent itemsets in the last hour with
+ the precision of a quarter of an hour, the last day with the precision
+ of an hour, and so on.
+ This model registers only 
+\begin_inset Formula $4+24+31+12=71$
+\end_inset
+
+ units of time (quarters, hours, days, months respectively) instead of 
+\begin_inset Formula $365\times24\times4=35,040$
+\end_inset
+
+ units of time — with the trade-off of coarser granularity for the distant
+ past.
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/stream mining/fp-stream natural tilted-time window model.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Natural tiled-time window.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stream-mining:frequent-itemset-mining:fp-stream:natural-tilted-time-window"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Logarithmic tilted-time window model.
+ 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques"
+
+\end_inset
+
+ In this model, the granularity decreases towards the past at an exponential
+ rate.
+ If the most recent slot holds data for the last quarter, then the one before
+ that also holds data for one quarter (the one before the most recent),
+ then for 2 quarters, 4, 8, 16, and so on.
+ In this model, only 
+\begin_inset Formula $\left\lceil \log_{2}(365\times24\times4)+1\right\rceil =\left\lceil 16.1\right\rceil =17$
+\end_inset
+
+ units of time are needed.
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align left
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream frequent patterns.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Frequent patterns for tilted-time windows.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stream-mining:frequent-itemset-mining:fp-stream:frequent-patterns"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream pattern-tree.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Pattern tree.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stream-mining:frequent-itemset-mining:fp-stream:pattern-tree"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream tilted-time windows embedded in pattern-tree.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Tilted-time windows embedded in pattern-tree.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stream-mining:frequent-itemset-mining:fp-stream:pattern-tree-tilted-time-windows"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Mining Time-Sensitive Frequent Patterns in Data Streams
+\end_layout
+
+\begin_layout Standard
+FP-stream can use any tilted-time window model.
+ We focus on FP-stream with a natural tilted-time window model.
+\end_layout
+
+\begin_layout Standard
+For each tilted-time window, a 
+\emph on
+frequent pattern set
+\emph default
+ is maintained — see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stream-mining:frequent-itemset-mining:fp-stream:frequent-patterns"
+
+\end_inset
+
+.
+ This allows us to answer queries like:
+\end_layout
+
+\begin_layout Itemize
+What is the frequent pattern set over the periods 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+ and 
+\begin_inset Formula $t_{3}$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Itemize
+What are the periods when the pattern 
+\begin_inset Formula $(a,b)$
+\end_inset
+
+ is frequent?
+\end_layout
+
+\begin_layout Itemize
+Does the support of 
+\begin_inset Formula $(a,b,c)$
+\end_inset
+
+ change dramatically in the period from 
+\begin_inset Formula $t_{3}$
+\end_inset
+
+ to 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+?
+\end_layout
+
+\begin_layout Itemize
+…
+\end_layout
+
+\begin_layout Standard
+That is, we have sufficient flexibility to mine a variety of types of frequent
+ patterns associated with time — possibilities are:
+\end_layout
+
+\begin_layout Itemize
+Mining frequent patterns in the current window — obviously this is the most
+ basic requirement.
+\end_layout
+
+\begin_layout Itemize
+Mining frequent patterns over time ranges with different granularities.
+\end_layout
+
+\begin_layout Itemize
+Placing different weights on windows to mine weighted frequent patterns.
+\end_layout
+
+\begin_layout Itemize
+Mining evolution of frequent patterns based on the changes of their occurences
+ in a sequence of windows.
+\end_layout
+
+\begin_layout Standard
+However, we can store this frequent pattern set much more efficiently using
+ a compact tree presentation, called a 
+\emph on
+pattern-tree
+\emph default
+.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stream-mining:frequent-itemset-mining:fp-stream:pattern-tree"
+
+\end_inset
+
+.
+ Note the strong resemblance in structure with an FP-tree.
+ The difference is that in an FP-tree, 
+\emph on
+all
+\emph default
+ incoming transactions (itemsets) are stored, whereas in a pattern-tree,
+ only 
+\emph on
+frequent
+\emph default
+ patterns (itemsets) are stored.
+ In fact, a pattern-tree (as described thus far) is the same as an FP-tree,
+ but it gets fed different data: frequent transactions only instead of all
+ transactions.
+\end_layout
+
+\begin_layout Standard
+Finally, frequent patterns usually do not change significantly over time.
+ Therefore the pattern-trees for different tilted-time windows will likely
+ have a considerable amount of overlap.
+ If we can 
+\emph on
+embed the tilted-time window structure into each node of the pattern-tree
+\emph default
+, we can save memory.
+\begin_inset Newline newline
+\end_inset
+
+Thus, we 
+\emph on
+use only a single 
+\emph default
+pattern-tree where 
+\emph on
+at each node the frequency for each tilted-time window is maintained
+\emph default
+.
+ This final structure is what we call a 
+\emph on
+FP-stream
+\emph default
+.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stream-mining:frequent-itemset-mining:fp-stream:pattern-tree-tilted-time-windows"
+
+\end_inset
+
+ for an example of this.
+\end_layout
+
+\begin_layout Subsubsection*
+Maintaining Tilted-Time Windows
+\end_layout
+
+\begin_layout Standard
+As new data flows in, the tilted-time window table grows.
+ In the case of a natural tilted-time window, which is the running example,
+ we need 
+\begin_inset Formula $4+24+31+12=71$
+\end_inset
+
+ windows.
+ For this tilted-time window model, it is very straightforward to perform
+ maintenance: when 4 
+\begin_inset Quotes eld
+\end_inset
+
+quarter windows
+\begin_inset Quotes erd
+\end_inset
+
+ have been collected and a fifth has begun, they are merged to form 1 new
+ 
+\begin_inset Quotes eld
+\end_inset
+
+hour window
+\begin_inset Quotes erd
+\end_inset
+
+.
+ Analogously, when 24 
+\begin_inset Quotes eld
+\end_inset
+
+hour windows
+\begin_inset Quotes erd
+\end_inset
+
+ have been collected and a 
+\begin_inset Formula $25{}^{\text{th}}$
+\end_inset
+
+ has begun, these 24 windows are merged to form one new 
+\begin_inset Quotes eld
+\end_inset
+
+day window
+\begin_inset Quotes erd
+\end_inset
+
+, and so on.
+\end_layout
+
+\begin_layout Subsubsection*
+Tail Pruning
+\end_layout
+
+\begin_layout Standard
+Given a batch of transactions 
+\begin_inset Formula $B$
+\end_inset
+
+, let 
+\begin_inset Formula $f_{I}(i,j)$
+\end_inset
+
+ denote the frequency of 
+\begin_inset Formula $I$
+\end_inset
+
+ in 
+\begin_inset Formula $B(i,j)$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $t_{0},\text{…},t_{n}$
+\end_inset
+
+ be the tilted-time windows which group the batches seen thus far, with
+ 
+\begin_inset Formula $t_{n}$
+\end_inset
+
+ the oldest and 
+\begin_inset Formula $t_{0}$
+\end_inset
+
+ the current.
+ The window size of 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ is denoted 
+\begin_inset Formula $w_{i}$
+\end_inset
+
+ (the number of transactions in the window).
+\end_layout
+
+\begin_layout Standard
+The goal of FP-stream is to mine all frequent itemsets whose support is
+ larger than 
+\begin_inset Formula $\sigma$
+\end_inset
+
+ over period 
+\begin_inset Formula $T=t_{k}\cup t_{k+1}\cup\text{…}\cup t_{k'}$
+\end_inset
+
+ (with 
+\begin_inset Formula $0\leqslant k\leqslant k'\leqslant n$
+\end_inset
+
+).
+ Then the size of 
+\begin_inset Formula $T$
+\end_inset
+
+ clearly is 
+\begin_inset Formula $W=w_{k}+w_{k+1}+\text{…}+w_{k'}$
+\end_inset
+
+.
+ This goal can only be met if we maintain all possible itemsets over all
+ these periods no matter if they are frequent or not
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Maintaining only frequent tilted-time window entries is not sufficient:
+ as the stream progresses, infrequent itemsets may become frequent.
+\end_layout
+
+\end_inset
+
+.
+ However, this would require too much space.
+\end_layout
+
+\begin_layout Standard
+Fortunately, there is a way to approximate this (and thus require less space).
+ Maintaining only 
+\begin_inset Formula $f_{I}(t_{0}),\text{…},f_{I}(t_{m-1})$
+\end_inset
+
+ for some 
+\begin_inset Formula $m$
+\end_inset
+
+ (with 
+\begin_inset Formula $0\leqslant m\leqslant n$
+\end_inset
+
+) and dropping the remaining tail sequences of tilted-time windows is sufficient.
+ Specifically, we drop tail sequences 
+\begin_inset Formula $f_{I}(t_{m}),\text{…},f_{I}(t_{n})$
+\end_inset
+
+ when the following conditions hold:
+\begin_inset Formula \[
+\exists l,\forall i,l\leqslant i\leqslant n,f_{I}(t_{i})<\sigma w_{i}\]
+
+\end_inset
+
+and
+\begin_inset Formula \[
+\forall l',l\leqslant m\leqslant l'\leqslant n:\sum_{i=l}^{l'}f_{I}(t_{i})<\epsilon\sum_{i=l}^{l'}w_{i}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These conditions imply that all itemsets will be dropped that:
+\end_layout
+
+\begin_layout Itemize
+have a frequency smaller than the minimum frequency per window (
+\begin_inset Formula $\sigma w_{i}$
+\end_inset
+
+) in 
+\emph on
+any
+\emph default
+ window from window 
+\begin_inset Formula $l$
+\end_inset
+
+ until the 
+\begin_inset Formula $n{}^{\text{th}}$
+\end_inset
+
+, i.e.
+ first, i.e.
+ most distant past window (
+\begin_inset Formula $f_{I}(t_{i})<\sigma w_{i}$
+\end_inset
+
+), 
+\emph on
+and
+\emph default
+;
+\end_layout
+
+\begin_layout Itemize
+have a frequency over all windows 
+\begin_inset Formula $l$
+\end_inset
+
+ through 
+\begin_inset Formula $n$
+\end_inset
+
+ or 
+\begin_inset Formula $l'$
+\end_inset
+
+ through 
+\begin_inset Formula $n$
+\end_inset
+
+ that is lower than the average allowed error rate
+\end_layout
+
+\begin_layout Standard
+As a result, we no longer have an exact frequency over 
+\begin_inset Formula $T$
+\end_inset
+
+, but an 
+\emph on
+approximate frequency
+\emph default
+ 
+\begin_inset Formula $\hat{f_{I}}(T)=\sum_{i=k}^{min\{m-1,k'\}}f_{I}(t_{i})$
+\end_inset
+
+ if 
+\begin_inset Formula $m>k$
+\end_inset
+
+ and 
+\begin_inset Formula $ $
+\end_inset
+
+
+\begin_inset Formula $\hat{f_{I}}(T)=0\sim\epsilon W$
+\end_inset
+
+ if 
+\begin_inset Formula $m\leqslant k$
+\end_inset
+
+.
+ The approximation is less than the actual frequency by at most as much
+ as:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+f_{I}(T)-\epsilon W\leqslant\hat{f_{I}}(T)\leqslant f_{I}(T)\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Thus, if we deliver all itemsets 
+\begin_inset Formula $I$
+\end_inset
+
+ for which 
+\begin_inset Formula $\hat{f_{I}}>(\sigma-\epsilon)W$
+\end_inset
+
+, we will not miss any frequent itemsets over the period 
+\begin_inset Formula $T$
+\end_inset
+
+.
+ As a side-effect, we may incorrectly return some itemsets whose 
+\emph on
+real
+\emph default
+ frequencies are between 
+\begin_inset Formula $(\sigma-\epsilon)W$
+\end_inset
+
+ and 
+\begin_inset Formula $\sigma W$
+\end_inset
+
+.
+ This is reasonable when 
+\begin_inset Formula $\epsilon$
+\end_inset
+
+ is small.
+\end_layout
+
+\begin_layout Standard
+We call this 
+\emph on
+tail pruning
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Type I & II Pruning
+\end_layout
+
+\begin_layout Standard
+For any itemsets 
+\begin_inset Formula $I\subseteq I'$
+\end_inset
+
+, the following holds: 
+\begin_inset Formula $f_{I}\geq f_{I'}$
+\end_inset
+
+.
+ This is known as the anti-monotone property: the frequency of an itemset
+ is always equal or larger than the the frequency of its supersets.
+\begin_inset Newline newline
+\end_inset
+
+It can be shown that this still holds in the current context, of approximate
+ frequency counting and tilted-time windows 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+From this, it immediately follows that if an itemset 
+\begin_inset Formula $I$
+\end_inset
+
+ is in the current batch 
+\begin_inset Formula $B$
+\end_inset
+
+, but is not in the FP-stream structure, then no superset is in the structure.
+ Therefore, if 
+\begin_inset Formula $f_{I}(B)<\epsilon\left|B\right|$
+\end_inset
+
+, then none of the supersets need to be examined.
+ So the mining of 
+\begin_inset Formula $B$
+\end_inset
+
+ can 
+\emph on
+prune its search
+\emph default
+ and not evaluate supersets of 
+\begin_inset Formula $I$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We call this 
+\emph on
+type I pruning
+\emph default
+.
+\begin_inset Newline newline
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The consequence in the other direction is that if an itemset 
+\begin_inset Formula $I$
+\end_inset
+
+ is being dropped from the FP-stream structure, then all its supersets can
+ also be dropped.
+\end_layout
+
+\begin_layout Standard
+We call this 
+\emph on
+type II pruning
+\emph default
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Algorithm
+\end_layout
+
+\begin_layout Standard
+For an in-depth explanation and evaluation of the algorithm, we refer to
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+, sections 3.6, 3.7 and 3.8.
 \end_layout
 
 \begin_layout Subsubsection
@@ -21766,6 +22815,52 @@ A proof for the queueing formula:
 Operations Research, 9(3):383–387
 \emph default
 , 1961
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "FP-stream"
+
+\end_inset
+
+
+\emph on
+Mining Frequent Patterns in Data Streams at Multiple Time Granularities
+\emph default
+, C.
+ Giannella; J.
+ Han; J.
+ Pei; X.
+ Yan; P.
+ S.
+ Yu, 
+\emph on
+Next generation data mining
+\emph default
+, 2003 
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "DSM-FI"
+
+\end_inset
+
+
+\emph on
+An Efficient Algorithm for Mining Frequent Itemests over the Entire History
+ of Data Streams
+\emph default
+, H.
+ Li, S.
+ Lee, M.
+ Shan, 
+\emph on
+Workshop on Knowledge Discovery in Data Streams
+\emph default
+, 2004
 \end_layout
 
 \begin_layout Bibliography
