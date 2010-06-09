@@ -7997,10 +7997,249 @@ Frequent Pattern
 (Itemset)
 \emph default
  Mining
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:stream-mining:frequent-itemset-mining"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
-Stanford's buffer + trie + subsetgen
+Lossy Counting For Frequent Itemsets
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:stream-mining:frequent-itemset-mining:lc"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+This algorithm builds upon the lossy counting (LC) algorithm (see section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:lc"
+
+\end_inset
+
+), to add support for frequent itemset mining.
+ It was introduced by the same paper 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Approximate frequency counts over data streams"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+However, it clearly is much more difficult to find frequent 
+\emph on
+itemsets
+\emph default
+ than 
+\emph on
+items
+\emph default
+ since the number of possible itemsets grows exponentially with the number
+ of different items: many more frequent itemsets are possible than the items
+ they consist of.
+\end_layout
+
+\begin_layout Subsubsection*
+Changes
+\end_layout
+
+\begin_layout Standard
+The set of entries 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ does no longer contain entries of the form 
+\begin_inset Formula $(e,f,\Delta)$
+\end_inset
+
+, but of the form 
+\begin_inset Formula $(set,f,\Delta)$
+\end_inset
+
+, where 
+\begin_inset Formula $set$
+\end_inset
+
+ is a subset of items.
+\end_layout
+
+\begin_layout Standard
+We no longer process the stream transaction per transaction, because then
+ memory consumption would rise significantly.
+ Instead, we try to fill available main memory with as many transactions
+ as possible and then process such a 
+\emph on
+batch
+\emph default
+ of transactions together.
+ Let 
+\begin_inset Formula $\beta$
+\end_inset
+
+ denote the number of buckets in main memory in the current batch being
+ processed.
+ We then update 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ as follows:
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+update_set
+\family default
+: For each entry 
+\begin_inset Formula $(set,f,\Delta)$
+\end_inset
+
+ that exists in 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+, update 
+\begin_inset Formula $f$
+\end_inset
+
+ by counting the occurrences of 
+\begin_inset Formula $set$
+\end_inset
+
+ in the current batch.
+\begin_inset Newline newline
+\end_inset
+
+The updated entry is deleted if 
+\begin_inset Formula $f+\Delta\leq b_{current}$
+\end_inset
+
+, just like in LC.
+\end_layout
+
+\begin_layout Itemize
+
+\family typewriter
+new_set
+\family default
+: If a set 
+\begin_inset Formula $set$
+\end_inset
+
+ in the current batch has frequency 
+\begin_inset Formula $f\geq\beta$
+\end_inset
+
+, and does not yet exist in 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+, add a new entry 
+\begin_inset Formula $(set,f,b_{current}-\beta)$
+\end_inset
+
+ to 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+This too, is analogous to what happens in LC, and is merely adjusted to
+ work with itemsets instead of items.
+\end_layout
+
+\begin_layout Standard
+It is important that 
+\begin_inset Formula $\beta$
+\end_inset
+
+ is a large number: this will save memory because all itemsets with a frequency
+ less than 
+\begin_inset Formula $\beta$
+\end_inset
+
+ will never enter 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ and therefore save memory.
+ For smaller values of 
+\begin_inset Formula $\beta$
+\end_inset
+
+ (such as 
+\begin_inset Formula $\beta=1$
+\end_inset
+
+ when working with frequen items instead of frequent itemsets), more spurious
+ subsets will enter 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+, which would drastically increase the average size of 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+, as well as drastically increase the refresh rate — effectively harming
+ the algorithm in both time and space.
+\end_layout
+
+\begin_layout Subsubsection*
+Limitation
+\end_layout
+
+\begin_layout Standard
+This algorithm is a simple but effective for finding frequent itemsets approxima
+tely, but has a major limitation: the output is based on all the previous
+ data.
+ This makes it unsuitable for use cases where recent data is more important
+ than the remote past.
+\begin_inset Newline newline
+\end_inset
+
+Note that a tilted time frame model with different time granularities can
+ be integrated with LC to emphasize recency.
+\end_layout
+
+\begin_layout Subsubsection*
+Implementation
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+If time allows, explain how to implement this.
+ Section 5.2-5.5.
+ in the 
+\begin_inset Quotes eld
+\end_inset
+
+Approximate Frequency Counts over Data Streams
+\begin_inset Quotes erd
+\end_inset
+
+ paper.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
@@ -8008,8 +8247,23 @@ Han's multiple time granularities
 \end_layout
 
 \begin_layout Subsubsection
-DSM-FI (2003, An Efficient Algorithm for Mining Frequent Itemests over the
- Entire History of Data Streams)
+DSM-FI
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:stream-mining:frequent-itemset-mining:dsm-fi"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Better than lossy counting memory wise because it does not store each possible
+ itemset separately, it compacts the storage of them by using an FP-tree.
+\end_layout
+
+\begin_layout Standard
+Reminiscent of FP-growth, but generates patters top-down instead of bottom-up.
 \end_layout
 
 \begin_layout Standard
