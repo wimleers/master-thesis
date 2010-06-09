@@ -8006,6 +8006,53 @@ name "sub:stream-mining:frequent-itemset-mining"
 
 \end_layout
 
+\begin_layout Standard
+A data stream consist of elements, which arrive in a particular order over
+ time.
+ There are several ways one can deal with this sequence nature, existing
+ models are:
+\end_layout
+
+\begin_layout Enumerate
+The landmark model: frequent patterns are mined in data streams by assuming
+ the patterns are measured from the begining of the stream until the current
+ moment.
+\begin_inset Newline newline
+\end_inset
+
+This model may not be desirable when 
+\emph on
+changes of patterns
+\emph default
+ and their 
+\emph on
+trends
+\emph default
+ are more interesting than the patterns themselves.
+ E.g.
+ a series of shopping transactions could start a long time ago (e.g.
+ a few years ago), but patterns found over the entire time span may be uninteres
+ting due to fashion, seasonal changes, and so on.
+\end_layout
+
+\begin_layout Enumerate
+The sliding window model: frequent patterns are mined over only the last
+ 
+\begin_inset Formula $w$
+\end_inset
+
+ transactions, with 
+\begin_inset Formula $w$
+\end_inset
+
+ the window size.
+\end_layout
+
+\begin_layout Enumerate
+The damped window model: a decay function is applied to the data stream,
+ to give more weight to recent data than to old data.
+\end_layout
+
 \begin_layout Subsubsection
 Lossy Counting For Frequent Itemsets
 \begin_inset CommandInset label
@@ -8243,7 +8290,14 @@ Approximate Frequency Counts over Data Streams
 \end_layout
 
 \begin_layout Subsubsection
-Han's multiple time granularities
+FP-Stream 
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:stream-mining:frequent-itemset-mining:fp-stream"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsubsection
