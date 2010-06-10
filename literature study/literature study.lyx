@@ -9490,110 +9490,929 @@ In practice, DSM-FI performs significantly better than LC memory-wise, because
 
 \begin_layout Section
 Anomaly Detection
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:anomaly-detection"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
 What are Anomalies?
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:what-are-anomalies"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Anomalies are patterns in data that to not conform to a notion of 
+\begin_inset Quotes eld
+\end_inset
+
+normal behavior
+\begin_inset Quotes erd
+\end_inset
+
+.
+ This is more easily illustrated through a figure: see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:example"
+
+\end_inset
+
+.
+ It illustrates anomalies in a simple 2D data set.
+ The data set has two 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ regions: 
+\begin_inset Formula $N_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{2}$
+\end_inset
+
+.
+ They are considered 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ since most of the observations lie in these two regions.
+ Points that are sufficiently far away from 
+\begin_inset Formula $N_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $N_{2}$
+\end_inset
+
+ are considered 
+\emph on
+anomalies
+\emph default
+.
+ In this example, that would be points 
+\begin_inset Formula $o_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $o_{2}$
+\end_inset
+
+, as well as all points in region 
+\begin_inset Formula $O_{3}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/anomaly detection/example.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+An example of anomalies in a 2D data set.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Anomaly Detection: A Survey"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:anomaly-detection:example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Anomalies can be triggered by a variety of causes, depending on their context;
+ ranging from malicious activities (such as intrusions, credit card fraud,
+ insurance fraud, attack of a computer system) to mere anomolous circumstances
+ (such as an extremely long winter, an extreme amount of rainfall).
+ All these anomalies have in common that they are 
+\emph on
+interesting
+\emph default
+ to the analyst, there must be 
+\emph on
+real life relevance
+\emph default
+ to make it into an anomaly.
+\end_layout
+
+\begin_layout Standard
+Fields related to anomaly detection are 
+\emph on
+noise removal
+\emph default
+, 
+\emph on
+noise accomodation
+\emph default
+ (both of which deal with removing uninteresting data points from a data
+ set that are acting as a hindrance to data analysis) and 
+\emph on
+novelty detection
+\emph default
+ (detecting previously unobserved patterns in the data set).
+\end_layout
+
+\begin_layout Subsection
+Challenges
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:challenges"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Conceptually, an anomaly is defined as a pattern that does not correspond
+ to normal behavior.
+ So, one would think that while looking at a specific region, one could
+ easily discern the data that is not normal as an anomaly.
+ Unfortunately, several factors make this simple approach impossible:
+\end_layout
+
+\begin_layout Itemize
+When malicious actions cause anomalies, the malicious adversaries often
+ try to adapt themeslves to make the anomalous events appear like normal,
+ thereby making detecting them much more difficult.
+\end_layout
+
+\begin_layout Itemize
+The definition of 
+\begin_inset Quotes eld
+\end_inset
+
+normal behavior
+\begin_inset Quotes erd
+\end_inset
+
+ may evolve over time, thus the current definition may no longer be representati
+ve in the future (cfr.
+ people's signatures that change over time).
+\end_layout
+
+\begin_layout Itemize
+In one domain, a small fluctuation may be considered normal, and in another
+ it may be considered an anomaly.
+ Thus techniques of one domain are not necessarily easily applied in another
+ domain.
+\end_layout
+
+\begin_layout Itemize
+Data sets often contain noise that tends to be similar to the actual anomalies,
+ which makes it difficult to detect actual anomalies.
+\end_layout
+
+\begin_layout Standard
+Due to the above challenges (and this list is not exhaustive), the anomaly
+ detection in its most general form is hard to solve: a technique for one
+ domain does not necessarily work for another.
+ That is why existing anomaly detection techniques are often designed especially
+ for one particular domain.
+\end_layout
+
+\begin_layout Standard
+Concepts from other disciplines such as statistics, machine learning, dat
+ amining, information theory and spectral theory have been used to develop
+ techniques for specific anomaly detection problems.
 \end_layout
 
 \begin_layout Subsection
 Types of Anomalies
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:types"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+There are three classes anomalies can be classified into:
 \end_layout
 
 \begin_layout Subsubsection
 Point Anomalies
 \end_layout
 
+\begin_layout Standard
+If an 
+\emph on
+individual data point
+\emph default
+ can be considered anomalous in comparison with the rest of the data set,
+ then this data point is called a 
+\emph on
+point anomaly
+\emph default
+.
+ This is the simplest type of anomaly, and the majority of the research
+ is focused on this type.
+\end_layout
+
+\begin_layout Standard
+The example (see figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:example"
+
+\end_inset
+
+) used in the introduction contains point anomalies.
+\end_layout
+
+\begin_layout Standard
+For a real life example, let us look at a simple credit card fraud detection
+ technique: if the 
+\emph on
+amount spent
+\emph default
+ in a transaction (the sole feature) is very high compared to the average
+ amount, that will be considered a point anomaly.
+\end_layout
+
 \begin_layout Subsubsection
 Contextual Anomalies
+\end_layout
+
+\begin_layout Standard
+If a data point is anomolous 
+\emph on
+in a specific context (but not otherwise)
+\emph default
+, then it is called a 
+\emph on
+contextual anomaly
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+A context is provided by the structure of the data set: each data point
+ is defined using two sets of attributes:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Contextual attributes.
+
+\emph default
+ These form the 
+\emph on
+context
+\emph default
+ for a data point.
+ e.g.
+ in spatial data sets, the longitude and latitude of a location are contextual
+ attributes.
+ In time-series data, time is a contextual attribute.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Behavioral attributes.
+ 
+\emph default
+These define the non-contextual properties of a data point.
+ e.g.
+ in a spatial data set that describes the average rainfall of the entire
+ world, the 
+\emph on
+amount
+\emph default
+ of rainfall at any location is a behavioral attribute.
+\end_layout
+
+\begin_layout Standard
+The anomalous behavior is then determined using the values for the behavioral
+ attributes 
+\emph on
+within a specific context
+\emph default
+.
+ A data point may be a contextual anomaly in a given context, but another
+ data point with identical behavioral attributes in another context (i.e.
+ with different contextual attributes) may be considered normal.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/anomaly detection/contextual anomaly example.png
+	width 75text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Example of a contextual anomaly.
+ The temperature at time 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ is the same as that at 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+, but occurs in a different context: the temperature at 
+\begin_inset Formula $t_{1}$
+\end_inset
+
+ is considered normal, the temperature at 
+\begin_inset Formula $t_{2}$
+\end_inset
+
+ is considered an anomaly.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Anomaly Detection: A Survey"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:anomaly-detection:contextual-anomaly-example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Contextual anomalies are most commonly investigated in time-series data
+ sets; figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:contextual-anomaly-example"
+
+\end_inset
+
+ shows an example.
+\begin_inset Newline newline
+\end_inset
+
+A similar example can be found in the credit card fraud detection domain,
+ that was used for an example of point anomalies previously.
+ Suppose that besides 
+\emph on
+amount spent
+\emph default
+ (which is of course a behavioral attribute), there is another, contextual
+ attribute: 
+\emph on
+time of purchase
+\emph default
+.
+ A €50 weekly shopping bill is normal for a given individual, except in
+ December, when he goes buying presents for Christmas and New Year's Eve,
+ then a €200 bill is quite normal.
+ Then a €200 bill in February will be considered a contextual anomaly, although
+ a €200 bill in December will 
+\emph on
+not
+\emph default
+ be considered a contextual anomaly.
 \end_layout
 
 \begin_layout Subsubsection
 Collective Anomalies
 \end_layout
 
+\begin_layout Standard
+If a 
+\emph on
+collection
+\emph default
+ of data points is anomolous when compared with the entire data set, it
+ is called a 
+\emph on
+collective anomaly.
+
+\emph default
+ The individual data points in a collective anomaly may not be anomalies
+ on their own, but their collective occurrence 
+\emph on
+is
+\emph default
+ anomalous.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/anomaly detection/collective anomaly example.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Example of a collective anomaly in a human electrocardiogram.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Anomaly Detection: A Survey"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:anomaly-detection:collective-anomaly-example"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:collective-anomaly-example"
+
+\end_inset
+
+, a medical example is shown: it is the output of a human electrocardiogram.
+ The highlighted region is a collective anomaly because the same low value
+ exists for an abnormally long time, although by itself this low value is
+ 
+\emph on
+not
+\emph default
+ an anomaly (i.e.
+ one such data point with this low value is not an anomaly).
+\end_layout
+
+\begin_layout Standard
+
+\bar under
+Note:
+\bar default
+ while point anomalies can occur in 
+\emph on
+any
+\emph default
+ data set, collective anomalies can only occur in data sets whose data points
+ are 
+\emph on
+related
+\emph default
+.
+ By including possible contextual information (i.e.
+ if it is available), both a point anomaly detection problem and a collective
+ anomaly detection problem can be transformed into a contextual anomaly
+ detection problem.
+\end_layout
+
 \begin_layout Subsection
 Anomaly Detection Modes
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:detection-modes"
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
-Supervised Anomaly Detection
+\begin_layout Standard
+Anomaly detection techniques can operate according to three possible modes.
+ Which mode can be used depends on the availability of labels.
+ Note that labeling data in an accurate manner, while ensuring that all
+ types of behaviors are represented, may be prohibitively expensive.
+ Labeling is often performed 
+\emph on
+manually
+\emph default
+ by a human expert — which clearly requires substantial effort.
+ Typically, getting a labeled set of anomalous data that covers 
+\emph on
+all
+\emph default
+ possible types of anomalous behavior is more difficult than getting labels
+ for normal behavior.
+ Additionally, 
+\emph on
+new
+\emph default
+ anomalies may arise over time, for which there is no labeled training data.
 \end_layout
 
-\begin_layout Subsubsection
-Semi-Supervised Anomaly Detection
+\begin_layout Itemize
+
+\emph on
+Supervised Anomaly Detection.
+
+\emph default
+ For supervised mode techniques, the availability of a a training data set
+ with labels for normal and anomaly classes is a requirement.
+\begin_inset Newline newline
+\end_inset
+
+There are two major issues that arise in this mode of anomaly detection:
 \end_layout
 
-\begin_layout Subsubsection
-Unsupervised Anomaly Detection
+\begin_deeper
+\begin_layout Itemize
+the anomalous data points are a minority when compared with the number of
+ normal data points
+\end_layout
+
+\begin_layout Itemize
+obtaining accurate and representative labels may be challenging, especially
+ for the anomaly class.
+\end_layout
+
+\end_deeper
+\begin_layout Itemize
+
+\emph on
+Semi-Supervised Anomaly Detection.
+
+\emph default
+ Techniques that operate in this mode, training data has labeled data points
+ for 
+\emph on
+only the normal class
+\emph default
+.
+ Because they do not need require labels for the anomaly class, they are
+ more widely applicable than supervised techniques.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Unsupervised Anomaly Detection.
+
+\emph default
+ These techniques don't require any training data and therefore are most
+ widely applicable.
+ They do make the assumption, however, that normal instances are far more
+ frequent than anomalies.
+ If this assumption is false, then a high false alarm rate is the consequence.
 \end_layout
 
 \begin_layout Subsection
 Anomaly Detection Output
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:output"
+
+\end_inset
+
+
 \end_layout
 
-\begin_layout Subsubsection
-Scores
+\begin_layout Standard
+An obvious, yet important aspect of anomaly detection is the output of the
+ technique used, which can be of either of the following two types:
 \end_layout
 
-\begin_layout Subsubsection
-Labels
+\begin_layout Itemize
+
+\emph on
+Scores.
+
+\emph default
+ Scoring techniques assign an 
+\emph on
+anomaly score
+\emph default
+ to each data point in the data set, depending on how anomalous that data
+ point is.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Labels.
+
+\emph default
+ Labeling techniques assign a label — either 
+\begin_inset Quotes eld
+\end_inset
+
+normal
+\begin_inset Quotes erd
+\end_inset
+
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+anomalous
+\begin_inset Quotes erd
+\end_inset
+
+ — to each data point.
+ 
+\end_layout
+
+\begin_layout Standard
+Scoring based anomaly detection techniques allow for a selection within
+ all anomalies, e.g.
+ to select the worst anomalies only.
+ 
 \end_layout
 
 \begin_layout Subsection
 Contextual Anomaly In Detail
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:contextual-detail"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Contextual attributes:
+There are many possible types of contextual attributes, some of which are:
 \end_layout
 
 \begin_layout Enumerate
-Spatial
+
+\emph on
+Spatial.
+
+\emph default
+ e.g.
+ latitude and longitude
 \end_layout
 
 \begin_layout Enumerate
-Graphs
+
+\emph on
+Graphs.
+
+\emph default
+ The edges that connect nodes (with each node being a data point) define
+ the neighborhood for each node (data point).
 \end_layout
 
 \begin_layout Enumerate
-Sequential
+
+\emph on
+Sequential.
+
+\emph default
+ The data set contains sequential data points, i.e.
+ the contextual attributes of a data point define its position in the sequence.
 \begin_inset Newline newline
 \end_inset
 
-Time series vs event sequence: time series = even inter-arrival time, event
- sequence = uneven interarrival time.
- In context of this thesis: we cannot assume an even inter-arrival time,
- hence we need to look at event sequence only.
-\end_layout
-
-\begin_layout Enumerate
-Profile
+Note that there is an important difference between 
+\emph on
+time-series data
+\emph default
+ and 
+\emph on
+event sequence data
+\emph default
+: time-series data haven 
+\emph on
+even inter-arrival times
+\emph default
+, wheras event sequence data have 
+\emph on
+uneven inter-arrival times
+\emph default
+.
 \end_layout
 
 \begin_layout Standard
-Two categories: reduction to point anomaly detection problem, or model the
- structure of the data and then use this model to detect anomalies.
+While a lot of literature is available for point anomaly detection techniques,
+ the research on contextual anomaly detection has been limited.
+ Contextual anomaly detection techniques can be divided in two categories:
 \end_layout
 
-\begin_layout Subsubsection
-Reduction to Point Anomaly Detection Problem
+\begin_layout Enumerate
+
+\emph on
+Reduction to a point anomaly detection problem
+\emph default
+.
+ Contextual anomalies are individual data points (like point anomalies),
+ but are anomalous only with respect to a context.
+\begin_inset Newline newline
+\end_inset
+
+An obvious generic reduction technique is then to first identify a context
+ under which to operate and then perform a point anomaly detection technique.
 \end_layout
 
-\begin_layout Subsubsection
-Utilizing the Structure in Data
+\begin_layout Enumerate
+
+\emph on
+Model the structure of the data and then use this model to detect anomalies.
+ 
+\emph default
+For time-series and event sequence data, it is not easy to apply reduction
+ techniques to apply point anomaly detection techniques.
+\begin_inset Newline newline
+\end_inset
+
+A generic technique in this categorie is the following.
+ A model is learnt from training data that is able to predict the expected
+ behavior within a given context.
+ If the observed behavior is significantly different from the expected behavior,
+ the corresponding data point is declared anomalous.
+\begin_inset Newline newline
+\end_inset
+
+A simple example of this generic technique is regression in which the contextual
+ attributes can be used to predict the behavioral attribute by fitting a
+ regression line on the data.
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Subsubsection*
 Computational Complexity
 \end_layout
 
-\begin_layout Subsubsection
+\begin_layout Standard
+The computational complexity of the training phase for techniques that use
+ models of the data is typically higher than that of techniques that reduce
+ the problem to point anomaly detection.
+ However, structure model techniques have a relatively fast testing phase,
+ thanks to the fact that each data point only needs to be compared to a
+ single model.
+\end_layout
+
+\begin_layout Subsubsection*
 Advantages and Disadvantages of Contextual Anomaly Detection Techniques
+\end_layout
+
+\begin_layout Standard
+A natural definition of an anoomaly is the main advantage of contextual
+ anomaly detection techniques: in real life applications, data points tend
+ to be similar within a given context.
+ Also, these techniques are able to detect anomalies that may not be detected
+ when using techniques that take a global view of the data set (which point
+ anomaly detection techniques do).
+\end_layout
+
+\begin_layout Standard
+The main disadvantage is a very obvious one: contextual anomaly detection
+ techniques are only applicable when a context is present in the data set.
 \end_layout
 
 \begin_layout Subsection
 Contextual Anomaly Algorithms
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:contextual-algorithms"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In the context of this thesis, we are clearly dealing with sequential data
+ with contextual anomalies (with episode duration being the behavioral attribute
+ and all other attributes contextual.
+ However, we cannot assume an even inter-arrival times, hence we need to
+ look at techniques for 
+\emph on
+event sequence
+\emph default
+ data only.
 \end_layout
 
 \begin_layout Subsubsection
@@ -23042,6 +23861,27 @@ Mining Frequent Patterns without Candidate Generation: A Frequent-Pattern
 DATA MINING AND KNOWLEDGE DISCOVERY, 2004, VOL 8; NUMBER 1, pages 53-87
 \emph default
 , 2000
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Anomaly Detection: A Survey"
+
+\end_inset
+
+
+\emph on
+Anomaly Detection: A Survey
+\emph default
+, V.
+ Chandola; A.
+ Banerjee; V.
+ Kumar, 
+\emph on
+ACM Computing Surveys (CSUR) Volume 41, Issue 3
+\emph default
+, 2009
 \end_layout
 
 \begin_layout Bibliography
