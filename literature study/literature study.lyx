@@ -9520,7 +9520,7 @@ normal behavior
 \end_inset
 
 .
- This is more easily illustrated through a figure: see figure 
+ This can be easily illustrated through a figure: see figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:anomaly-detection:example"
@@ -9655,7 +9655,7 @@ Anomalies can be triggered by a variety of causes, depending on their context;
 \emph on
 interesting
 \emph default
- to the analyst, there must be 
+ to the analyst — there must be 
 \emph on
 real life relevance
 \emph default
@@ -9700,8 +9700,8 @@ Conceptually, an anomaly is defined as a pattern that does not correspond
 
 \begin_layout Itemize
 When malicious actions cause anomalies, the malicious adversaries often
- try to adapt themeslves to make the anomalous events appear like normal,
- thereby making detecting them much more difficult.
+ try to adapt themselves to make the anomalous events appear normal, thereby
+ making detecting them much more difficult.
 \end_layout
 
 \begin_layout Itemize
@@ -9727,20 +9727,20 @@ In one domain, a small fluctuation may be considered normal, and in another
 
 \begin_layout Itemize
 Data sets often contain noise that tends to be similar to the actual anomalies,
- which makes it difficult to detect actual anomalies.
+ which makes it difficult to detect the actual anomalies.
 \end_layout
 
 \begin_layout Standard
 Due to the above challenges (and this list is not exhaustive), the anomaly
- detection in its most general form is hard to solve: a technique for one
- domain does not necessarily work for another.
+ detection problem in its most general form is hard to solve: a technique
+ for one domain does not necessarily work for another.
  That is why existing anomaly detection techniques are often designed especially
  for one particular domain.
 \end_layout
 
 \begin_layout Standard
-Concepts from other disciplines such as statistics, machine learning, dat
- amining, information theory and spectral theory have been used to develop
+Concepts from other disciplines such as statistics, machine learning, data
+ mining, information theory and spectral theory have been used to develop
  techniques for specific anomaly detection problems.
 \end_layout
 
@@ -9786,7 +9786,7 @@ reference "fig:anomaly-detection:example"
 
 \end_inset
 
-) used in the introduction contains point anomalies.
+ again) used in the introduction contains point anomalies.
 \end_layout
 
 \begin_layout Standard
@@ -9795,8 +9795,8 @@ For a real life example, let us look at a simple credit card fraud detection
 \emph on
 amount spent
 \emph default
- in a transaction (the sole feature) is very high compared to the average
- amount, that will be considered a point anomaly.
+ in a transaction (the sole attribute of each data point) is very high compared
+ to the average amount, that will be considered a point anomaly.
 \end_layout
 
 \begin_layout Subsubsection
@@ -9804,7 +9804,7 @@ Contextual Anomalies
 \end_layout
 
 \begin_layout Standard
-If a data point is anomolous 
+If a data point is anomalous 
 \emph on
 in a specific context (but not otherwise)
 \emph default
@@ -9969,12 +9969,12 @@ time of purchase
  A €50 weekly shopping bill is normal for a given individual, except in
  December, when he goes buying presents for Christmas and New Year's Eve,
  then a €200 bill is quite normal.
- Then a €200 bill in February will be considered a contextual anomaly, although
- a €200 bill in December will 
+ Therefore a €200 bill in February will be considered a contextual anomaly,
+ although a €200 bill in December will 
 \emph on
 not
 \emph default
- be considered a contextual anomaly.
+ be.
 \end_layout
 
 \begin_layout Subsubsection
@@ -10111,10 +10111,8 @@ name "sub:anomaly-detection:detection-modes"
 \end_layout
 
 \begin_layout Standard
-Anomaly detection techniques can operate according to three possible modes.
- Which mode can be used depends on the availability of labels.
- Note that labeling data in an accurate manner, while ensuring that all
- types of behaviors are represented, may be prohibitively expensive.
+Labeling data points in an accurate manner, while ensuring that all types
+ of behaviors are represented, may be prohibitively expensive.
  Labeling is often performed 
 \emph on
 manually
@@ -10133,6 +10131,11 @@ new
  anomalies may arise over time, for which there is no labeled training data.
 \end_layout
 
+\begin_layout Standard
+Anomaly detection techniques can operate according to three possible modes.
+ Which mode can be used depends on the availability of labels:
+\end_layout
+
 \begin_layout Itemize
 
 \emph on
@@ -10140,25 +10143,13 @@ Supervised Anomaly Detection.
 
 \emph default
  For supervised mode techniques, the availability of a a training data set
- with labels for normal and anomaly classes is a requirement.
-\begin_inset Newline newline
-\end_inset
-
-There are two major issues that arise in this mode of anomaly detection:
+ with labels for normal 
+\emph on
+and
+\emph default
+ anomaly classes is a requirement.
 \end_layout
 
-\begin_deeper
-\begin_layout Itemize
-the anomalous data points are a minority when compared with the number of
- normal data points
-\end_layout
-
-\begin_layout Itemize
-obtaining accurate and representative labels may be challenging, especially
- for the anomaly class.
-\end_layout
-
-\end_deeper
 \begin_layout Itemize
 
 \emph on
@@ -10181,8 +10172,11 @@ only the normal class
 Unsupervised Anomaly Detection.
 
 \emph default
- These techniques don't require any training data and therefore are most
- widely applicable.
+ These techniques don't require 
+\emph on
+any
+\emph default
+ training data and therefore are most widely applicable.
  They do make the assumption, however, that normal instances are far more
  frequent than anomalies.
  If this assumption is false, then a high false alarm rate is the consequence.
@@ -10214,8 +10208,8 @@ Scores.
 \emph on
 anomaly score
 \emph default
- to each data point in the data set, depending on how anomalous that data
- point is.
+ to each data point in the data set, depending on the degree anomality of
+ that data point.
 \end_layout
 
 \begin_layout Itemize
@@ -10245,7 +10239,11 @@ anomalous
 \end_layout
 
 \begin_layout Standard
-Scoring based anomaly detection techniques allow for a selection within
+
+\bar under
+Note:
+\bar default
+ scoring based anomaly detection techniques allow for a selection within
  all anomalies, e.g.
  to select the worst anomalies only.
  
@@ -10329,7 +10327,11 @@ Reduction to a point anomaly detection problem
 \emph default
 .
  Contextual anomalies are individual data points (like point anomalies),
- but are anomalous only with respect to a context.
+ but are anomalous only with respect to a 
+\emph on
+certain context
+\emph default
+.
 \begin_inset Newline newline
 \end_inset
 
@@ -10341,24 +10343,26 @@ An obvious generic reduction technique is then to first identify a context
 
 \emph on
 Model the structure of the data and then use this model to detect anomalies.
- 
-\emph default
-For time-series and event sequence data, it is not easy to apply reduction
- techniques to apply point anomaly detection techniques.
-\begin_inset Newline newline
-\end_inset
 
-A generic technique in this categorie is the following.
- A model is learnt from training data that is able to predict the expected
+\emph default
+ A generic technique in this category is the following.
+ A model is learned from training data that is able to predict the expected
  behavior within a given context.
- If the observed behavior is significantly different from the expected behavior,
- the corresponding data point is declared anomalous.
+ If the 
+\emph on
+observed
+\emph default
+ behavior is significantly different from the 
+\emph on
+expected
+\emph default
+ behavior, the corresponding data point is declared anomalous.
 \begin_inset Newline newline
 \end_inset
 
 A simple example of this generic technique is regression in which the contextual
  attributes can be used to predict the behavioral attribute by fitting a
- regression line on the data.
+ regression line (sometimes also called a trend line) on the data.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -10379,12 +10383,16 @@ Advantages and Disadvantages of Contextual Anomaly Detection Techniques
 \end_layout
 
 \begin_layout Standard
-A natural definition of an anoomaly is the main advantage of contextual
- anomaly detection techniques: in real life applications, data points tend
- to be similar within a given context.
+A 
+\emph on
+natural definition
+\emph default
+ of an anomaly is the main advantage of contextual anomaly detection techniques:
+ in real life applications, data points tend to be similar within a given
+ context.
  Also, these techniques are able to detect anomalies that may not be detected
- when using techniques that take a global view of the data set (which point
- anomaly detection techniques do).
+ when using techniques that take a global view of the data set (which is
+ exactly what point anomaly detection techniques do).
 \end_layout
 
 \begin_layout Standard
@@ -10406,7 +10414,7 @@ name "sub:anomaly-detection:contextual-algorithms"
 \begin_layout Standard
 In the context of this thesis, we are clearly dealing with sequential data
  with contextual anomalies (with episode duration being the behavioral attribute
- and all other attributes contextual.
+ and all other attributes contextual).
  However, we cannot assume an even inter-arrival times, hence we need to
  look at techniques for 
 \emph on
