@@ -10423,12 +10423,807 @@ event sequence
  data only.
 \end_layout
 
-\begin_layout Subsubsection
-Learning to Predict Rare Events in Event Sequences
+\begin_layout Standard
+After searching for papers on contextual anomaly detection algorithms that
+ work on event sequences, two interesting papers stood out: the algorithm
+ by Vilalta/Ma and the Timeweaver algorithm.
 \end_layout
 
 \begin_layout Subsubsection
-Predicting Rare Events In Temporal Domains (frequent itemset based!)
+Vilalta/Ma
+\end_layout
+
+\begin_layout Standard
+Vilalta & Ma 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Vilalta/Ma"
+
+\end_inset
+
+ designed a system based on frequent itemset mining to find patterns in
+ historical data.
+ More specifically, their approach extracts temporal patterns from data
+ to predict the occurrence of rare target events.
+ They make two assumptions:
+\end_layout
+
+\begin_layout Enumerate
+that the events are being characterized by categorical attributes and are
+ occurring with uneven inter-arrival times, which makes this an algorithm
+ to work on event sequence data and not time-series data;
+\end_layout
+
+\begin_layout Enumerate
+that the target events are higly infrequent.
+\end_layout
+
+\begin_layout Standard
+They have developed an efficient algorithm for this particular problemset
+ that involves performing a search for all frequent eventsets (which are
+ just a special type of itemsets: instead of 
+\begin_inset Quotes eld
+\end_inset
+
+items
+\begin_inset Quotes erd
+\end_inset
+
+ they contain 
+\begin_inset Quotes eld
+\end_inset
+
+events types
+\begin_inset Quotes erd
+\end_inset
+
+) that 
+\emph on
+precede
+\emph default
+ the target events.
+ The patterns that are found are combined into a rule-based model for prediction.
+\end_layout
+
+\begin_layout Standard
+Their approach differs from previous work that also uses the learning strategy:
+ most learning algorithms assume even class distributions and adopt a 
+\emph on
+discriminant-description
+\emph default
+ strategy: they search for separators 
+\emph on
+(discriminants)
+\emph default
+ that best separate (discriminate) examples of different classes.
+ Under skewed distributions (which is the case here: the target events are
+ highly infrequent), separating the under-represented class is difficult.
+ That's why they've opted for a 
+\emph on
+characteristic-description
+\emph default
+ strategy: instead of searching for separators, they search for common propertie
+s, and they do so by looking at the events preceding a target event, to
+ find common precursor events.
+\end_layout
+
+\begin_layout Subsubsection*
+The Event Prediction Problem, Formally
+\end_layout
+
+\begin_layout Standard
+The fundamental unit of study is an 
+\emph on
+event
+\emph default
+.
+ An event is of the form 
+\begin_inset Formula $d_{i}=(e_{i},t_{i})$
+\end_inset
+
+ where 
+\begin_inset Formula $e_{i}$
+\end_inset
+
+ indicates the event type and 
+\begin_inset Formula $t_{i}$
+\end_inset
+
+ indicates the occurrence time.
+\end_layout
+
+\begin_layout Standard
+Events belong in a sequence 
+\begin_inset Formula $D=<d_{1},d_{2},\text{…},d_{n}>$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+We are interested in predicting certain kinds of events that occur in sequence
+ 
+\begin_inset Formula $D$
+\end_inset
+
+.
+ We refer to this subset of events as 
+\emph on
+target events
+\emph default
+: 
+\begin_inset Formula $D_{target}\subset D$
+\end_inset
+
+.
+ We assume that the relative frequency of target events in comparison with
+ all events is low.
+ Furthermore, target events do not represent a 
+\emph on
+global
+\emph default
+ property of 
+\begin_inset Formula $D$
+\end_inset
+
+ (such as a trend or periodicity), but rather a 
+\emph on
+local
+\emph default
+ property.
+\end_layout
+
+\begin_layout Standard
+The user must specify a target event type 
+\begin_inset Formula $e_{target}$
+\end_inset
+
+ (e.g.
+ all fatal events), that defines 
+\begin_inset Formula $D_{target}$
+\end_inset
+
+ as 
+\begin_inset Formula \[
+D_{target}=\{d_{i}\in D\mid e_{i}=e_{target}\}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The framework assumes a dataset 
+\begin_inset Formula $D$
+\end_inset
+
+ of size 
+\begin_inset Formula $n$
+\end_inset
+
+ , containing a sequence of events (as defined before).
+ Event types take on categorical values.
+ We also assume we have identified a set of events 
+\begin_inset Formula $D_{target}\subset D$
+\end_inset
+
+ with 
+\begin_inset Formula $\left|D_{target}\right|=m\ll n=\left|D\right|$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The approach the Vilalta/Ma algorithm takes is to capture patterns that
+ characterize the conditions that precede each target event (i.e.
+ where 
+\begin_inset Formula $e_{i}=e_{target}$
+\end_inset
+
+).
+ Specifically, the goal is to find out what types of events frequently precede
+ a target event, for the purpose of prediction.
+ We look at those preceding events within a time window of fixed size 
+\begin_inset Formula $W$
+\end_inset
+
+ before a target event (as illustrated in figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:vilalta-ma"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+Next, there is a whole series of definitions for an 
+\begin_inset Quotes eld
+\end_inset
+
+eventset
+\begin_inset Quotes erd
+\end_inset
+
+, that will be used in the remainder of this section:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Matching.
+ 
+\emph default
+An eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ is a set of event types 
+\begin_inset Formula $\{e_{i}\}$
+\end_inset
+
+.
+ Eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ 
+\emph on
+matches
+\emph default
+ the set of events in window 
+\begin_inset Formula $W$
+\end_inset
+
+ if every event type 
+\begin_inset Formula $e_{i}\in Z$
+\end_inset
+
+ is found in 
+\begin_inset Formula $W$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Support.
+ 
+\emph default
+An eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ has 
+\emph on
+support
+\emph default
+ 
+\begin_inset Formula $s$
+\end_inset
+
+ in 
+\begin_inset Formula $D$
+\end_inset
+
+ if 
+\begin_inset Formula $s\%$
+\end_inset
+
+ of all windows of size 
+\begin_inset Formula $W$
+\end_inset
+
+ preceding target events are matched by 
+\begin_inset Formula $Z$
+\end_inset
+
+.
+ Eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ is 
+\emph on
+frequent
+\emph default
+ if
+\emph on
+ 
+\begin_inset Formula $s$
+\end_inset
+
+
+\emph default
+ is above a minimum user-defined threshold.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Confidence.
+ 
+\emph default
+An eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ has 
+\emph on
+confidence
+\emph default
+ 
+\begin_inset Formula $c$
+\end_inset
+
+ in 
+\begin_inset Formula $D$
+\end_inset
+
+ if 
+\begin_inset Formula $c\%$
+\end_inset
+
+ of all windows of size 
+\begin_inset Formula $W$
+\end_inset
+
+ matched by 
+\begin_inset Formula $Z$
+\end_inset
+
+ precede a target event.
+ Eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ is 
+\emph on
+accurate
+\emph default
+ if 
+\emph on
+
+\begin_inset Formula $c$
+\end_inset
+
+
+\emph default
+ is above a minimum user-defined threshold.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Specificity.
+ 
+\emph default
+An eventset 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is said to be more specific than an eventset 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+ if 
+\begin_inset Formula $Z_{j}\subset Z_{i}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Order.
+
+\emph default
+ We impose a partial ordering over the space of eventsets.
+ An eventset 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is marked as having a higher rank than eventset 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+, denoted 
+\begin_inset Formula $Z_{i}\succ Z_{j}$
+\end_inset
+
+ if any of the following conditions is true:
+\end_layout
+
+\begin_deeper
+\begin_layout Enumerate
+The confidence of 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is greater than that of 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The confidence of 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ equals that of 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+, but the support of 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is greater than the support of 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+The confidence and support of 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ equal that of 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+, but 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is more specific than 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+.
+\end_layout
+
+\end_deeper
+\begin_layout Subsubsection*
+Prediction Strategy
+\end_layout
+
+\begin_layout Standard
+Their prediction strategy takes the following steps:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Characterize
+\emph default
+ target events by looking at a fixed time window that precedes the target
+ event and then finding the types of events that frequently occur within
+ that window.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:vilalta-ma"
+
+\end_inset
+
+ for an easy to understand graphical explanation.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Validate
+\emph default
+ that the event types found in step 1 
+\emph on
+uniquely
+\emph default
+ characterize target events, and that they do not often occur outside of
+ the window directly preceding the target event.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Combine
+\emph default
+ the validated event types found in step 2 into rules, to end up with a
+ set of rules from which predictions can be made (i.e.
+ a rule-based prediction system).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename figures/anomaly detection/vilalta-ma.png
+	width 60text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+A plot of different event types versus time.
+ Before each target event, there is a time window.
+ This allows us to identify frequent sets of event types that act as indicators/
+precursors.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Vilalta/Ma"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:anomaly-detection:vilalta-ma"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Algorithmically, these steps take the following shape:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Frequent eventsets.
+ 
+\emph default
+This employs the standard Apriori 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Apriori"
+
+\end_inset
+
+ frequent 
+\emph on
+itemset
+\emph default
+ mining algorithm over each window (but of course this could be replaced
+ with any frequent itemset mining algorithm, such as FP-growth 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-Growth"
+
+\end_inset
+
+) to find all frequent 
+\emph on
+eventsets
+\emph default
+.
+ E.g.
+ in the case of figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:anomaly-detection:vilalta-ma"
+
+\end_inset
+
+, the eventset 
+\begin_inset Formula $\{a,b,d\}$
+\end_inset
+
+ would be found as the only frequent eventset with a sufficiently high minimum
+ support.
+ Let's call the collection of frequent eventsets 
+\begin_inset Formula $B$
+\end_inset
+
+, then 
+\begin_inset Formula $B=\{\{a,b,d\}\}$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Note that because thanks to the use of event
+\emph on
+sets
+\emph default
+, the order of events does no longer matter, nor do the inter-arrival times.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Accurate eventsets.
+
+\emph default
+ With frequent eventsets calculated, the next step is filtering out those
+ eventsets that do not meet minimum confidence.
+ Here, the general idea is to look at the number of times each of the frequent
+ eventsets occurs outside the time windows preceding the target events.
+ We capture all event types within each window that does 
+\emph on
+not
+\emph default
+ overlap with the time windows that precede target events.
+ We store these eventsets in a new database of eventsets 
+\begin_inset Formula $B'$
+\end_inset
+
+.
+ This database contains all eventsets that do 
+\emph on
+not
+\emph default
+ precede target events.
+\begin_inset Newline newline
+\end_inset
+
+Now we can calculate the confidence for the frequent eventsets in 
+\begin_inset Formula $B$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $f_{Z}(B)$
+\end_inset
+
+ be the number of transactions in 
+\begin_inset Formula $B$
+\end_inset
+
+ that matches the eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ and 
+\begin_inset Formula $f_{Z}(B')$
+\end_inset
+
+ that for 
+\begin_inset Formula $B'$
+\end_inset
+
+.
+ Then the confidence of the eventset 
+\begin_inset Formula $Z$
+\end_inset
+
+ is defined as follows: 
+\begin_inset Formula $confidence(Z,B,B')=f_{z}(B)/f_{z}(B)+f_{z}(B')$
+\end_inset
+
+.
+ Now we can filter the frequent eventsets to only keep those with high confidenc
+e, i.e.
+ 
+\emph on
+accurate
+\emph default
+ eventsets.
+ We store the result in 
+\begin_inset Formula $\mathcal{V}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Building a rule-based model.
+
+\emph default
+ For this, we first need to order the eventsets in 
+\begin_inset Formula $\mathcal{V}$
+\end_inset
+
+ depending on their rank.
+ This allows us to find the most accurate and specific rules first.
+ Then, we iterate over 
+\begin_inset Formula $\mathcal{V}$
+\end_inset
+
+ as long as it is not empty.
+ In each iteration, we select the next best eventset 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ and removes all other eventsets 
+\begin_inset Formula $Z_{j}$
+\end_inset
+
+ in 
+\begin_inset Formula $\mathcal{V}$
+\end_inset
+
+ that are more general than 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+.
+ This effectively eliminates eventsets that refer to the same pattern as
+ 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ but that are unnecessarily general.
+ A rule for 
+\begin_inset Formula $Z_{i}$
+\end_inset
+
+ is generated, of the form 
+\begin_inset Formula $Z_{i}\rightarrow targetevent$
+\end_inset
+
+ and is added to 
+\begin_inset Formula $\mathcal{R}$
+\end_inset
+
+.
+ Then the next iteration begins.
+\end_layout
+
+\begin_layout Standard
+The resulting set of rules 
+\begin_inset Formula $\mathcal{R}$
+\end_inset
+
+ can be used for prediction.
+\end_layout
+
+\begin_layout Subsubsection
+Timeweaver
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset citation
+LatexCommand cite
+key "timeweaver"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -23890,6 +24685,48 @@ Anomaly Detection: A Survey
 ACM Computing Surveys (CSUR) Volume 41, Issue 3
 \emph default
 , 2009
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "timeweaver"
+
+\end_inset
+
+
+\emph on
+Learning to Predict Rare Events in Event Sequences
+\emph default
+, G.
+ M.
+ Weiss; H.
+ Hirsh, 
+\emph on
+Proceedings of the 4th International Conference on Knowledge Discovery and
+ Data Mining
+\emph default
+, 1998
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Vilalta/Ma"
+
+\end_inset
+
+
+\emph on
+Predicting Rare Events In Temporal Domains
+\emph default
+, R.
+ Vilalta; S.
+ Ma, 
+\emph on
+Proceedings of the 2002 IEEE International Conference on Data Mining
+\emph default
+, 2002
 \end_layout
 
 \begin_layout Bibliography
