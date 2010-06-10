@@ -8064,10 +8064,29 @@ sliding window
 \begin_layout Enumerate
 The 
 \emph on
+tilted-time window
+\emph default
+ model: frequent patterns are mined over the last 
+\begin_inset Formula $w$
+\end_inset
+
+ transactions, but only the most recent frequent patterns are stored at
+ fine granularity — frequent patterns in the past are stored at coarser
+ granularity.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
 damped window
 \emph default
  model: a decay function is applied to the data stream, to give more weight
  to recent data than to old data.
+\end_layout
+
+\begin_layout Standard
+Several frequent pattern mining algorithms have been investigated, and they
+ are again presented in order of appearance.
 \end_layout
 
 \begin_layout Subsubsection
@@ -9361,12 +9380,105 @@ name "sub:stream-mining:frequent-itemset-mining:dsm-fi"
 \end_layout
 
 \begin_layout Standard
-Better than lossy counting memory wise because it does not store each possible
- itemset separately, it compacts the storage of them by using an FP-tree.
+The paper that introduced DSM-FI was titled 
+\begin_inset Quotes eld
+\end_inset
+
+An Efficient Algorithm for Mining Frequent Itemsets over the Entire History
+ of Data Streams
+\begin_inset Quotes erd
+\end_inset
+
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DSM-FI"
+
+\end_inset
+
+, so clearly it is a frequent pattern mining algorithm of the 
+\emph on
+landmark
+\emph default
+ model.
+ It was developed with the goal to outperform the lossy counting algorithm
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-itemset-mining:lc"
+
+\end_inset
+
+ (which of course also was one of the landmark model).
 \end_layout
 
 \begin_layout Standard
-Reminiscent of FP-growth, but generates patters top-down instead of bottom-up.
+The description for this algorithm is particularly brief because it lends
+ a lot from the FP-stream algorithm (see the previous section), but adapts
+ it to apply it to the landmark model instead of the tilted-time window
+ model (for which the FP-stream algorithm was developed).
+\end_layout
+
+\begin_layout Standard
+The DSM-FI algorithm (which is short for Data Stream Mining for Frequent
+ Itemsets) is composed of four steps:
+\end_layout
+
+\begin_layout Enumerate
+Reading a block of transactions.
+\end_layout
+
+\begin_layout Enumerate
+Constructing the summary data structure for this block of transactions.
+\begin_inset Newline newline
+\end_inset
+
+This summary data structure is merely another variation of a frequent prefix
+ tree — explaining another prefix tree would not add very much to this literatur
+e study.
+ So for details, please look at 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "DSM-FI"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Prune all infrequent items from the summary data structure, i.e.
+ those items whose frequency is less than 
+\begin_inset Formula $\epsilon N$
+\end_inset
+
+, where 
+\begin_inset Formula $\epsilon\in[0,1]$
+\end_inset
+
+ is again the acceptable error margin and 
+\begin_inset Formula $N$
+\end_inset
+
+ the current stream length.
+\end_layout
+
+\begin_layout Enumerate
+Discovering frequent itemsets using a top-down approach.
+ By using a top-down approach, it finds all maximal frequent itemsets and
+ then simply generates all subsets.
+ Thanks to the anti-monotone property (also exploited in FP-stream's type
+ I and II pruning), we know that all subsets of each maximal frequent itemset
+ are also frequent.
+ If we find candidate maximal frequent itemsets that are subsets of previously
+ found maximal frequent itemsets, we don't need need to start the top-down
+ mining process on them, since they've already been found.
+\end_layout
+
+\begin_layout Standard
+In practice, DSM-FI performs significantly better than LC memory-wise, because
+ it does not store each possible itemset separately (which LC does).
+ Instead it compacts the storage of itemsets by using a prefix tree.
 \end_layout
 
 \begin_layout Standard
