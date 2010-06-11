@@ -839,6 +839,16 @@ name "sec:process"
 Below, there is a schema that shows what happens during the various stages
  of the web performance optimization analytics process, along with references
  to the sections in which each stage is described in more detail.
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+Needs to be updated to incorporate data stream mining & anomaly detection.
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -5975,7 +5985,7 @@ Derive an
 \emph on
 approximate
 \emph default
- answer —while this won't be 100% correct, it is often sufficient in practice.
+ answer — while this won't be 100% correct, it is often sufficient in practice.
 \end_layout
 
 \begin_layout Standard
@@ -6018,7 +6028,7 @@ key "probabilistic lossy counting"
 \emph on
 frequent item mining algorithms
 \emph default
- can actually also be called 
+ are sometimes also called 
 \emph on
 heavy hitter algorithms
 \emph default
@@ -6037,7 +6047,7 @@ approximate
 Overview
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-counting:overview"
+name "sub:stream-mining:frequent-item-mining:overview"
 
 \end_inset
 
@@ -6045,7 +6055,7 @@ name "sub:stream-mining:frequent-item-counting:overview"
 \end_layout
 
 \begin_layout Standard
-Currently known frequent item counting algorithms all rely on one of three
+Currently known frequent item mining algorithms all rely on one of three
  basic techniques 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -6086,8 +6096,8 @@ reference "sub:stream-mining:frequent-item-mining:plc"
 \end_inset
 
 Counting algorithms have low per-element overhead, as they only require
- incrementing a counter in a hash-table, along with a potentially high periodic
- housekeeping step that may sort and delete counters.
+ incrementing a counter, along with a potentially high periodic housekeeping
+ step that may sort and delete counters.
 \end_layout
 
 \begin_layout Itemize
@@ -6808,11 +6818,6 @@ name "sub:stream-mining:frequent-item-mining:lc"
 \end_inset
 
 
-\end_layout
-
-\begin_layout Standard
-Lossy counting is the first solution that is guaranteed to require no more
- than one pass over the entire data set.
 \end_layout
 
 \begin_layout Standard
@@ -7543,7 +7548,7 @@ key "Finding Frequent Items in Data Streams"
 \end_layout
 
 \begin_layout Subsubsection
-Probabilistic Lossy Counting (2008)
+Probabilistic Lossy Counting
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:stream-mining:frequent-item-mining:plc"
@@ -7570,7 +7575,7 @@ key "probabilistic lossy counting"
 
 \end_inset
 
-, published in 2008, a probabilistic variant of lossy counting is introduced,
+, published in 2008, a probabilistic variant of lossy counting was introduced,
  with the unsurprising name Probabilistic Lossy Counting (PLC).
  It uses a tighter error bound on the estimated frequencies and provides
  probabilistic rather than deterministic guarantees on its accuracy.
@@ -7598,6 +7603,8 @@ heavy hitters
 ) show that PLC has between 34.4% and 74% lower memory consumption and between
  37.9% and 40.5% fewer false positives, while maintaining a sufficiently small
  (but as already mentioned, slightly higher) estimation error.
+ Note that these tests were conducted with a very large proportion of small
+ traffic flows (98.9%).
 \begin_inset Newline newline
 \end_inset
 
@@ -7729,7 +7736,7 @@ reference "fig:stream-mining:frequent-item-mining:plc:plc-vs-lc-error-distributi
 \end_inset
 
 , the difference in maximum error bound between PLC and LC is demonstrated
- for a data stream with a very large proportion (98,9%) of low-frequency
+ for a data stream with a very large proportion (98.9%) of low-frequency
  elements.
  While this may be considered an extreme example, it still shows the potential
  for improvement that PLC entails: since there is a large number of low-frequenc
@@ -7942,7 +7949,7 @@ If
 \begin_inset Formula $Y$
 \end_inset
 
-is a random variable that denotes the true frequency of an element, then
+ is a random variable that denotes the true frequency of an element, then
  
 \begin_inset Formula $Pr(Y>y)=\alpha y^{\beta}$
 \end_inset
@@ -9328,12 +9335,16 @@ For any itemsets
 \end_inset
 
 .
- This is known as the anti-monotone property: the frequency of an itemset
- is always equal or larger than the the frequency of its supersets.
+ This is known as the 
+\emph on
+anti-monotone property
+\emph default
+: the frequency of an itemset is always equal or larger than the the frequency
+ of its supersets.
 \begin_inset Newline newline
 \end_inset
 
-It can be shown that this still holds in the current context, of approximate
+It can be shown that this still holds in the current context of approximate
  frequency counting and tilted-time windows 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -9457,14 +9468,14 @@ landmark
 \emph default
  model.
  It was developed with the goal to outperform the lossy counting algorithm
- 
+ (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:frequent-itemset-mining:lc"
 
 \end_inset
 
- (which of course also was one of the landmark model).
+), which also was one of the landmark model.
 \end_layout
 
 \begin_layout Standard
@@ -10470,8 +10481,8 @@ name "sub:anomaly-detection:contextual-algorithms"
 In the context of this thesis, we are clearly dealing with sequential data
  with contextual anomalies (with episode duration being the behavioral attribute
  and all other attributes contextual).
- However, we cannot assume an even inter-arrival times, hence we need to
- look at techniques for 
+ However, we cannot assume  even inter-arrival times, hence we need to look
+ at techniques for 
 \emph on
 event sequence
 \emph default
