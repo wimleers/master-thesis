@@ -6131,7 +6131,7 @@ reference "sub:stream-mining:frequent-item-mining:basic-sampling"
 
 \end_inset
 
-), concise sampling(
+), concise sampling (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:frequent-item-mining:concise-sampling"
@@ -6454,7 +6454,7 @@ key "New Sampling-Based Summary Statistics for Improving Approximate Query Answe
 
 ); it is based on the simple observation that so long as space is set aside
  for a count of an item in the sample anyway, we may as well keep an exact
- count for the occurrences 
+ count for the occurrences.
 \end_layout
 
 \begin_layout Standard
@@ -6842,7 +6842,7 @@ key "Approximate frequency counts over data streams"
 \begin_inset Formula $N$
 \end_inset
 
- denotes the length of the stream so far —contrary to the sticky sampling
+ denotes the length of the stream so far — contrary to the sticky sampling
  algorithm described in the previous section, this algorithm is 
 \emph on
 not independent
@@ -7692,7 +7692,11 @@ key "Little's Law"
 
 \end_inset
 
-, the average size of the table increases.
+, the average size of 
+\begin_inset Formula $\mathcal{D}$
+\end_inset
+
+ increases.
  Thus, 
 \emph on
 the value of the maximum possible error 
@@ -10481,7 +10485,7 @@ name "sub:anomaly-detection:contextual-algorithms"
 In the context of this thesis, we are clearly dealing with sequential data
  with contextual anomalies (with episode duration being the behavioral attribute
  and all other attributes contextual).
- However, we cannot assume  even inter-arrival times, hence we need to look
+ However, we cannot assume even inter-arrival times, hence we need to look
  at techniques for 
 \emph on
 event sequence
@@ -24840,7 +24844,7 @@ Probabilistic Lossy Counting: An efficient algorithm for finding heavy hitters
  Hurley; A.
  Kind, 
 \emph on
-COMPUTER COMMUNICATION REVIEW 2008, VOL 38; NUMB 1, pages 5-16
+ACM SIGCOMM COMPUTER COMMUNICATION REVIEW 2008, VOL 38; NUMB 1, pages 5-16
 \emph default
 , 2008
 \end_layout
