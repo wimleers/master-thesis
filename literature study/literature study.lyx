@@ -4594,86 +4594,6 @@ Through this process, we estimate to achieve usable web performance issues
  after we can actually look at the results of this suggested process.
 \end_layout
 
-\begin_layout Subsubsection
-Evolution over Time
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:episodes-log-mining:detection:time"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-- when improvements are implemented, 
-\begin_inset Quotes eld
-\end_inset
-
-slow
-\begin_inset Quotes erd
-\end_inset
-
- can become redefined
-\end_layout
-
-\begin_layout Standard
-- when monitoring the 
-\begin_inset Quotes eld
-\end_inset
-
-live page loading performance
-\begin_inset Quotes erd
-\end_inset
-
-, one probably only wants to look at the last year, month, week, day, hour
- or fifteen minutes and compare the page loading performance for these periods,
- to verify stability or improvements and detect regressions.
- Compare this to typical data mining, which operates on the entire data
- set.
- Here, we want to apply data mining on subsets.
- And possibly even data mining on a live stream, to monitor the 
-\begin_inset Quotes eld
-\end_inset
-
-truly live page loading performance
-\begin_inset Quotes erd
-\end_inset
-
- and possibly show the overall variance, the variance per country, etc.,
- compared to the last year/month/week/day/hour.
- But then when is 
-\begin_inset Quotes eld
-\end_inset
-
-the last hour
-\begin_inset Quotes erd
-\end_inset
-
- updated? Every hour? Every fifteen minutes? Every minute? Live?
-\end_layout
-
-\begin_layout Standard
-- …
-\end_layout
-
-\begin_layout Standard
-How to handle this? Data mining data streams.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
 \begin_inset Newpage clearpage
 \end_inset
@@ -6144,7 +6064,14 @@ reference "sub:stream-mining:frequent-item-mining:lc"
 
 \end_inset
 
-), probabilistic lossy counting (
+), Karp/Demaine algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "A simple algorithm for finding frequent elements in streams and bags"
+
+\end_inset
+
+, probabilistic lossy counting (
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:frequent-item-mining:plc"
@@ -6171,7 +6098,8 @@ reference "sub:stream-mining:frequent-item-mining:count-sketch"
 
 \end_inset
 
-) They all use variants of the same data structure, which most of them call
+), min-count sketch.
+ They all use variants of the same data structure, which most of them call
  a 
 \emph on
 sketch
@@ -8436,33 +8364,6 @@ It is important that
 
 , as well as drastically increase the refresh rate — effectively harming
  the algorithm in both time and space.
-\end_layout
-
-\begin_layout Subsubsection*
-Implementation
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-If time allows, explain how to implement this.
- Section 5.2-5.5.
- in the 
-\begin_inset Quotes eld
-\end_inset
-
-Approximate Frequency Counts over Data Streams
-\begin_inset Quotes erd
-\end_inset
-
- paper.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
