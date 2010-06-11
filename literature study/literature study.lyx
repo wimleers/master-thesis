@@ -6144,13 +6144,6 @@ reference "sub:stream-mining:frequent-item-mining:lc"
 
 \end_inset
 
-), Karp/Demaine algorithm (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:stream-mining:frequent-item-mining:karp-demaine"
-
-\end_inset
-
 ), probabilistic lossy counting (
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -6178,15 +6171,7 @@ reference "sub:stream-mining:frequent-item-mining:count-sketch"
 
 \end_inset
 
-), min-count sketch (
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sub:stream-mining:frequent-item-mining:min-count-sketch"
-
-\end_inset
-
-).
- They all use variants of the same data structure, which most of them call
+) They all use variants of the same data structure, which most of them call
  a 
 \emph on
 sketch
@@ -7627,28 +7612,6 @@ key "Finding Frequent Items in Data Streams"
 \end_inset
 
  for that.
-\end_layout
-
-\begin_layout Subsubsection
-Min-Count Sketch (????)
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:stream-mining:frequent-item-mining:min-count-sketch"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection
-Karp/Demaine algorithm (2003)
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:stream-mining:frequent-item-mining:karp-demaine"
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
