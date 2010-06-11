@@ -5063,7 +5063,7 @@ potentially infinite
  Because not all data is known before starting the mining process, and because
  the size of the (stream of) data is potentially infinite, this implies
  that we can no longer use algorithms that require multiple scans: instead,
- it is necesary to use single-scan algorithms (it may even be impossible
+ it is necessary to use single-scan algorithms (it may even be impossible
  to store the entire data stream).
 \begin_inset Newline newline
 \end_inset
@@ -5168,7 +5168,7 @@ Rather than storing (and processing) the entire data stream, another option
  is to sample the stream at periodic intervals.
  However, to obtain an unbiased sampling of the data, it is necessary to
  know the length of the stream in advance, to determine the periodic interval.
- But for many data streams it is impossible to know the lenght, or indeed
+ But for many data streams it is impossible to know the length, or indeed
  it will be infinite.
  Hence another approach is necessary.
 \end_layout
@@ -5384,7 +5384,7 @@ Wavelets are a technique from the field of signal processing, but can also
  be used to build a multiresolution hierarchy over a signal, which would
  be the data stream in our case.
  Wavelets coefficients are projections of the given signal (again, the data
- stream in our case) onto an orthogal set of basis vector.
+ stream in our case) onto an orthogonal set of basis vector.
  The choice of basis vectors determines the type of wavelets used.
  Using the Haar wavelet (often chosen for their ease of computation) for
  example, we can recursively perform averaging and differencing at multiple
@@ -5449,7 +5449,7 @@ A sketch can be used to maintain the full histogram over the universe of
 \begin_inset Formula $v$
 \end_inset
 
- the universe size) and the elements in the datastream as 
+ the universe size) and the elements in the data stream as 
 \begin_inset Formula $A=\{a_{1},a_{2},\text{…},a_{N}\}$
 \end_inset
 
@@ -5588,7 +5588,7 @@ The frequency moments of a data stream (or any data set of fixed size) provide
 \emph on
 skew
 \emph default
- (or assymmetry) of the data.
+ (or asymmetry) of the data.
  The skew can be used to decide how to partition the data set for parallel
  or distributed database systems.
 \end_layout
@@ -6104,7 +6104,7 @@ reference "sub:stream-mining:frequent-item-mining:count-sketch"
 \emph on
 sketch
 \emph default
-, which is a one- or two-dimensional array of hashbuckets.
+, which is a one- or two-dimensional array of hash buckets.
 \begin_inset Newline newline
 \end_inset
 
@@ -6615,7 +6615,7 @@ For example, if the goal is to identify all items whose frequency is at
 \end_inset
 
  will be output.
- This leaves elements with frequences between 
+ This leaves elements with frequencies between 
 \begin_inset Formula $0.95\%$
 \end_inset
 
@@ -6626,7 +6626,7 @@ For example, if the goal is to identify all items whose frequency is at
 .
  These might or might not form part of the output.
  Those that make their way to the output are false positives.
- Further, still as per guarantee 3, all individiual frequencies are less
+ Further, still as per guarantee 3, all individual frequencies are less
  than their true frequencies by at most 
 \begin_inset Formula $0.05\%$
 \end_inset
@@ -6847,7 +6847,7 @@ not independent
 \end_inset
 
 .
- This algorithm performs better than sticky smpaling 
+ This algorithm performs better than sticky sampling 
 \emph on
 in practice
 \emph default
@@ -7276,7 +7276,7 @@ could
 \begin_inset Newline newline
 \end_inset
 
-We can deduct this mimimum average occurrence from the fact that the deletion
+We can deduct this minimum average occurrence from the fact that the deletion
  rule is 
 \begin_inset Formula $f+\Delta\leq b_{current}$
 \end_inset
@@ -7585,7 +7585,7 @@ n of the algorithm: it makes PLC less conservative in removing state for
 \begin_inset Newline newline
 \end_inset
 
-On top of this, PLC also reduces the rate of false positives and still achives
+On top of this, PLC also reduces the rate of false positives and still achieves
  a low, although slightly higher estimation error.
 \end_layout
 
@@ -7926,7 +7926,7 @@ ion (they don't give a solution for non-power-law distributions).
 
 \begin_layout Standard
 In their case of network flow traffic, they've empirically observed that
- it follws a Zipfian distribution.
+ it follows a Zipfian distribution.
  Providing the entire proof would lead us too far, thus consult 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -8108,7 +8108,7 @@ The
 landmark
 \emph default
  model: frequent patterns are mined in data streams by assuming the patterns
- are measured from the begining of the stream until the current moment.
+ are measured from the beginning of the stream until the current moment.
 \begin_inset Newline newline
 \end_inset
 
@@ -8353,7 +8353,7 @@ It is important that
 \begin_inset Formula $\beta=1$
 \end_inset
 
- when working with frequen items instead of frequent itemsets), more spurious
+ when working with frequent items instead of frequent itemsets), more spurious
  subsets will enter 
 \begin_inset Formula $\mathcal{D}$
 \end_inset
@@ -8474,7 +8474,7 @@ key "FP-Growth"
 \begin_inset Newline newline
 \end_inset
 
-In the FP-stream algorithm, two datastructures are used:
+In the FP-stream algorithm, two data structures are used:
 \end_layout
 
 \begin_layout Enumerate
@@ -8926,7 +8926,7 @@ Placing different weights on windows to mine weighted frequent patterns.
 \end_layout
 
 \begin_layout Itemize
-Mining evolution of frequent patterns based on the changes of their occurences
+Mining evolution of frequent patterns based on the changes of their occurrences
  in a sequence of windows.
 \end_layout
 
@@ -9704,7 +9704,7 @@ name "fig:anomaly-detection:example"
 \begin_layout Standard
 Anomalies can be triggered by a variety of causes, depending on their context;
  ranging from malicious activities (such as intrusions, credit card fraud,
- insurance fraud, attack of a computer system) to mere anomolous circumstances
+ insurance fraud, attack of a computer system) to mere anomalous circumstances
  (such as an extremely long winter, an extreme amount of rainfall).
  All these anomalies have in common that they are 
 \emph on
@@ -9724,7 +9724,7 @@ noise removal
 \emph default
 , 
 \emph on
-noise accomodation
+noise accommodation
 \emph default
  (both of which deal with removing uninteresting data points from a data
  set that are acting as a hindrance to data analysis) and 
@@ -10041,7 +10041,7 @@ If a
 \emph on
 collection
 \emph default
- of data points is anomolous when compared with the entire data set, it
+ of data points is anomalous when compared with the entire data set, it
  is called a 
 \emph on
 collective anomaly.
@@ -10263,8 +10263,8 @@ Scores.
 \emph on
 anomaly score
 \emph default
- to each data point in the data set, depending on the degree anomality of
- that data point.
+ to each data point in the data set, depending on the degree of anomalousness
+ of that data point.
 \end_layout
 
 \begin_layout Itemize
@@ -10362,7 +10362,7 @@ event sequence data
 \emph on
 even inter-arrival times
 \emph default
-, wheras event sequence data have 
+, whereas event sequence data have 
 \emph on
 uneven inter-arrival times
 \emph default
@@ -10517,11 +10517,11 @@ that the events are being characterized by categorical attributes and are
 \end_layout
 
 \begin_layout Enumerate
-that the target events are higly infrequent.
+that the target events are highly infrequent.
 \end_layout
 
 \begin_layout Standard
-They have developed an efficient algorithm for this particular problemset
+They have developed an efficient algorithm for this particular problem set
  that involves performing a search for all frequent eventsets (which are
  just a special type of itemsets: instead of 
 \begin_inset Quotes eld
@@ -11480,7 +11480,7 @@ Algorithm
 \end_layout
 
 \begin_layout Standard
-First, the population is initalized by creating prediction patterns containing
+First, the population is initialized by creating prediction patterns containing
  a single event, with the categorical attribute values set to the wildcard
  value 
 \begin_inset Quotes eld
