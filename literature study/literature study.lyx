@@ -10431,10 +10431,17 @@ After searching for papers on contextual anomaly detection algorithms that
 
 \begin_layout Subsubsection
 Vilalta/Ma
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:contextual-algorithms:vilalta-ma"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
-Vilalta & Ma 
+Published in 2002, Vilalta & Ma 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Vilalta/Ma"
@@ -11214,16 +11221,262 @@ The resulting set of rules
 
 \begin_layout Subsubsection
 Timeweaver
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:anomaly-detection:contextual-algorithms:timeweaver"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
+Timeweaver is a genetic algorithm, published in 1998 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "timeweaver"
 
 \end_inset
 
+, that is able to learn to predict rare events from sequences of events
+ with categorical attributes.
+ It achieves this by identifying predictive temporal and sequential patterns.
+\end_layout
 
+\begin_layout Standard
+Because this algorithm is based on genetic algorithms, and explaining that
+ too in full detail would lead us too far, this algorithm is only explained
+ from a high level perspective.
+ The explanation should be sufficient to grok the algorithm and put it into
+ perspective next to the Vilalta/Ma algorithm (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:anomaly-detection:contextual-algorithms:vilalta-ma"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsubsection*
+Prediction Pattern
+\end_layout
+
+\begin_layout Standard
+A 
+\emph on
+prediction pattern
+\emph default
+ is a sequence of events connected by 
+\emph on
+ordering primitives
+\emph default
+ that define sequential or temporal constraints between consecutive events.
+ The three ordering primitives are defined below, with A, B, C and D representin
+g individual events:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Wildcard 
+\begin_inset Quotes eld
+\end_inset
+
+*
+\begin_inset Quotes erd
+\end_inset
+
+.
+
+\emph default
+ Matches 
+\emph on
+any number
+\emph default
+ of events, e.g.
+ the prediction pattern A*D matches ABCD
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Next 
+\begin_inset Quotes eld
+\end_inset
+
+.
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\emph default
+Matches 
+\emph on
+no
+\emph default
+ events, e.g.
+ the prediction pattern D.A.C.
+ only matches DAC.
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+Unordered 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\emph default
+Allows events to occur in 
+\emph on
+any order
+\emph default
+ and is 
+\emph on
+commutative
+\emph default
+, e.g.
+ the prediction pattern A|C|D will match ACD, ADC, CDA, and so on.
+\end_layout
+
+\begin_layout Standard
+The 
+\begin_inset Quotes eld
+\end_inset
+
+|
+\begin_inset Quotes erd
+\end_inset
+
+ primitive has the highest precedence.
+ Each categorical attribute is allowed to take on the 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+ value, which matches 
+\emph on
+any
+\emph default
+ value.
+ A prediction pattern also has a 
+\emph on
+pattern duration
+\emph default
+, of course represented by an integer.
+ 
+\end_layout
+
+\begin_layout Standard
+Then a prediction pattern 
+\emph on
+matches
+\emph default
+ a sequence of events within an event sequence if:
+\end_layout
+
+\begin_layout Enumerate
+events within the event sequence are matched by the prediction pattern,
+ and;
+\end_layout
+
+\begin_layout Enumerate
+ordering constraints in the prediction pattern are obeyed, and;
+\end_layout
+
+\begin_layout Enumerate
+the events in the match occur within the pattern duration.
+\end_layout
+
+\begin_layout Standard
+This prediction pattern language allows for flexible and noise-tolerant
+ prediction rules.
+ For example: 
+\begin_inset Quotes eld
+\end_inset
+
+if 3 (or more) A events and 4 (or more) B events occur within an hour, then
+ predict the target event
+\begin_inset Quotes erd
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+This language was designed to be simple yet useful.
+ Extensions are possible and would only require changes to timeweaver's
+ pattern-matching logic.
+\end_layout
+
+\begin_layout Subsubsection*
+Algorithm
+\end_layout
+
+\begin_layout Standard
+First, the population is initalized by creating prediction patterns containing
+ a single event, with the categorical attribute values set to the wildcard
+ value 
+\begin_inset Quotes eld
+\end_inset
+
+?
+\begin_inset Quotes erd
+\end_inset
+
+ 50% of the time and to a randomly selected categorical attribute value
+ the remaining 50% of the time.
+\end_layout
+
+\begin_layout Standard
+The genetic algorithm then repeatedly does the following until a stopping
+ criterion is met: it selects 2 individuals from the population and applies
+ the mutation operator on both individuals (which randomly modifies a prediction
+ pattern: changing the categorical attribute values, ordering primitives
+ or pattern duration) 
+\emph on
+or
+\emph default
+ crossover (which may result in offspring of different length from the parents,
+ and thus may result in any size of pattern over time).
+\end_layout
+
+\begin_layout Standard
+Now, of course it is impossible to keep adding new prediction patterns:
+ after a certain amount of prediction patterns is being maintained, it becomes
+ necessary to replace existing ones with new ones (i.e.
+ offspring from crossover).
+\begin_inset Newline newline
+\end_inset
+
+We cannot use simple strategies such as FIFO here; it is necessary to balance
+ two opposing criteria: maintaining a diverse population (to keep all options
+ open) and focusing search in the most profitable areas.
+ This can be achieved by evaluating prediction patterns on exactly those
+ properties: weighing each pattern's fitness versus its uniqueness when
+ compared to the other patterns.
+\end_layout
+
+\begin_layout Standard
+For more details, please consult 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "timeweaver"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
