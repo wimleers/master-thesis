@@ -7428,7 +7428,7 @@ key "Approximate frequency counts over data streams"
 \end_layout
 
 \begin_layout Subsubsection
-Count Sketch (2002)
+Count Sketch
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:stream-mining:frequent-item-mining:count-sketch"
@@ -7436,6 +7436,197 @@ name "sub:stream-mining:frequent-item-mining:count-sketch"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Count Sketch is in fact not the name of this algorithm that was published
+ in 2002 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Finding Frequent Items in Data Streams"
+
+\end_inset
+
+, but of the data structure it relies on to estimate the most frequent items
+ in a data stream in a single pass.
+ A nice side-effect is that this algorithm leads directly to a two-pass
+ algorithm for estimating the items with the largest (absolute) change in
+ frequency between two data streams.
+\end_layout
+
+\begin_layout Subsubsection*
+Algorithm
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $h_{1},\text{…},h_{t}$
+\end_inset
+
+ be hash functions from objects to 
+\begin_inset Formula $\{1,\text{…},b\}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{1},\text{…}s_{t}$
+\end_inset
+
+ also be hash functions from objects to 
+\begin_inset Formula $\{+1,-1\}$
+\end_inset
+
+.
+ The CountSketch data structure consists of these hash functions 
+\begin_inset Formula $h_{i}$
+\end_inset
+
+ and 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+, along with a 
+\begin_inset Formula $t\times b$
+\end_inset
+
+ array of counters, which should be interpreted as an array of 
+\begin_inset Formula $t$
+\end_inset
+
+ hash tables that each contain 
+\begin_inset Formula $b$
+\end_inset
+
+ buckets.
+ Both 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+ are parameters to the algorithm and their values will be determined later.
+\end_layout
+
+\begin_layout Standard
+Note that the idea of hashing elements onto 
+\begin_inset Formula $-1$
+\end_inset
+
+ and 
+\begin_inset Formula $+1$
+\end_inset
+
+ has already been used and explained before, for approximating the 
+\begin_inset Formula $F_{2}$
+\end_inset
+
+ frequency moment — see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:methodologies:sketches"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The data structure supports two operations:
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $add(C,q):\,\forall i\in[1,t]:h_{i}(q)+=s_{i}(q)$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Formula $estimate(C,q):\, return\, median_{i}\{h_{i}(q)\cdot s_{i}(q)\}$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+We use the median instead of the mean because the mean is — as is well-known
+ — very sensitive to outliers, whereas the median is more robust.
+\end_layout
+
+\begin_layout Standard
+Once this data structure is implemented, the algorithm that belongs with
+ it is straightforward and simple to implement.
+ The CountSketch data structure is used to estimate the count each element
+ in the data stream; to keep a heap of the top 
+\begin_inset Formula $k$
+\end_inset
+
+ elements seen so far.
+ Formally: given a data stream 
+\begin_inset Formula $q_{1},\text{…},q_{n}$
+\end_inset
+
+, for each 
+\begin_inset Formula $j=1,\text{…},n$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+\begin_inset Formula $add(C,q_{j})$
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+If 
+\begin_inset Formula $q_{j}$
+\end_inset
+
+ is in the heap, increment its count.
+ Else, add 
+\begin_inset Formula $q_{j}$
+\end_inset
+
+ to the heap, but only if 
+\begin_inset Formula $estimate(C,q_{j})$
+\end_inset
+
+ is greater than the smallest estimated count in the heap; this smallest
+ estimated count should then be deleted from the heap, to make room for
+ 
+\begin_inset Formula $q_{j}$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+The algorithm takes space 
+\begin_inset Formula $O(tb+k)$
+\end_inset
+
+.
+ It is also possible to bound 
+\begin_inset Formula $t$
+\end_inset
+
+ and 
+\begin_inset Formula $b$
+\end_inset
+
+, but that would involve several proofs, thereby leading us too far — consult
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Finding Frequent Items in Data Streams"
+
+\end_inset
+
+ for that.
 \end_layout
 
 \begin_layout Subsubsection
