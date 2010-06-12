@@ -5023,6 +5023,20 @@ name "sec:stream-mining"
 \end_layout
 
 \begin_layout Standard
+This section is based mostly on 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques,Models and issues in data stream systems"
+
+\end_inset
+
+, at least for the introduction and general information about the various
+ methodologies.
+ The details about the various algorithms originates from their corresponding
+ original (or related) papers.
+\end_layout
+
+\begin_layout Standard
 In section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -5151,15 +5165,9 @@ synopsis data structures
 \end_layout
 
 \begin_layout Standard
-The synopses 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "data mining concepts techniques,Models and issues in data stream systems"
-
-\end_inset
-
- below are explained succinctly, either because they're fairly easy to comprehen
-d or because explaining them in-depth would lead us too far.
+The synopses below are explained succinctly, either because they're fairly
+ easy to comprehend or because explaining them in-depth would lead us too
+ far.
 \end_layout
 
 \begin_layout Subsubsection
@@ -5321,68 +5329,8 @@ Multiresolution methods also offer, on top of the aforementioned, the ability
  desirable property when processing a data stream.
 \end_layout
 
-\begin_layout Subsubsection*
-Balanced binary trees
-\end_layout
-
 \begin_layout Standard
-In a balanced binary tree, each level of the tree provides a different resolutio
-n: the deeper in the tree (i.e.
- further away from the root node), the more detailed the resolution becomes.
- The 
-\begin_inset Quotes eld
-\end_inset
-
-balanced
-\begin_inset Quotes erd
-\end_inset
-
- part in the data structure name refers to the fact that the tree is kept
- in balance automatically as new elements are added or removed.
-\end_layout
-
-\begin_layout Standard
-
-\bar under
-Note:
-\bar default
- in databases, B+ trees 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "B+ tree"
-
-\end_inset
-
- are often used, especially for indexes.
-\end_layout
-
-\begin_layout Subsubsection*
-Microclusters
-\end_layout
-
-\begin_layout Standard
-A more sophisticated method than balanced binary trees to store multiple
- resolutions is to use a clustering method, to organize stream data into
- a hierarchical structure of trees.
- A hierarchical clustering data structure such as BIRCH's CF-tree 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "BIRCH"
-
-\end_inset
-
- can be used to form a hierarchy of 
-\emph on
-microclusters
-\emph default
-.
- This allows us to update summary statistics of data streams incrementally
- in this his hierarchy.
- Information in these microclusters can then be aggregated into larger 
-\emph on
-macroclusters
-\emph default
- depending on the multiresolution requirements.
+We look at one example of a multiresolution data reduction method: wavelets.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -5395,10 +5343,264 @@ Wavelets are a technique from the field of signal processing, but can also
  be the data stream in our case.
  Wavelets coefficients are projections of the given signal (again, the data
  stream in our case) onto an orthogonal set of basis vector.
- The choice of basis vectors determines the type of wavelets used.
+ Which wavelets can be used depends on the choice of basis vectors.
  Using the Haar wavelet (often chosen for their ease of computation) for
  example, we can recursively perform averaging and differencing at multiple
  levels of resolution.
+\end_layout
+
+\begin_layout Standard
+An example of the one-dimensional Haar wavelet should clarify this.
+ Let 
+\begin_inset Formula $A$
+\end_inset
+
+ be a one-dimensional data vector, with 
+\begin_inset Formula $A=[22,14,16,12]$
+\end_inset
+
+.
+ We now first average each pair of values to get a new data vector with
+ a 
+\begin_inset Quotes eld
+\end_inset
+
+lower resolution
+\begin_inset Quotes erd
+\end_inset
+
+: 
+\begin_inset Formula $A'=[\frac{22+14}{2},\frac{16+12}{2}]=[18,14]$
+\end_inset
+
+.
+ Clearly we cannot generate 
+\begin_inset Formula $A$
+\end_inset
+
+ from 
+\begin_inset Formula $A'$
+\end_inset
+
+: not enough information is available.
+ To be able to restore the original values, we need to store the 
+\emph on
+detail coefficients
+\emph default
+, which capture the information that has been lost.
+ For Haar wavelets, these are simply the differences of the second original
+ value with the averaged value, in our example that would be: 
+\begin_inset Formula $18-14=4$
+\end_inset
+
+ and 
+\begin_inset Formula $14-12=2$
+\end_inset
+
+.
+ Note that it now is possible to restore the original four values.
+ If we now apply this process of averaging and differencing recursively,
+ we get the following full decomposition:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="4" columns="3">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Resolution
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Averages
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Detail coefficients
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+2
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $[22,14,16,12]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+n/a
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+1
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $[18,14]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $[4,2]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+0
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $[16]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $[2]$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The 
+\emph on
+wavelet transform of 
+\begin_inset Formula $A$
+\end_inset
+
+
+\emph default
+ (or 
+\emph on
+wavelet decomposition
+\emph default
+) is defined to be the single coefficient representing the overall average
+ of the values in 
+\begin_inset Formula $A$
+\end_inset
+
+, followed by the detail coefficients in the order of increasing resolution.
+ Thus, the Haar wavelet transform of 
+\begin_inset Formula $A$
+\end_inset
+
+ is 
+\begin_inset Formula $W_{A}=[16,2,4,2]$
+\end_inset
+
+.
+ Each entry in 
+\begin_inset Formula $W_{A}$
+\end_inset
+
+ is called a 
+\emph on
+wavelet coefficient
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+We can then achieve a more compact data representation by either only including
+ the lower resolution detail coefficients or by applying compression techniques
+ such as run-length encoding (run-length encoding 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Run-Length Encoding"
+
+\end_inset
+
+ can be applied because the information is statistically concentrated in
+ just a few coefficients).
 \end_layout
 
 \begin_layout Standard
@@ -5432,8 +5634,7 @@ name "sub:stream-mining:methodologies:sketches"
 \begin_layout Standard
 The aforementioned techniques either focus on a small partition of the data
  (sampling & sliding windows) or summarize the entire data (histograms),
- possibly at multiple resolutions (balanced binary trees, microclusters
- and wavelets).
+ possibly at multiple resolutions (wavelets).
 \end_layout
 
 \begin_layout Standard
@@ -5652,14 +5853,14 @@ Sketches provide probabilistic guarantees on the quality of the approximate
 \begin_inset Formula $O(\log v+\log N)$
 \end_inset
 
- space (
+ space 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "frequency moments space complexity"
 
 \end_inset
 
-).
+.
 \end_layout
 
 \begin_layout Standard
@@ -6418,8 +6619,8 @@ No clean theoretical bound for this algorithm is available: it can only
 Note:
 \bar default
  the reader familiar with data compression techniques may have aptly noted
- that this is indeed very similar to the simple, yet widely utilized Run-Length
- Encoding technique 
+ that this is indeed very similar to the simple, yet widely utilized run-length
+ encoding technique 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Run-Length Encoding"
@@ -24494,28 +24695,6 @@ Morgan Kaufmann
 \begin_layout Bibliography
 \begin_inset CommandInset bibitem
 LatexCommand bibitem
-key "B+ tree"
-
-\end_inset
-
-
-\emph on
-The Ubiquitous B-Tree
-\emph default
-, Douglas Comer, 
-\emph on
-ACM Computing Surveys
-\emph default
- 
-\emph on
-11(2)
-\emph default
-, pages 121–137, 1979
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
 key "wavelets query approximation"
 
 \end_inset
@@ -24530,24 +24709,6 @@ Approximate Query Processing Using Wavelets
  Rastogi; K.
  Shim, Proceedings of the International Conference on Very Large Databases,
  2000
-\end_layout
-
-\begin_layout Bibliography
-\begin_inset CommandInset bibitem
-LatexCommand bibitem
-key "BIRCH"
-
-\end_inset
-
-
-\emph on
-BIRCH: an efficient data clustering method for very large databases
-\emph default
-, T Zhang; R Ramakrishnan; M Livny, 
-\emph on
-ACM SIGMOD Record
-\emph default
-, 1996
 \end_layout
 
 \begin_layout Bibliography
