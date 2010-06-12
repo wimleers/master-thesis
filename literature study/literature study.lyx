@@ -5171,7 +5171,7 @@ The synopses below are explained succinctly, either because they're fairly
 \end_layout
 
 \begin_layout Subsubsection
-Random sampling
+Random Sampling
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:Random-samplingsub:stream-mining:methodologies:random-sampling"
@@ -5307,7 +5307,7 @@ However, histograms require at least two passes: at least one to decide
 \end_layout
 
 \begin_layout Subsubsection
-Multiresolution methods
+Multiresolution Methods
 \begin_inset CommandInset label
 LatexCommand label
 name "sub:stream-mining:methodologies:multiresolution-methods"
@@ -5726,7 +5726,12 @@ where
 \end_layout
 
 \begin_layout Standard
-This can be interpreted as follows:
+This can be interpreted as follows.
+ Each example result is calculated over the sequence 
+\family typewriter
+131113342
+\family default
+.
 \end_layout
 
 \begin_layout Itemize
@@ -5738,6 +5743,14 @@ This can be interpreted as follows:
 \end_inset
 
 .
+\begin_inset Newline newline
+\end_inset
+
+Applied to the example: 
+\begin_inset Formula $F_{0}=4$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Itemize
@@ -5746,6 +5759,14 @@ This can be interpreted as follows:
 
  is the length of the sequence, i.e.: 
 \begin_inset Formula $F_{1}=N$
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Applied to the example: 
+\begin_inset Formula $F_{1}=4+1+3+1=9$
 \end_inset
 
 .
@@ -5790,6 +5811,14 @@ repeat rate
 Gini's index of homogeneity
 \emph default
 .
+\begin_inset Newline newline
+\end_inset
+
+Applied to the example: 
+\begin_inset Formula $F_{2}=4^{2}+1^{2}+3^{2}+1^{2}=27$
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -5824,7 +5853,7 @@ sketches
 
 Sketches provide probabilistic guarantees on the quality of the approximate
  answer.
- For example: the answer to the given query is 12±1 with a 90% probability.
+ For example: the answer to the given query is 93±1 with a 95% probability.
  Given 
 \begin_inset Formula $N$
 \end_inset
@@ -5907,6 +5936,36 @@ The key idea behind the
 
 \emph default
  Clearly, this estimator can be calculated in a single pass.
+ Note that we do not actually calculate 
+\begin_inset Formula $m_{i}$
+\end_inset
+
+ in the formula for 
+\begin_inset Formula $X$
+\end_inset
+
+: each time we encounter 
+\begin_inset Formula $i$
+\end_inset
+
+, we just 
+\emph on
+update
+\emph default
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ by adding another iteration of 
+\begin_inset Formula $m_{i}z_{i}$
+\end_inset
+
+ (which is why it can work in a single pass).
+ Hashing can be used because the actual value of each 
+\begin_inset Formula $i$
+\end_inset
+
+ is irrelevant: we only want to know the frequency.
 \begin_inset Newline newline
 \end_inset
 
