@@ -7397,7 +7397,16 @@ mod
 \end_inset
 
 .
- In other words: elements with a small frequency are deleted.
+ In other words: elements with a small frequency are deleted; or more accurately
+: 
+\begin_inset Formula $e$
+\end_inset
+
+ is deleted if it occurs 
+\emph on
+at most once per bucket on average
+\emph default
+.
 \begin_inset Newline newline
 \end_inset
 
@@ -7470,7 +7479,11 @@ last
 \begin_inset Formula $\Delta$
 \end_inset
 
- assigned to a new entry is the maximum number of times 
+ assigned to a new entry is the 
+\emph on
+maximum
+\emph default
+ number of times 
 \begin_inset Formula $e$
 \end_inset
 
@@ -7483,7 +7496,15 @@ last
 \begin_inset Formula $b_{current}-1$
 \end_inset
 
-.
+, because otherwise 
+\begin_inset Formula $e$
+\end_inset
+
+ would 
+\emph on
+not
+\emph default
+ have been deleted.
  Once an entry is inserted into 
 \begin_inset Formula $\mathcal{D}$
 \end_inset
