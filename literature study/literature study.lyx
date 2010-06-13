@@ -6304,10 +6304,286 @@ approximate
 \end_layout
 
 \begin_layout Subsubsection
-Overview
+Window Models
 \begin_inset CommandInset label
 LatexCommand label
-name "sub:stream-mining:frequent-item-mining:overview"
+name "sub:stream-mining:frequent-item-mining:window-models"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+A data stream consist of elements, i.e.
+ item(set)s, which arrive in a particular order over time.
+ There are several ways one can deal with this sequence nature, existing
+ models are 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+landmark
+\emph default
+ model: frequent item(set)s are mined in data streams by assuming the item(set)s
+ are measured from the beginning of the stream until the current moment.
+\begin_inset Newline newline
+\end_inset
+
+This model may not be desirable when 
+\emph on
+changes of patterns (itemsets)
+\emph default
+ and their 
+\emph on
+trends
+\emph default
+ are more interesting than the patterns themselves.
+ E.g.
+ a series of shopping transactions could start a long time ago (e.g.
+ a few years ago), but patterns found over the entire time span may be uninteres
+ting due to fashion, seasonal changes, and so on.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+sliding window
+\emph default
+ model: frequent item(set)s are mined over only the last 
+\begin_inset Formula $w$
+\end_inset
+
+ transactions, with 
+\begin_inset Formula $w$
+\end_inset
+
+ the window size.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+tilted-time window
+\emph default
+ model: frequent item(set)s are mined over the last 
+\begin_inset Formula $w$
+\end_inset
+
+ transactions, but only the most recent frequent item(set)s are stored at
+ fine granularity — frequent item(set)s in the past are stored at coarser
+ granularity.
+\end_layout
+
+\begin_layout Enumerate
+The 
+\emph on
+damped window
+\emph default
+ model: a decay function is applied to the data stream, to give more weight
+ to recent data than to old data.
+\end_layout
+
+\begin_layout Standard
+If this wasn't clear yet: this classification is both applicable to both
+ single items (which is discussed in this section) and itemsets (discussed
+ in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-itemset-mining"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Standard
+All frequent item mining algorithms in the remainder of this section are
+ of the 
+\emph on
+landmark window 
+\emph default
+model, the window model for the frequent itemset mining algorithms in section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-itemset-mining"
+
+\end_inset
+
+ vary and are indicated on a per-algorithm basis.
+\end_layout
+
+\begin_layout Subsubsection*
+Tilted-Time Window
+\end_layout
+
+\begin_layout Standard
+The tilted-time window model needs a little bit more explaining.
+\end_layout
+
+\begin_layout Standard
+The design of the tilted-time window is based on the fact that often the
+ 
+\emph on
+details
+\emph default
+ of recent changes are interesting, but over a longer period, 
+\emph on
+less detail is necessary
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Several ways exist to designed a tilted-time window.
+ Here are two common examples:
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Natural tilted-time window model.
+ 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques,FP-stream"
+
+\end_inset
+
+ The time window is structured in multiple granularities, based on the 
+\begin_inset Quotes eld
+\end_inset
+
+natural
+\begin_inset Quotes erd
+\end_inset
+
+ (for humans) time scale: the most recent 4 quarters of an hour, then the
+ last 24 hours, 31 days and then 12 months.
+ This can of course vary, depending on the application.
+ See figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:stream-mining:frequent-item-mining:natural-tilted-time-window"
+
+\end_inset
+
+ for an example of what that looks like.
+\begin_inset Newline newline
+\end_inset
+
+Based on this model, we can compute frequent itemsets in the last hour with
+ the precision of a quarter of an hour, the last day with the precision
+ of an hour, and so on.
+ This model registers only 
+\begin_inset Formula $4+24+31+12=71$
+\end_inset
+
+ units of time (quarters, hours, days, months respectively) instead of 
+\begin_inset Formula $365\times24\times4=35,040$
+\end_inset
+
+ units of time — with the trade-off of coarser granularity for the distant
+ past.
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\noindent
+\align center
+\begin_inset Graphics
+	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream natural tilted-time window model.png
+	width 50text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Natural tiled-time window.
+\begin_inset Newline newline
+\end_inset
+
+
+\size scriptsize
+\emph on
+(Figure courtesy of 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+.)
+\size default
+\emph default
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:stream-mining:frequent-item-mining:natural-tilted-time-window"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Enumerate
+
+\emph on
+Logarithmic tilted-time window model.
+ 
+\emph default
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques"
+
+\end_inset
+
+ In this model, the granularity decreases towards the past at an exponential
+ rate.
+ If the most recent slot holds data for the last quarter, then the one before
+ that also holds data for one quarter (the one before the most recent),
+ then for 2 quarters, 4, 8, 16, and so on.
+ In this model, only 
+\begin_inset Formula $\left\lceil \log_{2}(365\times24\times4)+1\right\rceil =\left\lceil 16.1\right\rceil =17$
+\end_inset
+
+ units of time are needed.
+\end_layout
+
+\begin_layout Subsubsection
+Algorithm Classification
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:stream-mining:frequent-item-mining:algorithm-classificaiton"
 
 \end_inset
 
@@ -8313,7 +8589,7 @@ y elements, the decrease in
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -8349,7 +8625,7 @@ Note that the deterministic bound is significantly larger than the 95 percentile
 \begin_inset Newline newline
 \end_inset
 
-Note that 
+(
 \begin_inset Quotes eld
 \end_inset
 
@@ -8373,7 +8649,7 @@ error
 \begin_inset Formula $\Delta$
 \end_inset
 
-.
+.)
 \begin_inset Newline newline
 \end_inset
 
@@ -8682,86 +8958,45 @@ name "sub:stream-mining:frequent-itemset-mining"
 \end_layout
 
 \begin_layout Standard
-A data stream consist of elements, which arrive in a particular order over
- time.
- There are several ways one can deal with this sequence nature, existing
- models are 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "FP-stream"
-
-\end_inset
-
-:
-\end_layout
-
-\begin_layout Enumerate
-The 
+Several frequent pattern mining algorithms have been investigated, and they
+ are again presented in order of appearance.
+ Pattern mining works with item
 \emph on
-landmark
+set
 \emph default
- model: frequent patterns are mined in data streams by assuming the patterns
- are measured from the beginning of the stream until the current moment.
-\begin_inset Newline newline
-\end_inset
-
-This model may not be desirable when 
+s (there are no patterns to be found in single items), which are often called
+ 
 \emph on
-changes of patterns
+transactions
 \emph default
- and their 
-\emph on
-trends
-\emph default
- are more interesting than the patterns themselves.
- E.g.
- a series of shopping transactions could start a long time ago (e.g.
- a few years ago), but patterns found over the entire time span may be uninteres
-ting due to fashion, seasonal changes, and so on.
-\end_layout
-
-\begin_layout Enumerate
-The 
-\emph on
-sliding window
-\emph default
- model: frequent patterns are mined over only the last 
-\begin_inset Formula $w$
-\end_inset
-
- transactions, with 
-\begin_inset Formula $w$
-\end_inset
-
- the window size.
-\end_layout
-
-\begin_layout Enumerate
-The 
-\emph on
-tilted-time window
-\emph default
- model: frequent patterns are mined over the last 
-\begin_inset Formula $w$
-\end_inset
-
- transactions, but only the most recent frequent patterns are stored at
- fine granularity — frequent patterns in the past are stored at coarser
- granularity.
-\end_layout
-
-\begin_layout Enumerate
-The 
-\emph on
-damped window
-\emph default
- model: a decay function is applied to the data stream, to give more weight
- to recent data than to old data.
+ in the context of market basket analysis.
+ 
 \end_layout
 
 \begin_layout Standard
-Several frequent pattern mining algorithms have been investigated, and they
- are again presented in order of appearance.
+Note that the introduction of frequent item mining is still applicable (section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining"
+
+\end_inset
+
+), as are the explanations about window models (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:window-models"
+
+\end_inset
+
+) and the algorithm classification (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:algorithm-classificaiton"
+
+\end_inset
+
+).
 \end_layout
 
 \begin_layout Subsubsection
@@ -9108,156 +9343,29 @@ Incremental updates can be performed on both of these parts.
 \end_layout
 
 \begin_layout Subsubsection*
-Tilted-Time Window
+Mining Time-Sensitive Frequent Patterns in Data Streams
 \end_layout
 
 \begin_layout Standard
-The design of the tilted-time window is based on the fact that often the
+FP-stream can use any tilted-time window model (for more information about
+ window models and the tilted-time window model in particular, please see
  
-\emph on
-details
-\emph default
- of recent changes are interesting, but over a longer period, 
-\emph on
-less detail is necessary
-\emph default
-.
-\end_layout
-
-\begin_layout Standard
-Several ways exist to designed a tilted-time window.
- Here are two common examples:
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-Natural tilted-time window model.
- 
-\emph default
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "data mining concepts techniques,FP-stream"
-
-\end_inset
-
- The time window is structured in multiple granularities, based on the 
-\begin_inset Quotes eld
-\end_inset
-
-natural
-\begin_inset Quotes erd
-\end_inset
-
- (for humans) time scale: the most recent 4 quarters of an hour, then the
- last 24 hours, 31 days and then 12 months.
- This can of course vary, depending on the application.
- See figure 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "fig:stream-mining:frequent-itemset-mining:fp-stream:natural-tilted-time-window"
+reference "sub:stream-mining:frequent-item-mining:window-models"
 
 \end_inset
 
- for an example of what that looks like.
-\begin_inset Newline newline
-\end_inset
-
-Based on this model, we can compute frequent itemsets in the last hour with
- the precision of a quarter of an hour, the last day with the precision
- of an hour, and so on.
- This model registers only 
-\begin_inset Formula $4+24+31+12=71$
-\end_inset
-
- units of time (quarters, hours, days, months respectively) instead of 
-\begin_inset Formula $365\times24\times4=35,040$
-\end_inset
-
- units of time — with the trade-off of coarser granularity for the distant
- past.
-\begin_inset Float figure
-wide false
-sideways false
-status collapsed
-
-\begin_layout Plain Layout
-\noindent
-\align center
-\begin_inset Graphics
-	filename figures/stream mining/fp-stream natural tilted-time window model.png
-	width 50text%
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Natural tiled-time window.
-\begin_inset Newline newline
-\end_inset
-
-
-\size scriptsize
-\emph on
-(Figure courtesy of 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "FP-stream"
-
-\end_inset
-
-.)
-\size default
-\emph default
-
-\begin_inset CommandInset label
-LatexCommand label
-name "fig:stream-mining:frequent-itemset-mining:fp-stream:natural-tilted-time-window"
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Enumerate
-
-\emph on
-Logarithmic tilted-time window model.
+).
+ We focus on FP-stream with a natural tilted-time window model (see figure
  
-\emph default
-
-\begin_inset CommandInset citation
-LatexCommand cite
-key "data mining concepts techniques"
+\begin_inset CommandInset ref
+LatexCommand vref
+reference "fig:stream-mining:frequent-item-mining:natural-tilted-time-window"
 
 \end_inset
 
- In this model, the granularity decreases towards the past at an exponential
- rate.
- If the most recent slot holds data for the last quarter, then the one before
- that also holds data for one quarter (the one before the most recent),
- then for 2 quarters, 4, 8, 16, and so on.
- In this model, only 
-\begin_inset Formula $\left\lceil \log_{2}(365\times24\times4)+1\right\rceil =\left\lceil 16.1\right\rceil =17$
-\end_inset
-
- units of time are needed.
+ again).
 \end_layout
 
 \begin_layout Standard
@@ -9433,15 +9541,6 @@ name "fig:stream-mining:frequent-itemset-mining:fp-stream:pattern-tree-tilted-ti
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsubsection*
-Mining Time-Sensitive Frequent Patterns in Data Streams
-\end_layout
-
-\begin_layout Standard
-FP-stream can use any tilted-time window model.
- We focus on FP-stream with a natural tilted-time window model.
 \end_layout
 
 \begin_layout Standard
