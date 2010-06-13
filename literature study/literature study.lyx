@@ -7643,11 +7643,209 @@ key "Finding Frequent Items in Data Streams"
 
 \end_inset
 
-, but of the data structure it relies on to estimate the most frequent items
+, but of the data structure it relies on to estimate the most frequent elements
  in a data stream in a single pass.
  A nice side-effect is that this algorithm leads directly to a two-pass
- algorithm for estimating the items with the largest (absolute) change in
- frequency between two data streams.
+ algorithm for estimating the elements with the largest (absolute) change
+ in frequency between two data streams.
+\end_layout
+
+\begin_layout Subsubsection*
+Intuition
+\end_layout
+
+\begin_layout Standard
+We begin from a very simple algorithm and go to the final algorithm on a
+ step-by-step basis.
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $\mathcal{S}=q_{1},q_{2},\text{…},q_{n}$
+\end_inset
+
+ be a data stream, with each 
+\begin_inset Formula $q_{i}\in\mathcal{U}=\{e_{1},e_{2},\text{…},e_{m}\}$
+\end_inset
+
+ (i.e.
+ 
+\begin_inset Formula $m$
+\end_inset
+
+ different elements in the universe).
+ If each element 
+\begin_inset Formula $e_{i}$
+\end_inset
+
+ occurs 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ times in 
+\begin_inset Formula $\mathcal{S}$
+\end_inset
+
+, then that is so that 
+\begin_inset Formula $n_{1}\geq n_{2}\geq\text{…}\geq n_{m}$
+\end_inset
+
+, i.e.
+ 
+\begin_inset Formula $n_{1}$
+\end_inset
+
+ is the most frequent element, 
+\begin_inset Formula $n_{2}$
+\end_inset
+
+ the second most frequent, and so on.
+\end_layout
+
+\begin_layout Standard
+First, let 
+\begin_inset Formula $s$
+\end_inset
+
+ be a hash function from elements to 
+\begin_inset Formula $\{+1,-1\}$
+\end_inset
+
+ and let 
+\begin_inset Formula $c$
+\end_inset
+
+ be a counter.
+ As we process the incoming objects of the stream, each time we encounter
+ an element 
+\begin_inset Formula $e_{i}$
+\end_inset
+
+, we update the (single) counter 
+\family typewriter
+
+\begin_inset Formula $c=c+s(q_{i})$
+\end_inset
+
+
+\family default
+.
+ We can then estimate the 
+\begin_inset Formula $i{}^{\text{th}}$
+\end_inset
+
+ most frequent item 
+\begin_inset Formula $n_{i}$
+\end_inset
+
+ as follows: 
+\begin_inset Formula $E[c\cdot s[q_{i}]]=n_{i}$
+\end_inset
+
+.
+ However, the variance of every estimate is obviously very large.
+\end_layout
+
+\begin_layout Standard
+A natural solution to this problem is to use more counters.
+ I.e.
+ use 
+\begin_inset Formula $t$
+\end_inset
+
+ hash functions 
+\begin_inset Formula $s_{1},\text{…},s_{t}$
+\end_inset
+
+ and maintain 
+\begin_inset Formula $t$
+\end_inset
+
+ counters 
+\begin_inset Formula $c_{1},\text{…},c_{t}$
+\end_inset
+
+.
+ Then to process an element 
+\begin_inset Formula $q_{i}$
+\end_inset
+
+, we need to update all counters: 
+\begin_inset Formula $c_{j}=c_{j}+s_{j}(q_{i})$
+\end_inset
+
+, for each 
+\begin_inset Formula $j$
+\end_inset
+
+.
+ Now we have 
+\begin_inset Formula $E[c_{i}\cdot s_{i}[q_{i}]]=n_{i}$
+\end_inset
+
+.
+ We can then take the mean or median of these estimates to achieve a new
+ estimate with a lower variance than in the previous approach.
+\end_layout
+
+\begin_layout Standard
+However, high frequency elements can spoil the estimates of low frequency
+ elements, because for each element that is encountered, all counters are
+ updated.
+ Therefore we propose an alternative: we replace each of the 
+\begin_inset Formula $t$
+\end_inset
+
+ counters by a hash table of 
+\begin_inset Formula $b$
+\end_inset
+
+ counters and have all elements update 
+\emph on
+different subsets
+\emph default
+ of counters, one per hash table (i.e.
+ all 
+\begin_inset Formula $t$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+counter hash tables
+\begin_inset Quotes erd
+\end_inset
+
+ are updated, but only 
+\emph on
+one
+\emph default
+ counter per hash table).
+ This way, every element will get a sufficient amount of high-confidence
+ estimates (since only a few will have large variance thanks to this randomized
+ counter updating process) and therefore all elements can be estimated with
+ sufficient precision.
+ Now we have 
+\begin_inset Formula $E[h_{i}[q]\cdot s[q]]=n_{q}$
+\end_inset
+
+.
+ Note that by increasing the number of counters per hash table 
+\begin_inset Formula $b$
+\end_inset
+
+ to a sufficiently large amount, the variance can be decreased to an acceptable
+ level and by making the number of hash tables 
+\begin_inset Formula $t$
+\end_inset
+
+ sufficiently large, we will make sure that each of the 
+\begin_inset Formula $m$
+\end_inset
+
+ estimates (i.e.
+ one for every element in the universe) has the desired variance.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -7713,7 +7911,8 @@ Note that the idea of hashing elements onto
 \begin_inset Formula $+1$
 \end_inset
 
- has already been used and explained before, for approximating the 
+ for estimation has already been used and explained before, for approximating
+ the 
 \begin_inset Formula $F_{2}$
 \end_inset
 
@@ -7732,17 +7931,79 @@ The data structure supports two operations:
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $add(C,q):\,\forall i\in[1,t]:h_{i}(q)+=s_{i}(q)$
+
+\family typewriter
+add(
+\begin_inset Formula $C$
 \end_inset
 
+,
+\begin_inset Formula $q$
+\end_inset
 
+): for 
+\begin_inset Formula $i$
+\end_inset
+
+=
+\begin_inset Formula $1$
+\end_inset
+
+ to 
+\begin_inset Formula $t$
+\end_inset
+
+ do 
+\begin_inset Formula $h_{i}$
+\end_inset
+
+[
+\begin_inset Formula $q$
+\end_inset
+
+] += 
+\begin_inset Formula $s_{i}$
+\end_inset
+
+[
+\begin_inset Formula $q$
+\end_inset
+
+]
 \end_layout
 
 \begin_layout Itemize
-\begin_inset Formula $estimate(C,q):\, return\, median_{i}\{h_{i}(q)\cdot s_{i}(q)\}$
+
+\family typewriter
+estimate(
+\begin_inset Formula $C$
 \end_inset
 
+, 
+\begin_inset Formula $q$
+\end_inset
 
+): return median
+\begin_inset Formula $_{\text{i}}$
+\end_inset
+
+ {
+\begin_inset Formula $h_{i}$
+\end_inset
+
+[
+\begin_inset Formula $q$
+\end_inset
+
+]
+\begin_inset Formula $\cdot s_{i}$
+\end_inset
+
+[
+\begin_inset Formula $q$
+\end_inset
+
+]} 
 \end_layout
 
 \begin_layout Standard
@@ -7770,14 +8031,21 @@ Once this data structure is implemented, the algorithm that belongs with
 :
 \end_layout
 
-\begin_layout Enumerate
-\begin_inset Formula $add(C,q_{j})$
+\begin_layout Itemize
+
+\family typewriter
+add(
+\begin_inset Formula $C$
 \end_inset
 
+,
+\begin_inset Formula $q_{j}$
+\end_inset
 
+)
 \end_layout
 
-\begin_layout Enumerate
+\begin_layout Itemize
 If 
 \begin_inset Formula $q_{j}$
 \end_inset
@@ -7788,9 +8056,17 @@ If
 \end_inset
 
  to the heap, but only if 
-\begin_inset Formula $estimate(C,q_{j})$
+\family typewriter
+estimate(
+\begin_inset Formula $C$
 \end_inset
 
+, 
+\begin_inset Formula $q$
+\end_inset
+
+)
+\family default
  is greater than the smallest estimated count in the heap; this smallest
  estimated count should then be deleted from the heap, to make room for
  
@@ -7801,11 +8077,11 @@ If
 \end_layout
 
 \begin_layout Standard
-The algorithm takes space 
+The algorithm requires 
 \begin_inset Formula $O(tb+k)$
 \end_inset
 
-.
+ space.
  It is also possible to bound 
 \begin_inset Formula $t$
 \end_inset
