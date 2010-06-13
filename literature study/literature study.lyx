@@ -9662,6 +9662,26 @@ Finally, frequent patterns usually do not change significantly over time.
 embed the tilted-time window structure into each node of the pattern-tree
 \emph default
 , we can save memory.
+ The important assumption here is that frequencies of items do not change
+ drastically and thus the FP-tree structure (its hierarchical structure)
+ does not need to change
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+This requires knowledge about the original FP-growth algorithm 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-Growth"
+
+\end_inset
+
+.
+\end_layout
+
+\end_inset
+
+.
 \begin_inset Newline newline
 \end_inset
 
