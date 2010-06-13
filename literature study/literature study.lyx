@@ -6508,27 +6508,24 @@ If
 \begin_inset Formula $\frac{x}{N}$
 \end_inset
 
-, the count of an element 
-\begin_inset Formula $k$
+, the count of the 
+\begin_inset Formula $k{}^{\text{th}}$
 \end_inset
 
- is denoted 
+ most frequent element is denoted 
 \begin_inset Formula $n_{k}$
 \end_inset
 
- and the frequency of an element 
-\begin_inset Formula $k$
+ (i.e.
+ 
+\begin_inset Formula $n_{1}\geq n_{2}\geq\text{…}\geq n_{k}\geq\text{…}\geq n_{m}$
 \end_inset
 
- is denoted 
-\begin_inset Formula $f_{k}$
+) and let 
+\begin_inset Formula $f_{i}=\frac{n_{i}}{N}$
 \end_inset
 
- (indeed, 
-\begin_inset Formula $f_{k}=\frac{n_{k}}{N}$
-\end_inset
-
-).
+.
  To guarantee that all top 
 \begin_inset Formula $k$
 \end_inset
@@ -7015,8 +7012,8 @@ When a user requests a list of items with threshold
 \end_inset
 
 .
- The true supports of these frequent items are underestimated by at most
- 
+ One can prove that the true supports of these frequent items are underestimated
+ by at most 
 \begin_inset Formula $\epsilon$
 \end_inset
 
