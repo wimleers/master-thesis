@@ -8313,7 +8313,7 @@ y elements, the decrease in
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \noindent
@@ -8346,6 +8346,34 @@ windows
 
 Note that the deterministic bound is significantly larger than the 95 percentile.
  The data stream is a trace of network traffic flow.
+\begin_inset Newline newline
+\end_inset
+
+Note that 
+\begin_inset Quotes eld
+\end_inset
+
+CCDF
+\begin_inset Quotes erd
+\end_inset
+
+ in the chart corresponds to 
+\begin_inset Formula $\delta$
+\end_inset
+
+ and 
+\begin_inset Quotes eld
+\end_inset
+
+error
+\begin_inset Quotes erd
+\end_inset
+
+ corresponds to 
+\begin_inset Formula $\Delta$
+\end_inset
+
+.
 \begin_inset Newline newline
 \end_inset
 
