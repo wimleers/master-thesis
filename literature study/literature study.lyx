@@ -291,14 +291,14 @@ key "High Performance Web Sites Book"
 \end_inset
 
 .
- Therefor this is also the part where optimizations have the largest effect
- — optimizing the code that renders the pages has far less effect.
+ Therefor this is also the part where optimizations have the largest effect—opti
+mizing the code that renders the pages has far less effect.
 \end_layout
 
 \begin_layout Standard
 To be able to prove the positive impact of optimizing the loading of the
- components of a web site — thereby proving that the work I was going to
- have done had a positive impact — I researched existing page loading profiling
+ components of a web site—thereby proving that the work I was going to have
+ done had a positive impact—I researched existing page loading profiling
  tools.
  Episodes 
 \begin_inset CommandInset citation
@@ -333,7 +333,7 @@ key "Gomez web site,Keynote web site,WebMetrics web site,Pingdom web site"
 \end_inset
 
  require simulations, which implies they're also only suitable for simulating
- traffic on a new version of a web site before it goes live — they required
+ traffic on a new version of a web site before it goes live—they required
  simulations when I wrote my bachelor thesis in 2009, and still do at the
  time of writing this, in May 2010);
 \end_layout
@@ -343,15 +343,15 @@ Episodes does not require any hardware other than a server to log to.
 \end_layout
 
 \begin_layout Standard
-Also as part of my bachelor thesis, I wrote a simple Drupal module — the
- Episodes module 
+Also as part of my bachelor thesis, I wrote a simple Drupal module—the Episodes
+ module 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Drupal Episodes module"
 
 \end_inset
 
- — that could create simple charts to compare the average page loading time
+—that could create simple charts to compare the average page loading time
  per day per geographic region.
  For my test case, with two weeks of collecting data, this was the resulting
  dataset:
@@ -488,10 +488,10 @@ key "File Conveyor"
 
 \end_inset
 
- — the daemon that I wrote to automatically sync files to any CDN, regardlesss
- of the file transfer protocol used — when integrated with a Drupal web
- site and thus providing CDN integration for that web site, had a positive
- impact: the test web site consistently loaded about 
+—the daemon that I wrote to automatically sync files to any CDN, regardlesss
+ of the file transfer protocol used—when integrated with a Drupal web site
+ and thus providing CDN integration for that web site, had a positive impact:
+ the test web site consistently loaded about 
 \emph on
 twice as fast
 \emph default
@@ -515,7 +515,7 @@ The main problem is that sites are too slow.
 \begin_layout Standard
 However, simply implementing all known tricks is not enough, because using
  a CDN might speed up your web site for half your visitors and slow it down
- for the other half — although that is an extremely unlikely scenario.
+ for the other half—although that is an extremely unlikely scenario.
  That is why you need to be able to do Continuous Profiling (cfr.
  Continuous Integration).
 \end_layout
@@ -576,10 +576,9 @@ page loads
 \end_layout
 
 \begin_layout Standard
-I told Steve Souders about my idea for my master thesis — he is the most
- prominent speaker, researcher and evangelizer in the web performance optimizati
-on scene and on Google's payroll to push this forward — and asked him for
- feedback.
+I told Steve Souders about my idea for my master thesis—he is the most prominent
+ speaker, researcher and evangelizer in the web performance optimization
+ scene and on Google's payroll to push this forward—and asked him for feedback.
  His response:
 \end_layout
 
@@ -590,12 +589,12 @@ I did a mini performance conference in LA last month and heard three big
  latency.
  I realized that most companies aren't even at the point where they have
  good metrics.
- I think the first idea — Google Analytics for latency — is the best idea.
+ I think the first idea—Google Analytics for latency—is the best idea.
  […] It would be great if this lived on Google AppEngine.
- Users could take the code and spin up their own instance — for free! You
+ Users could take the code and spin up their own instance—for free! You
  could also host a shared instance.
  I will say that the work […] on AppEngine has been hard because of the
- datastore — my officemate does the programming and it is taken him months
+ datastore—my officemate does the programming and it is taken him months
  to do what I did in a few days on the LAMP stack.
 \end_layout
 
@@ -2228,7 +2227,7 @@ TODO
 , Episodes records the durations of the various episodes during the loading
  of the page and when the page has finished loading, it sends this information
  to a web server log.
- It does this by means of a specially formatted URL — the URL contains the
+ It does this by means of a specially formatted URL—the URL contains the
  names and durations of the recorded episodes (in order of being recorded
  and occurrence) as a single long GET parameter.
  This GET parameter can then be parsed to easily extract the episodes that
@@ -2381,7 +2380,7 @@ speeds
 \begin_inset Quotes erd
 \end_inset
 
-: very slow — slow — acceptable — fast — very fast, for example.
+: very slow—slow—acceptable—fast—very fast, for example.
  This would need to come with sane defaults, but should be configurable
  by the user in the end.
 \end_layout
@@ -2556,7 +2555,7 @@ y detected web performance issues.
 
 \emph on
 This visualization tool will be implemented as part of this master thesis.
- For this, OLAP will be used — see section 
+ For this, OLAP will be used—see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:OLAP"
@@ -3686,8 +3685,8 @@ browser
 
 \begin_layout Itemize
 if a hierarchical value is not feasible, then storing both each major (x.0)
- browser version and each minor (x.y.z) browser version — as 2 separate categorica
-l attributes — is likely the best alternative
+ browser version and each minor (x.y.z) browser version—as 2 separate categorical
+ attributes—is likely the best alternative
 \begin_inset Newline newline
 \end_inset
 
@@ -3796,7 +3795,7 @@ is-a
 
  relationships
 \series default
- among items sold at a grocery store — e.g., milk is a kind of food and DVD
+ among items sold at a grocery store—e.g., milk is a kind of food and DVD
  is a kind of home electronics equipment.
 \end_layout
 
@@ -4221,9 +4220,9 @@ Internet Explorer 6 or 7
 \end_deeper
 \begin_layout Standard
 Overall, we can see that we need to detect associations between a single
- numerical attribute — relatively high durations of an episode, i.e.
- relative to all durations of this episode — and one or more of the categorical
- attributes — date, time, location, ISP, IP range, path, operating system,
+ numerical attribute—relatively high durations of an episode, i.e.
+ relative to all durations of this episode—and one or more of the categorical
+ attributes—date, time, location, ISP, IP range, path, operating system,
  browser, browser version and user agent.
 \end_layout
 
@@ -5047,8 +5046,8 @@ reference "sec:episodes-log-mining"
 , Episodes log mining has been explained in detail.
  However, it only deals with mining entire Episodes log files.
  In practice, it will be necessary to process all incoming data immediately,
- so that the live status of the system can be calculated — and displayed
- to the end-user.
+ so that the live status of the system can be calculated—and displayed to
+ the end-user.
 \end_layout
 
 \begin_layout Standard
@@ -5111,7 +5110,7 @@ name "sub:stream-mining:methodologies"
 
 \begin_layout Standard
 As discussed before, it is impractical (or even unrealistic) to scan through
- an entire data stream multiple times — sometimes it even might be impossible
+ an entire data stream multiple times—sometimes it even might be impossible
  to evaluate every element of the stream due to the update rate.
  The size of the data is not the only problem: the universes
 \begin_inset Foot
@@ -5318,7 +5317,7 @@ name "sub:stream-mining:methodologies:multiresolution-methods"
 \end_layout
 
 \begin_layout Standard
-A multiresolution method is an example of a data reduction method — a data
+A multiresolution method is an example of a data reduction method—a data
  reduction method can be used to achieve smaller data storage requirements,
  yet closely maintain the integrity of the original data.
 \begin_inset Newline newline
@@ -6245,7 +6244,7 @@ Derive an
 \emph on
 approximate
 \emph default
- answer — while this won't be 100% correct, it is often sufficient in practice.
+ answer—while this won't be 100% correct, it is often sufficient in practice.
 \end_layout
 
 \begin_layout Standard
@@ -6379,7 +6378,7 @@ tilted-time window
 \end_inset
 
  transactions, but only the most recent frequent item(set)s are stored at
- fine granularity — frequent item(set)s in the past are stored at coarser
+ fine granularity—frequent item(set)s in the past are stored at coarser
  granularity.
 \end_layout
 
@@ -6494,7 +6493,7 @@ Based on this model, we can compute frequent itemsets in the last hour with
 \begin_inset Formula $365\times24\times4=35,040$
 \end_inset
 
- units of time — with the trade-off of coarser granularity for the distant
+ units of time—with the trade-off of coarser granularity for the distant
  past.
 \begin_inset Float figure
 wide false
@@ -6699,8 +6698,8 @@ Sampling algorithms reduce the required memory resources and the processing
 
 \begin_layout Standard
 The algorithms are explained in the next subsections, in order of being
- published — with the additional goal of providing an (approximation of)
- the timeline over which new, improved algorithms have been invented.
+ published—with the additional goal of providing an (approximation of) the
+ timeline over which new, improved algorithms have been invented.
 \begin_inset Newline newline
 \end_inset
 
@@ -7375,7 +7374,7 @@ key "Approximate frequency counts over data streams"
 \begin_inset Formula $N$
 \end_inset
 
- denotes the length of the stream so far — contrary to the sticky sampling
+ denotes the length of the stream so far—contrary to the sticky sampling
  algorithm described in the previous section, this algorithm is 
 \emph on
 not independent
@@ -8192,7 +8191,7 @@ Note that the idea of hashing elements onto
 \begin_inset Formula $F_{2}$
 \end_inset
 
- frequency moment — see section 
+ frequency moment—see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:stream-mining:methodologies:sketches"
@@ -8283,8 +8282,8 @@ estimate(
 \end_layout
 
 \begin_layout Standard
-We use the median instead of the mean because the mean is — as is well-known
- — very sensitive to outliers, whereas the median is more robust.
+We use the median instead of the mean because the mean is—as is well-known—very
+ sensitive to outliers, whereas the median is more robust.
 \end_layout
 
 \begin_layout Standard
@@ -8366,7 +8365,7 @@ The algorithm requires
 \begin_inset Formula $b$
 \end_inset
 
-, but that would involve several proofs, thereby leading us too far — consult
+, but that would involve several proofs, thereby leading us too far—consult
  
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -9190,8 +9189,8 @@ It is important that
 \begin_inset Formula $\mathcal{D}$
 \end_inset
 
-, as well as drastically increase the refresh rate — effectively harming
- the algorithm in both time and space.
+, as well as drastically increase the refresh rate—effectively harming the
+ algorithm in both time and space.
 \end_layout
 
 \begin_layout Subsubsection
@@ -9264,8 +9263,8 @@ key "FP-Growth"
 
 \end_inset
 
- — if not, that should be read first; note that a very clear explanation
- of FP-growth is available in 
+—if not, that should be read first; note that a very clear explanation of
+ FP-growth is available in 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Intro to Data Mining"
@@ -9548,7 +9547,7 @@ For each tilted-time window, a
 \emph on
 frequent pattern set
 \emph default
- is maintained — see figure 
+ is maintained—see figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:stream-mining:frequent-itemset-mining:fp-stream:frequent-patterns"
@@ -9601,11 +9600,11 @@ Does the support of
 
 \begin_layout Standard
 That is, we have sufficient flexibility to mine a variety of types of frequent
- patterns associated with time — possibilities are:
+ patterns associated with time—possibilities are:
 \end_layout
 
 \begin_layout Itemize
-Mining frequent patterns in the current window — obviously this is the most
+Mining frequent patterns in the current window—obviously this is the most
  basic requirement.
 \end_layout
 
@@ -10325,7 +10324,7 @@ Anomalies can be triggered by a variety of causes, depending on their context;
 \emph on
 interesting
 \emph default
- to the analyst — there must be 
+ to the analyst—there must be 
 \emph on
 real life relevance
 \emph default
@@ -10787,7 +10786,7 @@ Labeling data points in an accurate manner, while ensuring that all types
 \emph on
 manually
 \emph default
- by a human expert — which clearly requires substantial effort.
+ by a human expert—which clearly requires substantial effort.
  Typically, getting a labeled set of anomalous data that covers 
 \emph on
 all
@@ -10888,7 +10887,7 @@ anomaly score
 Labels.
 
 \emph default
- Labeling techniques assign a label — either 
+ Labeling techniques assign a label—either 
 \begin_inset Quotes eld
 \end_inset
 
@@ -10904,7 +10903,7 @@ anomalous
 \begin_inset Quotes erd
 \end_inset
 
- — to each data point.
+—to each data point.
  
 \end_layout
 
@@ -12184,8 +12183,8 @@ name "sec:OLAP"
 \end_layout
 
 \begin_layout Standard
-OLAP — short for On-Line Analytical Processing — is an approach designed
- to be able to quickly answer queries about multidimensional data.
+OLAP—short for On-Line Analytical Processing—is an approach designed to
+ be able to quickly answer queries about multidimensional data.
 \end_layout
 
 \begin_layout Standard
@@ -13535,7 +13534,7 @@ identification of the attribute that is the focus of the analysis (the
 \emph on
 measure attribute
 \emph default
-) — this attribute is called the 
+)—this attribute is called the 
 \emph on
 target quantity
 \emph default
@@ -13748,8 +13747,7 @@ It may be called a
 \emph on
 data cube representation
 \emph default
- though: it is just a way to represent a data set — no calculations are
- required.
+ though: it is just a way to represent a data set—no calculations are required.
  For the result of the data cube 
 \emph on
 operator
@@ -13788,7 +13786,7 @@ A multidimensional
 \emph on
 representation
 \emph default
- of the Iris data set — but 
+ of the Iris data set—but 
 \emph on
 not
 \emph default
@@ -15098,8 +15096,8 @@ name "sub:OLAP:data-cube"
 \end_layout
 
 \begin_layout Standard
-Before going into details about the data cube, let's start with an example
- — it will immediately be clear how a data cube can be used.
+Before going into details about the data cube, let's start with an example—it
+ will immediately be clear how a data cube can be used.
 \end_layout
 
 \begin_layout Standard
@@ -16885,7 +16883,7 @@ A roll-up is the aggregation of values
 \emph on
 within
 \emph default
- a dimension — not across an entire dimension!
+ a dimension—not across an entire dimension!
 \begin_inset Newline newline
 \end_inset
 
@@ -16949,7 +16947,7 @@ at a higher level
 \begin_inset Quotes erd
 \end_inset
 
-, the data will be viewed with more granularity — 
+, the data will be viewed with more granularity—
 \begin_inset Quotes eld
 \end_inset
 
@@ -17463,7 +17461,7 @@ To calculate a roll-up over
 \begin_inset Formula $n$
 \end_inset
 
- group by SQL statements need to be unioned together — 1 per dimension that
+ group by SQL statements need to be unioned together—1 per dimension that
  is being rolled up.
 \end_layout
 
@@ -17996,7 +17994,7 @@ Color
 \family default
  as the rows.
  Then we can reuse the results for the roll-up example.
- But for roll-up, we didn't aggregate sales by color — this is why roll-up
+ But for roll-up, we didn't aggregate sales by color—this is why roll-up
  is called assymetric.
 \begin_inset Newline newline
 \end_inset
@@ -18562,12 +18560,12 @@ HAVING
 status collapsed
 
 \begin_layout Plain Layout
-Decorations are columns that do not appear in the GROUP BY list — and that
+Decorations are columns that do not appear in the GROUP BY list—and that
  are therefore not allowed to be projected (be in the 
 \family typewriter
 SELECT
 \family default
- list) in traditional SQL — but that are functionally dependent on the grouping
+ list) in traditional SQL—but that are functionally dependent on the grouping
  columns.
  See 
 \begin_inset CommandInset citation
@@ -22226,8 +22224,8 @@ The potential advantage over the first method (based on the uniform distribution
 \begin_layout Enumerate
 While the first two methods are simple applications of well-known statistics
  methods, the third tries to exploit the nature of the process that is being
- applied — essentially, data is being grouped according to the distinct
- values within the dimensions.
+ applied—essentially, data is being grouped according to the distinct values
+ within the dimensions.
  This method therefore estimates the number of tuples in each grouping by
  estimating the number of distinct values in each particular grouping.
 \begin_inset Newline newline
@@ -22286,7 +22284,7 @@ key "Cubing Algorithms"
 \emph on
 cube
 \emph default
- the array and store it back in a database — this has been found to be more
+ the array and store it back in a database—this has been found to be more
  efficient than cubing the table directly!
 \end_layout
 
@@ -22431,8 +22429,8 @@ name "sub:OLAP:data-cube:updates:prefix-sum"
 The essential idea of the Prefix Sum method is to precompute many prefix
  sums of the data cube, which can then be used to answer any range-sum query
  in constant time.
- The downside is a large update cost — in the worst case, an array needs
- to be rebuilt that has the same size as the data cube itself.
+ The downside is a large update cost—in the worst case, an array needs to
+ be rebuilt that has the same size as the data cube itself.
 \end_layout
 
 \begin_layout Standard
@@ -22551,7 +22549,7 @@ name "fig:OLAP:data-cube:prefix-sum-example"
 \end_layout
 
 \begin_layout Standard
-Discussing all details would lead us to far — if interested, it is recommended
+Discussing all details would lead us to far—if interested, it is recommended
  to consult the original paper 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -23301,7 +23299,7 @@ Effects of an update to the cell with coordinates
 \begin_inset Formula $(1,5)$
 \end_inset
 
- — marked with an asterisk on the left.
+—marked with an asterisk on the left.
 \begin_inset Newline newline
 \end_inset
 
@@ -23423,7 +23421,7 @@ reference "fig:OLAP:data-cube:ddc-partitioning"
 \end_inset
 
 .
- Each box stores — just like the Relative Prefix Sum method — 
+ Each box stores—just like the Relative Prefix Sum method—
 \begin_inset Formula $k^{d}-(k-1)^{d}$
 \end_inset
 
@@ -23644,7 +23642,7 @@ The surfaces containing the overlay values of a
 
 \end_inset
 
- — the recursion of course stops for 
+—the recursion of course stops for 
 \begin_inset Formula $d=2$
 \end_inset
 
@@ -23757,7 +23755,7 @@ Thanks to this recursive nature, less values need to be retrieved, resulting
 \begin_inset Formula $O(\log^{d}n)$
 \end_inset
 
- — for details see again 
+—for details see again 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Dynamic Data Cube - specialized hierarchical structure"
@@ -23804,7 +23802,7 @@ actual
 \begin_layout Standard
 The Prefix Sum and Relative Prefix Sum methods would need to grow new rows
  (for lack of a better term in >3D; more accurately: expansion in a specific
- dimension) for even a single cell in a previously non-existing area — see
+ dimension) for even a single cell in a previously non-existing area—see
  figure 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -23866,7 +23864,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Growth of a Dynamic Data Cube — shaded areas don't store values.
+Growth of a Dynamic Data Cube—shaded areas don't store values.
 \begin_inset Newline newline
 \end_inset
 
@@ -24844,7 +24842,7 @@ key "Apache log files"
 
 
 \emph on
-Log Files — Apache HTTP Server
+Log Files—Apache HTTP Server
 \emph default
 , 
 \begin_inset Flex URL
