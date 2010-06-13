@@ -368,7 +368,7 @@ About two weeks, or 100 MB worth of statistics, had been logged.
 
 \begin_layout Standard
 While my test case was a fairly big web site (500,000-1,000,000 page views
- per month), that's nothing when compared with the top-100 web sites.
+ per month), that is nothing when compared with the top-100 web sites.
  And even for these mere 2.7 million recorded episodes, it took several minutes
  to generate simple charts (see figures 
 \begin_inset CommandInset ref
@@ -515,8 +515,8 @@ The main problem is that sites are too slow.
 \begin_layout Standard
 However, simply implementing all known tricks is not enough, because using
  a CDN might speed up your web site for half your visitors and slow it down
- for the other half — although that's an extremely unlikely scenario.
- That's why you need to be able to do Continuous Profiling (cfr.
+ for the other half — although that is an extremely unlikely scenario.
+ That is why you need to be able to do Continuous Profiling (cfr.
  Continuous Integration).
 \end_layout
 
@@ -595,7 +595,7 @@ I did a mini performance conference in LA last month and heard three big
  Users could take the code and spin up their own instance — for free! You
  could also host a shared instance.
  I will say that the work […] on AppEngine has been hard because of the
- datastore — my officemate does the programming and it's taken him months
+ datastore — my officemate does the programming and it is taken him months
  to do what I did in a few days on the LAMP stack.
 \end_layout
 
@@ -615,7 +615,7 @@ key "Google AppEngine"
 \end_layout
 
 \begin_layout Standard
-Whether it would run or Google AppEngine or not, it's certain that an open
+Whether it would run or Google AppEngine or not, it is certain that an open
  source Continuous page loading performance profiling would be very valuable,
  which is exactly what I'll try to build for my master thesis.
 \end_layout
@@ -738,7 +738,7 @@ key "WPO proposal resource packages,WPO proposal resource packages - comments by
  capacity because of the overhead of HTTP and TCP and the various blocking
  behaviors in browsers.
  This proposal would result in less bandwidth being consumed by overhead.
- Plus, it's backwards compatible: browsers that don't support it load the
+ Plus, it is backwards compatible: browsers that don't support it load the
  page the same way as today.
 \end_layout
 
@@ -1971,7 +1971,7 @@ reference "sec:episodes-log-mining"
 
 \end_inset
 
-), I've used 
+), I have used 
 \emph on
 web usage mining
 \emph default
@@ -2214,7 +2214,7 @@ reference "sub:episodes-log-mining:detection-advanced:preloading-typical-navigat
 \end_layout
 
 \begin_layout Standard
-That's why Episodes was developed.
+That is why Episodes was developed.
  As explained earlier 
 \begin_inset Note Note
 status open
@@ -2357,7 +2357,7 @@ slow
 \end_layout
 
 \begin_layout Enumerate
-There's a threshold 
+There is a threshold 
 \begin_inset Formula $y$
 \end_inset
 
@@ -2428,7 +2428,7 @@ name "sub:episodes-log-mining:intro:the-mining-process"
 \begin_layout Standard
 The overall web usage mining process (and therefore Episodes log mining,
  which is merely a specialization) can be seen as a three-stage process.
- Below I've provided a high-level comparison of the differences between
+ Below I have provided a high-level comparison of the differences between
  web usage mining and Episodes log mining.
 \end_layout
 
@@ -4085,7 +4085,7 @@ This is in fact a consequent of the previous point: redundant association
 \end_inset
 
  and both rules have similar confidence.
- If confidence differs, then it it's possible that a more specific rule
+ If confidence differs, then it it is possible that a more specific rule
  occurs with a higher confidence than the general rule.
  This would suggest that while the association exists for the more general
  rule, that it is more pronounced in the more specific rule.
@@ -4203,10 +4203,10 @@ Internet Explorer 6 or 7
 \begin_layout Itemize
 Without hierarchical categorical attributes for the user agent field, but
  just the exact user agent string, it is likely that nothing would be detected.
- Even with specific browser versions, it's possible that nothing would be
- detected, or there might be too much information (e.g.
+ Even with specific browser versions, it is possible that nothing would
+ be detected, or there might be too much information (e.g.
  a very long list with exact versions of Internet Explorer), but thanks
- to hierarchical attributes, it's possible to provide the very understandable
+ to hierarchical attributes, it is possible to provide the very understandable
  
 \begin_inset Quotes eld
 \end_inset
@@ -4415,13 +4415,13 @@ key "Rank Correlation Methods,Measures of Association"
 \end_layout
 
 \begin_layout Standard
-By using these new support measures and techniques they've developed to
- combine the mining of sets of numerical attributes with ordinal and categorical
- attributes, it is possible to form association rules.
+By using these new support measures and techniques they  have developed
+ to combine the mining of sets of numerical attributes with ordinal and
+ categorical attributes, it is possible to form association rules.
 \end_layout
 
 \begin_layout Standard
-In their case, they've applied it to meteorological data, which allowed
+In their case, they  have applied it to meteorological data, which allowed
  them to discover association rules such as (with 
 \begin_inset Formula $t_{1}$
 \end_inset
@@ -4647,7 +4647,7 @@ This does not require knowledge about a user's
 \emph on
 identity
 \emph default
-, it's only necessary to be able to distinguish among different users.
+, it is only necessary to be able to distinguish among different users.
  The term 
 \emph on
 user activity record
@@ -4698,8 +4698,8 @@ Sessionization is the process of segmenting the user activity record of
  the web site.
  We cannot rely on session identifiers because e.g.
  anonymous users may not have such a session identifier at all, and because
- it's not desirable to impose requirements on the web site for this functionalit
-y to work.
+ it is not desirable to impose requirements on the web site for this functionali
+ty to work.
 \end_layout
 
 \begin_layout Standard
@@ -4891,7 +4891,7 @@ n
  This file can then be used by the web site to automatically preload components
  that will likely be needed, and thus improve the overall perceived page
  loading performance.
- Of course, this could also be done manually, but then it's easy to become
+ Of course, this could also be done manually, but then it is easy to become
  outdated.
 \end_layout
 
@@ -6752,7 +6752,7 @@ reference "sub:stream-mining:frequent-item-mining:sticky-sampling"
 ) build upon it.
  It requires the size of the data set to be known in advance, which renders
  it useless for use with data streams.
- It's only listed here fore reference.
+ It is only listed here fore reference.
 \end_layout
 
 \begin_layout Standard
@@ -7393,7 +7393,7 @@ in practice
 \emph on
 in theory
 \emph default
-, it's worst-case space complexity is worse.
+, it is worst-case space complexity is worse.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -8794,7 +8794,7 @@ ion (they don't give a solution for non-power-law distributions).
 \end_layout
 
 \begin_layout Standard
-In their case of network flow traffic, they've empirically observed that
+In their case of network flow traffic, they  have empirically observed that
  it follows a Zipfian distribution.
  Providing the entire proof would lead us too far, thus consult 
 \begin_inset CommandInset citation
@@ -11191,7 +11191,7 @@ discriminant-description
  that best separate (discriminate) examples of different classes.
  Under skewed distributions (which is the case here: the target events are
  highly infrequent), separating the under-represented class is difficult.
- That's why they've opted for a 
+ That is why they  have opted for a 
 \emph on
 characteristic-description
 \emph default
@@ -12190,7 +12190,7 @@ OLAP — short for On-Line Analytical Processing — is an approach designed
 
 \begin_layout Standard
 Some of the terminology and capabilities of OLAP systems can be found in
- today's spreadsheet applications, so it's in fact very likely that you're
+ today's spreadsheet applications, so it is in fact very likely that you're
  already (unwittingly) familiar with OLAP principles! OLAP systems are designed
  to make interactive analysis of (multidimensional) data possible and typically
  provide extensive visualization and summarization capabilities.
@@ -13720,7 +13720,7 @@ Note that this is
 \emph on
 not
 \emph default
- a data cube: it's merely a multidimensional representation.
+ a data cube: it is merely a multidimensional representation.
  It has 3 dimensions and therefore it looks like and 
 \emph on
 is
@@ -21973,8 +21973,9 @@ name "sub:OLAP:data-cube:performance"
 
 \begin_layout Standard
 One key demand of OLAP applications is that queries be answered quickly.
- This is of course not a demand that is unique to OLAP: it's very rare that
- it's a requirement for a database or any other software to respond slowly.
+ This is of course not a demand that is unique to OLAP: it is very rare
+ that it is a requirement for a database or any other software to respond
+ slowly.
  But OLAP's requirements are fairly stringent.
 \begin_inset Newline newline
 \end_inset
@@ -21986,7 +21987,7 @@ Fortunately, the multidimensional data model of OLAP is structured enough
 \begin_layout Standard
 If there is one key property to OLAP or multidimensional data analysis,
  then it is the ability to simultaneously aggregate across many dimensions.
- As we've discussed before (see section 
+ As we have discussed before (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:OLAP:data-cube:operator"
@@ -22023,10 +22024,10 @@ key "Cubing Algorithms"
  programs.
  In terms of multidimensional data analysis, aggregates on some subsets
  of dimensions can be precomputed.
- However, it's impossible to precompute everything, and we may end up precomputi
-ng unneeded aggregates.
+ However, it is impossible to precompute everything, and we may end up precomput
+ing unneeded aggregates.
  And because of the hierarchical nature (i.e.
- one subset of dimensions may be a subset of another subset), it's possible
+ one subset of dimensions may be a subset of another subset), it is possible
  that the increase in required storage space may be unreasonable.
 \end_layout
 
@@ -22112,7 +22113,7 @@ name "sub:OLAP:data-cube:storage-explosion"
 
 \begin_layout Standard
 The more aggregates that are precomputed, the faster queries can be answered.
- However, it's difficult to say in advance how much space (storage) will
+ However, it is difficult to say in advance how much space (storage) will
  be required for a certain amount of precomputation.
  There are different methods (discussed in 
 \begin_inset CommandInset citation
@@ -22294,8 +22295,8 @@ Conclusion
 \end_layout
 
 \begin_layout Standard
-Clearly, there's much more to the cube operator than meets the eye: a straightfo
-rward implementation is likely unable to attain the desired performance;
+Clearly, there is much more to the cube operator than meets the eye: a straightf
+orward implementation is likely unable to attain the desired performance;
  optimizations on multiple levels are necessary.
  Precomputing parts seems an obvious optimization, but may require too much
  storage; estimating how much storage this will require is also not trivial.
@@ -22624,7 +22625,7 @@ overlay boxes
 \end_inset
 
  the number of dimensions.
- The explanations below are for the 2D case, because that's easier to explain
+ The explanations below are for the 2D case, because that is easier to explain
  and visualize, but the same techniques can be applied to arrays of any
  number of dimensions.
 \end_layout
@@ -23055,7 +23056,7 @@ To calculate
 \begin_inset Formula $RP[8,7]$
 \end_inset
 
- (since that's our target cell).
+ (since that is our target cell).
  The result is 
 \begin_inset Formula $179+40+14+23=256$
 \end_inset
@@ -23789,7 +23790,7 @@ Neither the Prefix Sum nor the Relative Prefix Sum methods carry optimizations
  to limit growth of the data cube.
  Instead, they assume that the size of each dimension is known a priori,
  or simply that size is not an issue.
- For some cases, it's more convenient (and space efficient) to grow the
+ For some cases, it is more convenient (and space efficient) to grow the
  size of the data cube dynamically, just enough to suit the size of the
  data.
  For example, the number of possible values of an attribute could be large,
