@@ -11099,6 +11099,22 @@ After searching for papers on contextual anomaly detection algorithms that
  by Vilalta/Ma and the Timeweaver algorithm.
 \end_layout
 
+\begin_layout Standard
+There is a strong reason for not examining point anomaly algorithms in more
+ detail: to be able to reduce a contextual anomaly algorithm to a point
+ anomaly algorithm, it is necessary to consider 
+\emph on
+each combination of contextual attributes
+\emph default
+ and then look at the behavior attributes for that contextual attribute.
+\begin_inset Newline newline
+\end_inset
+
+In the context of this thesis, the number of contextual attributes can grow
+ very large, which then makes reduction to point anomaly detection rather
+ inefficient.
+\end_layout
+
 \begin_layout Subsubsection
 Vilalta/Ma
 \begin_inset CommandInset label
