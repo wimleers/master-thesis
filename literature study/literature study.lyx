@@ -9734,6 +9734,18 @@ name "sec:anomaly-detection"
 
 \end_layout
 
+\begin_layout Standard
+This section is based on the comprehensive survey on anomaly detection by
+ Chandola, Banerjee and Kumar 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Anomaly Detection: A Survey"
+
+\end_inset
+
+.
+\end_layout
+
 \begin_layout Subsection
 What are Anomalies?
 \begin_inset CommandInset label
