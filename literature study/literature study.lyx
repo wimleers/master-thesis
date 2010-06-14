@@ -296,6 +296,13 @@ LatexCommand tableofcontents
 
 \begin_layout Section
 Introduction
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:introduction"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -320,6 +327,13 @@ TODO
 
 \begin_layout Section
 Motivation
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:motivation"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
@@ -23900,7 +23914,7 @@ An exact numerical example could be added here, based on the example in
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \noindent
@@ -23954,49 +23968,307 @@ name "fig:OLAP:data-cube:ddc-growth"
 
 \end_layout
 
-\begin_layout Subsection
-Text Cube
-\end_layout
-
 \begin_layout Standard
-TODO: 
-\begin_inset Flex URL
-status collapsed
+\begin_inset Newpage clearpage
+\end_inset
 
-\begin_layout Plain Layout
 
-https://dashlink.arc.nasa.gov/static/dashlink/media/topic/Text_Cube.pdf
 \end_layout
+
+\begin_layout Section
+Outlook
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:outlook"
 
 \end_inset
 
 
 \end_layout
 
-\begin_layout Subsection
-Data Cube over a Data Stream
-\end_layout
-
 \begin_layout Standard
-TODO: 
-\begin_inset Flex URL
-status collapsed
-
-\begin_layout Plain Layout
-
-http://portal.acm.org/citation.cfm?id=1504102
-\end_layout
+This thesis text is only partially completed: it is only part one.
+ In part two, there likely will need to be some additional literature study
+ to cover the missing gaps (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:outlook:further-literature-study"
 
 \end_inset
 
-, 
-\begin_inset Flex URL
-status collapsed
+).
+ However, for the most part it will consist of implementing what I've always
+ intended to build (see the motivation again, in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:motivation"
+
+\end_inset
+
+); a preliminary toolchain has already been devised (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:outlook:preliminary-toolchain"
+
+\end_inset
+
+).
+ For all of this, a planning has been created (see 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:outlook:planning"
+
+\end_inset
+
+).
+\end_layout
+
+\begin_layout Subsection
+Further Literature Study
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:outlook:further-literature-study"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Itemize
+The presented contextual anomaly detection algorithms are in fact 
+\emph on
+prediction
+\emph default
+ algorithms: I've been unable to find actual 
+\emph on
+detection
+\emph default
+ algorithms so far.
+ Surely, there must be some, and they need to be evaluated.
+\end_layout
+
+\begin_layout Itemize
+The data cube has been covered extensively in this literature study.
+ However, most of it assumes 
+\emph on
+static
+\emph default
+ 
+\emph on
+data sets
+\emph default
+ (i.e.
+ only updated in batches at an infrequent pace), while it is likely that
+ also for OLAP, explicit support and optimizations for 
+\emph on
+data
+\emph default
+ 
+\emph on
+streams
+\emph default
+ will be necessary.
+ A starting point can be found in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "data mining concepts techniques"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsection
+Preliminary Toolchain
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:outlook:preliminary-toolchain"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Currently, I plan to 
+\emph on
+not
+\emph default
+ implement this thesis using Google AppEngine as Steve Souders suggested
+ (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:motivation"
+
+\end_inset
+
+), but to use C++/Qt because it allows for far more efficient resource usage,
+ is not reliant on a specific cloud computing platform (which is what Google
+ AppEngine is) and because Google AppEngine might take too much time to
+ get up to speed with.
+ Thus, I will write a desktop application and not a web application.
+ This implies that the Episodes log file will somehow have to be sent from
+ the web server to the desktop application.
+ This can be achieved through a very simple web application.
+\end_layout
+
+\begin_layout Standard
+This desktop application will in fact contain an embedded web browser which
+ will contain the actual UI (i.e.
+ one cannot visit any websites using it, it's merely used for its XHTML/CSS/JS/S
+VG capabilities).
+ By building the actual UI using web technology, this makes the application
+ easier to port to a web application in the future.
+\end_layout
+
+\begin_layout Standard
+Note that this is 
+\emph on
+preliminary
+\emph default
+ and my view on this may still change.
+\end_layout
+
+\begin_layout Itemize
+Calculations: C++/Qt.
+\end_layout
+
+\begin_layout Itemize
+UI: QtWebKit to embed a browser in the C++/Qt application, XHTML/CSS/JS/Raphael
+ for the actual UI (Raphael is a JavaScript library to create vector graphics
+ in general and charts in specific).
+ 
+\end_layout
+
+\begin_layout Itemize
+Episodes log file passthrough web application: PHP.
+\end_layout
+
+\begin_layout Subsection
+Planning
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:outlook:planning"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The planning is on a per-month basis, with goals to be completed by the
+ end of each month:
+\end_layout
+
+\begin_layout Standard
+\noindent
+\align center
+\begin_inset Tabular
+<lyxtabular version="3" rows="5" columns="2">
+<features>
+<column alignment="center" valignment="top" width="0">
+<column alignment="center" valignment="top" width="0">
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
 
 \begin_layout Plain Layout
-
-http://portal.acm.org/citation.cfm?id=1646304&dl=ACM
+Month
 \end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+Goals
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+September 2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+further literature study + episodes log mining
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+October 2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+data stream mining
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+November 2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+OLAP + initial UI
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+December 2010
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" topline="true" bottomline="true" leftline="true" rightline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+finish UI + anomaly detection
+\end_layout
+
+\end_inset
+</cell>
+</row>
+</lyxtabular>
 
 \end_inset
 
