@@ -203,16 +203,72 @@ Preface
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
+This thesis has grown from a custom proposal that I wrote, which continues
+ where I left off with my bachelor thesis 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Improving Drupal's page loading performance"
 
 \end_inset
 
+.
+ My personal goal is to build a useful contribution to the upcoming field
+ of 
+\emph on
+Web Performance Optimization
+\emph default
+, to hopefully help the field move forward, towards a faster and more pleasant
+ Internet experience.
+\end_layout
 
+\begin_layout Standard
+I thank Steve Souders, evangelist (and coiner of the term 
+\emph on
+Web Performance Optimization
+\emph default
+, or 
+\emph on
+WPO
+\emph default
+ for short) for giving feedback on my initial suggestions on doing a meaningful
+ master thesis in the WPO field.
+ There likely is nobody in a better position to judge this than him.
+\begin_inset Newline newline
+\end_inset
+
+It is my hope that chosing an idea that has his approval, maximizes the
+ chance of it being a useful contribution to the field and it making a differenc
+e in real-world situations.
+\end_layout
+
+\begin_layout Standard
+My deepest gratitude goes to my promotor, Prof.
+ dr.
+ Jan Van den Bussche, for making time in his already overfull schedule for
+ guiding me through the various steps of this master thesis.
+ Our rare—yet intense—meetings have often triggered disbelief and raised
+ eyebrows at his memorable thoroughness and insight.
+ They brought interesting trivia and made my view on computer science broader.
+ The end of office hours did not imply that it was time to stop a meeting.
+ Even late at night in the weekend, I would get an e-mail explaining his
+ interpretation on an algorithm.
+ If I had to give one word to describe him, it would be 
+\emph on
+dedication
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+Special thanks also go to Prof.
+ dr.
+ Benjamin Schrauwen, whom pointed me in the right direction when I was looking
+ into anomaly detection literature.
+\end_layout
+
+\begin_layout Standard
+Finally, I would like to thank my parents Etienne & Noëlla and my brother
+ Tim, whose support has been invaluable.
 \end_layout
 
 \begin_layout Standard
