@@ -2524,24 +2524,26 @@ slow
 \end_inset
 
  episode constantly changes, as new episodes are being added.
- This is addressed in section 
+ This can be worked around by using 
+\emph on
+data stream mining
+\emph default
+, as opposed to 
+\begin_inset Quotes eld
+\end_inset
+
+regular
+\begin_inset Quotes erd
+\end_inset
+
+ data mining (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:episodes-log-mining:detection:time"
+reference "sec:stream-mining"
 
 \end_inset
 
-.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO FIX THIS LINK
-\end_layout
-
-\end_inset
-
-
+).
 \end_layout
 
 \begin_layout Subsubsection
@@ -5074,24 +5076,14 @@ reference "sub:episodes-log-mining:intro:web-usage-mining-vs-episodes-log-mining
 \end_inset
 
  percent may gradually change as the log file is updated with new log entries.
- This too, is addressed in section 
+ This too, is by data stream mining (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sub:episodes-log-mining:detection:time"
+reference "sec:stream-mining"
 
 \end_inset
 
-.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO FIX THIS LINK
-\end_layout
-
-\end_inset
-
-
+).
 \end_layout
 
 \begin_layout Subsubsection*
