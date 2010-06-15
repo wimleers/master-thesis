@@ -887,6 +887,10 @@ key "Google page speed ranking"
 \end_layout
 
 \begin_layout Standard
+\begin_inset Note Comment
+status collapsed
+
+\begin_layout Plain Layout
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -902,9 +906,19 @@ name "sec:process"
 \end_inset
 
 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO: uncomment this in part 2.
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
 Below, there is a schema that shows what happens during the various stages
  of the web performance optimization analytics process, along with references
  to the sections in which each stage is described in more detail.
@@ -920,14 +934,14 @@ Needs to be updated to incorporate data stream mining & anomaly detection.
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset space ~
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \noindent
 \begin_inset Tabular
 <lyxtabular version="3" rows="25" columns="4">
@@ -1974,14 +1988,14 @@ to be implemented
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 \begin_inset space ~
 \end_inset
 
 
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 The first two stages are already been implemented by the Episodes library
  itself.
  In 
@@ -2002,11 +2016,13 @@ key "Drupal Episodes module"
  trivial.
 \end_layout
 
-\begin_layout Standard
+\begin_layout Plain Layout
 All later stages are covered by this master thesis.
 \end_layout
 
-\begin_layout Standard
+\end_inset
+
+
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -2033,14 +2049,7 @@ For
 \emph on
 Episodes log mining
 \emph default
-, (see section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:episodes-log-mining"
-
-\end_inset
-
-), I have used 
+, (see the next section), I have used 
 \emph on
 web usage mining
 \emph default
