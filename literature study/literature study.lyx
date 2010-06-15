@@ -24233,6 +24233,157 @@ name "fig:OLAP:data-cube:ddc-growth"
 \end_layout
 
 \begin_layout Section
+Conclusion
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:conclusion"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The user begins by integrating Episodes with his web site, which will log
+ the measured results to an Episodes log file.
+ This log file by itself is a good set of data that can be interpreted,
+ but it would be too time-intensive to manually analyze it.
+ Hence the mining of meaningful associations between the context of a page
+ view and a slow episode needs to be automated.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+Episodes log mining
+\series default
+ (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:episodes-log-mining"
+
+\end_inset
+
+), which is a specialization of web usage mining, has been studied from
+ a high-level perspective: more detail would have added many implementation
+ details, and the implementation belongs in part two of this thesis.
+ Therefore, the necessary details will be added in part two of this thesis.
+\end_layout
+
+\begin_layout Standard
+Also, because web usage mining is only designed to work with static data
+ sets (that are updated in batches), regular data mining techniques were
+ not sufficient for the purpose of this thesis, in which the goal is to
+ detect problems instantaneously: we need mining of data 
+\emph on
+streams
+\emph default
+, i.e.
+ data sets to which data is being appended continuously.
+\end_layout
+
+\begin_layout Standard
+Hence 
+\series bold
+data stream mining
+\series default
+ (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:stream-mining"
+
+\end_inset
+
+) is the next subject that has been studied.
+ We've looked at a large set of frequent item mining algorithms and two
+ frequent item
+\emph on
+set
+\emph default
+ mining algorithms, one of which builds upon a frequent item algorithm and
+ the other of which builds upon a famous frequent itemset mining algorithm
+ for static data sets, FP-growth.
+\end_layout
+
+\begin_layout Standard
+However, frequent pattern mining algorithms can only find problems that
+ persist over a certain period over time, that gradually grow and fade.
+ We also need to be able to detect brief problems, e.g.
+ caused by traffic spikes.
+ That is, we also want to detect 
+\emph on
+infrequent issues
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+For this, we look into 
+\series bold
+anomaly detection
+\series default
+ (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:anomaly-detection"
+
+\end_inset
+
+) in general and 
+\emph on
+contextual anomaly detection
+\emph default
+ in particular.
+ We've discussed two contextual anomaly detection algorithms.
+\end_layout
+
+\begin_layout Standard
+Finally, automatically detecting problems and presenting them to the user
+ is excellent, but the user may also want to inspect all data himself.
+ He may for example want to look at charts of average page loading time
+ in Belgium and those in the United States.
+ Or maybe compare this month's performance with that of a year ago in Internet
+ Explorer, because optimizations have been made particularly for that browser.
+ In other words: the user may want to inspect the data from multiple contexts,
+ with each context limiting one or more contextual, categorical attributes
+ (e.g.
+ browser, location, operating system …) to one or more values.
+\end_layout
+
+\begin_layout Standard
+That can be achieved with 
+\series bold
+OLAP
+\series default
+ (section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:OLAP"
+
+\end_inset
+
+), which is designed to be able to quickly answer queries about multidimensional
+ data.
+ We've explained the 
+\emph on
+data cube 
+\emph default
+in-depth and discussed several algorithms that help improve its query performanc
+e.
+\end_layout
+
+\begin_layout Standard
+How to continue from here is explained in the outlook (next section).
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Outlook
 \begin_inset CommandInset label
 LatexCommand label
@@ -24244,7 +24395,7 @@ name "sec:outlook"
 \end_layout
 
 \begin_layout Standard
-This thesis text is only partially completed: it is only part one.
+This thesis text has only partially been completed: it is only part one.
  In part two, there likely will need to be some additional literature study
  to cover the missing gaps (see 
 \begin_inset CommandInset ref
