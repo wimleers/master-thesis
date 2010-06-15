@@ -306,37 +306,6 @@ name "sec:introduction"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Newpage clearpage
-\end_inset
-
-
-\end_layout
-
-\begin_layout Section
-Motivation
-\begin_inset CommandInset label
-LatexCommand label
-name "sec:motivation"
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 My bachelor thesis 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -772,8 +741,8 @@ Proposals
 \end_layout
 
 \begin_layout Standard
-Recent proposals (in the last three months at the time of writing) for web
- performance optimization include:
+Recent proposals (in the last three months of 2009 alone) for web performance
+ optimization include:
 \end_layout
 
 \begin_layout Itemize
@@ -840,9 +809,9 @@ years
 \end_layout
 
 \begin_layout Standard
-Both would strongly affect browser implementations, which indicates the
- willingness and likeliness to change the way data is transferred over the
- internet to make web sites load faster.
+All of these would strongly affect browser implementations, which indicates
+ the willingness and likeliness to change the way data is transferred over
+ the internet to make web sites load faster.
 \end_layout
 
 \begin_layout Subsection*
@@ -884,6 +853,31 @@ key "Google page speed ranking"
  This effectively means that all companies whom have been paying for SEO
  (search engine optimization) will also have to consider web performance
  optimization.
+\end_layout
+
+\begin_layout Subsection
+Conclusion
+\end_layout
+
+\begin_layout Standard
+Given the aforementioned context, it is clear that the importance of web
+ performance optimization is only growing.
+ And as it grows, the need for tools that can assist developers in making
+ the right decisions of course also grows.
+ Because new performance issues may occur at any point of time, there is
+ a need for continuous profiling.
+\end_layout
+
+\begin_layout Standard
+That's why it is my goal to build a tool that can be used for continuous
+ profiling that, if well-written, can become a very useful tool in the day-to-da
+y life of the web developer, to help keep the web developer's live web sites
+ loading fast.
+ It 
+\emph on
+could
+\emph default
+ make a real difference, and that is what I'm aiming for.
 \end_layout
 
 \begin_layout Standard
@@ -24406,10 +24400,10 @@ reference "sub:outlook:further-literature-study"
 
 ).
  However, for the most part it will consist of implementing what I've always
- intended to build (see the motivation again, in section 
+ intended to build (see the introduction again, in section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:motivation"
+reference "sec:introduction"
 
 \end_inset
 
@@ -24506,7 +24500,7 @@ not
  (see section 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:motivation"
+reference "sec:introduction"
 
 \end_inset
 
