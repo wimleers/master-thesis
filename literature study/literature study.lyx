@@ -2089,6 +2089,68 @@ TODO: uncomment this in part 2.
 \end_layout
 
 \begin_layout Subsubsection*
+Data Stream Mining
+\end_layout
+
+\begin_layout Standard
+The main task of this thesis consists of mining patterns in the Episodes
+ log file.
+ However, this Episodes log file is continuously being updated: new log
+ entries are appended as pages are being viewed on the web site.
+ So we are in fact not dealing with a static data set that occasionally
+ receives a batch of new log entries: we are dealing with a 
+\emph on
+data stream
+\emph default
+! Therefore, data stream mining is precisely what is needed; more specifically:
+ 
+\emph on
+frequent pattern stream mining
+\emph default
+, because from there it is a simple step to association rules, which are
+ exactly what we need.
+ This is discussed in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:stream-mining"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
+Anomaly Detection
+\end_layout
+
+\begin_layout Standard
+Data stream mining can only find frequently occuring patterns, because that
+ is exactly what frequent pattern mining is about.
+ However, we also want to be able to detect occasional spikes instead of
+ just the persistent problems.
+ For example, spikes may occur only on the first day of the month (because
+ people can enter the monthly contest on that day), which the web server
+ may not be able to cope with properly.
+ Detecting these 
+\emph on
+infrequent problems
+\emph default
+ is exactly what 
+\emph on
+anomaly detection
+\emph default
+ is for.
+ Anomaly detection is discussed in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:anomaly-detection"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Subsubsection*
 OLAP
 \end_layout
 
@@ -24301,8 +24363,8 @@ reference "sec:motivation"
 \begin_layout Standard
 This desktop application will in fact contain an embedded web browser which
  will contain the actual UI (i.e.
- one cannot visit any websites using it, it's merely used for its XHTML/CSS/JS/S
-VG capabilities).
+ one cannot visit any web sites using it, it's merely used for its XHTML/CSS/JS/
+SVG capabilities).
  By building the actual UI using web technology, this makes the application
  easier to port to a web application in the future.
 \end_layout
