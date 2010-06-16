@@ -291,7 +291,7 @@ Preface
 \begin_layout Standard
 This thesis has grown from a custom proposal that I wrote, which continues
  where I left off with my bachelor thesis.
- My personal goal is to build a useful contribution to the upcoming field
+ My personal goal is to create a useful contribution to the upcoming field
  of 
 \emph on
 Web Performance Optimization
@@ -301,7 +301,7 @@ Web Performance Optimization
 \end_layout
 
 \begin_layout Standard
-I thank Steve Souders, evangelist (and coiner of the term 
+I thank Steve Souders—evangelist and coiner of the term 
 \emph on
 Web Performance Optimization
 \emph default
@@ -309,7 +309,7 @@ Web Performance Optimization
 \emph on
 WPO
 \emph default
- for short) for giving feedback on my initial suggestions on doing a meaningful
+ for short—for giving feedback on my initial suggestions on doing a meaningful
  master thesis in the WPO field.
  There likely is nobody in a better position to judge this than him.
 \begin_inset Newline newline
@@ -325,9 +325,10 @@ My deepest gratitude goes to my promotor, Prof.
  dr.
  Jan Van den Bussche, for making time in his already overfull schedule for
  guiding me through the various steps of this master thesis.
- Our rare—yet intense—meetings have often triggered disbelief and raised
+ Our rare—yet intense—meetings have often triggered my disbelief and raised
  eyebrows at his memorable thoroughness and insight.
- They brought interesting trivia and made my view on computer science broader.
+ They brought interesting facts & trivia, and made my view on computer science
+ broader.
  The end of office hours did not imply that it was time to stop a meeting.
  Even late at night in the weekend, I would get an e-mail explaining his
  interpretation on an algorithm.
@@ -336,6 +337,7 @@ My deepest gratitude goes to my promotor, Prof.
 dedication
 \emph default
 .
+ I'm very grateful for his indispensable help.
 \end_layout
 
 \begin_layout Standard
@@ -343,6 +345,11 @@ Special thanks also go to Prof.
  dr.
  Benjamin Schrauwen, whom pointed me in the right direction when I was looking
  into anomaly detection literature.
+ He saved me 
+\emph on
+a lot
+\emph default
+ of time.
 \end_layout
 
 \begin_layout Standard
