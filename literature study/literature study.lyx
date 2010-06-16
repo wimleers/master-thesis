@@ -24572,6 +24572,62 @@ key "data mining concepts techniques"
 \end_layout
 
 \begin_layout Subsection
+Implementation
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:outlook:implementation"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+What the implementation will exactly entail has already been indicated in
+ the introduction (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:introduction"
+
+\end_inset
+
+), in which the goals for this thesis have also been stated.
+ The details of the implementation will still have to be worked out in part
+ 2 of this thesis.
+ However, it has not yet been explained 
+\emph on
+how
+\emph default
+ anything should be implemented, i.e.
+ using which algorithms.
+ That too, should be done in the second part of this thesis.
+ Of course, it was impossible to write about the 
+\begin_inset Quotes eld
+\end_inset
+
+how
+\begin_inset Quotes erd
+\end_inset
+
+ part when the literature study was not yet written, and it is possible
+ that the 
+\begin_inset Quotes eld
+\end_inset
+
+what
+\begin_inset Quotes erd
+\end_inset
+
+ part may change due to low feasibility of some of the desirable features.
+\end_layout
+
+\begin_layout Standard
+In other words: the specification and design of the implementation have
+ not yet been defined, but will be in the second part of this thesis.
+ They will of course be based on the results found in the literature study.
+\end_layout
+
+\begin_layout Subsection
 Preliminary Toolchain
 \begin_inset CommandInset label
 LatexCommand label
