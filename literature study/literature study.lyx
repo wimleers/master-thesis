@@ -179,7 +179,7 @@ Abstract
 \end_layout
 
 \begin_layout Standard
-The goal of this master piece is to make a useful contribution to the upcoming
+The goal of this master thesis is to make a useful contribution to the upcoming
  
 \emph on
 Web Performance Optimization
@@ -191,17 +191,22 @@ WPO
  for short.
  The importance of WPO is only growing, and as it grows, the need for tools
  that can assist developers in making the right decisions also grows.
- Thus that is the goal of this thesis: to build a tool that can be used
- for continuous profiling that.
+ Hence that is the goal of this thesis: to build a tool that can be used
+ for the continuous profiling of a web site's performance.
 \end_layout
 
 \begin_layout Standard
-The developer begins by integrating Episodes with the web site, which will
- log the measured results to an Episodes log file.
+The developer begins by integrating 
+\emph on
+Episodes
+\emph default
+ (a tool for measuring how long the various episodes of the page loading
+ process take) with the web site, which will log the measured results to
+ an Episodes log file.
  This log file by itself is a good set of data that can be interpreted,
  but it would be too time-intensive to manually analyze it.
- Hence we want to automate this analysis.
- This is why the thesis is titled 
+ Hence we want to automate this analysis, and this is why the thesis is
+ titled 
 \begin_inset Quotes eld
 \end_inset
 
@@ -220,10 +225,14 @@ Episodes log mining
 \emph default
 ,
 \series default
- which is a specialization of web usage mining However, web usage mining
- is only designed to work with static data sets (that are updated in batches),
- while an Episodes log file is updated continuously: it can be considered
- a 
+ which is a specialization of 
+\emph on
+web usage mining
+\emph default
+.
+ However, web usage mining is only designed to work with static data sets
+ (that are updated in batches), while an Episodes log file is updated continuous
+ly: it should be considered a 
 \emph on
 data stream
 \emph default
@@ -238,10 +247,10 @@ set
 \emph default
  mining algorithms have been looked into.
  However, frequent pattern mining algorithms can only find problems that
- persist over a certain period over time, that gradually grow and fade.
- We also need to be able to detect brief problems, e.g.
- caused by traffic spikes.
- That is, we also want to detect 
+ persist over relatively long periods over time.
+ We also want to detect brief problems, that are typically caused by traffic
+ spikes; i.e.
+ 
 \emph on
 infrequent issues
 \emph default
@@ -255,17 +264,17 @@ anomaly detection
 
 \begin_layout Standard
 Finally, automatically detecting problems and presenting them to the user
- is excellent, but the user may also want to inspect all measurements himself.
+ is great, but the user may also want to inspect all measurements himself.
  That can be achieved with 
 \emph on
 OLAP
 \emph default
- and more specifically the 
+ techniques and more specifically the 
 \emph on
 data cube
 \emph default
-, which is designed to be able to quickly answer queries about multidimensional
- data.
+, which is a data structure designed to be able to quickly answer queries
+ about multidimensional data.
 \end_layout
 
 \begin_layout Standard
