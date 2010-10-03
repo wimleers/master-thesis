@@ -970,7 +970,7 @@ could
 
 \begin_layout Standard
 \begin_inset Note Comment
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Newpage clearpage
@@ -2152,14 +2152,10 @@ applied
 \end_inset
 
  to qualify as a true member of this literature study.
- Hence it was decided to postpone the full details to part two of this thesis.
+ 
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
 This led to concluding that numerical data mining was not going to be part
  of this thesis, and that normal categorical association rule mining would
  not suffice; hierarchically categorical association rule mining was necessary,
@@ -2169,21 +2165,6 @@ This led to concluding that numerical data mining was not going to be part
 generalized association rule mining
 \emph default
 ).
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: uncomment this in part 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection*
@@ -2315,6 +2296,40 @@ name "sec:episodes-log-mining"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Quotation
+For 
+\emph on
+Episodes log mining
+\emph default
+, I have used 
+\emph on
+web usage mining
+\emph default
+ as a basis.
+ However, it was clear that this would be too 
+\begin_inset Quotes eld
+\end_inset
+
+applied
+\begin_inset Quotes erd
+\end_inset
+
+ to qualify as a true member of this literature study.
+ 
+\end_layout
+
+\begin_layout Quotation
+This led to concluding that numerical data mining was not going to be part
+ of this thesis, and that normal categorical association rule mining would
+ not suffice; hierarchically categorical association rule mining was necessary,
+ for which concept hierarchies would need to be used (this is also called
+ 
+\emph on
+generalized association rule mining
+\emph default
+).
 \end_layout
 
 \begin_layout Subsection
@@ -2482,10 +2497,6 @@ While that is interesting in itself and
 can
 \emph default
  be useful for suggesting advanced page loading performance improvements
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
  (e.g.
  preloading images of next pages in typical navigation paths, see section
  
@@ -2495,22 +2506,7 @@ reference "sub:episodes-log-mining:detection-advanced:preloading-typical-navigat
 
 \end_inset
 
-)
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: uncomment this in part 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-, it doesn't provide enough information to be able to perform page loading
+), it doesn't provide enough information to be able to perform page loading
  performance analysis.
 \end_layout
 
@@ -2783,11 +2779,7 @@ Episodes log mining:
 g consists of mapping the IP address of each log entry to a location and
  an ISP (if possible), extracting the various episodes from the specially
  formatted URL, normalizing the user agent string, and so on.
-\begin_inset Note Comment
-status open
-
-\begin_layout Itemize
-See section 
+ See section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:episodes-log-mining:attributes:pre-processing"
@@ -2795,21 +2787,6 @@ reference "sub:episodes-log-mining:attributes:pre-processing"
 \end_inset
 
  for more details.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: uncomment this in part 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \begin_inset Newline newline
 \end_inset
 
@@ -2988,15 +2965,6 @@ DrupalBehaviors:47,frontend:8015" 200 "http:// driverpacks.net/applications"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-start here
-\end_layout
-
-\end_inset
-
 Each such log entry (of which there is one for each pageview!) can be transforme
 d into a long list of categorical attributes: IP address, location (by mapping
  the IP address to a location), date, episode names, browser, operating
@@ -3005,55 +2973,6 @@ d into a long list of categorical attributes: IP address, location (by mapping
 \end_layout
 
 \begin_layout Standard
-Episodes log mining in general and these attributes in specific of course
- need more explaining, but it cannot be considered literature study, since
- it only requires a very 
-\begin_inset Quotes eld
-\end_inset
-
-applied
-\begin_inset Quotes erd
-\end_inset
-
- text to be meaningful.
- General web usage mining is irrelevant to this thesis, since that is mostly
- about finding patterns in visitors' activities, which is something we don't
- care about from a web performance optimization perspective.
-\begin_inset Newline newline
-\end_inset
-
-Therefore, these additional explanations will be added in part two of this
- thesis.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: remove this in part 2, as the commented part below is uncommented.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: uncomment this in part 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
 In this section, a more in-depth look is given at the various attributes
  in an Episodes log file, what they mean, how they should be generated from
  the fields in each log entry and how they should be used to provide meaningful
@@ -3071,7 +2990,7 @@ name "sub:episodes-log-mining:attributes:fields-explained"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 A complete list of the 
 \begin_inset Quotes eld
 \end_inset
@@ -3606,7 +3525,7 @@ Host (i.e.
 .
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 For the sake of completeness, this is what the Episodes log format looks
  like when configuring Apache (consult 
 \begin_inset CommandInset citation
@@ -3618,7 +3537,7 @@ key "Apache log files"
  for detailed explanations about the syntax):
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset listings
 lstparams "basicstyle={\ttfamily},breaklines=true"
 inline false
@@ -3661,13 +3580,13 @@ name "sub:episodes-log-mining:attributes:pre-processing"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 A single field in each Episodes log entry contains numerical attributes:
  the query string field.
  It contains all episode durations, which are of course numerical attributes.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Many categorical attributes can be extracted from the other fields of an
  Episodes log entry, preferably in a hierarchical manner because that would
  allow for more easily human-interpretable results.
@@ -3692,7 +3611,7 @@ reference "sub:episodes-log-mining:attributes:concept-hierarchies"
 , it is explained how this can be implemented.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Here is an overview of how each usable field in the Episode slog file should
  be mapped to a (hierarchical) categorical attribute:
 \end_layout
@@ -4170,7 +4089,7 @@ name "sub:episodes-log-mining:attributes:concept-hierarchies"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 In section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -4183,7 +4102,7 @@ reference "sub:episodes-log-mining:attributes:pre-processing"
 le results for us humans.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 However, hierarchical categorical attributes require the use of 
 \emph on
 concept hierarchies
@@ -4223,7 +4142,7 @@ is-a
  is a kind of home electronics equipment.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 A concept hierarchy can be represented through a directed acyclic graph.
  For the example in the above definition, that would look like figure 
 \begin_inset CommandInset ref
@@ -4235,7 +4154,7 @@ reference "fig:mining:concept-hierarchy"
 .
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -4289,7 +4208,7 @@ name "fig:mining:concept-hierarchy"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 For more details, consult 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -4320,7 +4239,7 @@ mining with concept hierarchies
 New Possibilities by Using Concept Hierarchies
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 When one uses concept hierarchies in association rule mining, some new possibili
 ties open up 
 \begin_inset CommandInset citation
@@ -4401,7 +4320,7 @@ Similarly, association rules involving items at the lower levels of a concept
 Implementation Notes
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Standard association rule mining can be adapted to incorporate concept hierarchi
 es fairly easily.
  Each transaction 
@@ -4438,14 +4357,14 @@ Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.5
  Service Pack 1, Windows x86, Windows.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 An important implication that may not be immeiately obvious, is that the
  summing of support counts at a of the child concepts at a lower level for
  the parent concept at a higher level does not need to be performed explicitly.
  This happens automatically thanks to the extending of transactions!
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Thanks to this approach, existing association rule mining algorithms such
  as 
 \emph on
@@ -4529,7 +4448,7 @@ Because all transactions are increased in size (i.e.
 Applied to Sample Web Performance Issues
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 If we now apply this more detailed information to the three sample web performan
 ce issues mentioned before, then we can gain more insight in how this can
  be detected:
@@ -4638,7 +4557,7 @@ Internet Explorer 6 or 7
 \end_layout
 
 \end_deeper
-\begin_layout Plain Layout
+\begin_layout Standard
 Overall, we can see that we need to detect associations between a single
  numerical attribute—relatively high durations of an episode, i.e.
  relative to all durations of this episode—and one or more of the categorical
@@ -4646,7 +4565,7 @@ Overall, we can see that we need to detect associations between a single
  browser, browser version and user agent.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -4664,7 +4583,7 @@ name "sub:episodes-log-mining:detection"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 The goal of this thesis is to automate the detection ofweb performance issues.
  This can be achieved through 
 \emph on
@@ -4688,7 +4607,7 @@ name "sub:episodes-log-mining:detection:numerical-mining"
 Discretization: Information Loss
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 A traditional data mining approach would be to use the classical association
  rule framework 
 \begin_inset CommandInset citation
@@ -4711,7 +4630,7 @@ key "Mining quantitative association rules in large relational tables"
 ).
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 However, discretization has several serious disadvantages:
 \end_layout
 
@@ -4758,7 +4677,7 @@ it is possible that rules will not be accepted because they don't meet the
 \end_layout
 
 \end_deeper
-\begin_layout Plain Layout
+\begin_layout Standard
 Clearly, it is desirable to not apply discretization to the collected Episodes
  durations, to avoid information loss and the consequential problems.
 \end_layout
@@ -4767,7 +4686,7 @@ Clearly, it is desirable to not apply discretization to the collected Episodes
 Rank-Correlated Sets of Numerical Attributes
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 In 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -4788,7 +4707,7 @@ key "Rank Correlation Methods,Measures of Association"
  of rank correlation measures.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 They propose to compare attributes by the rank of their values, through
  three new support measures for sets of numerical attributes:
 \end_layout
@@ -4833,13 +4752,13 @@ key "Rank Correlation Methods,Measures of Association"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 By using these new support measures and techniques they  have developed
  to combine the mining of sets of numerical attributes with ordinal and
  categorical attributes, it is possible to form association rules.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 In their case, they  have applied it to meteorological data, which allowed
  them to discover association rules such as (with 
 \begin_inset Formula $t_{1}$
@@ -4892,7 +4811,7 @@ If
 Applicability
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 At first, it appeared that this technique could prove useful to find more
  accurate association rules for the numerical attributes in Episodes log
  mining.
@@ -4912,7 +4831,7 @@ reference "sub:episodes-log-mining:attributes:pre-processing"
  browser, hardware, CPU load, etc.).
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 It is clear that these association rules would be absolutely useless.
  Therefore it was decided to stop looking into numerical data mining.
 \end_layout
@@ -4928,7 +4847,7 @@ name "sub:episodes-log-mining:detection:categorical-mining"
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 It has been explained why numerical data mining has been ruled out.
  All other attributes (see section 
 \begin_inset CommandInset ref
@@ -4949,7 +4868,7 @@ reference "sub:episodes-log-mining:attributes:concept-hierarchies"
 .
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 
 \emph on
 What we want, is to associate one or more of the hierarchical categories
@@ -4980,13 +4899,13 @@ fast
  or any other possible user-defined speed) of each episode.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 To achieve this, it is necessary to first classify each episode's duration
  as its corresponding speed.
  This effectively is a form of discretization.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 After this has happened, all we are left with are categorical attributes,
  some of which are hierarchical.
  We can then apply well-known association rule mining algorithms such as
@@ -5015,7 +4934,7 @@ key "Intro to Data Mining,Mining Generalized Association Rules"
 ).
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Through this process, we estimate to achieve usable web performance issues
  detection.
  More refinement is only possible after an implementation has been completed,
@@ -5023,7 +4942,7 @@ Through this process, we estimate to achieve usable web performance issues
  after we can actually look at the results of this suggested process.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -5056,12 +4975,12 @@ name "sub:episodes-log-mining:detection-advanced:preloading-typical-navigation-p
 Step 1: User Identification
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 User identification is necessary: one can only discover which paths are
  typical if one can identify the navigation history of a single user.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 This does not require knowledge about a user's 
 \emph on
 identity
@@ -5094,7 +5013,7 @@ key "Web Data Mining"
 Step 2: Sessionization
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Suppose a page 
 \family typewriter
 A
@@ -5111,7 +5030,7 @@ B
  as well.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Sessionization is the process of segmenting the user activity record of
  each user into sessions, where each session represents a single visit to
  the web site.
@@ -5121,7 +5040,7 @@ Sessionization is the process of segmenting the user activity record of
 ty to work.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Denote the 
 \begin_inset Quotes eld
 \end_inset
@@ -5159,7 +5078,7 @@ real
  This is likely impossible to achieve in all cases.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 In general, there are two types of sessionization heuristics 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -5186,7 +5105,7 @@ Structure-oriented heuristics derive sessions from comparing the data of
 Step 3: Path Completion
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Pages in the navigation path may be cached in the end user's browser (or
  in an intermediate proxy server) and therefore their browser may not make
  any request at all to the web server, and thus some page views may not
@@ -5200,7 +5119,7 @@ key "Web Data Mining"
 .
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 This is true for typical web usage mining, but 
 \emph on
 not
@@ -5218,7 +5137,7 @@ not
 Calculating the Typical Navigation Paths
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 This is hardly rocket statistics: from all navigation paths, the top 
 \begin_inset Formula $x$
 \end_inset
@@ -5230,7 +5149,7 @@ typical
  navigation paths.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 More advanced techniques, such as cluster analysis, probabilistic latent
  semantic analysis, association rule mining, collaborative filtering and
  so on could also be applied, but seem overkill given that the above simple
@@ -5246,7 +5165,7 @@ key "Web Data Mining"
 , pages 466—482 for details about these (and other) more advanced techniques.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 Note that here, like for the definition of 
 \begin_inset Quotes eld
 \end_inset
@@ -5281,7 +5200,7 @@ reference "sec:stream-mining"
 Using the Found Typical Navigation Paths for Component Preloading
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 When typical navigation paths have been found, they can be exported in a
  simple format, e.g.
  
@@ -5314,7 +5233,7 @@ n
  outdated.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 There are several methods a web site can use to decide which components
  should be preloaded (i.e.
  which components are new in comparison with the previous page in the path:
@@ -5423,11 +5342,6 @@ main page
  has already been loaded).
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
 \begin_layout Standard
 \begin_inset Newpage clearpage
 \end_inset
@@ -5446,6 +5360,31 @@ name "sec:stream-mining"
 
 \end_layout
 
+\begin_layout Quotation
+The main task of this thesis consists of mining patterns in the Episodes
+ log file.
+ However, this Episodes log file is continuously being updated: new log
+ entries are appended as pages are being viewed on the web site.
+ So we are in fact not dealing with a static data set that occasionally
+ receives a batch of new log entries: we are dealing with a 
+\emph on
+data stream
+\emph default
+! Therefore, data stream mining is precisely what is needed; more specifically:
+ 
+\emph on
+frequent pattern stream mining
+\emph default
+, because from there it is a simple step to association rules, which are
+ exactly what we need.
+ (Association rules are deduced automatically from a data set and define
+ the associations that apparently occur in the data set.
+ E.g.
+ people buying bread in the super market also buy wine.
+ Or, applied to this context: pages that include a specific JavaScript file,
+ are slow in a specific browser.)
+\end_layout
+
 \begin_layout Standard
 This section is based mostly on 
 \begin_inset CommandInset citation
@@ -5461,10 +5400,6 @@ key "data mining concepts techniques,Models and issues in data stream systems"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
 In section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -5477,24 +5412,6 @@ reference "sec:episodes-log-mining"
  In practice, it will be necessary to process all incoming data immediately,
  so that the live status of the system can be calculated—and displayed to
  the end-user.
-\end_layout
-
-\begin_layout Plain Layout
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO uncomment this in part 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -10705,6 +10622,25 @@ name "sec:anomaly-detection"
 
 \end_layout
 
+\begin_layout Quotation
+Data stream mining can only find frequently occuring patterns, because that
+ is exactly what frequent pattern mining is about.
+ However, we also want to be able to detect occasional spikes instead of
+ just the persistent problems.
+ For example, spikes may occur only on the first day of the month (because
+ people can enter the monthly contest on that day), which the web server
+ may not be able to cope with properly.
+ Detecting these 
+\emph on
+infrequent problems
+\emph default
+ is exactly what 
+\emph on
+anomaly detection
+\emph default
+ is for.
+\end_layout
+
 \begin_layout Standard
 This section is based on the comprehensive survey on anomaly detection by
  Chandola, Banerjee and Kumar 
@@ -12729,6 +12665,29 @@ name "sec:OLAP"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Quotation
+
+\emph on
+OLAP
+\emph default
+, and more specifically the 
+\emph on
+data cube
+\emph default
+, is necessary to be able to quickly answer queries about multidimensional
+ data.
+ The data that needs to be presented to the user (and browsed, queried,
+ interacted with) in the context of web performance optimization is very
+ multidimensional, as is explained in section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:episodes-log-mining:attributes"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
