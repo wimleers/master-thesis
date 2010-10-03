@@ -406,7 +406,8 @@ key "Drupal"
 
 \end_inset
 
- web sites load faster.
+ web sites load faster (Drupal is a hybrid of a Content Management System
+ and a framework, to build websites with).
  80 to 90% of the response time (as observed by the end user) is spent on
  downloading the components of a web page 
 \begin_inset CommandInset citation
@@ -416,15 +417,15 @@ key "High Performance Web Sites Book"
 \end_inset
 
 .
- Therefor this is also the part where optimizations have the largest effect—opti
-mizing the code that renders the pages has far less effect.
+ Therefore this is also the part where optimizations have the largest effect—opt
+imizing the code that renders the pages (i.e.
+ the code that generates (X)HTML) has far less effect.
 \end_layout
 
 \begin_layout Standard
 To be able to prove the positive impact of optimizing the loading of the
- components of a web site—thereby proving that the work I was going to have
- done had a positive impact—I researched existing page loading profiling
- tools.
+ components of a web site—thereby proving that the work I was going to do
+ had a positive impact—I researched existing page loading profiling tools.
  Episodes 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -494,7 +495,7 @@ About two weeks, or 100 MB worth of statistics, had been logged.
 \begin_layout Standard
 While my test case was a fairly big web site (500,000-1,000,000 page views
  per month), that is nothing when compared with the top-100 web sites.
- And even for these mere 2.7 million recorded episodes, it took several minutes
+ Even for these mere 2.7 million recorded episodes, it took several minutes
  to generate simple charts (see figures 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -595,8 +596,9 @@ name "fig:Episodes-chart-plp"
 \end_layout
 
 \begin_layout Standard
-That is of course largely due to the fact that the database schema used
- was extremely inefficient: it was in fact a verbatim copy of the log file.
+That is of course for a large part due to the fact that the database schema
+ used was extremely inefficient: it was in fact a verbatim copy of the log
+ file.
  The database schema should be optimized for the queries that are necessary
  to generate the charts.
  In that implementation, multiple full table scans were required, which
@@ -662,15 +664,15 @@ That by itself is easy: all it requires is to integrate Episodes with your
  to apply data mining techniques as well as visualizing the conclusions
  that are found.
  E.g.
- pages may be loading slower from South-Africa because the CDN's server
+ pages may be loading more slowly from South-Africa because the CDN's server
  there (a 
 \emph on
 PoP
 \emph default
-) is offline, or your shopping cart checkout page may be loading slow in
- Firefox because of a JavaScript issue, or a particular page may be loading
- slow in all web browsers because of bad CSS on that page, or maybe your
- site is loading very slow for all users of a certain ISP because their
+) is offline, or your shopping cart checkout page may be loading slowly
+ in Firefox because of a JavaScript issue, or a particular page may be loading
+ slowly in all web browsers because of bad CSS on that page, or maybe your
+ site is loading very slowly for all users of a certain ISP because their
  DNS server has poor performance.
  All of these problems (and more) could be pinpointed (albeit partially)
  automatically.
