@@ -22888,7 +22888,7 @@ OLAP implies
 interactive
 \emph default
  data analysis.
- Interactivity requires fast updates.
+ Interactivity requires fast updates (and queries!).
 \end_layout
 
 \begin_layout Itemize
@@ -22908,6 +22908,30 @@ So, the ability to perform more frequent updates would enable other types
  of applications.
  As a side-effect, applications that don't really need it automatically
  get greater flexibility and 24 hour availability.
+\end_layout
+
+\begin_layout Standard
+In the context of WPO analytics, there are two reasons for requiring frequent
+ updates:
+\end_layout
+
+\begin_layout Enumerate
+OLAP's ability to do interactive data analysis is desirable, and interactivity
+ requires fast queries and updates (as indicated previously).
+\end_layout
+
+\begin_layout Enumerate
+It's very desirable to be able to analyze the 
+\emph on
+live performance
+\emph default
+, i.e.
+ the performance of the website as it is being experienced by visitors 
+\emph on
+right now
+\emph default
+.
+ For this, fast updates clearly are a requirement.
 \end_layout
 
 \begin_layout Subsubsection*
