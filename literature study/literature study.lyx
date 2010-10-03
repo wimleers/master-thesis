@@ -969,10 +969,6 @@ could
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Comment
-status open
-
-\begin_layout Plain Layout
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -988,45 +984,25 @@ name "sec:process"
 \end_inset
 
 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: uncomment this in part 2.
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
+\begin_layout Standard
 Below, there is a schema that shows what happens during the various stages
  of the web performance optimization analytics process, along with references
  to the sections in which each stage is described in more detail.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Needs to be updated to incorporate data stream mining & anomaly detection.
 \end_layout
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset space ~
 \end_inset
 
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \noindent
 \begin_inset Tabular
-<lyxtabular version="3" rows="25" columns="4">
+<lyxtabular version="3" rows="29" columns="4">
 <features>
 <column alignment="center" valignment="top" width="0">
 <column alignment="center" valignment="top" width="0">
@@ -1603,10 +1579,17 @@ log
 \begin_layout Plain Layout
 
 \series bold
-section 
+sections 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:episodes-log-mining"
+
+\end_inset
+
+ & 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:stream-mining"
 
 \end_inset
 
@@ -1681,10 +1664,17 @@ association rule mining
 \begin_layout Plain Layout
 
 \series bold
-section 
+sections 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:episodes-log-mining:detection"
+
+\end_inset
+
+ & 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:stream-mining"
 
 \end_inset
 
@@ -1726,6 +1716,170 @@ reference "sub:episodes-log-mining:detection"
 \begin_inset Text
 
 \begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+\begin_inset Formula $\downarrow$
+\end_inset
+
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+</row>
+<row>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+anomaly detection
+\end_layout
+
+\end_inset
+</cell>
+<cell alignment="center" valignment="top" leftline="true" usebox="none">
+\begin_inset Text
+
+\begin_layout Plain Layout
+
+\series bold
+section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:anomaly-detection"
+
+\end_inset
+
 
 \end_layout
 
@@ -2070,14 +2224,14 @@ to be implemented
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 \begin_inset space ~
 \end_inset
 
 
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 The first two stages are already been implemented by the Episodes library
  itself.
  In 
@@ -2098,13 +2252,8 @@ key "Drupal Episodes module"
  trivial.
 \end_layout
 
-\begin_layout Plain Layout
+\begin_layout Standard
 All later stages are covered by this master thesis.
-\end_layout
-
-\end_inset
-
-
 \begin_inset Newpage clearpage
 \end_inset
 
@@ -4584,7 +4733,8 @@ name "sub:episodes-log-mining:detection"
 \end_layout
 
 \begin_layout Standard
-The goal of this thesis is to automate the detection ofweb performance issues.
+The goal of this thesis is to automate the detection of web performance
+ issues.
  This can be achieved through 
 \emph on
 Episodes log mining
