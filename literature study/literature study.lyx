@@ -1,4 +1,4 @@
-#LyX 1.6.5 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -2122,6 +2122,13 @@ name "sec:Goals-justification"
 
 \end_layout
 
+\begin_layout Standard
+As any other master thesis, this master thesis also includes a literature
+ study.
+ But since the end goal is very practical, the subjects of the literature
+ study require a brief justification and introduction.
+\end_layout
+
 \begin_layout Subsubsection*
 Episodes Log Mining
 \end_layout
@@ -2200,7 +2207,16 @@ frequent pattern stream mining
 \emph default
 , because from there it is a simple step to association rules, which are
  exactly what we need.
- This is discussed in section 
+ (Association rules are deduced automatically from a data set and define
+ the associations that apparently occur in the data set.
+ E.g.
+ people buying bread in the super market also buy wine.
+ Or, applied to this context: pages that include a specific JavaScript file,
+ are slow in a specific browser.)
+\end_layout
+
+\begin_layout Standard
+This is discussed in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:stream-mining"
@@ -2231,7 +2247,10 @@ infrequent problems
 anomaly detection
 \emph default
  is for.
- Anomaly detection is discussed in section 
+\end_layout
+
+\begin_layout Standard
+Anomaly detection is discussed in section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:anomaly-detection"
@@ -2250,14 +2269,7 @@ OLAP
 \emph on
 OLAP
 \emph default
- (see section 
-\begin_inset CommandInset ref
-LatexCommand ref
-reference "sec:OLAP"
-
-\end_inset
-
-), and more specifically the 
+, and more specifically the 
 \emph on
 data cube
 \emph default
@@ -2269,6 +2281,18 @@ data cube
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:episodes-log-mining:attributes"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+OLAP, and the data cube operator in particular, is discussed in section
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:OLAP"
 
 \end_inset
 
