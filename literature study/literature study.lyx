@@ -10974,7 +10974,7 @@ name "sub:anomaly-detection:types"
 \end_layout
 
 \begin_layout Standard
-There are three classes anomalies can be classified into:
+Anomalies can be classified into three classes:
 \end_layout
 
 \begin_layout Subsubsection
