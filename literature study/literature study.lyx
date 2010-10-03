@@ -2432,7 +2432,7 @@ usage
 Web usage mining
 \series default
  refers to the automatic discovery and analysis of patterns in clickstream
- and associated data colected or generated as a result of user interactions
+ and associated data collected or generated as a result of user interactions
  with web resources on one or more web sites.
  
 \series bold
@@ -2470,8 +2470,8 @@ However, in the context of web performance optimization analytics (which
  is what this thesis is about), typical web server logs are not sufficient:
  they only capture which resources were requested by user agents and some
  metadata (date and time, IP address, referrer, etc.).
- That is by itself not enough information on how the actual page loading
- performance of the browser as perceived by the end user was.
+ That is by itself not enough information on the actual page loading performance
+ of the browser as perceived by the end user.
  It only provides sufficient information for other kinds of analysis, such
  as typical navigation paths, popular pages, and so on.
 \begin_inset Newline newline
@@ -2633,7 +2633,17 @@ slow
 both
 \emph default
  of which I would like to support in the implementation that will accompany
- this thesis):
+ this thesis
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+update upon implementation completion
+\end_layout
+
+\end_inset
+
+):
 \end_layout
 
 \begin_layout Enumerate
@@ -3007,7 +3017,7 @@ applied
 
  text to be meaningful.
  General web usage mining is irrelevant to this thesis, since that is mostly
- about finding patterns in visitor's activities, which is something we don't
+ about finding patterns in visitors' activities, which is something we don't
  care about from a web performance optimization perspective.
 \begin_inset Newline newline
 \end_inset
