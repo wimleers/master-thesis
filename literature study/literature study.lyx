@@ -5788,7 +5788,7 @@ Wavelets are a technique from the field of signal processing, but can also
  be used to build a multiresolution hierarchy over a signal, which would
  be the data stream in our case.
  Wavelets coefficients are projections of the given signal (again, the data
- stream in our case) onto an orthogonal set of basis vector.
+ stream in our case) onto an orthogonal set of basis vectors.
  Which wavelets can be used depends on the choice of basis vectors.
  Using the Haar wavelet (often chosen for their ease of computation) for
  example, we can recursively perform averaging and differencing at multiple
@@ -6583,6 +6583,15 @@ name "sub:stream-mining:frequent-item-mining"
 \end_layout
 
 \begin_layout Standard
+Association rules are deduced automatically from a data set and define the
+ associations that apparently occur in the data set.
+ E.g.
+ people buying bread in the super market also buy wine.
+ Or, applied to this context: pages that include a specific JavaScript file,
+ are slow in a specific browser.
+\end_layout
+
+\begin_layout Standard
 A typical goal in data mining is 
 \emph on
 pattern mining
@@ -6604,6 +6613,96 @@ people who buy both milk and beer also tend to buy diapers with 70% probability
 minimum support
 \emph default
 .
+\end_layout
+
+\begin_layout Standard
+In the context of WPO, interesting patterns would consist of a URL that
+ loads slowly and all contextual attributes that occur many times in combination
+ with that slowly loading URL: browser, physical location of the visitor,
+ ISP of the visitor, operating system, and so on.
+\begin_inset Newline newline
+\end_inset
+
+E.g.: many page loads with a slow page load time that have the contextual
+ attributes 
+\begin_inset Quotes eld
+\end_inset
+
+http://uhasselt.be/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Internet Explorer 8.0
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Hasselt, Belgium
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Windows 7 SP1
+\begin_inset Quotes erd
+\end_inset
+
+ would allow us to deduce that http://uhasselt.be/ is slow in Hasselt, Belgium,
+ but only on the Windows 7 SP1 operating system that use the Internet Explorer
+ 8.0 browser.
+\begin_inset Newline newline
+\end_inset
+
+If 
+\emph on
+also
+\emph default
+ many page loads are slow with the contextual attributes 
+\begin_inset Quotes eld
+\end_inset
+
+http://uhasselt.be/
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Internet Explorer 8.0
+\begin_inset Quotes erd
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Windows 7 SP1
+\begin_inset Quotes erd
+\end_inset
+
+ (i.e.
+ with the specific location 
+\begin_inset Quotes eld
+\end_inset
+
+Hasselt, Belgium
+\begin_inset Quotes erd
+\end_inset
+
+ no longer in the contextual attributes), then that implies that it's just
+ the browser being slow (or the web site not being optimized sufficiently
+ for that browser) and not that the physical location of the visitor causes
+ the slowness.
 \end_layout
 
 \begin_layout Standard
@@ -6691,7 +6790,7 @@ Derive an
 \emph on
 approximate
 \emph default
- answer—while this won't be 100% correct, it is often sufficient in practice.
+ answer—while this will not be 100% correct, it is often sufficient in practice.
 \end_layout
 
 \begin_layout Standard
@@ -6747,6 +6846,10 @@ All algorithms in this section and the next provide
 approximate
 \emph default
  answers.
+\end_layout
+
+\begin_layout Standard
+Finally, examples of patterns that can be thought
 \end_layout
 
 \begin_layout Subsubsection
@@ -6890,7 +6993,7 @@ less detail is necessary
 \end_layout
 
 \begin_layout Standard
-Several ways exist to designed a tilted-time window.
+Several ways exist to design a tilted-time window.
  Here are two common examples:
 \end_layout
 
@@ -9415,8 +9518,7 @@ s (there are no patterns to be found in single items), which are often called
 \emph on
 transactions
 \emph default
- in the context of market basket analysis.
- 
+.
 \end_layout
 
 \begin_layout Standard
