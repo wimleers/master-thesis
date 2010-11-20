@@ -52,6 +52,9 @@ namespace EpisodesParser {
                 episodeParts = episodeRaw.split(':');
                 episode.id       = mapEpisodeNameToID(episodeParts[0]);
                 episode.duration = episodeParts[1].toInt();
+#ifdef DEBUG
+                episode.episodeIDNameHash = &this->IDNameHash;
+#endif
                 parsedLine->episodes.append(episode);
             }
 

@@ -24,7 +24,13 @@ typedef QHash<EpisodeID, EpisodeName> EpisodeIDNameHash;
 // duration is sufficiently long (65535 seconds, 16-bit, would be excessive).
 typedef quint8 EpisodeDuration;
 
-struct EpisodeStruct { EpisodeID id; EpisodeDuration duration; };
+struct EpisodeStruct {
+    EpisodeID id;
+    EpisodeDuration duration;
+#ifdef DEBUG
+    EpisodeIDNameHash * episodeIDNameHash;
+#endif
+};
 typedef EpisodeStruct Episode;
 typedef QList<Episode> EpisodeList;
 
@@ -69,6 +75,9 @@ struct ExpandedEpisodesLogLineStruct {
     IPHierarchy ip;
     Time time;
     EpisodeList episodes;
+#ifdef DEBUG
+    EpisodeIDNameHash * episodeIDNameHash;
+#endif
     HTTPStatus status;
     URL url;
 };
@@ -79,20 +88,8 @@ typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 
 
 #ifdef DEBUG
-// Alternative types that support named output.
-struct NamedEpisodeIDStruct { EpisodeID id; EpisodeIDNameHash * lookup; };
-typedef NamedEpisodeIDStruct NamedEpisodeID;
-struct NamedEpisodeStruct { Episode episode; EpisodeIDNameHash * lookup; };
-typedef NamedEpisodeStruct NamedEpisode;
-struct NamedEpisodeListStruct { EpisodeList episodes; EpisodeIDNameHash * lookup; };
-typedef NamedEpisodeListStruct NamedEpisodeList;
-struct NamedHostIDStruct { HostID host; EpisodeIDNameHash * lookup; };
-typedef NamedHostIDStruct NamedHostID;
-
 // QDebug() streaming output operators.
-QDebug operator<<(QDebug dbg, const NamedEpisodeID & namedEpisodeID);
-QDebug operator<<(QDebug dbg, const NamedEpisode & namedEpisode);
-QDebug operator<<(QDebug dbg, const NamedEpisodeList & namedEpisodeList);
+QDebug operator<<(QDebug dbg, const Episode & episode);
 QDebug operator<<(QDebug dbg, const NamedHostID & namedHostID);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
 #endif

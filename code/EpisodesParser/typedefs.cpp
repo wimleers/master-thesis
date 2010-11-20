@@ -5,32 +5,29 @@
 
 namespace EpisodesParser {
 
-    QDebug operator<<(QDebug dbg, const NamedEpisode & namedEpisode) {
-        dbg.nospace() << namedEpisode.lookup->value(namedEpisode.episode.id).toStdString().c_str()
+    QDebug operator<<(QDebug dbg, const Episode & e) {
+        dbg.nospace() << e.episodeIDNameHash->value(e.id).toStdString().c_str()
                       << "("
-                      << namedEpisode.episode.id
+                      << e.id
                       << ") = "
-                      << namedEpisode.episode.duration;
+                      << e.duration;
 
         return dbg.nospace();
     }
 
-    QDebug operator<<(QDebug dbg, const NamedEpisodeList & namedEpisodeList) {
+    QDebug operator<<(QDebug dbg, const EpisodeList & el) {
         QString episodeOutput;
-        NamedEpisode tmp;
-        tmp.lookup = namedEpisodeList.lookup;
 
         //dbg.nospace() << "[size=" << namedEpisodeList.episodes.size() << "] ";
         dbg.nospace() << "{";
 
-        for (int i = 0; i < namedEpisodeList.episodes.size(); i++) {
+        for (int i = 0; i < el.size(); i++) {
             if (i > 0)
                 dbg.nospace() << ", ";
 
             // Generate output for episode.
-            tmp.episode = namedEpisodeList.episodes[i];
             episodeOutput.clear();
-            QDebug(&episodeOutput) << tmp;
+            QDebug(&episodeOutput) << el[i];
 
             dbg.nospace() << episodeOutput.toStdString().c_str();
         }
@@ -39,15 +36,11 @@ namespace EpisodesParser {
         return dbg.nospace();
     }
 
-    QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine) {
-        NamedEpisodeList nel;
-        nel.episodes = episodesLogLine.episodes;
-        nel.lookup = episodesLogLine.episodeIDNameHash;
-
+    QDebug operator<<(QDebug dbg, const EpisodesLogLine & line) {
         dbg.nospace() << "{\n"
-                      << "ip = " << episodesLogLine.ip << ", \n"
-                      << "time = " << episodesLogLine.time << ", \n"
-                      << "episodes = " << nel << ", \n"
+                      << "ip = " << line.ip << ", \n"
+                      << "time = " << line.time << ", \n"
+                      << "episodes = " << line.episodes << ", \n"
                       << ", more to come!\n"
                       << "}";
 
