@@ -28,7 +28,7 @@ struct EpisodeStruct {
     EpisodeID id;
     EpisodeDuration duration;
 #ifdef DEBUG
-    EpisodeIDNameHash * episodeIDNameHash;
+    EpisodeIDNameHash * IDNameHash;
 #endif
 };
 typedef EpisodeStruct Episode;
@@ -39,23 +39,36 @@ typedef QList<Episode> EpisodeList;
 typedef quint16 HTTPStatus;
 
 typedef QString URL;
+typedef QString UA;
 
-// Efficient storage of hosts (cfr. efficient storage of Episode names).
-typedef QString HostName;
-typedef quint8 HostID;
-typedef QHash<HostName, HostID> HostNameIDHash;
+// Efficient storage of domain names.
+typedef QString DomainName;
+typedef quint8 DomainID;
+typedef QHash<DomainName, DomainID> DomainNameIDHash;
+typedef QHash<DomainID, DomainName> DomainIDNameHash;
+struct DomainStruct {
+    DomainID id;
+    // TODO: allow multiple domains to be analyzed as one whole by providing
+    // a common identifier.
+#ifdef DEBUG
+    EpisodeIDNameHash * IDNameHash;
+#endif
+};
+typedef DomainStruct Domain;
 
 // Parsed raw line from Episodes log file: no processing applied whatsoever.
 struct EpisodesLogLineStruct {
     IPAddress ip;
     Time time;
     EpisodeList episodes;
-#ifdef DEBUG
-    EpisodeIDNameHash * episodeIDNameHash;
-#endif
     HTTPStatus status;
     URL url;
-    HostID host;
+    UA ua;
+    Domain domain;
+#ifdef DEBUG
+    EpisodeIDNameHash * episodeIDNameHash;
+    DomainIDNameHash * domainIDNameHash;
+#endif
 };
 typedef EpisodesLogLineStruct EpisodesLogLine;
 
@@ -71,15 +84,28 @@ struct IPHierarchyStruct {
 };
 typedef IPHierarchyStruct IPHierarchy;
 
+struct UAHierarchyStruct {
+    UA ua;
+    QString os_name;
+    QString os_major;
+    QString os_minor;
+    QString cpu_arch;
+    QString browser_name;
+    QString browser_major;
+    QString browser_minor;
+};
+typedef UAHierarchyStruct UAHierarchy;
+
 struct ExpandedEpisodesLogLineStruct {
     IPHierarchy ip;
     Time time;
     EpisodeList episodes;
+    HTTPStatus status;
+    UAHierarchy ua;
+    URL url;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;
 #endif
-    HTTPStatus status;
-    URL url;
 };
 typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 
@@ -90,6 +116,7 @@ typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 #ifdef DEBUG
 // QDebug() streaming output operators.
 QDebug operator<<(QDebug dbg, const Episode & episode);
+QDebug operator<<(QDebug dbg, const Domain & domain);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
 #endif
 

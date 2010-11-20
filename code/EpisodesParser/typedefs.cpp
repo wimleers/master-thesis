@@ -6,11 +6,18 @@
 namespace EpisodesParser {
 
     QDebug operator<<(QDebug dbg, const Episode & e) {
-        dbg.nospace() << e.episodeIDNameHash->value(e.id).toStdString().c_str()
+        dbg.nospace() << e.IDNameHash->value(e.id).toStdString().c_str()
                       << "("
                       << e.id
                       << ") = "
                       << e.duration;
+
+        return dbg.nospace();
+    }
+
+    QDebug operator<<(QDebug dbg, const Domain & d) {
+        dbg.nospace() << d.IDNameHash->value(d.id).toStdString().c_str()
+                      << "(" << d.id << ")";
 
         return dbg.nospace();
     }
@@ -37,11 +44,16 @@ namespace EpisodesParser {
     }
 
     QDebug operator<<(QDebug dbg, const EpisodesLogLine & line) {
+        const static char * eol = ", \n";
+
         dbg.nospace() << "{\n"
-                      << "ip = " << line.ip << ", \n"
-                      << "time = " << line.time << ", \n"
-                      << "episodes = " << line.episodes << ", \n"
-                      << ", more to come!\n"
+                      << "IP = " << line.ip << eol
+                      << "time = " << line.time << eol
+                      << "episodes = " << line.episodes << eol
+                      << "status = " << line.status << eol
+                      << "URL = " << line.url << eol
+                      << "user-agent = " << line.ua << eol
+                      << "domain = " << line.domain << eol
                       << "}";
 
         return dbg.nospace();

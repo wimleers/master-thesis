@@ -2,7 +2,7 @@
 
 namespace EpisodesParser {
     Parser::Parser() {
-        this->nextID = 0;
+        this->nextEpisodeID = this->nextDomainID = 0;
     }
 
 
@@ -53,15 +53,31 @@ namespace EpisodesParser {
                 episode.id       = mapEpisodeNameToID(episodeParts[0]);
                 episode.duration = episodeParts[1].toInt();
 #ifdef DEBUG
-                episode.episodeIDNameHash = &this->IDNameHash;
+                episode.IDNameHash = &this->episodeIDNameHash;
 #endif
                 parsedLine->episodes.append(episode);
             }
 
+            // HTTP status code.
+            parsedLine->status = list[4].toShort();
+
+            // URL.
+            parsedLine->url = list[5];
+
+            // User-agent.
+            parsedLine->ua = list[6];
+
+            // Domain name.
+            parsedLine->domain.id = this->mapDomainNameToID(list[7]);
+#ifdef DEBUG
+            parsedLine->domain.IDNameHash = &this->domainIDNameHash;
+#endif
+
+
 #ifdef DEBUG
             // Debug.
-            qDebug() << line;
-            parsedLine->episodeIDNameHash = &this->IDNameHash;
+            parsedLine->episodeIDNameHash = &this->episodeIDNameHash;
+            parsedLine->domainIDNameHash = &this->domainIDNameHash;
             qDebug() << *parsedLine;
 
             if (numLines++ == 2) {
@@ -78,14 +94,27 @@ namespace EpisodesParser {
     // Protected methods.
 
     EpisodeID Parser::mapEpisodeNameToID(EpisodeName name) {
-        if (!this->nameIDHash.contains(name)) {
-            EpisodeID id = this->nextID++;
-            this->nameIDHash.insert(name, id);
+        if (!this->episodeNameIDHash.contains(name)) {
+            EpisodeID id = this->nextEpisodeID++;
+            this->episodeNameIDHash.insert(name, id);
 #ifdef DEBUG
-            this->IDNameHash.insert(id, name);
+            this->episodeIDNameHash.insert(id, name);
 #endif
         }
 
-        return nameIDHash[name];
+        return this->episodeNameIDHash[name];
     }
+
+    DomainID Parser::mapDomainNameToID(DomainName name) {
+        if (!this->domainNameIDHash.contains(name)) {
+            DomainID id = this->nextDomainID++;
+            this->domainNameIDHash.insert(name, id);
+#ifdef DEBUG
+            this->domainIDNameHash.insert(id, name);
+#endif
+        }
+
+        return this->domainNameIDHash[name];
+    }
+
 }

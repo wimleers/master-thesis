@@ -27,13 +27,17 @@ namespace EpisodesParser {
     protected:
         QHostAddress ipConvertor;
         QDateTime timeConvertor;
-        EpisodeNameIDHash nameIDHash;
+        EpisodeNameIDHash episodeNameIDHash;
+        DomainNameIDHash domainNameIDHash;
 #ifdef DEBUG
-        EpisodeIDNameHash IDNameHash;
+        EpisodeIDNameHash episodeIDNameHash;
+        DomainIDNameHash domainIDNameHash;
 #endif
-        EpisodeID nextID;
+        EpisodeID nextEpisodeID;
+        DomainID nextDomainID;
 
         EpisodeID mapEpisodeNameToID(EpisodeName name);
+        DomainID mapDomainNameToID(DomainName name);
     };
 
 }
