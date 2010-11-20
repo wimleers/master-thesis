@@ -18,12 +18,15 @@ typedef uint Time;
 typedef QString EpisodeName;
 typedef quint8 EpisodeID;
 typedef QHash<EpisodeName, EpisodeID> EpisodeNameIDHash;
+typedef QHash<EpisodeID, EpisodeName> EpisodeIDNameHash;
 
 // Store Episode durations as 8-bit uints, 255 seconds as an Episode
 // duration is sufficiently long (65535 seconds, 16-bit, would be excessive).
 typedef quint8 EpisodeDuration;
 
-typedef QHash<EpisodeID, EpisodeDuration> Episode;
+struct EpisodeStruct { EpisodeID id; EpisodeDuration duration; };
+typedef EpisodeStruct Episode;
+typedef QList<Episode> EpisodeList;
 
 // 510 is the highest HTTP status code, so 9 bits would be sufficient, but
 // that's not possible, so we use 16 instead.
@@ -40,7 +43,10 @@ typedef QHash<HostName, HostID> HostNameIDHash;
 struct EpisodesLogLineStruct {
     IPAddress ip;
     Time time;
-    QList<Episode> episodes;
+    EpisodeList episodes;
+#ifdef DEBUG
+    EpisodeIDNameHash * episodeIDNameHash;
+#endif
     HTTPStatus status;
     URL url;
     HostID host;
@@ -62,7 +68,7 @@ typedef IPHierarchyStruct IPHierarchy;
 struct ExpandedEpisodesLogLineStruct {
     IPHierarchy ip;
     Time time;
-    QList<Episode> episodes;
+    EpisodeList episodes;
     HTTPStatus status;
     URL url;
 };
@@ -74,13 +80,19 @@ typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 
 #ifdef DEBUG
 // Alternative types that support named output.
-struct NamedEpisodeIDStruct { EpisodeID id; EpisodeNameIDHash lookup; };
+struct NamedEpisodeIDStruct { EpisodeID id; EpisodeIDNameHash * lookup; };
 typedef NamedEpisodeIDStruct NamedEpisodeID;
-struct NamedHostIDStruct { HostID host; HostNameIDHash lookup; };
+struct NamedEpisodeStruct { Episode episode; EpisodeIDNameHash * lookup; };
+typedef NamedEpisodeStruct NamedEpisode;
+struct NamedEpisodeListStruct { EpisodeList episodes; EpisodeIDNameHash * lookup; };
+typedef NamedEpisodeListStruct NamedEpisodeList;
+struct NamedHostIDStruct { HostID host; EpisodeIDNameHash * lookup; };
 typedef NamedHostIDStruct NamedHostID;
 
 // QDebug() streaming output operators.
 QDebug operator<<(QDebug dbg, const NamedEpisodeID & namedEpisodeID);
+QDebug operator<<(QDebug dbg, const NamedEpisode & namedEpisode);
+QDebug operator<<(QDebug dbg, const NamedEpisodeList & namedEpisodeList);
 QDebug operator<<(QDebug dbg, const NamedHostID & namedHostID);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
 #endif
