@@ -90,7 +90,6 @@ typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 #ifdef DEBUG
 // QDebug() streaming output operators.
 QDebug operator<<(QDebug dbg, const Episode & episode);
-QDebug operator<<(QDebug dbg, const NamedHostID & namedHostID);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
 #endif
 
