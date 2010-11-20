@@ -24606,6 +24606,129 @@ name "sub:olap:stream-cube"
 \end_layout
 
 \begin_layout Standard
+In the preceding subsections, we have discussed the data cube at length.
+ But the input data (over which the data cube was being calculated) was
+ always a static data set.
+ In this subsection, we will discuss how to apply the data cube operator
+ to a dynamic data set: a data 
+\emph on
+stream
+\emph default
+.
+\end_layout
+
+\begin_layout Standard
+In this section, we will consider the design requirements and look into
+ the various design aspects that are proposed by the study 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "stream cube"
+
+\end_inset
+
+ on which this section is based.
+\end_layout
+
+\begin_layout Subsubsection
+Design Requirements
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:olap:stream-cube:design-requirements"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To design an efficient and scalable stream data cube that can provide fast
+ online multidimensional stream data analysis, we formulate some design
+ requirements.
+\end_layout
+
+\begin_layout Enumerate
+Since a data stream is possibly infinite, and storage space is never infinite,
+ we must ensure that the stream data cube uses a finite amount of storage.
+ It should stay relatively stable in size over time.
+\begin_inset Newline newline
+\end_inset
+
+By using a tilted time frame, the most distant time is compressed very strongly
+ and data beyond that most distant time is simply removed.
+ In other words: only a subset of the data stream (a 
+\emph on
+window
+\emph default
+ of the most recent time) is considered, and the most recent part of that
+ subset has more detail than the most distant part of that subset.
+\end_layout
+
+\begin_layout Enumerate
+As a data cube must be incrementally updatable (see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:OLAP:data-cube:updates"
+
+\end_inset
+
+), a stream data cube must be as well.
+ Since the input data streams are possibly inifinite, it is impossible to
+ reconstruct the stream data cube from scratch: the stream data cube 
+\emph on
+must
+\emph default
+ be incrementally updatable.
+\end_layout
+
+\begin_layout Enumerate
+The time required for an incremental update of a stream data cube must be
+ proportional to the size of the portion of the base cuboid (in our context:
+ the minimal interesting layer) that is being updated.
+ Of course, it is desirable that there is a linear relation between the
+ time required to update the portion of the base cuboid and the size of
+ that portion of the base cuboid.
+\end_layout
+
+\begin_layout Enumerate
+Fast online drilling along any single dimension or along a combination of
+ a small number of dimensions is also a requirement, to allow for efficient
+ analysis of the data by an analyist.
+ Materialization of some portion of the data cube will facilitate that.
+\end_layout
+
+\begin_layout Standard
+
+\series bold
+\bar under
+Note:
+\series default
+\bar default
+ an iceberg data cube is not an eligible candidate architecture because
+ it does not allow for incremental updates.
+\begin_inset Newline newline
+\end_inset
+
+(An iceberg data cube only stores the cells in the data cube that exceed
+ a certain threshold—like icebergs exceed the sea surface.
+ Exactly because they only store the cells exceeding a certain threshold,
+ they are not capable of incremental updates: if an update would make a
+ previously not-threshold-exceeding cell exceed the threshold after some
+ time, it would require the entire iceberg data cube to be recalculated,
+ because no record for that newly threshold-exceeding cell existed previously.)
+\end_layout
+
+\begin_layout Subsubsection
+Architecture
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:olap:stream-cube:architecture"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 The stream cube algorithm 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -24663,8 +24786,9 @@ Now, to build a static data cube (i.e.
  one that does not represent a data stream), it may make sense to materialize
  the entire data cube, i.e.
  all cuboids.
- But in the case of a data stream, which is possibly infinite, this is impossibl
-e (as has been discussed at length in section
+ But in the case of a data stream, which is possibly infinite, this may
+ be impossible due to enormous space requirements (as has been discussed
+ at length in section
 \begin_inset space ~
 \end_inset
 
@@ -24686,13 +24810,14 @@ Therefore, in the stream cube architecture, we choose to maintain (compute
 \emph on
 critical layers
 \emph default
- 
+
 \begin_inset Foot
-status open
+status collapsed
 
 \begin_layout Plain Layout
 'layer' is used as a synonym for 'cuboid'—this transforms the concept from
- n dimensions to 3 dimensions, and thus makes it more easily understandable.
+ n dimensions (which is very abstract) to 3 dimensions (which is very tangible),
+ and thus makes it more easily understandable.
 \end_layout
 
 \end_inset
@@ -24715,8 +24840,9 @@ the
 \emph on
 minimal interesting layer (m-layer):
 \emph default
- the minimal layer that an analyst would want to examine (it's not practical,
- nor cost-effective to examine the smallest detail of the data stream)
+ the minimal layer that an analyst would want to examine (because it's not
+ practical, nor cost-effective to examine the smallest detail of the data
+ stream)
 \end_layout
 
 \end_deeper
@@ -24816,18 +24942,7 @@ Our task is to support efficient, high-level, on-line multi-dimensional
 \end_layout
 
 \begin_layout Standard
-Now
-\end_layout
-
-\begin_layout Subsubsection
-Architecture
-\begin_inset CommandInset label
-LatexCommand label
-name "sub:olap:stream-cube:architecture"
-
-\end_inset
-
-
+Now we will look into the major design aspects.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -24842,7 +24957,19 @@ name "sub:olap:stream-cube:architecture:tilted-time-frame"
 \end_layout
 
 \begin_layout Standard
-tilted time frame: see earlier section
+The tilted time frame concept has been explained at length in section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-item-mining:window-models"
+
+\end_inset
+
+—it's not useful to repeat the same information, so please read that section
+ again if you have skipped that part or forgotten the details.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -24878,7 +25005,7 @@ Web click stream
 \emph on
 (individual-user, URL, second
 \emph default
-) triples.
+) tuples.
 \end_layout
 
 \begin_layout Standard
@@ -24967,16 +25094,16 @@ within
 \emph on
 (user group, URL group, minute)
 \emph default
- triples.
+ tuples.
 \end_layout
 
 \begin_layout Standard
-Similarly, the o-layer is defined as the observer layer and thus everything
+Similarly, the o-layer is defined as the observation layer and thus everything
  above will not be calculated (materialized) right away, but only upon request,
  if it piques the curiosity of the analyst.
- The o-layer is the layer the analyst uses to continuously observe the stream
- of data, to make decisions on how to take action or what to analyze further
- (by looking at layers above).
+ The o-layer is the layer the analyst uses to observe the stream of data,
+ to make decisions on how to take action or what to analyze further (by
+ looking at the layers above).
 \begin_inset Newline newline
 \end_inset
 
@@ -24993,7 +25120,7 @@ all
 \emph on
 (*, theme, quarter)
 \emph default
- triples.
+ tuples.
 \end_layout
 
 \begin_layout Standard
@@ -25018,13 +25145,13 @@ some
  layers between the m- and o-layer have been materialized: those along the
  popuar path.
  The popular path is the path the analyst is most likely interested in to
- follow, to dig deeper into the data stream while analyzing the stream.
+ follow, to dig deeper into the data stream (to achieve a deeper understanding)
+ while analyzing the stream.
  This is where the 
 \emph on
 popular path cubing
 \emph default
- technique steps into the spotlight, in the next subsection.
- 
+ technique steps into the spotlight.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -25036,6 +25163,289 @@ name "sub:olap:stream-cube:architecture:popular-path-cubing"
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+Popular path cubing computes and maintains a single popular aggregation
+ path from the m-layer to the o-layer.
+ The result is that queries that fall within any of those layers can be
+ answered immediately, without further computation; and that queries that
+ fall outside of those layers can be answered with minimal online computation:
+ we don't have to start computing from the raw data, we can start from the
+ m-layer in the worst case, and in other cases we can start from the highest
+ level popular path cuboids that contains the set of dimensions relevant
+ to the query.
+\begin_inset Newline newline
+\end_inset
+
+Initial cube computation and incremental updates are similar: the raw stream
+ data is scanned once and generalized into the m-layer.
+ It is then inserted into the corresponding path of the H-tree, increasing
+ the count and aggregating the measure values of the corresponding leaf
+ node in the corresponding slot of the tilted time frame.
+ The aggregation values for the cuboids along the popular path can be calculated
+ by updating all the nodes starting from the affected leaf node (which belongs
+ to the m-layer) to the o-layer (the root node) whenever the time granularity
+ of the leaf node layer warrants this (e.g.
+ when the m-layer's time granularity is a minute, then at the end of every
+ minute the data will be rolled up from leaf cuboids to higher level cuboids).
+ For details about the initial cube computation and incremental updates,
+ please look at section 4.2 in the study
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset citation
+LatexCommand cite
+key "stream cube"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
+A data structure is required to be able to efficiently compute and store
+ the popular path cuboids.
+ The required space should be minimal.
+\begin_inset Newline newline
+\end_inset
+
+The 
+\emph on
+H-tree
+\emph default
+ (hyper-linked tree) is a data structure the study finds suitable for this
+ task—this data structure was introduced in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "H-tree"
+
+\end_inset
+
+.
+ There are no formal definitions of the hyper-linked tree to be found anywhere;
+ however, there is an easy way to explain it: it is a superset of the FP-tree
+ data structure (see section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-itemset-mining:fp-stream"
+
+\end_inset
+
+).
+ The FP-tree data structure is capable of storing a 
+\emph on
+single
+\emph default
+ number (the support count) on each node, the H-tree is capable of storing
+ 
+\emph on
+multiple 
+\emph default
+numbers (e.g.
+ sum and count, to be able to calculate the average and still remain incremental
+ly updateable) on each node.
+ Both use the same header table concept.
+ Both rely on prefix paths in order to be as compact as possible.
+\end_layout
+
+\begin_layout Standard
+For an in-depth explanation of the algorithms used, we refer to 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "stream cube"
+
+\end_inset
+
+, example
+\begin_inset space ~
+\end_inset
+
+4 and section
+\begin_inset space ~
+\end_inset
+
+4.2.
+\end_layout
+
+\begin_layout Subsubsection
+Performance
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:olap:stream-cube:performance"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To evaluate the effectiveness and efficiency of the stream cube, the study
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "stream cube"
+
+\end_inset
+
+ also performed an extensive performance study using synthetic data sets.
+\end_layout
+
+\begin_layout Standard
+They compared the following algorithms' space and time requirements:
+\end_layout
+
+\begin_layout Enumerate
+full cubing
+\end_layout
+
+\begin_layout Enumerate
+top-k cubing
+\end_layout
+
+\begin_layout Enumerate
+popular path cubing
+\end_layout
+
+\begin_layout Enumerate
+no precomputation (only the base cuboid at the m-layer is precomputed)
+\end_layout
+
+\begin_layout Standard
+For details, see section
+\begin_inset space ~
+\end_inset
+
+5 in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "stream cube"
+
+\end_inset
+
+.
+ The results can be summarized as follows:
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+popular path cubing
+\emph default
+ is an efficient and feasible methodologies
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+no precomputation
+\emph default
+ is the second choice
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+full cubing
+\emph default
+ is too costly in both space and time
+\end_layout
+
+\begin_layout Itemize
+
+\emph on
+top-k cubing
+\emph default
+ is not a good candidate because it cannot handle incremental updating of
+ a stream data cube
+\end_layout
+
+\begin_layout Subsubsection
+FP-Stream + Stream Cube
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:olap:fp-stream+stream-cube"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+In section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:olap:stream-cube:architecture:popular-path-cubing"
+
+\end_inset
+
+, we already explained the H-tree datastructure by using the FP-tree datastructu
+re.
+ So an obvious result is to attempt to combine both data structures and
+ the accompanying algorithms into a single datastructure with an accompanying
+ set of algorithms, to be able to 
+\emph on
+answer both OLAP queries and perform frequent itemset mining using a single
+ data structure
+\emph default
+.
+\begin_inset Newline newline
+\end_inset
+
+Instead of having separate datastructures (and thus combined space and time
+ requirements), we may be able to significantly improve performance.
+\end_layout
+
+\begin_layout Standard
+In this section, we will look into combining the FP-stream (see section
+\begin_inset space ~
+\end_inset
+
+
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:stream-mining:frequent-itemset-mining:fp-stream"
+
+\end_inset
+
+) and Stream Cube algorithms.
+\end_layout
+
+\begin_layout Standard
+
+\emph on
+This was attempted by first writing an FP-stream implementation and then
+ retrofitting a Stream Cube on top/inside of it.
+\end_layout
+
+\begin_layout Subsubsection*
+Introduction
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsubsection*
+Problems
+\end_layout
+
+\begin_layout Subsubsection*
+Conclusion
 \end_layout
 
 \begin_layout Standard
@@ -25183,11 +25593,18 @@ data cube
 \emph default
 in-depth and discussed several algorithms that help improve its query performanc
 e.
-\end_layout
+\begin_inset Newline newline
+\end_inset
 
-\begin_layout Standard
-How to continue from this first part of the thesis in the second part next
- year is explained in the outlook, which is the next section.
+Additionally, we've discussed the 
+\emph on
+stream data cube
+\emph default
+ in detail, which will allow the 
+\emph on
+data cube
+\emph default
+ to be applied to the continuous stream of data generated by Episodes.
 \end_layout
 
 \begin_layout Standard
@@ -25202,6 +25619,16 @@ Outlook
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:outlook"
+
+\end_inset
+
+
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO: update this while progressing
+\end_layout
 
 \end_inset
 
@@ -25267,37 +25694,6 @@ detection
 \emph default
  algorithms so far.
  Surely, there must be some, and they need to be evaluated.
-\end_layout
-
-\begin_layout Itemize
-The data cube has been covered extensively in this literature study.
- However, most of it assumes 
-\emph on
-static
-\emph default
- 
-\emph on
-data sets
-\emph default
- (i.e.
- only updated in batches at an infrequent pace), while it is likely that
- also for OLAP, explicit support and optimizations for 
-\emph on
-data
-\emph default
- 
-\emph on
-streams
-\emph default
- will be necessary.
- A starting point can be found in 
-\begin_inset CommandInset citation
-LatexCommand cite
-key "data mining concepts techniques"
-
-\end_inset
-
-.
 \end_layout
 
 \begin_layout Subsection
@@ -27434,6 +27830,30 @@ Distributed and Parallel Databases
  Vol.
  18 p.
  173—197, 2005
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "H-tree"
+
+\end_inset
+
+
+\emph on
+Efficient computation of iceberg cubes with complex measures
+\emph default
+, J.
+ Han; J.
+ Pei; G.
+ Dong; K.
+ Wang, 
+\emph on
+Proc.
+ SIGMOD
+\emph default
+, 2001, pp.
+ 1–12
 \end_layout
 
 \end_body
