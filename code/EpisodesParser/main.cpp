@@ -15,8 +15,8 @@ int main(int argc, char *argv[]) {
     parser = new Parser();
 
     timer.start();
-    parser->parse("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.log");
-    cout << QString("Duration: %1 ms.").arg(timer.elapsed()) << endl;
+    int linesParsed = parser->parse("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.log");
+    cout << QString("Duration: %1 ms. Parsed %2 lines.").arg(timer.elapsed()).arg(linesParsed) << endl;
 }
 
 

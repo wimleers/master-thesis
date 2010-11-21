@@ -17,7 +17,7 @@ namespace EpisodesParser {
 
     public:
         Parser();
-        bool parse(const QString & fileName);
+        int parse(const QString & fileName);
 
     signals:
     //    void parsedEpisode(Episode episode);
