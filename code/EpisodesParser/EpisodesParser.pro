@@ -6,7 +6,8 @@ SOURCES += \
 
 HEADERS += \
     Parser.h \
-    typedefs.h
+    typedefs.h \
+    QCachingLocale.h
 
 QT += network
 

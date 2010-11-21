@@ -64,7 +64,7 @@ namespace EpisodesParser {
             // URL.
             parsedLine->url = list[5];
 
-            // User-agent.
+            // User-Agent.
             parsedLine->ua = list[6];
 
             // Domain name.
