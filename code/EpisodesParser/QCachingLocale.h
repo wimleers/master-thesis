@@ -5,6 +5,7 @@
 
 #include <QSystemLocale>
 #include <QVariant>
+#include <QMutex>
 
 class QCachingLocale : public QSystemLocale {
 public:
@@ -28,7 +29,9 @@ public:
             case QSystemLocale::PMText:
                 // in = empty
                 if (!this->cacheInNone.contains(type)) {
+                    QCachingLocale::inNoneMutex.lock();
                     this->cacheInNone[type] = QSystemLocale::query(type, in);
+                    QCachingLocale::inNoneMutex.unlock();
                 }
                 return this->cacheInNone[type];
             case QSystemLocale::TimeFormatShort:
@@ -39,7 +42,9 @@ public:
                 // in = int
                 inAsInt = in.toInt();
                 if (!this->cacheInInt.contains(type) || !this->cacheInInt[type].contains(inAsInt)) {
+                    QCachingLocale::inIntMutex.lock();
                     this->cacheInInt[type][inAsInt] = QSystemLocale::query(type, in);
+                    QCachingLocale::inIntMutex.unlock();
                 }
                 return this->cacheInInt[type][inAsInt];
             case QSystemLocale::DateToStringLong:
@@ -54,7 +59,9 @@ public:
                 // QDate, QTime, QDateTime can be converted to unix timestamps.
                 inAsInt = in.toDateTime().toTime_t();
                 if (!this->cacheInInt.contains(type) || !this->cacheInInt[type].contains(inAsInt)) {
+                    QCachingLocale::inIntMutex.lock();
                     this->cacheInInt[type][inAsInt] = QSystemLocale::query(type, in);
+                    QCachingLocale::inIntMutex.unlock();
                 }
                 return this->cacheInInt[type][inAsInt];
             default:
@@ -65,11 +72,19 @@ public:
         }
     }
 private:
+    // Mutexes are necessary to make the query method thread-safe (they are
+    // used to serialize access for insertions to the two QHashes).
+    static QMutex inNoneMutex;
+    static QMutex inIntMutex;
+
     // Cache for QSystemLocale queries that don't use the 'in' parameter.
     mutable QHash<QueryType, QVariant> cacheInNone;
     // Cache for QSystemLocale queries that use an 'in' parameter that is either
     // of type int, or can be converted to that type.
     mutable QHash<QueryType, QHash<int, QVariant> > cacheInInt;
 };
+
+QMutex QCachingLocale::inNoneMutex;
+QMutex QCachingLocale::inIntMutex;
 
 #endif // QCACHINGLOCALE_H
