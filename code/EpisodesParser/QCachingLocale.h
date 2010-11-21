@@ -1,3 +1,5 @@
+// Source: https://github.com/wimleers/QCachingLocale
+
 #ifndef QCACHINGLOCALE_H
 #define QCACHINGLOCALE_H
 
