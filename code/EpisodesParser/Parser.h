@@ -46,10 +46,6 @@ namespace EpisodesParser {
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
 
-        // Incrementors for use in the QHashes.
-        static EpisodeID nextEpisodeID;
-        static DomainID nextDomainID;
-
         // Methods to actually use the above QHashes.
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
         static DomainID mapDomainNameToID(DomainName name);

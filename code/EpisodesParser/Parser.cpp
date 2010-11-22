@@ -1,8 +1,6 @@
 #include "Parser.h"
 
 namespace EpisodesParser {
-    EpisodeID Parser::nextEpisodeID = 0;
-    DomainID Parser::nextDomainID = 0;
     EpisodeNameIDHash Parser::episodeNameIDHash;
     DomainNameIDHash Parser::domainNameIDHash;
     EpisodeIDNameHash Parser::episodeIDNameHash;
@@ -75,7 +73,7 @@ namespace EpisodesParser {
         if (!Parser::episodeNameIDHash.contains(name)) {
             Parser::episodeHashMutex.lock();
 
-            EpisodeID id = Parser::nextEpisodeID++;
+            EpisodeID id = Parser::episodeNameIDHash.size();
             Parser::episodeNameIDHash.insert(name, id);
 #ifdef DEBUG
             Parser::episodeIDNameHash.insert(id, name);
@@ -103,7 +101,7 @@ namespace EpisodesParser {
         if (!Parser::domainNameIDHash.contains(name)) {
             Parser::domainHashMutex.lock();
 
-            DomainID id = Parser::nextDomainID++;
+            DomainID id = Parser::domainNameIDHash.size();
             Parser::domainNameIDHash.insert(name, id);
 #ifdef DEBUG
             Parser::domainIDNameHash.insert(id, name);
