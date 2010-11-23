@@ -25084,11 +25084,11 @@ o-layer
 \end_inset
 
 Looking at the figure, it is easy to see that all dimensions in the triples
- have been aggregated 
+ have been rolled up (aggregated 
 \emph on
 within
 \emph default
- their dimension: individual users are rolled up to user groups, URLs to
+ their dimension): individual users are rolled up to user groups, URLs to
  URL groups and seconds to minutes.
  Thus, the m-layer consists of 
 \emph on
