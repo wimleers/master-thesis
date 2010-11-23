@@ -3,8 +3,10 @@
 namespace EpisodesParser {
     EpisodeNameIDHash Parser::episodeNameIDHash;
     DomainNameIDHash Parser::domainNameIDHash;
+#ifdef DEBUG
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
+#endif
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
 
