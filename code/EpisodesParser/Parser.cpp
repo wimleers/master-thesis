@@ -183,12 +183,11 @@ namespace EpisodesParser {
 
 #ifdef DEBUG
         /*
-        parsedLine.episodeIDNameHash = &this->episodeIDNameHash;
-        parsedLine.domainIDNameHash = &this->domainIDNameHash;
+        parsedLine.episodeIDNameHash = &Parser::episodeIDNameHash;
+        parsedLine.domainIDNameHash = &Parser::domainIDNameHash;
         qDebug() << parsedLine;
         */
 #endif
-
         return parsedLine;
     }
 
