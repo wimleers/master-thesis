@@ -1,6 +1,7 @@
+# Necessary to be able to use the QHostAddress class.
+QT += network
 
 SOURCES += \
-    main.cpp \
     Parser.cpp \
     typedefs.cpp
 
@@ -9,10 +10,13 @@ HEADERS += \
     typedefs.h \
     QCachingLocale.h
 
-QT += network
-
 # Disable qDebug() output when in release mode.
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
 
 # Add a DEBUG define when in debug mode.
 CONFIG(debug, debug|release):DEFINES += DEBUG
+
+
+
+# Temporary main, for testing purposes.
+SOURCES += main.cpp
