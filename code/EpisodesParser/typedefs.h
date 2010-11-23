@@ -2,6 +2,7 @@
 #define TYPEDEFS_H
 
 #include <QtGlobal>
+#include <QMetaType>
 #include <QList>
 #include <QDebug>
 
@@ -24,14 +25,18 @@ typedef QHash<EpisodeID, EpisodeName> EpisodeIDNameHash;
 // duration is sufficiently long (65535 seconds, 16-bit, would be excessive).
 typedef quint8 EpisodeDuration;
 
-struct EpisodeStruct {
+struct Episode {
+    Episode() {}
+    Episode(EpisodeID id, EpisodeDuration duration) : id(id), duration(duration) {}
     EpisodeID id;
     EpisodeDuration duration;
 #ifdef DEBUG
     EpisodeIDNameHash * IDNameHash;
 #endif
 };
-typedef EpisodeStruct Episode;
+inline bool operator==(const Episode &e1, const Episode &e2) {
+    return e1.id == e2.id && e1.duration == e2.duration;
+}
 typedef QList<Episode> EpisodeList;
 
 // 510 is the highest HTTP status code, so 9 bits would be sufficient, but
@@ -46,7 +51,7 @@ typedef QString DomainName;
 typedef quint8 DomainID;
 typedef QHash<DomainName, DomainID> DomainNameIDHash;
 typedef QHash<DomainID, DomainName> DomainIDNameHash;
-struct DomainStruct {
+struct Domain {
     DomainID id;
     // TODO: allow multiple domains to be analyzed as one whole by providing
     // a common identifier.
@@ -54,10 +59,9 @@ struct DomainStruct {
     EpisodeIDNameHash * IDNameHash;
 #endif
 };
-typedef DomainStruct Domain;
 
 // Parsed raw line from Episodes log file: no processing applied whatsoever.
-struct EpisodesLogLineStruct {
+struct EpisodesLogLine {
     IPAddress ip;
     Time time;
     EpisodeList episodes;
@@ -70,11 +74,10 @@ struct EpisodesLogLineStruct {
     DomainIDNameHash * domainIDNameHash;
 #endif
 };
-typedef EpisodesLogLineStruct EpisodesLogLine;
 
 
 
-struct IPHierarchyStruct {
+struct IPHierarchy {
     IPAddress ip;
     QString continent;
     QString country;
@@ -82,9 +85,8 @@ struct IPHierarchyStruct {
     QString city;
     QString isp;
 };
-typedef IPHierarchyStruct IPHierarchy;
 
-struct UAHierarchyStruct {
+struct UAHierarchy {
     UA ua;
     QString os_name;
     QString os_major;
@@ -94,9 +96,8 @@ struct UAHierarchyStruct {
     QString browser_major;
     QString browser_minor;
 };
-typedef UAHierarchyStruct UAHierarchy;
 
-struct ExpandedEpisodesLogLineStruct {
+struct ExpandedEpisodesLogLine {
     IPHierarchy ip;
     Time time;
     EpisodeList episodes;
@@ -107,7 +108,6 @@ struct ExpandedEpisodesLogLineStruct {
     EpisodeIDNameHash * episodeIDNameHash;
 #endif
 };
-typedef ExpandedEpisodesLogLineStruct ExpandedEpisodesLogLine;
 
 
 
@@ -123,4 +123,9 @@ QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
 
 
 }
+
+// Register metatypes to allow these types to be streamed in QTests.
+Q_DECLARE_METATYPE(EpisodesParser::EpisodeList)
+Q_DECLARE_METATYPE(EpisodesParser::Episode)
+
 #endif // TYPEDEFS_H

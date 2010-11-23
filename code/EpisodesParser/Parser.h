@@ -24,6 +24,9 @@ namespace EpisodesParser {
         Parser();
         int parse(const QString & fileName);
 
+        // Processing logic.
+        static EpisodesLogLine mapLineToEpisodesLogLine(const QString & line);
+
     signals:
         void parsedChunk(QStringList chunk);
     //    void parsedEpisode(Episode episode);
@@ -49,9 +52,6 @@ namespace EpisodesParser {
         // Methods to actually use the above QHashes.
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
         static DomainID mapDomainNameToID(DomainName name);
-
-        // Processing logic.
-        static EpisodesLogLine mapLineToEpisodesLogLine(const QString & line);
     };
 
 }
