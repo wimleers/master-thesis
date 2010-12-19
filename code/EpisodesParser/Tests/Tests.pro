@@ -1,14 +1,7 @@
 DEPENDPATH += ..
-include (../EpisodesParser.pro)
+include (../EpisodesParser.pri)
 
-# Ignore the temporary main.
-SOURCES -= main.cpp
-
-
-# Disable EpisodesParser's conditional debug output.
-#DEFINES -= DEBUG
-
-CONFIG += debug qtestlib
+CONFIG += qtestlib
 macx {
   CONFIG -= app_bundle
 }

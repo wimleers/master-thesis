@@ -1,4 +1,3 @@
-#include <QApplication>
 #include "TestParser.h"
 
 int main() {

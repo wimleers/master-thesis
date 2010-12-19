@@ -1,0 +1,3 @@
+[submodule "code/EpisodesParser/QCachingLocale"]
+	path = code/EpisodesParser/QCachingLocale
+	url = git://github.com/wimleers/QCachingLocale.git
