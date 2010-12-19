@@ -7,10 +7,23 @@ namespace EpisodesParser {
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
 #endif
+    bool Parser::staticsInitialized = false;
+    QBrowsCap Parser::browsCap;
+    QMutex Parser::staticsInitializationMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
 
     Parser::Parser() {
+        // Only initialize some static members the first time an instance of
+        // this class is created.
+        this->staticsInitializationMutex.lock();
+        if (!this->staticsInitialized) {
+            this->browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
+            this->browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
+            this->browsCap.buildIndex();
+        }
+        this->staticsInitializationMutex.unlock();
+
         connect(this, SIGNAL(parsedChunk(QStringList)), SLOT(processParsedChunk(QStringList)));
     }
 
@@ -192,10 +205,36 @@ namespace EpisodesParser {
     }
 
 
+    /**
+     * Expand an EpisodesLogLine data structure to an ExpandedEpisodesLogLine
+     * data structure, which contains the expanded (hierarchical) versions
+     * of the ip and User Agent values. I.e. these expanded versions provide
+     * a concept hierarchy.
+     *
+     * @param line
+     *   EpisodesLogLine data structure.
+     * return
+     *   Corresponding ExpandedEpisodesLogLine data structure.
+     */
+    ExpandedEpisodesLogLine Parser::expandEpisodesLogLine(const EpisodesLogLine & line) {
+        ExpandedEpisodesLogLine expanded;
+
+        Parser::browsCap.matchUserAgent(line.ua);
+
+        return expanded;
+    }
+
+
+    ExpandedEpisodesLogLine Parser::mapAndExpandToEpisodesLogLine(const QString & line) {
+        return Parser::expandEpisodesLogLine(Parser::mapLineToEpisodesLogLine(line));
+    }
+
     //---------------------------------------------------------------------------
     // Protected slots.
 
     void Parser::processParsedChunk(const QStringList & chunk) {
-        QList<EpisodesLogLine> processedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+//        QList<EpisodesLogLine> processedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+//        QtConcurrent::blockingMapped(processedChunk, Parser::expandEpisodesLogLine);
+        QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
     }
 }

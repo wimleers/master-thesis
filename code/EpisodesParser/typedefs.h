@@ -86,23 +86,26 @@ struct IPHierarchy {
     QString isp;
 };
 
-struct UAHierarchy {
+struct UAHierarchyDetails {
     UA ua;
+    // OS details.
     QString os_name;
-    QString os_major;
-    QString os_minor;
-    QString cpu_arch;
+    QString os_version;
+    // Browser details.
     QString browser_name;
-    QString browser_major;
-    QString browser_minor;
+    quint16 browser_version_major;
+    quint16 browser_version_minor;
 };
+typedef quint16 UAHierarchyID;
+typedef QHash<UAHierarchyDetails, UAHierarchyID> UAHierarchyDetailsIDHash;
+typedef QHash<UAHierarchyID, UAHierarchyDetails> UAHierarchyIDDetailsHash;
 
 struct ExpandedEpisodesLogLine {
     IPHierarchy ip;
     Time time;
     EpisodeList episodes;
     HTTPStatus status;
-    UAHierarchy ua;
+    UAHierarchyDetails ua;
     URL url;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;

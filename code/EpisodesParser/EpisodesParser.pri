@@ -4,8 +4,13 @@ QT -= gui
 
 INCLUDEPATH += \
     $${PWD} \
-    $${PWD}/QCachingLocale
-DEPENDPATH += $${PWD}/QCachingLocale
+    $${PWD}/QCachingLocale \
+    $${PWD}/QBrowsCap
+DEPENDPATH += \
+    $${PWD}/QCachingLocale \
+    $${PWD}/QBrowsCap
+
+include("QBrowsCap/QBrowsCap.pri")
 
 SOURCES += \
     $${PWD}/Parser.cpp \

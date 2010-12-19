@@ -11,11 +11,12 @@
 #include <QThread>
 #include <QtConcurrentMap>
 #include <QMutex>
+#include "QBrowsCap.h"
 #include "typedefs.h"
 
 namespace EpisodesParser {
 
-    #define CHUNK_SIZE 1000
+    #define CHUNK_SIZE 4000
 
     class Parser : public QObject {
         Q_OBJECT
@@ -26,6 +27,8 @@ namespace EpisodesParser {
 
         // Processing logic.
         static EpisodesLogLine mapLineToEpisodesLogLine(const QString & line);
+        static ExpandedEpisodesLogLine expandEpisodesLogLine(const EpisodesLogLine & line);
+        static ExpandedEpisodesLogLine mapAndExpandToEpisodesLogLine(const QString & line);
 
     signals:
         void parsedChunk(QStringList chunk);
@@ -45,7 +48,11 @@ namespace EpisodesParser {
         static DomainIDNameHash domainIDNameHash;
 #endif
 
+        static bool staticsInitialized;
+        static QBrowsCap browsCap;
+
         // Mutexes used to ensure thread-safety.
+        static QMutex staticsInitializationMutex;
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
 
