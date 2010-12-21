@@ -5,7 +5,10 @@
 #include <QMetaType>
 #include <QList>
 #include <QHostAddress>
+
+#ifdef DEBUG
 #include <QDebug>
+#endif
 
 
 namespace EpisodesParser {
@@ -28,6 +31,7 @@ typedef quint8 EpisodeDuration;
 struct Episode {
     Episode() {}
     Episode(EpisodeID id, EpisodeDuration duration) : id(id), duration(duration) {}
+
     EpisodeID id;
     EpisodeDuration duration;
 #ifdef DEBUG
