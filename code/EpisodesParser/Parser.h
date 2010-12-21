@@ -6,7 +6,6 @@
 #include <QRegExp>
 #include <QTextStream>
 #include <QStringList>
-#include <QtNetwork>
 #include <QDateTime>
 #include <QThread>
 #include <QtConcurrentMap>

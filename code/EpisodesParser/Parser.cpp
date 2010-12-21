@@ -137,7 +137,6 @@ namespace EpisodesParser {
      *   Corresponding EpisodesLogLine data structure.
      */
     EpisodesLogLine Parser::mapLineToEpisodesLogLine(const QString & line) {
-        static QHostAddress ipConvertor;
         static QDateTime timeConvertor;
         QRegExp rx("((?:\\d{1,3}\\.){3}\\d{1,3}) \\[\\w+, ([^\\]]+)\\] \\\"\\?ets=([^\\\"]+)\\\" (\\d{3}) \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\"");
         QStringList list, episodesRaw, episodeParts;
@@ -150,8 +149,7 @@ namespace EpisodesParser {
         list = rx.capturedTexts();
 
         // IP address.
-        ipConvertor.setAddress(list[1]);
-        parsedLine.ip = ipConvertor.toIPv4Address();
+        parsedLine.ip.setAddress(list[1]);
 
         // Time.
         dateTime = list[2].left(20);

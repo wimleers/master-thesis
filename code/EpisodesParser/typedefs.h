@@ -4,13 +4,13 @@
 #include <QtGlobal>
 #include <QMetaType>
 #include <QList>
+#include <QHostAddress>
 #include <QDebug>
 
 
 namespace EpisodesParser {
 
 
-typedef quint32 IPAddress;
 typedef uint Time;
 
 // Efficient storage of Episode names: don't store the actual names, use
@@ -62,7 +62,7 @@ struct Domain {
 
 // Parsed raw line from Episodes log file: no processing applied whatsoever.
 struct EpisodesLogLine {
-    IPAddress ip;
+    QHostAddress ip;
     Time time;
     EpisodeList episodes;
     HTTPStatus status;
@@ -78,7 +78,7 @@ struct EpisodesLogLine {
 
 
 struct IPHierarchy {
-    IPAddress ip;
+    QHostAddress ip;
     QString continent;
     QString country;
     QString province;
