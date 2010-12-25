@@ -12,6 +12,8 @@ namespace EpisodesParser {
     QMutex Parser::staticsInitializationMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
+    QMutex Parser::regExpMutex;
+    QMutex Parser::dateTimeMutex;
 
     Parser::Parser() {
         // Only initialize some static members the first time an instance of
@@ -138,15 +140,17 @@ namespace EpisodesParser {
      */
     EpisodesLogLine Parser::mapLineToEpisodesLogLine(const QString & line) {
         static QDateTime timeConvertor;
-        QRegExp rx("((?:\\d{1,3}\\.){3}\\d{1,3}) \\[\\w+, ([^\\]]+)\\] \\\"\\?ets=([^\\\"]+)\\\" (\\d{3}) \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\"");
         QStringList list, episodesRaw, episodeParts;
         QString dateTime;
         int timezoneOffset;
         Episode episode;
         EpisodesLogLine parsedLine;
 
+        Parser::regExpMutex.lock();
+        QRegExp rx("((?:\\d{1,3}\\.){3}\\d{1,3}) \\[\\w+, ([^\\]]+)\\] \\\"\\?ets=([^\\\"]+)\\\" (\\d{3}) \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\" \\\"([^\\\"]+)\\\"");
         rx.indexIn(line);
         list = rx.capturedTexts();
+        Parser::regExpMutex.unlock();
 
         // IP address.
         parsedLine.ip.setAddress(list[1]);
@@ -154,6 +158,7 @@ namespace EpisodesParser {
         // Time.
         dateTime = list[2].left(20);
         timezoneOffset = list[2].right(5).left(3).toInt();
+        Parser::dateTimeMutex.lock();
         timeConvertor = QDateTime::fromString(dateTime, "dd-MMM-yyyy HH:mm:ss");
         // Mark this QDateTime as one with a certain offset from UTC, and
         // set that offset.
@@ -163,6 +168,7 @@ namespace EpisodesParser {
         timeConvertor = timeConvertor.toUTC();
         // Store the UTC timestamp.
         parsedLine.time = timeConvertor.toTime_t();
+        Parser::dateTimeMutex.unlock();
 
         // Episode names and durations.
         episodesRaw = list[3].split(',');

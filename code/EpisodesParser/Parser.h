@@ -54,6 +54,8 @@ namespace EpisodesParser {
         static QMutex staticsInitializationMutex;
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
+        static QMutex regExpMutex;
+        static QMutex dateTimeMutex;
 
         // Methods to actually use the above QHashes.
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
