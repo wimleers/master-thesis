@@ -5,12 +5,15 @@ QT -= gui
 INCLUDEPATH += \
     $${PWD} \
     $${PWD}/QCachingLocale \
-    $${PWD}/QBrowsCap
+    $${PWD}/QBrowsCap \
+    $${PWD}/QGeoIP
 DEPENDPATH += \
     $${PWD}/QCachingLocale \
-    $${PWD}/QBrowsCap
+    $${PWD}/QBrowsCap \
+    $${PWD}/QGeoIP
 
 include("QBrowsCap/QBrowsCap.pri")
+include("QGeoIP/QGeoIP.pri")
 
 SOURCES += \
     $${PWD}/Parser.cpp \

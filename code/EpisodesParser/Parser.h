@@ -11,6 +11,7 @@
 #include <QtConcurrentMap>
 #include <QMutex>
 #include "QBrowsCap.h"
+#include "QGeoIP.h"
 #include "typedefs.h"
 
 namespace EpisodesParser {
@@ -49,6 +50,7 @@ namespace EpisodesParser {
 
         static bool staticsInitialized;
         static QBrowsCap browsCap;
+        static QGeoIP geoIP;
 
         // Mutexes used to ensure thread-safety.
         static QMutex staticsInitializationMutex;

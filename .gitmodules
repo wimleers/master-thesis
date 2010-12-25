@@ -4,3 +4,6 @@
 [submodule "code/EpisodesParser/QBrowsCap"]
 	path = code/EpisodesParser/QBrowsCap
 	url = git@github.com:wimleers/QBrowsCap.git
+[submodule "code/EpisodesParser/QGeoIP"]
+	path = code/EpisodesParser/QGeoIP
+	url = git@github.com:wimleers/QGeoIP.git

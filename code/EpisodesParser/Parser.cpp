@@ -9,6 +9,7 @@ namespace EpisodesParser {
 #endif
     bool Parser::staticsInitialized = false;
     QBrowsCap Parser::browsCap;
+    QGeoIP Parser::geoIP;
     QMutex Parser::staticsInitializationMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
@@ -23,6 +24,8 @@ namespace EpisodesParser {
             this->browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
             this->browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
             this->browsCap.buildIndex();
+
+            this->geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
         }
         this->staticsInitializationMutex.unlock();
 
@@ -222,8 +225,10 @@ namespace EpisodesParser {
      */
     ExpandedEpisodesLogLine Parser::expandEpisodesLogLine(const EpisodesLogLine & line) {
         ExpandedEpisodesLogLine expanded;
+//        QGeoIPRecord record;
 
         Parser::browsCap.matchUserAgent(line.ua);
+        Parser::geoIP.recordByAddr(line.ip);
 
         return expanded;
     }
@@ -239,6 +244,12 @@ namespace EpisodesParser {
     void Parser::processParsedChunk(const QStringList & chunk) {
 //        QList<EpisodesLogLine> processedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
 //        QtConcurrent::blockingMapped(processedChunk, Parser::expandEpisodesLogLine);
-        QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
+
+        QString line;
+        foreach (line, chunk) {
+            Parser::mapAndExpandToEpisodesLogLine(line);
+        }
+
+//        QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
     }
 }
