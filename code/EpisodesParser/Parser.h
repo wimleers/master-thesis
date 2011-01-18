@@ -45,6 +45,8 @@ namespace EpisodesParser {
         static DomainNameIDHash domainNameIDHash;
         static UAHierarchyDetailsIDHash uaHierarchyDetailsIDHash;
         static UAHierarchyIDDetailsHash uaHierarchyIDDetailsHash;
+        static TYPE_hash_location_toID hash_location_toID;
+        static TYPE_hash_location_fromID hash_location_fromID;
 #ifdef DEBUG
         static EpisodeIDNameHash episodeIDNameHash;
         static DomainIDNameHash domainIDNameHash;
@@ -59,6 +61,7 @@ namespace EpisodesParser {
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
         static QMutex uaHierarchyHashMutex;
+        static QMutex mutex_hashAccess_location;
         static QMutex regExpMutex;
         static QMutex dateTimeMutex;
 
@@ -66,6 +69,7 @@ namespace EpisodesParser {
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
         static DomainID mapDomainNameToID(DomainName name);
         static UAHierarchyID mapUAHierarchyToID(UAHierarchyDetails ua);
+        static LocationID hash_location_mapToID(const Location & location);
     };
 
 }

@@ -3,6 +3,10 @@
 
 namespace EpisodesParser {
 
+    uint qHash(const Location & location) {
+        return qHash(location.region + location.city + location.isp);
+    }
+
     uint qHash(const UAHierarchyDetails & ua) {
         return qHash(ua.platform + ua.browser_name + ua.browser_version);
     }
@@ -62,12 +66,12 @@ namespace EpisodesParser {
         return dbg.nospace();
     }
 
-    QDebug operator<<(QDebug dbg, const IPHierarchy & ip) {
-        dbg.nospace() << ip.ip
-                      << " ("
-                      << ip.continent << " > " << ip.country << " > " << ip.city
-                      << ", " << ip.isp
-                      << ")";
+    QDebug operator<<(QDebug dbg, const Location & location) {
+        dbg.nospace() << location.continent
+                      << " > " << location.region
+                      << " > " << location.country
+                      << " > " << location.city
+                      << " (" << location.isp << ")";
         return dbg.nospace();
     }
 
@@ -82,7 +86,7 @@ namespace EpisodesParser {
         const static char * eol = ", \n";
 
         dbg.nospace() << "{\n"
-                      << "IP = " << line.ip << eol
+                      << "location = " << line.location << eol
                       << "time = " << line.time << eol
                       << "episodes = " << line.episodes << eol
                       << "status = " << line.status << eol

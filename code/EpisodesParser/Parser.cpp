@@ -5,6 +5,8 @@ namespace EpisodesParser {
     DomainNameIDHash Parser::domainNameIDHash;
     UAHierarchyDetailsIDHash Parser::uaHierarchyDetailsIDHash;
     UAHierarchyIDDetailsHash Parser::uaHierarchyIDDetailsHash;
+    TYPE_hash_location_toID   Parser::hash_location_toID;
+    TYPE_hash_location_fromID Parser::hash_location_fromID;
 #ifdef DEBUG
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
@@ -16,6 +18,7 @@ namespace EpisodesParser {
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
     QMutex Parser::uaHierarchyHashMutex;
+    QMutex Parser::mutex_hashAccess_location;
     QMutex Parser::regExpMutex;
     QMutex Parser::dateTimeMutex;
 
@@ -164,6 +167,32 @@ namespace EpisodesParser {
     }
 
     /**
+     * Map a Location to a Location ID. Generate a new ID when necessary.
+     *
+     * @param location
+     *   Location.
+     * @return
+     *   The corresponding location ID.
+     *
+     * Modifies a class variable upon some calls (i.e. when a new key must be
+     * inserted in the QHash), hence we need to use a mutex to ensure thread
+     * safety.
+     */
+    LocationID Parser::hash_location_mapToID(const Location & location) {
+        if (!Parser::hash_location_toID.contains(location)) {
+            Parser::mutex_hashAccess_location.lock();
+
+            LocationID id = Parser::hash_location_toID.size();
+            Parser::hash_location_toID.insert(location, id);
+            Parser::hash_location_fromID.insert(id, location);
+
+            Parser::mutex_hashAccess_location.unlock();
+        }
+
+        return Parser::hash_location_toID[location];
+    }
+
+    /**
      * Map a line (raw string) to an EpisodesLogLine data structure.
      *
      * @param line
@@ -256,16 +285,19 @@ namespace EpisodesParser {
         ExpandedEpisodesLogLine expandedLine;
         QGeoIPRecord geoIPRecord;
         QPair<bool, QBrowsCapRecord> browsCapResult;
+        Location location;
         UAHierarchyDetails ua;
 
         // IP address hierarchy.
         geoIPRecord = Parser::geoIP.recordByAddr(line.ip);
-        expandedLine.ip.ip        = line.ip;
-        expandedLine.ip.continent = geoIPRecord.continentCode;
-        expandedLine.ip.country   = geoIPRecord.country;
-        expandedLine.ip.city      = geoIPRecord.city;
-        expandedLine.ip.region    = geoIPRecord.region;
-        expandedLine.ip.isp       = geoIPRecord.isp;
+        location.continent = geoIPRecord.continentCode;
+        location.country   = geoIPRecord.country;
+        location.city      = geoIPRecord.city;
+        location.region    = geoIPRecord.region;
+        location.isp       = geoIPRecord.isp;
+
+        expandedLine.location = Parser::hash_location_mapToID(location);
+        expandedLine.hash_location_fromID = &Parser::hash_location_fromID;
 
         // Time.
         expandedLine.time = line.time;

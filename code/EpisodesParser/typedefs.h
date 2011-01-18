@@ -81,14 +81,26 @@ struct EpisodesLogLine {
 
 
 
-struct IPHierarchy {
-    QHostAddress ip;
+struct Location{
     QString continent;
     QString country;
     QString region;
     QString city;
     QString isp;
+
+    // @TODO this is a likely performance bottleneck.
+    // @TRICKY: Note that we don't check continent and country, we assume each
+    // (region, city, isp) tuple is unique on its own!
+    bool operator==(const Location & other) const {
+        return (this->region == other.region
+                && this->city == other.city
+                && this->isp == other.isp);
+    }
 };
+typedef quint32 LocationID;
+typedef QHash<Location, LocationID> TYPE_hash_location_toID;
+typedef QHash<LocationID, Location> TYPE_hash_location_fromID;
+uint qHash(const Location & location);
 
 struct UAHierarchyDetails {
     // OS details.
@@ -105,21 +117,23 @@ struct UAHierarchyDetails {
         return (this->platform == other.platform && this->browser_name == other.browser_name && this->browser_version == other.browser_version);
     }
 };
-typedef uint UAHierarchyID;
+typedef quint16 UAHierarchyID;
 typedef QHash<UAHierarchyDetails, UAHierarchyID> UAHierarchyDetailsIDHash;
 typedef QHash<UAHierarchyID, UAHierarchyDetails> UAHierarchyIDDetailsHash;
 uint qHash(const UAHierarchyDetails & ua);
 
 struct ExpandedEpisodesLogLine {
-    IPHierarchy ip;
+    LocationID location;
     Time time;
     EpisodeList episodes;
     HTTPStatus status;
     URL url;
     UAHierarchyID ua;
+
+    TYPE_hash_location_fromID * hash_location_fromID;
+    UAHierarchyIDDetailsHash * uaHierarchyIDDetailsHash;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;
-    UAHierarchyIDDetailsHash * uaHierarchyIDDetailsHash;
 #endif
 };
 
@@ -132,7 +146,7 @@ struct ExpandedEpisodesLogLine {
 QDebug operator<<(QDebug dbg, const Episode & episode);
 QDebug operator<<(QDebug dbg, const Domain & domain);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
-QDebug operator<<(QDebug dbg, const IPHierarchy & ip);
+QDebug operator<<(QDebug dbg, const Location & location);
 QDebug operator<<(QDebug dbg, const UAHierarchyDetails & ua);
 QDebug operator<<(QDebug dbg, const ExpandedEpisodesLogLine & episodesLogLine);
 #endif
