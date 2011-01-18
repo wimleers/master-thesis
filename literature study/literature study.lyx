@@ -4506,7 +4506,7 @@ Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; SV1; (R1 1.6); .NET CLR 2.0.5
 \end_layout
 
 \begin_layout Standard
-An important implication that may not be immeiately obvious, is that the
+An important implication that may not be immediately obvious, is that the
  summing of support counts at a of the child concepts at a lower level for
  the parent concept at a higher level does not need to be performed explicitly.
  This happens automatically thanks to the extending of transactions!
