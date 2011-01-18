@@ -25,9 +25,11 @@ typedef quint8 EpisodeID;
 typedef QHash<EpisodeName, EpisodeID> EpisodeNameIDHash;
 typedef QHash<EpisodeID, EpisodeName> EpisodeIDNameHash;
 
-// Store Episode durations as 8-bit uints, 255 seconds as an Episode
-// duration is sufficiently long (65535 seconds, 16-bit, would be excessive).
-typedef quint8 EpisodeDuration;
+// Store Episode durations as 16-bit uints.
+typedef quint16 EpisodeDuration;
+// The EpisodeDuration will be discretized to an EpisodeSpeed for association
+// rule mining.
+typedef QString EpisodeSpeed;
 
 struct Episode {
     Episode() {}

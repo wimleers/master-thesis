@@ -12,6 +12,7 @@
 #include <QMutex>
 #include "QBrowsCap.h"
 #include "QGeoIP.h"
+#include "EpisodeDurationDiscretizer.h"
 #include "typedefs.h"
 
 namespace EpisodesParser {
@@ -56,6 +57,7 @@ namespace EpisodesParser {
         static bool staticsInitialized;
         static QBrowsCap browsCap;
         static QGeoIP geoIP;
+        static EpisodeDurationDiscretizer episodeDiscretizer;
 
         // Mutexes used to ensure thread-safety.
         static QMutex staticsInitializationMutex;

@@ -11,7 +11,6 @@ int main(int argc, char *argv[]) {
     Parser * parser;
     QTime timer;
 
-
     parser = new Parser();
 
     timer.start();
@@ -23,6 +22,8 @@ int main(int argc, char *argv[]) {
             .arg((float)linesParsed/timePassed)
             .arg((float)timePassed/linesParsed)
             << endl;
+
+    delete parser;
 }
 
 

@@ -17,12 +17,14 @@ include("QGeoIP/QGeoIP.pri")
 
 SOURCES += \
     $${PWD}/Parser.cpp \
-    $${PWD}/typedefs.cpp
+    $${PWD}/typedefs.cpp \
+    EpisodesParser/EpisodeDurationDiscretizer.cpp
 
 HEADERS += \
     $${PWD}/Parser.h \
     $${PWD}/typedefs.h \
-    $${PWD}/QCachingLocale/QCachingLocale.h
+    $${PWD}/QCachingLocale/QCachingLocale.h \
+    EpisodesParser/EpisodeDurationDiscretizer.h
 
 # Disable qDebug() output when in release mode.
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT

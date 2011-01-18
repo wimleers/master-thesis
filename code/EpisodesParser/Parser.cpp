@@ -12,8 +12,11 @@ namespace EpisodesParser {
     DomainIDNameHash Parser::domainIDNameHash;
 #endif
     bool Parser::staticsInitialized = false;
+
     QBrowsCap Parser::browsCap;
     QGeoIP Parser::geoIP;
+    EpisodeDurationDiscretizer Parser::episodeDiscretizer;
+
     QMutex Parser::staticsInitializationMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
@@ -32,6 +35,8 @@ namespace EpisodesParser {
             this->browsCap.buildIndex();
 
             this->geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
+
+            this->episodeDiscretizer.parseCsvFile("/Users/wimleers/School/masterthesis/git/code/EpisodesParser/EpisodesSpeeds.csv");
         }
         this->staticsInitializationMutex.unlock();
 
@@ -338,14 +343,15 @@ namespace EpisodesParser {
                  << Parser::uaHierarchyIDDetailsHash.value(line.ua).generateAssociationRuleItems();
 
         Episode episode;
+        EpisodeName episodeName;
         QStringList transaction;
         foreach (episode, line.episodes) {
-            transaction << QString("episode:") + episode.IDNameHash->value(episode.id)
-                        // TODO: don't store the actual duration, but the
-                        // corresponding discretized value (e.g. "slow")
-                        << QString("duration:") + QString::number(episode.duration)
+            episodeName = episode.IDNameHash->value(episode.id);
+            transaction << QString("episode:") + episodeName
+                        << QString("duration:") + Parser::episodeDiscretizer.mapToSpeed(episodeName, episode.duration)
                         // Append the shared items.
                         << itemList;
+            qDebug() << transaction;
             transactions << transaction;
         }
 
