@@ -85,7 +85,7 @@ struct IPHierarchy {
     QHostAddress ip;
     QString continent;
     QString country;
-    QString province;
+    QString region;
     QString city;
     QString isp;
 };
@@ -93,12 +93,13 @@ struct IPHierarchy {
 struct UAHierarchyDetails {
     UA ua;
     // OS details.
-    QString os_name;
-    QString os_version;
+    QString platform;
     // Browser details.
     QString browser_name;
+    QString browser_version;
     quint16 browser_version_major;
     quint16 browser_version_minor;
+    bool is_mobile;
 };
 typedef quint16 UAHierarchyID;
 typedef QHash<UAHierarchyDetails, UAHierarchyID> UAHierarchyDetailsIDHash;
@@ -109,8 +110,8 @@ struct ExpandedEpisodesLogLine {
     Time time;
     EpisodeList episodes;
     HTTPStatus status;
-    UAHierarchyDetails ua;
     URL url;
+    UAHierarchyDetails ua;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;
 #endif
@@ -125,6 +126,9 @@ struct ExpandedEpisodesLogLine {
 QDebug operator<<(QDebug dbg, const Episode & episode);
 QDebug operator<<(QDebug dbg, const Domain & domain);
 QDebug operator<<(QDebug dbg, const EpisodesLogLine & episodesLogLine);
+QDebug operator<<(QDebug dbg, const IPHierarchy & ip);
+QDebug operator<<(QDebug dbg, const UAHierarchyDetails & ua);
+QDebug operator<<(QDebug dbg, const ExpandedEpisodesLogLine & episodesLogLine);
 #endif
 
 

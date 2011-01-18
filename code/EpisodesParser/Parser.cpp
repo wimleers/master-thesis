@@ -178,10 +178,10 @@ namespace EpisodesParser {
         foreach (QString episodeRaw, episodesRaw) {
             episodeParts = episodeRaw.split(':');
 
-            episode.id       = mapEpisodeNameToID(episodeParts[0]);
+            episode.id       = Parser::mapEpisodeNameToID(episodeParts[0]);
             episode.duration = episodeParts[1].toInt();
 #ifdef DEBUG
-            episode.IDNameHash = &episodeIDNameHash;
+            episode.IDNameHash = &Parser::episodeIDNameHash;
 #endif
             parsedLine.episodes.append(episode);
         }
@@ -224,13 +224,42 @@ namespace EpisodesParser {
      *   Corresponding ExpandedEpisodesLogLine data structure.
      */
     ExpandedEpisodesLogLine Parser::expandEpisodesLogLine(const EpisodesLogLine & line) {
-        ExpandedEpisodesLogLine expanded;
-//        QGeoIPRecord record;
+        ExpandedEpisodesLogLine expandedLine;
+        QGeoIPRecord geoIPRecord;
+        QPair<bool, QBrowsCapRecord> BCResult;
+        QBrowsCapRecord & BCRecord = BCResult.second;
 
-        Parser::browsCap.matchUserAgent(line.ua);
-        Parser::geoIP.recordByAddr(line.ip);
+        // IP address hierarchy.
+        geoIPRecord = Parser::geoIP.recordByAddr(line.ip);
+        expandedLine.ip.ip        = line.ip;
+        expandedLine.ip.continent = geoIPRecord.continentCode;
+        expandedLine.ip.country   = geoIPRecord.country;
+        expandedLine.ip.city      = geoIPRecord.city;
+        expandedLine.ip.region    = geoIPRecord.region;
+        expandedLine.ip.isp       = geoIPRecord.isp;
 
-        return expanded;
+        // Time.
+        expandedLine.time = line.time;
+
+        // Episode name and durations.
+        // @TODO: discretize to fast/acceptable/slow.
+        expandedLine.episodes = line.episodes;
+
+        // URL.
+        expandedLine.url = line.url;
+
+        // User-Agent hierarchy.
+        BCResult = Parser::browsCap.matchUserAgent(line.ua);
+        BCRecord = BCResult.second;
+        expandedLine.ua.ua = line.ua;
+        expandedLine.ua.platform              = BCRecord.platform;
+        expandedLine.ua.browser_name          = BCRecord.browser_name;
+        expandedLine.ua.browser_version       = BCRecord.browser_version;
+        expandedLine.ua.browser_version_major = BCRecord.browser_version_major;
+        expandedLine.ua.browser_version_minor = BCRecord.browser_version_minor;
+        expandedLine.ua.is_mobile             = BCRecord.is_mobile;
+
+        return expandedLine;
     }
 
 
