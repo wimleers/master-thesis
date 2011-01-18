@@ -43,6 +43,8 @@ namespace EpisodesParser {
         // QHashes that are used to minimize memory usage.
         static EpisodeNameIDHash episodeNameIDHash;
         static DomainNameIDHash domainNameIDHash;
+        static UAHierarchyDetailsIDHash uaHierarchyDetailsIDHash;
+        static UAHierarchyIDDetailsHash uaHierarchyIDDetailsHash;
 #ifdef DEBUG
         static EpisodeIDNameHash episodeIDNameHash;
         static DomainIDNameHash domainIDNameHash;
@@ -56,12 +58,14 @@ namespace EpisodesParser {
         static QMutex staticsInitializationMutex;
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
+        static QMutex uaHierarchyHashMutex;
         static QMutex regExpMutex;
         static QMutex dateTimeMutex;
 
         // Methods to actually use the above QHashes.
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
         static DomainID mapDomainNameToID(DomainName name);
+        static UAHierarchyID mapUAHierarchyToID(UAHierarchyDetails ua);
     };
 
 }

@@ -3,6 +3,8 @@
 namespace EpisodesParser {
     EpisodeNameIDHash Parser::episodeNameIDHash;
     DomainNameIDHash Parser::domainNameIDHash;
+    UAHierarchyDetailsIDHash Parser::uaHierarchyDetailsIDHash;
+    UAHierarchyIDDetailsHash Parser::uaHierarchyIDDetailsHash;
 #ifdef DEBUG
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
@@ -13,6 +15,7 @@ namespace EpisodesParser {
     QMutex Parser::staticsInitializationMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
+    QMutex Parser::uaHierarchyHashMutex;
     QMutex Parser::regExpMutex;
     QMutex Parser::dateTimeMutex;
 
@@ -134,6 +137,33 @@ namespace EpisodesParser {
     }
 
     /**
+     * Map a UA hierarchy to a UA hierarchy ID. Generate a new ID when
+     * necessary.
+     *
+     * @param ua
+     *   UA hierarchy
+     * @return
+     *   The corresponding UA hierarchy ID.
+     *
+     * Modifies a class variable upon some calls (i.e. when a new key must be
+     * inserted in the QHash), hence we need to use a mutex to ensure thread
+     * safety.
+     */
+    UAHierarchyID Parser::mapUAHierarchyToID(UAHierarchyDetails ua) {
+        if (!Parser::uaHierarchyDetailsIDHash.contains(ua)) {
+            Parser::uaHierarchyHashMutex.lock();
+
+            UAHierarchyID id = Parser::uaHierarchyDetailsIDHash.size();
+            Parser::uaHierarchyDetailsIDHash.insert(ua, id);
+            Parser::uaHierarchyIDDetailsHash.insert(id, ua);
+
+            Parser::uaHierarchyHashMutex.unlock();
+        }
+
+        return Parser::uaHierarchyDetailsIDHash[ua];
+    }
+
+    /**
      * Map a line (raw string) to an EpisodesLogLine data structure.
      *
      * @param line
@@ -211,7 +241,6 @@ namespace EpisodesParser {
         return parsedLine;
     }
 
-
     /**
      * Expand an EpisodesLogLine data structure to an ExpandedEpisodesLogLine
      * data structure, which contains the expanded (hierarchical) versions
@@ -226,8 +255,8 @@ namespace EpisodesParser {
     ExpandedEpisodesLogLine Parser::expandEpisodesLogLine(const EpisodesLogLine & line) {
         ExpandedEpisodesLogLine expandedLine;
         QGeoIPRecord geoIPRecord;
-        QPair<bool, QBrowsCapRecord> BCResult;
-        QBrowsCapRecord & BCRecord = BCResult.second;
+        QPair<bool, QBrowsCapRecord> browsCapResult;
+        UAHierarchyDetails ua;
 
         // IP address hierarchy.
         geoIPRecord = Parser::geoIP.recordByAddr(line.ip);
@@ -249,15 +278,16 @@ namespace EpisodesParser {
         expandedLine.url = line.url;
 
         // User-Agent hierarchy.
-        BCResult = Parser::browsCap.matchUserAgent(line.ua);
-        BCRecord = BCResult.second;
-        expandedLine.ua.ua = line.ua;
-        expandedLine.ua.platform              = BCRecord.platform;
-        expandedLine.ua.browser_name          = BCRecord.browser_name;
-        expandedLine.ua.browser_version       = BCRecord.browser_version;
-        expandedLine.ua.browser_version_major = BCRecord.browser_version_major;
-        expandedLine.ua.browser_version_minor = BCRecord.browser_version_minor;
-        expandedLine.ua.is_mobile             = BCRecord.is_mobile;
+        browsCapResult = Parser::browsCap.matchUserAgent(line.ua);
+        ua.platform              = browsCapResult.second.platform;
+        ua.browser_name          = browsCapResult.second.browser_name;
+        ua.browser_version       = browsCapResult.second.browser_version;
+        ua.browser_version_major = browsCapResult.second.browser_version_major;
+        ua.browser_version_minor = browsCapResult.second.browser_version_minor;
+        ua.is_mobile             = browsCapResult.second.is_mobile;
+
+        expandedLine.ua = Parser::mapUAHierarchyToID(ua);
+        expandedLine.uaHierarchyIDDetailsHash = &Parser::uaHierarchyIDDetailsHash;
 
         return expandedLine;
     }

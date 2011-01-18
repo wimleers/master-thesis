@@ -1,10 +1,13 @@
-#ifdef DEBUG
-
 #include "typedefs.h"
 
 
 namespace EpisodesParser {
 
+    uint qHash(const UAHierarchyDetails & ua) {
+        return qHash(ua.platform + ua.browser_name + ua.browser_version);
+    }
+
+#ifdef DEBUG
     QDebug operator<<(QDebug dbg, const Episode & e) {
         dbg.nospace() << e.IDNameHash->value(e.id).toStdString().c_str()
                       << "("
@@ -84,10 +87,10 @@ namespace EpisodesParser {
                       << "episodes = " << line.episodes << eol
                       << "status = " << line.status << eol
                       << "URL = " << line.url << eol
-                      << "user-agent = " << line.ua << eol
+                      << "user-agent = " << line.ua << " -> " << line.uaHierarchyIDDetailsHash->value(line.ua) << eol
                       << "}";
 
         return dbg.nospace();
     }
-}
 #endif
+}

@@ -91,7 +91,6 @@ struct IPHierarchy {
 };
 
 struct UAHierarchyDetails {
-    UA ua;
     // OS details.
     QString platform;
     // Browser details.
@@ -100,10 +99,16 @@ struct UAHierarchyDetails {
     quint16 browser_version_major;
     quint16 browser_version_minor;
     bool is_mobile;
+
+    // @TODO this is a likely performance bottleneck.
+    bool operator==(const UAHierarchyDetails & other) const {
+        return (this->platform == other.platform && this->browser_name == other.browser_name && this->browser_version == other.browser_version);
+    }
 };
-typedef quint16 UAHierarchyID;
+typedef uint UAHierarchyID;
 typedef QHash<UAHierarchyDetails, UAHierarchyID> UAHierarchyDetailsIDHash;
 typedef QHash<UAHierarchyID, UAHierarchyDetails> UAHierarchyIDDetailsHash;
+uint qHash(const UAHierarchyDetails & ua);
 
 struct ExpandedEpisodesLogLine {
     IPHierarchy ip;
@@ -111,9 +116,10 @@ struct ExpandedEpisodesLogLine {
     EpisodeList episodes;
     HTTPStatus status;
     URL url;
-    UAHierarchyDetails ua;
+    UAHierarchyID ua;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;
+    UAHierarchyIDDetailsHash * uaHierarchyIDDetailsHash;
 #endif
 };
 
