@@ -29,6 +29,7 @@ namespace EpisodesParser {
         static EpisodesLogLine mapLineToEpisodesLogLine(const QString & line);
         static ExpandedEpisodesLogLine expandEpisodesLogLine(const EpisodesLogLine & line);
         static ExpandedEpisodesLogLine mapAndExpandToEpisodesLogLine(const QString & line);
+        static QList<QStringList> mapExpandedEpisodesLogLineToTransactions(const ExpandedEpisodesLogLine & line);
 
     signals:
         void parsedChunk(QStringList chunk);

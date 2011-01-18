@@ -329,6 +329,30 @@ namespace EpisodesParser {
         return Parser::expandEpisodesLogLine(Parser::mapLineToEpisodesLogLine(line));
     }
 
+    QList<QStringList> Parser::mapExpandedEpisodesLogLineToTransactions(const ExpandedEpisodesLogLine & line) {
+        QList<QStringList> transactions;
+        QStringList itemList;
+        itemList << QString("url:") + QString(line.url)
+                 << QString("status:") + QString::number(line.status)
+                 << Parser::hash_location_fromID.value(line.location).generateAssociationRuleItems()
+                 << Parser::uaHierarchyIDDetailsHash.value(line.ua).generateAssociationRuleItems();
+
+        Episode episode;
+        QStringList transaction;
+        foreach (episode, line.episodes) {
+            transaction << QString("episode:") + episode.IDNameHash->value(episode.id)
+                        // TODO: don't store the actual duration, but the
+                        // corresponding discretized value (e.g. "slow")
+                        << QString("duration:") + QString::number(episode.duration)
+                        // Append the shared items.
+                        << itemList;
+            transactions << transaction;
+        }
+
+        return transactions;
+    }
+
+
     //---------------------------------------------------------------------------
     // Protected slots.
 
@@ -338,14 +362,29 @@ namespace EpisodesParser {
         // to an EpisodesLogLine concurrently for now.
         // QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
 
+        // Perform the mapping from strings to EpisodesLogLine concurrently.
         QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
 
+        // Perform the expanding of the EpisodesLogLines sequentially.
+        // Reason: see above.
         QList<ExpandedEpisodesLogLine> expandedChunk;
         EpisodesLogLine line;
         foreach (line, mappedChunk) {
             expandedChunk << Parser::expandEpisodesLogLine(line);
         }
 
-        qDebug() << "Processed chunk! Size:" << expandedChunk.size();
+        // Perform the mapping from ExpandedEpisodesLogLines to groups of
+        // transactions concurrently
+        QList< QList<QStringList> > groupedTransactions = QtConcurrent::blockingMapped(expandedChunk, Parser::mapExpandedEpisodesLogLineToTransactions);
+
+        // Perform the merging of transaction groups into a single list of
+        // transactions sequentially (impossible to do concurrently).
+        QList<QStringList> transactions;
+        QList<QStringList> transactionGroup;
+        foreach (transactionGroup, groupedTransactions) {
+            transactions << transactionGroup;
+        }
+
+        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines! Transactions generated:" << transactions.size();
     }
 }

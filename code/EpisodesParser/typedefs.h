@@ -5,6 +5,7 @@
 #include <QMetaType>
 #include <QList>
 #include <QHostAddress>
+#include <QStringList>
 
 #ifdef DEBUG
 #include <QDebug>
@@ -96,6 +97,26 @@ struct Location{
                 && this->city == other.city
                 && this->isp == other.isp);
     }
+
+    /**
+     * Generate the items for this Location, to allow for association rule
+     * mining. This takes the concept hierarchy into account.
+     *
+     * @return
+     *   The association rule items for this Location.
+     */
+    QStringList generateAssociationRuleItems() const {
+        static const QString prefix = "location:";
+        static const QString s = ":";
+
+        return QStringList() // Granular locations.
+                             << prefix + this->continent
+                             << prefix + this->continent + s + this->country
+                             << prefix + this->continent + s + this->country + s + this->region
+                             << prefix + this->continent + s + this->country + s + this->region + s + this->city
+                             // ISP per country (global ISP does not make sense).
+                             << prefix + "isp:" + this->country + s + this->isp;
+    }
 };
 typedef quint32 LocationID;
 typedef QHash<Location, LocationID> TYPE_hash_location_toID;
@@ -115,6 +136,33 @@ struct UAHierarchyDetails {
     // @TODO this is a likely performance bottleneck.
     bool operator==(const UAHierarchyDetails & other) const {
         return (this->platform == other.platform && this->browser_name == other.browser_name && this->browser_version == other.browser_version);
+    }
+
+    /**
+     * Generate the items for this UA, to allow for association rule
+     * mining. This takes the concept hierarchy into account.
+     *
+     * @return
+     *   The association rule items for this Location.
+     */
+    QStringList generateAssociationRuleItems() const {
+        static const QString prefix = "ua:";
+        static const QString s = ":";
+
+        const QString browser_version_major = QString::number(this->browser_version_major);
+        const QString browser_version_minor = QString::number(this->browser_version_minor);
+
+        return QStringList() // Platform-specific browsers.
+                             << prefix + this->platform
+                             << prefix + this->platform + s + this->browser_name
+                             << prefix + this->platform + s + this->browser_name + s + browser_version_major
+                             << prefix + this->platform + s + this->browser_name + s + browser_version_major + s + browser_version_minor
+                             // Cross-platform browsers.
+                             << prefix + this->browser_name
+                             << prefix + this->browser_name + s + browser_version_major
+                             << prefix + this->browser_name + s + browser_version_major + s + browser_version_minor
+                             // Mobile or not.
+                             << prefix + ((this->is_mobile) ? "isMobile" : "isNotMobile");
     }
 };
 typedef quint16 UAHierarchyID;
