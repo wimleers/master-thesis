@@ -22,3 +22,4 @@ attachWysiwyg,fast,10,acceptable,20,slow
 filefieldPreviewLinks,fast,10,acceptable,20,slow
 filefieldAdmin,fast,10,acceptable,20,slow
 filefieldButtons,fast,10,acceptable,20,slow
+autocomplete,fast,50,acceptable,200,slow

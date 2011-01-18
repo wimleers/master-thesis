@@ -351,7 +351,6 @@ namespace EpisodesParser {
                         << QString("duration:") + Parser::episodeDiscretizer.mapToSpeed(episodeName, episode.duration)
                         // Append the shared items.
                         << itemList;
-            qDebug() << transaction;
             transactions << transaction;
         }
 
