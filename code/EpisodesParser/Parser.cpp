@@ -271,14 +271,19 @@ namespace EpisodesParser {
     // Protected slots.
 
     void Parser::processParsedChunk(const QStringList & chunk) {
-//        QList<EpisodesLogLine> processedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
-//        QtConcurrent::blockingMapped(processedChunk, Parser::expandEpisodesLogLine);
+        // This 100% concurrent approach fails, because QGeoIP still has
+        // thread-safety issues. Hence, we only do the mapping from a QString
+        // to an EpisodesLogLine concurrently for now.
+        // QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
 
-        QString line;
-        foreach (line, chunk) {
-            Parser::mapAndExpandToEpisodesLogLine(line);
+        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+
+        QList<ExpandedEpisodesLogLine> expandedChunk;
+        EpisodesLogLine line;
+        foreach (line, mappedChunk) {
+            expandedChunk << Parser::expandEpisodesLogLine(line);
         }
 
-//        QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
+        qDebug() << "Processed chunk! Size:" << expandedChunk.size();
     }
 }
