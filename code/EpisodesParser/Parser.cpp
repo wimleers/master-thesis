@@ -355,6 +355,7 @@ namespace EpisodesParser {
                         // Append the shared items.
                         << itemList;
             transactions << transaction;
+            transaction.clear();
         }
 
         return transactions;
@@ -390,7 +391,7 @@ namespace EpisodesParser {
         QList<QStringList> transactions;
         QList<QStringList> transactionGroup;
         foreach (transactionGroup, groupedTransactions) {
-            transactions << transactionGroup;
+            transactions.append(transactionGroup);
         }
 
         qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines! Transactions generated:" << transactions.size();
