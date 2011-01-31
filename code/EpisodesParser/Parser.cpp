@@ -311,6 +311,9 @@ namespace EpisodesParser {
         // @TODO: discretize to fast/acceptable/slow.
         expandedLine.episodes = line.episodes;
 
+        // HTTP status code.
+        expandedLine.status = line.status;
+
         // URL.
         expandedLine.url = line.url;
 
