@@ -30,12 +30,15 @@ namespace EpisodesParser {
         // this class is created.
         this->staticsInitializationMutex.lock();
         if (!this->staticsInitialized) {
+            // About 1.5 MB of permanent memory consumption.
             this->browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
             this->browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
             this->browsCap.buildIndex();
 
+            // About 25 MB of permanent memory consumption.
             this->geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
 
+            // No significant permanent memory consumption.
             this->episodeDiscretizer.parseCsvFile("/Users/wimleers/School/masterthesis/git/code/EpisodesParser/EpisodesSpeeds.csv");
         }
         this->staticsInitializationMutex.unlock();
