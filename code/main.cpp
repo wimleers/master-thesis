@@ -12,7 +12,7 @@ int main(int argc, char *argv[]) {
     QTime timer;
 
     parser = new Parser();
-
+/*
     timer.start();
     int linesParsed = parser->parse("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.log");
     int timePassed = timer.elapsed();
@@ -22,8 +22,16 @@ int main(int argc, char *argv[]) {
             .arg((float)linesParsed/timePassed)
             .arg((float)timePassed/linesParsed)
             << endl;
-
+*/
     delete parser;
+
+    QTextStream in(stdin);
+    forever {
+        QString line = in.readLine();
+        if (!line.isNull())
+            break;
+    }
+
 }
 
 
