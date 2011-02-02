@@ -25,11 +25,6 @@ public:
     void preprocessingPhase1();
     void preprocessingPhase2();
     QList<ItemList> calculatingPhase1();
-    QList<SupportCount> calculatingPhase2(QList<ItemList> frequentItemsets);
-
-    // Static (class) methods.
-    static QList<SupportCount> calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets);
-    static SupportCount calculateSupportCountForFrequentItemset(ItemList frequentItemset);
 
 #ifdef DEBUG
     ItemIDNameHash * getItemIDNameHash() { return &this->itemIDNameHash; }
@@ -53,7 +48,7 @@ protected:
     void calculateItemsSortedBySupportCount();
     ItemIDList determineSuffixOrder() const;
 
-    QList<ItemList> generateFrequentItemsets(FPTree* tree, ItemList suffix = ItemList());
+    QList<ItemList> generateFrequentItemsets(FPTree * tree, ItemList suffix = ItemList());
 };
 
 #endif // FPGROWTH_H

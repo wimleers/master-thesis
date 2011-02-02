@@ -68,49 +68,6 @@ QList<ItemList> FPGrowth::calculatingPhase1() {
     return frequentItemsets;
 }
 
-QList<SupportCount> FPGrowth::calculatingPhase2(QList<ItemList> frequentItemsets) {
-    QList<SupportCount> frequentItemsetsSupportCounts = this->calculateSupportCountsForFrequentItemsets(frequentItemsets);
-
-#ifdef FPGROWTH_DEBUG
-    // Debug output.
-    foreach (ItemList frequentItemset, frequentItemsets) {
-        qDebug() << "support(" << frequentItemset << " ) = " << (frequentItemsetsSupportCounts[frequentItemsets.indexOf(frequentItemset)] * 1.0 / this->numberTransactions);
-    }
-#endif
-
-    return frequentItemsetsSupportCounts;
-}
-
-
-//------------------------------------------------------------------------------
-// Public static methods.
-
-/**
- * Runs FPGrowth::calculateSupportForFrequentItemset() on a list of frequent
- * itemsets.
- *
- * @see FPGrowth::calculateSupportForFrequentItemset()
- */
-QList<SupportCount> FPGrowth::calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets) {
-    QList<SupportCount> supportCounts;
-    foreach (ItemList frequentItemset, frequentItemsets)
-        supportCounts.append(FPGrowth::calculateSupportCountForFrequentItemset(frequentItemset));
-    return supportCounts;
-}
-
-/**
- * Given a frequent itemset, calculate its support count.
- * Do this by finding the minimum support count of all items in the frequent
- * itemset.
- */
-SupportCount FPGrowth::calculateSupportCountForFrequentItemset(ItemList frequentItemset) {
-    SupportCount supportCount = MAX_SUPPORT;
-    foreach (Item item, frequentItemset)
-        if (item.supportCount < supportCount)
-            supportCount = item.supportCount;
-    return supportCount;
-}
-
 
 //------------------------------------------------------------------------------
 // Protected methods.
@@ -269,7 +226,7 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
             // is the next frequent itemset. Additionally, it will serve as the
             // next suffix.
             Item suffixItem(suffixItemID, suffixItemSupport);
-#ifdef FPGROWTH_DEBUG
+#ifdef DEBUG
             suffixItem.IDNameHash = &this->itemIDNameHash;
 #endif
             ItemList frequentItemset;

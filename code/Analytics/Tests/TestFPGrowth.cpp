@@ -1,5 +1,4 @@
 #include "TestFPGrowth.h"
-#include <QTime>
 
 void TestFPGrowth::basic() {
     QList<QStringList> transactions;
@@ -20,7 +19,6 @@ void TestFPGrowth::basic() {
     fpgrowth->preprocessingPhase1();
     fpgrowth->preprocessingPhase2();
     QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
-    QList<SupportCount> frequentItemsetsSupportCounts = fpgrowth->calculatingPhase2(frequentItemsets);
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -36,12 +34,11 @@ void TestFPGrowth::basic() {
     // * frequent itemsets: {{A}, {B}, {C}, {D}, {C, B}, {C, A}}
 
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(3, 4))
-                                                 << (ItemList() << Item(1, 5))
-                                                 << (ItemList() << Item(2, 4) << Item(1, 5))
-                                                 << (ItemList() << Item(0, 6))
-                                                 << (ItemList() << Item(2, 4) << Item(0, 6))
-                                                 << (ItemList() << Item(2, 8))
+    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(3))
+                                                 << (ItemList() << Item(1))
+                                                 << (ItemList() << Item(2) << Item(1))
+                                                 << (ItemList() << Item(0))
+                                                 << (ItemList() << Item(2) << Item(0))
+                                                 << (ItemList() << Item(2))
     );
-    QCOMPARE(frequentItemsetsSupportCounts, QList<SupportCount>() << 4 << 5 << 4 << 6 << 4 << 8);
 }
