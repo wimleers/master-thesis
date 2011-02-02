@@ -1,5 +1,6 @@
 #include "TestFPTree.h"
 #include "TestFPGrowth.h"
+#include "TestRuleMiner.h"
 
 int main() {
     TestFPTree FPTree;
@@ -7,6 +8,9 @@ int main() {
 
     TestFPGrowth FPGrowth;
     QTest::qExec(&FPGrowth);
+
+    TestRuleMiner ruleMiner;
+    QTest::qExec(&ruleMiner);
 
     return 0;
 }

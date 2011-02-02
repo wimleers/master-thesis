@@ -9,7 +9,9 @@ TARGET = Tests
 
 
 HEADERS += TestFPTree.h \
-           TestFPGrowth.h
+           TestFPGrowth.h \
+           TestRuleMiner.h
 SOURCES += Tests.cpp \
            TestFPTree.cpp \
-           TestFPGrowth.cpp
+           TestFPGrowth.cpp \
+           TestRuleMiner.cpp

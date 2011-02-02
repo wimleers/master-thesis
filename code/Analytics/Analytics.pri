@@ -7,11 +7,13 @@ SOURCES += \
     $${PWD}/FPNode.cpp \
     $${PWD}/FPTree.cpp \
     $${PWD}/FPGrowth.cpp\
+    $${PWD}/RuleMiner.cpp \
     $${PWD}/typedefs.cpp
 HEADERS += \
     $${PWD}/FPNode.h \
     $${PWD}/FPTree.h \
     $${PWD}/FPGrowth.h \
+    $${PWD}/RuleMiner.h \
     $${PWD}/typedefs.h
 
 # Disable qDebug() output when in release mode.
