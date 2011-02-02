@@ -13,6 +13,7 @@ private slots:
 //    void cleanupTestCase() {}
 //    void init();
 //    void cleanup();
+    void basic();
 };
 
 #endif // TESTFPGROWTH_H
