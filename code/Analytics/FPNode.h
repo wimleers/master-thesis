@@ -37,6 +37,7 @@ public:
 #ifdef DEBUG
     // Debug output.
     unsigned int getNodeID() const { return this->nodeID; }
+    static void resetLastNodeID() { FPNode::lastNodeID = 0; }
 #endif
 
 protected:
