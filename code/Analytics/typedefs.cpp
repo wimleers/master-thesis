@@ -31,4 +31,23 @@ QDebug operator<<(QDebug dbg, const Transaction & transaction) {
     return dbg.nospace();
 }
 
+QDebug operator<<(QDebug dbg, const AssociationRule & associationRule) {
+    dbg.nospace() << "{";
+    for (int i = 0; i < associationRule.antecedent.size(); i++) {
+        if (i > 0)
+            dbg.nospace() << ", ";
+        dbg.nospace() << associationRule.antecedent[i];
+    }
+    dbg.nospace() << "} => {";
+    for (int i = 0; i < associationRule.consequent.size(); i++) {
+        if (i > 0)
+            dbg.nospace() << ", ";
+        dbg.nospace() << associationRule.consequent[i];
+    }
+    dbg.nospace() << "}";
+
+    dbg.nospace() << " (conf=" << associationRule.confidence << ")";
+
+    return dbg.nospace();
+}
 #endif
