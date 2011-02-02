@@ -12,6 +12,7 @@ typedef uint32_t ItemID; // Supports 2^32 *different* items. Change to uint64_t 
 #define ROOT_ITEMID 4294967295 // Largest supported value for uint32_t.
 typedef QString ItemName;
 typedef uint32_t SupportCount; // Supports 2^32 *total* items. Change to uint64_t to support more.
+#define MAX_SUPPORT 4294967295
 typedef QHash<ItemID, ItemName> ItemIDNameHash;
 typedef QHash<ItemName, ItemID> ItemNameIDHash;
 struct Item {
@@ -41,9 +42,8 @@ struct Item {
     ItemIDNameHash * IDNameHash;
 #endif
 };
-inline bool operator==(const Item &i1, const Item &i2) {
-    // Important! We don't require a match on the supportCount attribute!
-    return i1.id == i2.id;
+inline bool operator==(const Item & i1, const Item & i2) {
+    return i1.id == i2.id && i1.supportCount == i2.supportCount;
 }
 
 

@@ -11,7 +11,7 @@ QDebug operator<<(QDebug dbg, const Item & i) {
     return dbg.nospace();
 }
 
-QDebug operator<<(QDebug dbg, const Transaction &transaction) {
+QDebug operator<<(QDebug dbg, const Transaction & transaction) {
     QString itemOutput;
 
     dbg.nospace() << "[size=" << transaction.size() << "] {";
