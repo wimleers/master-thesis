@@ -8,17 +8,19 @@
 #include <QString>
 
 // Generic data mining types.
-typedef uint32_t ItemID; // Supports 2^32 *different* items. Change to uint64_t to support more.
+typedef uint32_t ItemID; // Supports 2^32 *different* items. Upgradable to uint64_t.
 #define ROOT_ITEMID 4294967295 // Largest supported value for uint32_t.
 typedef QString ItemName;
-typedef uint32_t SupportCount; // Supports 2^32 *total* items. Change to uint64_t to support more.
+typedef uint32_t SupportCount; // Supports 2^32 count. Upgradable to uint64_t.
 #define MAX_SUPPORT 4294967295
 typedef QHash<ItemID, ItemName> ItemIDNameHash;
 typedef QHash<ItemName, ItemID> ItemNameIDHash;
 struct Item {
     Item() {}
-    Item(ItemID id) : id(id), supportCount(1) {}
-    Item(ItemID id, SupportCount supportCount) : id(id), supportCount(supportCount) {}
+    Item(ItemID id)
+        : id(id), supportCount(1) {}
+    Item(ItemID id, SupportCount supportCount)
+        : id(id), supportCount(supportCount) {}
 
     ItemID id;
     /**
@@ -37,13 +39,19 @@ struct Item {
     SupportCount supportCount;
 
 #ifdef DEBUG
-    Item(ItemID id, ItemIDNameHash * IDNameHash) : id(id), supportCount(1), IDNameHash(IDNameHash) {}
-    Item(ItemID id, SupportCount supportCount, ItemIDNameHash * IDNameHash) : id(id), supportCount(supportCount), IDNameHash(IDNameHash) {}
+    Item(ItemID id, ItemIDNameHash * IDNameHash)
+        : id(id), supportCount(1), IDNameHash(IDNameHash) {}
+    Item(ItemID id, SupportCount supportCount, ItemIDNameHash * IDNameHash)
+        : id(id), supportCount(supportCount), IDNameHash(IDNameHash) {}
     ItemIDNameHash * IDNameHash;
 #endif
 };
 inline bool operator==(const Item & i1, const Item & i2) {
-    return i1.id == i2.id && i1.supportCount == i2.supportCount;
+    // Important! We don't require a match on the supportCount attribute!
+    return i1.id == i2.id;
+}
+inline bool operator!=(const Item & i1, const Item & i2) {
+    return !(i1 == i2);
 }
 
 
@@ -53,8 +61,15 @@ typedef QList<ItemID> ItemIDList;
 typedef QList<Item> ItemList;
 typedef QList<SupportCount> ItemCountList;
 typedef QList<Item> Transaction;
-struct AssociationRuleStruct { ItemList antecedent; ItemList consequent; float confidence; };
-typedef AssociationRuleStruct AssociationRule;
+struct AssociationRule {
+    AssociationRule() {}
+    AssociationRule(ItemList antecedent, ItemList consequent, float confidence)
+        : antecedent(antecedent), consequent(consequent), confidence(confidence) {}
+
+    ItemList antecedent;
+    ItemList consequent;
+    float confidence;
+};
 
 
 
