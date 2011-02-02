@@ -50,6 +50,7 @@ SupportCount FPTree::getItemSupport(ItemID itemID) const {
  * by the SupportCount of the FPNode we started from, i.e. a node that has the
  * ItemID itemID, because we're looking at only the paths that include this
  * node.
+ * Exclude the leaf node itself, as it will no longer be needed.
  */
 QList<ItemList> FPTree::calculatePrefixPaths(ItemID itemID) const {
     QList<ItemList> prefixPaths;
@@ -61,13 +62,13 @@ QList<ItemList> FPTree::calculatePrefixPaths(ItemID itemID) const {
     FPNodeList leafNodes = this->getItemPath(itemID);
     foreach (FPNode * leafNode, leafNodes) {
         // Build the prefix path starting from the given leaf node, by
-        // traversing up the tree.
+        // traversing up the tree (but do not include the leaf node's item in
+        // the prefix path).
         // Don't copy the item's original count, but the count of the leaf node
         // instead, because we're looking at only the paths that include this
         // leaf node.
         node = leafNode;
         supportCount = leafNode->getSupportCount();
-        prefixPath.prepend(node->getItem());
         while ((node = node->getParent()) != NULL && node->getItemID() != ROOT_ITEMID) {
             item = node->getItem();
             item.supportCount = supportCount;
