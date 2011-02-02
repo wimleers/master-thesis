@@ -60,7 +60,6 @@ QList<ItemList> FPGrowth::calculatingPhase1() {
     QList<ItemList> frequentItemsets = this->generateFrequentItemsets(this->tree);
 
 #ifdef FPGROWTH_DEBUG
-    // Debug output.
     qDebug() << "frequent itemsets:" << frequentItemsets.size();
     qDebug() << frequentItemsets;
 #endif
@@ -201,15 +200,6 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
     // itemsets!
     foreach (ItemID suffixItemID, orderedSuffixItemIDs) {
 #ifdef FPGROWTH_DEBUG
-        // Debug output.
-        /*
-        NamedItemID namedSuffixItemID;
-        namedSuffixItemID.itemID = suffixItemID;
-        namedSuffixItemID.itemNQs = this->itemNQs;
-        if (suffix.size() == 0)
-            qDebug() << "==========ROOT==========";
-        qDebug() << "suffix item" << namedSuffixItemID << ctree->getItemSupport(suffixItemID) << (ctree->getItemSupport(suffixItemID) >= this->minimumSupport);
-        */
         if (suffix.size() == 0)
             qDebug() << "==========ROOT==========";
         Item suffixItem(suffixItemID, ctree->getItemSupport(suffixItemID), &this->itemIDNameHash);
@@ -234,13 +224,6 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
             frequentItemset.append(suffix);
 
 #ifdef FPGROWTH_DEBUG
-            // Debug output.
-            /*
-            NamedItemList namedFrequentItemSet;
-            namedFrequentItemSet.items = frequentItemset;
-            namedFrequentItemSet.itemNQs = this->itemNQs;
-            qDebug() << "\t\t\t\t new frequent itemset:" << namedFrequentItemSet;
-            */
             qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
 #endif
 
@@ -251,16 +234,6 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
             prefixPaths = ctree->calculatePrefixPaths(suffixItemID);
 
 #ifdef FPGROWTH_DEBUG
-            // Debug output.
-            /*
-            qDebug() << "prefix paths:";
-            foreach (ItemList prefixPath, prefixPaths) {
-                NamedItemList namedPrefixPath;
-                namedPrefixPath.items = prefixPath;
-                namedPrefixPath.itemNQs = this->itemNQs;
-                qDebug() << "\t" << namedPrefixPath;
-            }
-            */
             qDebug() << "prefix paths:";
             qDebug() << prefixPaths;
 #endif
@@ -283,16 +256,6 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
             }
 
 #ifdef FPGROWTH_DEBUG
-            // Debug output.
-            /*
-            qDebug() << "filtered prefix paths: ";
-            foreach (ItemList prefixPath, filteredPrefixPaths) {
-                NamedItemList namedPrefixPath;
-                namedPrefixPath.items = prefixPath;
-                namedPrefixPath.itemNQs = this->itemNQs;
-                qDebug() << "\t" << namedPrefixPath;
-            }
-            */
             qDebug() << "filtered prefix paths: ";
             qDebug() << filteredPrefixPaths;
 #endif
