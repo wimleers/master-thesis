@@ -5,6 +5,8 @@
 #include <QFile>
 #include "../FPGrowth.h"
 
+using namespace Analytics;
+
 class TestFPGrowth : public QObject {
     Q_OBJECT
 

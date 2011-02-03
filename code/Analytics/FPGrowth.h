@@ -11,46 +11,49 @@
 #include "FPNode.h"
 #include "FPTree.h"
 
-#ifdef DEBUG
-//#define FPGROWTH_DEBUG 0
-#endif
-
-class FPGrowth : public QObject {
-    Q_OBJECT
-
-public:
-    FPGrowth(const QList<QStringList> & transactions, float minimumSupport);
-    ~FPGrowth();
-    void setFilterItems(QList<ItemName> items);
-    ItemIDNameHash getItemIDNameHash() const { return this->itemIDNameHash; }
-    void preprocessingPhase1();
-    void preprocessingPhase2();
-    QList<ItemList> calculatingPhase1();
+namespace Analytics {
 
 #ifdef DEBUG
-    ItemIDNameHash * getItemIDNameHash() { return &this->itemIDNameHash; }
+    //#define FPGROWTH_DEBUG 0
 #endif
 
-protected slots:
-    void processTransaction(Transaction transaction);
+    class FPGrowth : public QObject {
+        Q_OBJECT
 
-protected:
-    ItemCountHash totalSupportCounts;
-    ItemIDList itemsSortedByTotalSupportCount;
-    FPTree * tree;
-    QList<QStringList> transactions;
-    float minimumSupport;
-    SupportCount minimumSupportAbsolute;
-    int numberTransactions;
-    ItemIDNameHash itemIDNameHash;
-    ItemNameIDHash itemNameIDHash;
-    QList<ItemName> filterItems;
+    public:
+        FPGrowth(const QList<QStringList> & transactions, float minimumSupport);
+        ~FPGrowth();
+        void setFilterItems(QList<ItemName> items);
+        ItemIDNameHash getItemIDNameHash() const { return this->itemIDNameHash; }
+        void preprocessingPhase1();
+        void preprocessingPhase2();
+        QList<ItemList> calculatingPhase1();
 
-    Transaction optimizeTransaction(Transaction transaction) const;
-    void calculateItemsSortedBySupportCount();
-    ItemIDList determineSuffixOrder() const;
+#ifdef DEBUG
+        ItemIDNameHash * getItemIDNameHash() { return &this->itemIDNameHash; }
+#endif
 
-    QList<ItemList> generateFrequentItemsets(FPTree * tree, ItemList suffix = ItemList());
-};
+    protected slots:
+        void processTransaction(Transaction transaction);
 
+    protected:
+        ItemCountHash totalSupportCounts;
+        ItemIDList itemsSortedByTotalSupportCount;
+        FPTree * tree;
+        QList<QStringList> transactions;
+        float minimumSupport;
+        SupportCount minimumSupportAbsolute;
+        int numberTransactions;
+        ItemIDNameHash itemIDNameHash;
+        ItemNameIDHash itemNameIDHash;
+        QList<ItemName> filterItems;
+
+        Transaction optimizeTransaction(Transaction transaction) const;
+        void calculateItemsSortedBySupportCount();
+        ItemIDList determineSuffixOrder() const;
+
+        QList<ItemList> generateFrequentItemsets(FPTree * tree, ItemList suffix = ItemList());
+    };
+
+}
 #endif // FPGROWTH_H

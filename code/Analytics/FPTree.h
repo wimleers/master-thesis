@@ -8,40 +8,43 @@
 #include <QString>
 
 #include "typedefs.h"
-#include "fpnode.h"
+#include "FPNode.h"
 
-class FPTree {
-public:
-    FPTree();
-    ~FPTree();
+namespace Analytics {
+    class FPTree {
+    public:
+        FPTree();
+        ~FPTree();
 
-    // Accessors.
-    FPNode * getRoot() const { return this->root; }
-    bool hasItemPath(ItemID itemID) const;
-    QList<ItemID> getItemIDs() const { return this->itemPaths.keys(); }
-    FPNodeList getItemPath(ItemID itemID) const;
-    bool itemPathContains(ItemID itemID, FPNode * node) const;
-    SupportCount getItemSupport(ItemID item) const;
-    QList<ItemList> calculatePrefixPaths(ItemID itemID) const;
+        // Accessors.
+        FPNode * getRoot() const { return this->root; }
+        bool hasItemPath(ItemID itemID) const;
+        QList<ItemID> getItemIDs() const { return this->itemPaths.keys(); }
+        FPNodeList getItemPath(ItemID itemID) const;
+        bool itemPathContains(ItemID itemID, FPNode * node) const;
+        SupportCount getItemSupport(ItemID item) const;
+        QList<ItemList> calculatePrefixPaths(ItemID itemID) const;
 
-    // Modifiers.
-    void addTransaction(Transaction transaction);
+        // Modifiers.
+        void addTransaction(Transaction transaction);
 
-    // Static (class) methods.
-    static ItemCountHash calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths);
+        // Static (class) methods.
+        static ItemCountHash calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths);
 
-protected:
-    FPNode * root;
-    QHash<ItemID, FPNodeList> itemPaths;
+    protected:
+        FPNode * root;
+        QHash<ItemID, FPNodeList> itemPaths;
 
-    void addNodeToItemPath(FPNode * node);
-};
-
-Q_DECLARE_METATYPE(FPTree);
+        void addNodeToItemPath(FPNode * node);
+    };
 
 #ifdef DEBUG
-QDebug operator<<(QDebug dbg, const FPTree & tree);
-QString dumpHelper(const FPNode & node, QString prefix = "");
+    QDebug operator<<(QDebug dbg, const FPTree & tree);
+    QString dumpHelper(const FPNode & node, QString prefix = "");
 #endif
+
+}
+
+Q_DECLARE_METATYPE(Analytics::FPTree);
 
 #endif // FPTREE_H

@@ -6,6 +6,8 @@
 #include "../FPGrowth.h"
 #include "../Ruleminer.h"
 
+using namespace Analytics;
+
 class TestRuleMiner : public QObject {
     Q_OBJECT
 

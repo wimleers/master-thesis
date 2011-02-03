@@ -5,6 +5,8 @@
 #include <QFile>
 #include "../FPTree.h"
 
+using namespace Analytics;
+
 class TestFPTree: public QObject {
     Q_OBJECT
 
