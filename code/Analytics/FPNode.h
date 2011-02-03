@@ -10,7 +10,7 @@
 
 class FPNode {
 public:
-    FPNode(Item = Item());
+    FPNode(Item item = Item());
     ~FPNode();
 
     // Accessors.
