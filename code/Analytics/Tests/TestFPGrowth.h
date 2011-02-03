@@ -14,6 +14,7 @@ private slots:
 //    void init();
 //    void cleanup();
     void basic();
+    void withFilter();
 };
 
 #endif // TESTFPGROWTH_H

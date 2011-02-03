@@ -5,12 +5,16 @@ FPGrowth::FPGrowth(const QList<QStringList> & transactions, float minimumSupport
     this->minimumSupport = minimumSupport;
     this->minimumSupportAbsolute = 0;
     this->transactions = transactions;
-    this->numberTransactions = 0;
+    this->numberTransactions = transactions.size();
     this->tree = new FPTree();
 }
 
 FPGrowth::~FPGrowth() {
     delete this->tree;
+}
+
+void FPGrowth::setFilterItems(QList<ItemName> items) {
+    this->filterItems = items;
 }
 
 void FPGrowth::preprocessingPhase1() {
@@ -38,16 +42,31 @@ void FPGrowth::preprocessingPhase1() {
 // Build FP-tree.
 void FPGrowth::preprocessingPhase2() {
     Transaction transaction;
-    foreach (QStringList transactionAsStrings, this->transactions) {
-        transaction.clear();
-        foreach (QString itemName, transactionAsStrings)
-#ifdef DEBUG
-            transaction << Item((ItemID) this->itemNameIDHash[itemName], &this->itemIDNameHash);
-#else
-            transaction << Item((ItemID) this->itemNameIDHash[itemName]);
-#endif
+    bool matchesFilter;
 
-        this->processTransaction(transaction);
+    // When filter items have been set, require all transactions to match
+    // either of these filter items.
+    bool requiresFilterMatch = (this->filterItems.size() > 0);
+
+    foreach (QStringList transactionAsStrings, this->transactions) {
+        matchesFilter = false;
+        transaction.clear();
+        foreach (ItemName name, transactionAsStrings) {
+            // Filter transactions when appropriate.
+            if (requiresFilterMatch && !matchesFilter) {
+                foreach (ItemName filter, this->filterItems)
+                    if (filter.compare(name) == 0)
+                        matchesFilter = true;
+            }
+#ifdef DEBUG
+            transaction << Item((ItemID) this->itemNameIDHash[name], &this->itemIDNameHash);
+#else
+            transaction << Item((ItemID) this->itemNameIDHash[name]);
+#endif
+        }
+
+        if (!requiresFilterMatch || matchesFilter)
+            this->processTransaction(transaction);
     }
 
 #ifdef FPGROWTH_DEBUG
@@ -299,9 +318,6 @@ QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suff
   * Slot that receives a Transaction, optimizes it and adds it to the tree.
   */
 void FPGrowth::processTransaction(Transaction transaction) {
-    // Keep track of the number of transactions.
-    this->numberTransactions++;
-
     Transaction optimizedTransaction;
     optimizedTransaction = this->optimizeTransaction(transaction);
 

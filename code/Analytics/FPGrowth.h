@@ -21,6 +21,7 @@ class FPGrowth : public QObject {
 public:
     FPGrowth(const QList<QStringList> & transactions, float minimumSupport);
     ~FPGrowth();
+    void setFilterItems(QList<ItemName> items);
     ItemIDNameHash getItemIDNameHash() const { return this->itemIDNameHash; }
     void preprocessingPhase1();
     void preprocessingPhase2();
@@ -43,6 +44,7 @@ protected:
     int numberTransactions;
     ItemIDNameHash itemIDNameHash;
     ItemNameIDHash itemNameIDHash;
+    QList<ItemName> filterItems;
 
     Transaction optimizeTransaction(Transaction transaction) const;
     void calculateItemsSortedBySupportCount();
