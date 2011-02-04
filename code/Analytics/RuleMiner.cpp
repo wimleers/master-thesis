@@ -2,8 +2,8 @@
 
 namespace Analytics {
     /**
- * An exact implementation of algorithm 6.2 on page 351 in the textbook.
- */
+     * An exact implementation of algorithm 6.2 on page 351 in the textbook.
+     */
     QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence) {
         QList<AssociationRule> associationRules;
         QList<ItemList> consequents;
@@ -56,10 +56,10 @@ namespace Analytics {
     }
 
     /**
- * Given a frequent itemset, calculate its support count.
- * Do this by finding the minimum support count of all items in the frequent
- * itemset.
- */
+     * Given a frequent itemset, calculate its support count.
+     * Do this by finding the minimum support count of all items in the
+     * frequent itemset.
+     */
     SupportCount RuleMiner::calculateSupportCountForFrequentItemset(ItemList frequentItemset) {
         SupportCount supportCount = MAX_SUPPORT;
         foreach (Item item, frequentItemset)
@@ -128,9 +128,9 @@ namespace Analytics {
 
 
     /**
- * Build the antecedent for this candidate consequent, which are all items in
- * the frequent itemset except for those in the candidate consequent.
- */
+     * Build the antecedent for this candidate consequent, which are all items
+     * in the frequent itemset except for those in the candidate consequent.
+     */
     ItemList RuleMiner::getAntecedent(ItemList frequentItemset, ItemList consequent) {
         ItemList antecedent;
         foreach (Item item, frequentItemset)
