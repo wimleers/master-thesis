@@ -118,7 +118,7 @@ namespace Analytics {
         // sufficiently high confidence), and the size of the consequents
         // still alows them to be expanded, expand the consequents and attempt
         // to generate more association rules with them.
-        if (consequents.size() > 0 && k > m + 1) {
+        if (consequents.size() >= 2 && k > m + 1) {
             QList<ItemList> candidateConsequents = RuleMiner::generateCandidateItemsets(consequents);
             associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, candidateConsequents, frequentItemsets, frequentItemsetsSupportCounts, minimumConfidence));
         }
