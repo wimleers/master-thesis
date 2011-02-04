@@ -369,6 +369,8 @@ namespace EpisodesParser {
     // Protected slots.
 
     void Parser::processParsedChunk(const QStringList & chunk) {
+        qDebug() << "STARTING CHUNK" << chunk[0];
+
         // This 100% concurrent approach fails, because QGeoIP still has
         // thread-safety issues. Hence, we only do the mapping from a QString
         // to an EpisodesLogLine concurrently for now.
@@ -398,5 +400,7 @@ namespace EpisodesParser {
         }
 
         qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines! Transactions generated:" << transactions.size();
+
+        emit processedChunk(transactions);
     }
 }

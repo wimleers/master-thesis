@@ -1,11 +1,15 @@
-#ifndef TYPEDEFS_H
-#define TYPEDEFS_H
+#ifndef ITEM_H
+#define ITEM_H
 
 #include "stdint.h"
-#include <QDebug>
 #include <QHash>
 #include <QList>
 #include <QString>
+
+#ifdef DEBUG
+#include <QDebug>
+#endif
+
 
 namespace Analytics {
 
@@ -26,18 +30,18 @@ namespace Analytics {
 
         ItemID id;
         /**
-     * One would not expect SupportCount to be associated with an item.
-     * However, this allows for cleaner code when building conditional
-     * FP-trees. More specifically: the prefix paths that
-     * FPTree::calculatePrefixPaths() returns already include the correct
-     * SupportCount values (i.e. the number of times that itemset was included
-     * in all transactions) and can be passed to FPTree::addTransaction()
-     * *directly*. Otherwise, we'd have to repeatedly insert the prefix path,
-     * to match the number of times that itemset was included in all
-     * transactions
-     * Each item occurs once in each transaction. Therefor, this defaults to
-     * 1.
-     */
+         * One would not expect SupportCount to be associated with an item.
+         * However, this allows for cleaner code when building conditional
+         * FP-trees. More specifically: the prefix paths that
+         * FPTree::calculatePrefixPaths() returns already include the correct
+         * SupportCount values (i.e. the number of times that itemset was
+         * included in all transactions) and can be passed to
+         * FPTree::addTransaction() *directly*. Otherwise, we'd have to
+         * repeatedly insert the prefix path, to match the number of times
+         * that itemset was included in all transactions.
+         * Each item occurs once in each transaction. Therefor, this defaults
+         * to 1.
+         */
         SupportCount supportCount;
 
 #ifdef DEBUG
@@ -74,15 +78,6 @@ namespace Analytics {
     };
 
 
-
-    // FP-growth specific types.
-    class FPNode; // Work around cyclical dependency.
-
-    // FP-growth specific container types.
-    typedef QHash<ItemID, FPNode *> ItemIDFPNodeHash;
-    typedef QList<FPNode *> FPNodeList;
-
-
 #ifdef DEBUG
     // QDebug() streaming output operators.
     QDebug operator<<(QDebug dbg, const Item & item);
@@ -91,4 +86,4 @@ namespace Analytics {
 #endif
 
 }
-#endif // TYPEDEFS_H
+#endif // ITEM_H

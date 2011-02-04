@@ -2,13 +2,14 @@
 #define FPNODE_H
 
 #include <QHash>
-#include <QDebug>
 #include <QMetaType>
 #include <QString>
 
-#include "typedefs.h"
+#include "Item.h"
+
 
 namespace Analytics {
+
     class FPNode {
     public:
         FPNode(Item item = Item());
@@ -22,7 +23,7 @@ namespace Analytics {
         SupportCount getSupportCount() const { return this->item.supportCount; }
         FPNode * getParent() const { return this->parent; }
         FPNode * getChild(ItemID itemID) const;
-        ItemIDFPNodeHash getChildren() const;
+        QHash<ItemID, FPNode *> getChildren() const;
         bool hasChild(ItemID itemID) const;
         unsigned int numChildren() const { return this->children.size(); }
 
@@ -36,14 +37,13 @@ namespace Analytics {
         void decreaseSupportCount(SupportCount count) { this->item.supportCount -= count; }
 
 #ifdef DEBUG
-        // Debug output.
         unsigned int getNodeID() const { return this->nodeID; }
         static void resetLastNodeID() { FPNode::lastNodeID = 0; }
 #endif
 
     protected:
         FPNode * parent;
-        ItemIDFPNodeHash children;
+        QHash<ItemID, FPNode *> children;
         SupportCount count;
         Item item;
 #ifdef DEBUG
@@ -54,11 +54,12 @@ namespace Analytics {
 #endif
     };
 
+    typedef QList<FPNode *> FPNodeList;
+
 #ifdef DEBUG
     QDebug operator<<(QDebug dbg, const FPNode & node);
     QDebug operator<<(QDebug dbg, const FPNodeList & itemPath);
 #endif
-
 }
 
 Q_DECLARE_METATYPE(Analytics::FPNode);

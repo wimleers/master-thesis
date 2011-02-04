@@ -1,18 +1,25 @@
-#include "Parser.h"
 #include "QCachingLocale.h"
+#include "Parser.h"
+#include "Analyst.h"
+#include <QObject>
+#include <QTime>
 
 using namespace EpisodesParser;
+using namespace Analytics;
 
 int main(int argc, char *argv[]) {
     QCachingLocale cl;
 
     QTextStream cout(stdout);
     QTextStream cerr(stderr);
-    Parser * parser;
     QTime timer;
+    Parser * parser;
+    Analyst * analyst;
 
     parser = new Parser();
-/*
+    analyst = new Analyst(0.4, 0.8);
+    QObject::connect(parser, SIGNAL(processedChunk(QList<QStringList>)), analyst, SLOT(analyzeTransactions(QList<QStringList>)));
+
     timer.start();
     int linesParsed = parser->parse("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.log");
     int timePassed = timer.elapsed();
@@ -22,8 +29,9 @@ int main(int argc, char *argv[]) {
             .arg((float)linesParsed/timePassed)
             .arg((float)timePassed/linesParsed)
             << endl;
-*/
+
     delete parser;
+
 
     QTextStream in(stdin);
     forever {
@@ -31,7 +39,6 @@ int main(int argc, char *argv[]) {
         if (!line.isNull())
             break;
     }
-
 }
 
 

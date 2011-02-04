@@ -1,9 +1,10 @@
 #ifndef RULEMINER_H
 #define RULEMINER_H
 
-#include "typedefs.h"
+#include "Item.h"
 #include "FPGrowth.h"
 #include <QList>
+
 
 namespace Analytics {
 

@@ -7,8 +7,9 @@
 #include <QMetaType>
 #include <QString>
 
-#include "typedefs.h"
+#include "Item.h"
 #include "FPNode.h"
+
 
 namespace Analytics {
     class FPTree {

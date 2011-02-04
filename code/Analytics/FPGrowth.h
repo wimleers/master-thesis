@@ -7,14 +7,16 @@
 #include <QString>
 #include <QStringList>
 #include <math.h>
-#include "typedefs.h"
+
+#include "Item.h"
 #include "FPNode.h"
 #include "FPTree.h"
+
 
 namespace Analytics {
 
 #ifdef DEBUG
-    //#define FPGROWTH_DEBUG 0
+//    #define FPGROWTH_DEBUG 1
 #endif
 
     class FPGrowth : public QObject {

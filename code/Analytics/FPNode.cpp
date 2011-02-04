@@ -34,7 +34,7 @@ namespace Analytics {
             return NULL;
     }
 
-    ItemIDFPNodeHash FPNode::getChildren() const {
+    QHash<ItemID, FPNode *> FPNode::getChildren() const {
         return this->children;
     }
 

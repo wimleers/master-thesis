@@ -10,10 +10,12 @@
 #include <QThread>
 #include <QtConcurrentMap>
 #include <QMutex>
+
 #include "QBrowsCap.h"
 #include "QGeoIP.h"
 #include "EpisodeDurationDiscretizer.h"
 #include "typedefs.h"
+
 
 namespace EpisodesParser {
 
@@ -34,7 +36,7 @@ namespace EpisodesParser {
 
     signals:
         void parsedChunk(QStringList chunk);
-    //    void parsedEpisode(Episode episode);
+        void processedChunk(QList<QStringList> transactions);
 
     public slots:
 
