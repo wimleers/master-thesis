@@ -19,7 +19,8 @@ namespace Analytics {
 
     public:
         Analyst(float minSupport, float minConfidence);
-         void addFilter(ItemName item);
+        void addRuleConsequentRequirement(ItemName item);
+        void addFilter(ItemName item);
 
     protected slots:
         void analyzeTransactions(const QList<QStringList> & transactions);
@@ -28,6 +29,7 @@ namespace Analytics {
         void performMining(const QList<QStringList> & transactions);
 
         QList<ItemName> filterItems;
+        QList<ItemName> ruleConsequentRequirements;
         float minSupport;
         float minConfidence;
     };

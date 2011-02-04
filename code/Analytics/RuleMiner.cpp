@@ -1,10 +1,14 @@
 #include "RuleMiner.h"
 
 namespace Analytics {
+
+    //------------------------------------------------------------------------
+    // Public static methods.
+
     /**
      * An exact implementation of algorithm 6.2 on page 351 in the textbook.
      */
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements) {
         QList<AssociationRule> associationRules;
         QList<ItemList> consequents;
 
@@ -15,12 +19,22 @@ namespace Analytics {
             // It's only possible to generate an association rule if there are at
             // least two items in the frequent itemset.
             if (frequentItemset.size() >= 2) {
-                // Generate all 1-item consequents.
-                consequents.clear();
-                foreach (Item item, frequentItemset) {
-                    ItemList consequent;
-                    consequent.append(item);
-                    consequents.append(consequent);
+                if (ruleConsequentRequirements.size() > 0) {
+                    consequents.clear();
+                    foreach (Item item, ruleConsequentRequirements) {
+                        ItemList consequent;
+                        consequent.append(item);
+                        consequents.append(consequent);
+                    }
+                }
+                else {
+                    // Generate all 1-item consequents.
+                    consequents.clear();
+                    foreach (Item item, frequentItemset) {
+                        ItemList consequent;
+                        consequent.append(item);
+                        consequents.append(consequent);
+                    }
                 }
 
 #ifdef RULEMINER_DEBUG
@@ -38,9 +52,6 @@ namespace Analytics {
 
     //------------------------------------------------------------------------
     // Protected static methods.
-
-    //------------------------------------------------------------------------
-    // Public static methods.
 
     /**
      * Runs RuleMiner::calculateSupportForFrequentItemset() on a list of
@@ -76,6 +87,8 @@ namespace Analytics {
      * This variation of that algorithm fixes that.
      */
     QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(ItemList frequentItemset, QList<ItemList> consequents, QList<ItemList> frequentItemsets, QList<SupportCount> frequentItemsetsSupportCounts, float minimumConfidence) {
+        Q_ASSERT_X(consequents.size() > 0, "RuleMiner::generateAssociationRulesForFrequentItemset", "List of consequents may not be empty.");
+
         QList<AssociationRule> associationRules;
         SupportCount frequentItemsetSupportCount, antecedentSupportCount;
         ItemList antecedent;

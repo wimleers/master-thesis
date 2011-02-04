@@ -17,7 +17,9 @@ int main(int argc, char *argv[]) {
     Analyst * analyst;
 
     parser = new Parser();
-    analyst = new Analyst(0.4, 0.8);
+    analyst = new Analyst(0.05, 0.8);
+    analyst->addRuleConsequentRequirement("duration:slow");
+
     QObject::connect(parser, SIGNAL(processedChunk(QList<QStringList>)), analyst, SLOT(analyzeTransactions(QList<QStringList>)));
 
     timer.start();

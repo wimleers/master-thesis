@@ -8,6 +8,17 @@ namespace Analytics {
     }
 
 
+    void Analyst::addRuleConsequentRequirement(ItemName item) {
+        // If an item is required to be in the rule consequent, it evidently
+        // must also be in the frequent itemsets. Therefore, also add this
+        // item to the filters.
+        this->addFilter(item);
+
+        if (!this->ruleConsequentRequirements.contains(item))
+            this->ruleConsequentRequirements.append(item);
+    }
+
+
     /**
      * Add a filter. When association rule mining is performed, at least one
      * of these filters will have to be applicable for a rule to qualify
@@ -17,7 +28,8 @@ namespace Analytics {
      *   An item to filter on.
      */
     void Analyst::addFilter(ItemName item) {
-        this->filterItems.append(item);
+        if (!this->filterItems.contains(item))
+            this->filterItems.append(item);
     }
 
 
@@ -37,6 +49,7 @@ namespace Analytics {
         qDebug() << "starting mining";
         FPGrowth * fpgrowth = new FPGrowth(transactions, this->minSupport);
         fpgrowth->setFilterItems(this->filterItems);
+
         qDebug() << "set filter items complete";
         fpgrowth->preprocessingPhase1();
         qDebug() << "preprocessing phase 1 complete";
@@ -45,14 +58,21 @@ namespace Analytics {
         QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
         qDebug() << "calculating phase 1 complete";
 
-        QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, this->minConfidence);
+        ItemList requirements;
+        foreach (ItemName name, this->ruleConsequentRequirements) {
+#ifdef DEBUG
+            requirements.append(Item(fpgrowth->getItemID(name), fpgrowth->getItemIDNameHash()));
+#else
+            requirements.append(Item(fpgrowth->getItemID(name)));
+#endif
+        }
+
+        QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, this->minConfidence, requirements);
         qDebug() << "mining association rules complete";
 
         qDebug() << associationRules;
 
         delete fpgrowth;
-        qDebug() << "deleted fpgrowth";
-
     }
 
 }

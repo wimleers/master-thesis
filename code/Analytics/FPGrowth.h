@@ -26,7 +26,7 @@ namespace Analytics {
         FPGrowth(const QList<QStringList> & transactions, float minimumSupport);
         ~FPGrowth();
         void setFilterItems(QList<ItemName> items);
-        ItemIDNameHash getItemIDNameHash() const { return this->itemIDNameHash; }
+        ItemID getItemID(ItemName name) const { return this->itemNameIDHash[name]; }
         void preprocessingPhase1();
         void preprocessingPhase2();
         QList<ItemList> calculatingPhase1();

@@ -14,7 +14,7 @@ namespace Analytics {
 
     class RuleMiner {
     public:
-        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence);
+        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements);
 
     protected:
         static QList<SupportCount> calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets);
