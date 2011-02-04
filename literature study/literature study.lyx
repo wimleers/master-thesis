@@ -25932,6 +25932,133 @@ finish UI + anomaly detection
 \end_layout
 
 \begin_layout Section
+Findings
+\end_layout
+
+\begin_layout Subsection
+Initial data mining: FP-Growth, not FP-Stream
+\end_layout
+
+\begin_layout Itemize
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+ episodes are marked as such through user configuration (duraiton intervals
+ configurable by the user, configurable per episode).
+\end_layout
+
+\begin_layout Itemize
+Each episode log line is mapped to multiple transactions, one per episode
+ in the page view that triggered that episode log line.
+\begin_inset Newline newline
+\end_inset
+
+This means 1000 episodes log lines can easily expand to 10,000 transactions
+ — it all depends on the amount of episodes the web developer has defined.
+ It may also differ between different pages, e.g.
+ measure the load time for an image gallery — this gallery will most likely
+ not exist on every page.
+\end_layout
+
+\begin_layout Itemize
+Each transaction looks like this: 
+\begin_inset Quotes eld
+\end_inset
+
+episode:css duration:slow status:200 url:http://blah.com/sadfsdf ua:isNotMobile
+ ua:WinXP ua:WinXP:Firefox ua:WinXP:Firefox:3 ua:WinXP:Firefox:3:6 location:EU
+ location:EU:Belgium location:EU:Belgium:Limburg location:EU:Belgium:Limburg:Has
+selt …
+\begin_inset Quotes erd
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+I.e.
+ the concept hierarchy is embedded in the transaction.
+\end_layout
+
+\begin_layout Itemize
+We can filter on 
+\begin_inset Quotes eld
+\end_inset
+
+duration:slow
+\begin_inset Quotes erd
+\end_inset
+
+ during frequent itemset generation.
+ This means these calculations will only be as heavy as the user has defined
+ each episode to be 
+\begin_inset Quotes eld
+\end_inset
+
+slow
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Itemize
+We can even significantly reduce the search space for association rules:
+ since we are looking for causes for slow episodes, we can thus require
+ the consequent of an association rule to contain 
+\begin_inset Quotes eld
+\end_inset
+
+duration:slow
+\begin_inset Quotes erd
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+Since we already required 
+\begin_inset Quotes eld
+\end_inset
+
+duration:slow
+\begin_inset Quotes erd
+\end_inset
+
+ to be in the frequent itemset during the frequent itemset generation step,
+ this item is part of every frequent itemset.
+ However, instead of testing all possible association rules' confidence,
+ we now only have to test 
+\emph on
+one
+\emph default
+ possible association rule's confidence per frequent itemset!
+\end_layout
+
+\begin_layout Itemize
+More to follow.
+\end_layout
+
+\begin_layout Subsection
+Going from FP-Growth to FP-Stream
+\end_layout
+
+\begin_layout Itemize
+Not yet implemented.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
 Glossary
 \begin_inset CommandInset label
 LatexCommand label
