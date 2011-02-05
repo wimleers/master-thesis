@@ -26,6 +26,7 @@ namespace EpisodesParser {
 
     public:
         Parser();
+        static void clearCaches();
         int parse(const QString & fileName);
 
         // Processing logic.

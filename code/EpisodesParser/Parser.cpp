@@ -28,22 +28,47 @@ namespace EpisodesParser {
     Parser::Parser() {
         // Only initialize some static members the first time an instance of
         // this class is created.
-        this->staticsInitializationMutex.lock();
-        if (!this->staticsInitialized) {
+        Parser::staticsInitializationMutex.lock();
+        if (!Parser::staticsInitialized) {
             // About 1.5 MB of permanent memory consumption.
-            this->browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
-            this->browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
-            this->browsCap.buildIndex();
+            Parser::browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
+            Parser::browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
+            Parser::browsCap.buildIndex();
 
             // About 25 MB of permanent memory consumption.
-            this->geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
+            Parser::geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
 
             // No significant permanent memory consumption.
-            this->episodeDiscretizer.parseCsvFile("/Users/wimleers/School/masterthesis/git/code/EpisodesParser/EpisodesSpeeds.csv");
+            Parser::episodeDiscretizer.parseCsvFile("/Users/wimleers/School/masterthesis/git/code/EpisodesParser/EpisodesSpeeds.csv");
+
+            Parser::staticsInitialized = true;
         }
-        this->staticsInitializationMutex.unlock();
+        Parser::staticsInitializationMutex.unlock();
 
         connect(this, SIGNAL(parsedChunk(QStringList)), SLOT(processParsedChunk(QStringList)));
+    }
+
+    /**
+     * Clear caches.
+     *
+     * This clears as many caches as possible:
+     * - QGeoIP's databases are closed (but this unfortunately doesn't affect
+     *   memory usage significantly, due to problems with the underlying
+     *   libGeoIP library of MaxMind)
+     * - QBrowsCap's in-memory cache is cleared
+     *
+     * Call this function whenever the Parser will not be used for long
+     * periods of time.
+     */
+    void Parser::clearCaches() {
+        Parser::staticsInitializationMutex.lock();
+        if (Parser::staticsInitialized) {
+            Parser::geoIP.closeDatabases();
+            Parser::browsCap.resetCache();
+
+            Parser::staticsInitialized = false;
+        }
+        Parser::staticsInitializationMutex.unlock();
     }
 
     /**
@@ -399,6 +424,7 @@ namespace EpisodesParser {
             transactions.append(transactionGroup);
         }
 
+        qDebug() << transactions[0];
         qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines! Transactions generated:" << transactions.size();
 
         emit processedChunk(transactions);

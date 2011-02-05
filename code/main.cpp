@@ -45,6 +45,9 @@ int main(int argc, char *argv[]) {
             << endl;
     delete parser;
 
+    // Clear caches (QBrowsCap, QGeoIP).
+    EpisodesParser::Parser::clearCaches();
+
     // FIXME: remove this eventually. This is merely here to check on memory
     // consumption after everything has been deleted from memory.
     QTextStream in(stdin);
