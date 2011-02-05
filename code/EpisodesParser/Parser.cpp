@@ -11,13 +11,13 @@ namespace EpisodesParser {
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
 #endif
-    bool Parser::staticsInitialized = false;
+    bool Parser::parserHelpersInitialized = false;
 
     QBrowsCap Parser::browsCap;
     QGeoIP Parser::geoIP;
     EpisodeDurationDiscretizer Parser::episodeDiscretizer;
 
-    QMutex Parser::staticsInitializationMutex;
+    QMutex Parser::parserHelpersInitMutex;
     QMutex Parser::episodeHashMutex;
     QMutex Parser::domainHashMutex;
     QMutex Parser::uaHierarchyHashMutex;
@@ -26,32 +26,42 @@ namespace EpisodesParser {
     QMutex Parser::dateTimeMutex;
 
     Parser::Parser() {
-        // Only initialize some static members the first time an instance of
-        // this class is created.
-        Parser::staticsInitializationMutex.lock();
-        if (!Parser::staticsInitialized) {
-            // About 1.5 MB of permanent memory consumption.
-            Parser::browsCap.setCsvFile("/Users/wimleers/Desktop/browscap.csv");
-            Parser::browsCap.setIndexFile("/Users/wimleers/Desktop/browscap-index.db");
-            Parser::browsCap.buildIndex();
-
-            // About 25 MB of permanent memory consumption.
-            Parser::geoIP.openDatabases("./data/GeoIPCity.dat", "./data/GeoIPASNum.dat");
-
-            // No significant permanent memory consumption.
-            Parser::episodeDiscretizer.parseCsvFile("/Users/wimleers/School/masterthesis/git/code/EpisodesParser/EpisodesSpeeds.csv");
-
-            Parser::staticsInitialized = true;
-        }
-        Parser::staticsInitializationMutex.unlock();
+        Parser::parserHelpersInitMutex.lock();
+        if (!Parser::parserHelpersInitialized)
+            qFatal("Call Parser::initParserHelper()  before creating Parser instances.");
+        Parser::parserHelpersInitMutex.unlock();
 
         connect(this, SIGNAL(parsedChunk(QStringList)), SLOT(processParsedChunk(QStringList)));
     }
 
+    void Parser::initParserHelpers(const QString & browsCapCSV,
+                                   const QString & browsCapIndex,
+                                   const QString & geoIPCityDB,
+                                   const QString & geoIPISPDB,
+                                   const QString & episodeDiscretizerCSV)
+    {
+        Parser::parserHelpersInitMutex.lock();
+        if (!Parser::parserHelpersInitialized) {
+            // About 1.5 MB of permanent memory consumption.
+            Parser::browsCap.setCsvFile(browsCapCSV);
+            Parser::browsCap.setIndexFile(browsCapIndex);
+            Parser::browsCap.buildIndex();
+
+            // About 25 MB of permanent memory consumption.
+            Parser::geoIP.openDatabases(geoIPCityDB, geoIPISPDB);
+
+            // No significant permanent memory consumption.
+            Parser::episodeDiscretizer.parseCsvFile(episodeDiscretizerCSV);
+
+            Parser::parserHelpersInitialized = true;
+        }
+        Parser::parserHelpersInitMutex.unlock();
+    }
+
     /**
-     * Clear caches.
+     * Clear parser helpers' caches.
      *
-     * This clears as many caches as possible:
+     * This clears as many parser helpers' caches as possible:
      * - QGeoIP's databases are closed (but this unfortunately doesn't affect
      *   memory usage significantly, due to problems with the underlying
      *   libGeoIP library of MaxMind)
@@ -60,15 +70,15 @@ namespace EpisodesParser {
      * Call this function whenever the Parser will not be used for long
      * periods of time.
      */
-    void Parser::clearCaches() {
-        Parser::staticsInitializationMutex.lock();
-        if (Parser::staticsInitialized) {
+    void Parser::clearParserHelperCaches() {
+        Parser::parserHelpersInitMutex.lock();
+        if (Parser::parserHelpersInitialized) {
             Parser::geoIP.closeDatabases();
             Parser::browsCap.resetCache();
 
-            Parser::staticsInitialized = false;
+            Parser::parserHelpersInitialized = false;
         }
-        Parser::staticsInitializationMutex.unlock();
+        Parser::parserHelpersInitMutex.unlock();
     }
 
     /**

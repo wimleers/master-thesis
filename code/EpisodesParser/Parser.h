@@ -10,6 +10,7 @@
 #include <QThread>
 #include <QtConcurrentMap>
 #include <QMutex>
+#include <QMutexLocker>
 
 #include "QBrowsCap.h"
 #include "QGeoIP.h"
@@ -26,7 +27,12 @@ namespace EpisodesParser {
 
     public:
         Parser();
-        static void clearCaches();
+        static void initParserHelpers(const QString & browsCapCSV,
+                                      const QString & browsCapIndex,
+                                      const QString & geoIPCityDB,
+                                      const QString & geoIPISPDB,
+                                      const QString & episodeDiscretizerCSV);
+        static void clearParserHelperCaches();
         int parse(const QString & fileName);
 
         // Processing logic.
@@ -57,13 +63,13 @@ namespace EpisodesParser {
         static DomainIDNameHash domainIDNameHash;
 #endif
 
-        static bool staticsInitialized;
+        static bool parserHelpersInitialized;
         static QBrowsCap browsCap;
         static QGeoIP geoIP;
         static EpisodeDurationDiscretizer episodeDiscretizer;
 
         // Mutexes used to ensure thread-safety.
-        static QMutex staticsInitializationMutex;
+        static QMutex parserHelpersInitMutex;
         static QMutex episodeHashMutex;
         static QMutex domainHashMutex;
         static QMutex uaHierarchyHashMutex;

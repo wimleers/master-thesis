@@ -22,6 +22,13 @@ int main(int argc, char *argv[]) {
     EpisodesParser::Parser * parser;
     Analytics::Analyst * analyst;
 
+    EpisodesParser::Parser::initParserHelpers("./config/browscap.csv",
+                                              "./config/browscap-index.db",
+                                              "./config/GeoIPCity.dat",
+                                              "./config/GeoIPASNum.dat",
+                                              "./config/EpisodesSpeeds.csv"
+                                              );
+
     // Instantiate the EpisodesParser and the Analytics. Then connect them.
     parser = new EpisodesParser::Parser();
     // TODO: when these parameters have been figured out, they should be the defaults
@@ -45,8 +52,7 @@ int main(int argc, char *argv[]) {
             << endl;
     delete parser;
 
-    // Clear caches (QBrowsCap, QGeoIP).
-    EpisodesParser::Parser::clearCaches();
+    EpisodesParser::Parser::clearParserHelperCaches();
 
     // FIXME: remove this eventually. This is merely here to check on memory
     // consumption after everything has been deleted from memory.
