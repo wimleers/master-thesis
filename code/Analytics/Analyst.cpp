@@ -49,7 +49,6 @@ namespace Analytics {
         qDebug() << "starting mining";
         FPGrowth * fpgrowth = new FPGrowth(transactions, this->minSupport);
         fpgrowth->setFilterItems(this->filterItems);
-
         qDebug() << "set filter items complete";
         fpgrowth->preprocessingPhase1();
         qDebug() << "preprocessing phase 1 complete";
