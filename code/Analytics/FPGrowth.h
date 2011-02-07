@@ -23,14 +23,13 @@ namespace Analytics {
         Q_OBJECT
 
     public:
-        FPGrowth(const QList<QStringList> & transactions, float minimumSupport);
+        FPGrowth(const QList<QStringList> & transactions, float minSupportRelative);
         ~FPGrowth();
-        void setFilterItems(QList<ItemName> items);
-        ItemID getItemID(ItemName name) const { return this->itemNameIDHash[name]; }
-        void preprocessingPhase1();
-        void preprocessingPhase2();
-        QList<ItemList> calculatingPhase1();
 
+        void setTransactionRequirements(QList<ItemName> items);
+        QList<ItemList> mineFrequentItemsets();
+
+        ItemID getItemID(ItemName name) const { return this->itemNameIDHash[name]; }
 #ifdef DEBUG
         ItemIDNameHash * getItemIDNameHash() { return &this->itemIDNameHash; }
 #endif
@@ -39,22 +38,29 @@ namespace Analytics {
         void processTransaction(Transaction transaction);
 
     protected:
-        ItemCountHash totalSupportCounts;
-        ItemIDList itemsSortedByTotalSupportCount;
+        // Static methods.
+        static QList<ItemID> sortItemIDsByDecreasingSupportCount(QHash<ItemID, SupportCount> itemSupportCounts);
+
+        // Methods.
+        void scanTransactions();
+        void buildFPTree();
+        Transaction optimizeTransaction(Transaction transaction) const;
+        QList<ItemList> generateFrequentItemsets(FPTree * tree, ItemList suffix = ItemList());
+
+        // Properties.
         FPTree * tree;
         QList<QStringList> transactions;
-        float minimumSupport;
-        SupportCount minimumSupportAbsolute;
-        int numberTransactions;
+
+        float minSupportRelative;
+        SupportCount minSupportAbsolute;
+
+        QHash<ItemID, SupportCount> totalFrequentSupportCounts;
+        QList<ItemID> frequentItemIDsSortedByTotalSupportCount;
+
         ItemIDNameHash itemIDNameHash;
         ItemNameIDHash itemNameIDHash;
-        QList<ItemName> filterItems;
 
-        Transaction optimizeTransaction(Transaction transaction) const;
-        void calculateItemsSortedBySupportCount();
-        ItemIDList determineSuffixOrder() const;
-
-        QList<ItemList> generateFrequentItemsets(FPTree * tree, ItemList suffix = ItemList());
+        QList<ItemName> transactionRequirements;
     };
 
 }

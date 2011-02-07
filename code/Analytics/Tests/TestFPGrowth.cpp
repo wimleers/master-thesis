@@ -15,10 +15,7 @@ void TestFPGrowth::basic() {
 
     FPNode::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4);
-
-    fpgrowth->preprocessingPhase1();
-    fpgrowth->preprocessingPhase2();
-    QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
+    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -34,12 +31,12 @@ void TestFPGrowth::basic() {
     // * frequent itemsets: {{A}, {B}, {C}, {D}, {C, B}, {C, A}}
 
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(3))
-                                                 << (ItemList() << Item(1))
-                                                 << (ItemList() << Item(2) << Item(1))
+    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(2))
                                                  << (ItemList() << Item(0))
                                                  << (ItemList() << Item(2) << Item(0))
-                                                 << (ItemList() << Item(2))
+                                                 << (ItemList() << Item(1))
+                                                 << (ItemList() << Item(2) << Item(1))
+                                                 << (ItemList() << Item(3))
     );
 }
 
@@ -61,10 +58,8 @@ void TestFPGrowth::withFilter() {
 
     QList<ItemName> filter;
     filter << "A";
-    fpgrowth->setFilterItems(filter);
-    fpgrowth->preprocessingPhase1();
-    fpgrowth->preprocessingPhase2();
-    QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
+    fpgrowth->setTransactionRequirements(filter);
+    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results
     // (*after* applying filtering):
@@ -81,8 +76,8 @@ void TestFPGrowth::withFilter() {
     // * frequent itemsets: {{A}, {C}, {A, C}}
 
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(0))
+    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(2))
+                                                 << (ItemList() << Item(0))
                                                  << (ItemList() << Item(2) << Item(0))
-                                                 << (ItemList() << Item(2))
     );
 }

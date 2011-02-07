@@ -85,8 +85,8 @@ namespace Analytics {
         return prefixPaths;
     }
 
-    ItemCountHash FPTree::calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths) {
-        ItemCountHash supportCounts;
+    QHash<ItemID, SupportCount> FPTree::calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths) {
+        QHash<ItemID, SupportCount> supportCounts;
 
         foreach (ItemList prefixPath, prefixPaths)
             foreach (Item item, prefixPath)

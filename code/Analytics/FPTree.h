@@ -30,7 +30,7 @@ namespace Analytics {
         void addTransaction(Transaction transaction);
 
         // Static (class) methods.
-        static ItemCountHash calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths);
+        static QHash<ItemID, SupportCount> calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths);
 
     protected:
         FPNode * root;

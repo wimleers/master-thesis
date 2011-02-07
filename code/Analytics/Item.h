@@ -62,7 +62,6 @@ namespace Analytics {
 
 
     // Generic data mining container types.
-    typedef QHash<ItemID, SupportCount> ItemCountHash;
     typedef QList<ItemID> ItemIDList;
     typedef QList<Item> ItemList;
     typedef QList<SupportCount> ItemCountList;

@@ -2,11 +2,12 @@
 
 namespace Analytics {
 
-    FPGrowth::FPGrowth(const QList<QStringList> & transactions, float minimumSupport) {
-        this->minimumSupport = minimumSupport;
-        this->minimumSupportAbsolute = 0;
+    FPGrowth::FPGrowth(const QList<QStringList> & transactions, float minSupportRelative) {
         this->transactions = transactions;
-        this->numberTransactions = transactions.size();
+
+        this->minSupportRelative = minSupportRelative;
+        this->minSupportAbsolute = ceil(this->minSupportRelative * this->transactions.size());
+
         this->tree = new FPTree();
     }
 
@@ -14,11 +15,110 @@ namespace Analytics {
         delete this->tree;
     }
 
-    void FPGrowth::setFilterItems(QList<ItemName> items) {
-        this->filterItems = items;
+    /**
+     * Set the requirements for transactions: each transaction needs to have
+     * all of the required items. Wildcards are allowed, e.g. "episode:*" will
+     * match "episode:foo", "episode:bar", etc.
+     *
+     * @param requiredItems
+     *   A list of required transaction items.
+     */
+    void FPGrowth::setTransactionRequirements(QList<ItemName> items) {
+        this->transactionRequirements = items;
     }
 
-    void FPGrowth::preprocessingPhase1() {
+    /**
+     * Mine frequent itemsets. (First scan the transactions, then build the
+     * FP-tree, then generate the frequent itemsets from there.)
+     */
+    QList<ItemList> FPGrowth::mineFrequentItemsets() {
+        this->scanTransactions();
+        this->buildFPTree();
+        return this->generateFrequentItemsets(this->tree);
+    }
+
+
+    //------------------------------------------------------------------------------
+    // Protected slots.
+
+    /**
+     * Slot that receives a Transaction, optimizes it and adds it to the tree.
+     */
+    void FPGrowth::processTransaction(Transaction transaction) {
+        Transaction optimizedTransaction;
+        optimizedTransaction = this->optimizeTransaction(transaction);
+
+        // It's possible that the optimized transaction has become empty if
+        // none of the items in the given transaction meet or exceed the
+        // minimum support.
+        if (optimizedTransaction.size() > 0)
+            this->tree->addTransaction(optimizedTransaction);
+    }
+
+
+    //------------------------------------------------------------------------
+    // Protected static methods.
+
+    /**
+     * Given an ItemID -> SupportCount dictionary, find sort ItemIDs by
+     * decreasing support count.
+     *
+     * @param itemSupportCounts
+     *   A QHash of ItemID -> SupportCount pairs.
+     * @return
+     *   A QList of ItemIDs, sorted by decreasing support count.
+     */
+    QList<ItemID> FPGrowth::sortItemIDsByDecreasingSupportCount(QHash<ItemID, SupportCount> itemSupportCounts){
+        QHash<SupportCount, ItemID> itemIDsBySupportCount;
+        QSet<SupportCount> supportCounts;
+        SupportCount supportCount;
+        foreach (ItemID itemID, itemSupportCounts.keys()) {
+            supportCount = itemSupportCounts[itemID];
+
+            // Fill itemsBySupport by using QHash::insertMulti(), which allows
+            // for multiple values for the same key.
+            itemIDsBySupportCount.insertMulti(supportCount, itemID);
+
+            // Fill supportCounts. Since this is a set, each unique support
+            // count will only be stored once.
+            supportCounts.insert(supportCount);
+        }
+
+        // Sort supportCounts from smaller to greater. But first convert from
+        // a QSet to a QList, because sets cannot have an order by definition.
+        QList<SupportCount> sortedSupportCounts;
+        sortedSupportCounts = supportCounts.toList();
+//        qSort(sortedSupportCounts);
+        qSort(sortedSupportCounts.begin(), sortedSupportCounts.end(), qGreater<SupportCount>());
+
+        // Store all ItemIDs, sorted by support count. If multiple ItemIDs
+        // have the same SupportCount, sort them from small to large.
+        QList<ItemID> sortedItemIDs;
+        foreach (SupportCount support, sortedSupportCounts) {
+            ItemIDList itemIDs = itemIDsBySupportCount.values(support);
+            qSort(itemIDs);
+            sortedItemIDs.append(itemIDs);
+        }
+
+        return sortedItemIDs;
+    }
+
+
+    //------------------------------------------------------------------------
+    // Protected methods.
+
+    /**
+     * Preprocess the transactions:
+     * 1) map the item names to item IDs, so we only have to store numeric IDs
+     *    in the FP-tree and conditional FP-trees, instead of entire strings
+     * 2) determine the support count of each item (happens simultaneously
+     *    with step 1)
+     * 3) discard infrequent items' support count
+     * 4) sort the frequent items by decreasing support count
+     */
+    void FPGrowth::scanTransactions() {
+        // Map the item names to item IDs. Maintain two dictionaries: one for
+        // each look-up direction (name -> id and id -> name).
         ItemID itemID;
         foreach (QStringList transaction, this->transactions) {
             foreach (QString itemName, transaction) {
@@ -27,35 +127,45 @@ namespace Analytics {
                     itemID = this->itemNameIDHash.size();
                     this->itemNameIDHash.insert(itemName, itemID);
                     this->itemIDNameHash.insert(itemID, itemName);
-                    this->totalSupportCounts.insert(itemID, 0);
+                    this->totalFrequentSupportCounts.insert(itemID, 0);
                 }
                 else
                     itemID = this->itemNameIDHash[itemName];
 
-                this->totalSupportCounts[itemID]++;
+                this->totalFrequentSupportCounts[itemID]++;
             }
         }
 
-        this->minimumSupportAbsolute = ceil(this->minimumSupport * this->transactions.size());
-        this->calculateItemsSortedBySupportCount();
+        // Discard infrequent items' SupportCount.
+        foreach (ItemID id, this->totalFrequentSupportCounts.keys())
+            if (this->totalFrequentSupportCounts[id] < this->minSupportAbsolute)
+                this->totalFrequentSupportCounts.remove(id);
+
+        // Sort the frequent items' ItemIDs by decreasing SupportCount.
+        this->frequentItemIDsSortedByTotalSupportCount = FPGrowth::sortItemIDsByDecreasingSupportCount(this->totalFrequentSupportCounts);
     }
 
-    // Build FP-tree.
-    void FPGrowth::preprocessingPhase2() {
+    /**
+     * Build the FP-tree, by using the results from scanTransactions() and
+     * taking into account the transactions requirements set through
+     * setTransactionRequirements().
+     */
+    void FPGrowth::buildFPTree() {
         Transaction transaction;
         bool matchesFilter;
 
         // When filter items have been set, require all transactions to match
         // either of these filter items.
-        bool requiresFilterMatch = (this->filterItems.size() > 0);
+        bool requiresFilterMatch = (this->transactionRequirements.size() > 0);
 
         foreach (QStringList transactionAsStrings, this->transactions) {
             matchesFilter = false;
             transaction.clear();
             foreach (ItemName name, transactionAsStrings) {
                 // Filter transactions when appropriate.
+                // TODO: wildcard matches (e.g. "episode:*")
                 if (requiresFilterMatch && !matchesFilter) {
-                    foreach (ItemName filter, this->filterItems)
+                    foreach (ItemName filter, this->transactionRequirements)
                         if (filter.compare(name) == 0)
                             matchesFilter = true;
                 }
@@ -71,127 +181,51 @@ namespace Analytics {
         }
 
 #ifdef FPGROWTH_DEBUG
-        qDebug() << "Parsed" << this->numberTransactions << "transactions.";
+        qDebug() << "Parsed" << this->transactions.size() << "transactions.";
         qDebug() << *this->tree;
 #endif
     }
 
-    QList<ItemList> FPGrowth::calculatingPhase1() {
-        QList<ItemList> frequentItemsets = this->generateFrequentItemsets(this->tree);
-
-#ifdef FPGROWTH_DEBUG
-        qDebug() << "frequent itemsets:" << frequentItemsets.size();
-        qDebug() << frequentItemsets;
-#endif
-
-        return frequentItemsets;
-    }
-
-
-    //------------------------------------------------------------------------
-    // Protected methods.
-
-    // TODO: make this method use this->itemsSortedBySupportCount, which
-    // removes a lot of per-transaction calculations, at the cost of comparing
-    // with a possibly long list of items to find the proper order.
+    /**
+     * Optimize a transaction.
+     *
+     * This is achieved by sorting the items by decreasing support count. To
+     * do this as fast as possible,
+     * this->frequentItemIDsSortedByTotalSupportCount is reused. Because
+     * this->itemIDsSortedByTotalSupportCount does not include infrequent
+     * items, these are also automatically removed by this simple routine.
+     *
+     * @param transaction
+     *   A transaction.
+     * @return
+     *   The optimized transaction.
+     */
     Transaction FPGrowth::optimizeTransaction(Transaction transaction) const {
         Transaction optimizedTransaction;
-        QHash<ItemID, Item> itemIDToItem;
-        QHash<SupportCount, ItemID> totalSupportToItemID;
-        QSet<SupportCount> supportSet;
-        QList<SupportCount> supportList;
-        SupportCount totalSupportCount;
-
-        // Fill the following variables:
-        // - itemIDToItem, which maps itemIDs (key) to their corresponding
-        //   items (values).
-        // - supportToItemID, which maps supports (key) to all item IDs with
-        //   that support (values).
-        // - supportSet, which is a set of all different supports. This will
-        //   be used to sort by support.
-        // But discard infrequent items (i.e. if their support is smaller than
-        // the minimum support).
-        foreach (Item item, transaction) {
-            itemIDToItem.insert(item.id, item);
-            totalSupportCount = this->totalSupportCounts[item.id];
-
-            // Discard items that are total infrequent.
-            if (totalSupportCount < this->minimumSupportAbsolute)
-                continue;
-
-            // Fill itemsBySupport by using QHash::insertMulti(), which allows
-            // for multiple values for the same key.
-            totalSupportToItemID.insertMulti(totalSupportCount, item.id);
-
-            // Fill supportSet.
-            supportSet.insert(totalSupportCount);
-        }
-
-        // It's possible that none of the items in this transaction meet or
-        // exceed the minimum support.
-        if (supportSet.size() == 0)
-            return optimizedTransaction;
-
-        // Sort supportSet from greater to smaller. But first convert
-        // supportSet to a list supportList, because sets cannot have an order
-        // by definition.
-        supportList = supportSet.toList();
-        qSort(supportList.begin(), supportList.end(), qGreater<SupportCount>());
-
-        // Store items with largest support first in the optimized
-        // transaction:
-        // - first iterate over all supports in supportList, which are now
-        //   sorted from greater to smaller
-        // - then retrieve all items that have this support
-        // - then sort these items to ensure the same order is applied to all
-        //   itemsets with the same support, which minimizes the size of the
-        //   FP-tree even further (i.e. maximizes density)
-        // - finally, append the item to the transaction optimizedTransaction.
-        foreach (SupportCount support, supportList) {
-            ItemIDList itemIDs = totalSupportToItemID.values(support);
-            qSort(itemIDs);
-            foreach (ItemID itemID, itemIDs)
-                optimizedTransaction << itemIDToItem[itemID];
+        Item item;
+        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount) {
+            item.id = itemID;
+            if (transaction.contains(item))
+                optimizedTransaction.append(transaction.at(transaction.indexOf(item)));
         }
 
         return optimizedTransaction;
     }
 
-
-    void FPGrowth::calculateItemsSortedBySupportCount() {
-        QHash<SupportCount, ItemID> itemsByTotalSupport;
-        QSet<SupportCount> supportSet;
-        QList<SupportCount> supportList;
-        SupportCount totalSupport;
-
-        Q_ASSERT_X(this->itemsSortedByTotalSupportCount.size() == 0, "FPGrowth::getItemsSortedBySupportCount", "Should only be called once.");
-
-        foreach (ItemID itemID, this->totalSupportCounts.keys()) {
-            totalSupport = this->totalSupportCounts[itemID];
-
-            // Fill itemsBySupport by using QHash::insertMulti(), which allows
-            // for multiple values for the same key.
-            itemsByTotalSupport.insertMulti(totalSupport, itemID);
-
-            // Fill supportSet.
-            supportSet.insert(totalSupport);
-        }
-
-        // Sort supportSet from smaller to greater. But first convert
-        // supportSet to a list supportList, because sets cannot have an order
-        // by definition.
-        supportList = supportSet.toList();
-        qSort(supportList);
-
-        // Store all items, sorted by total support count.
-        foreach (SupportCount support, supportList) {
-            ItemIDList itemIDs = itemsByTotalSupport.values(support);
-            qSort(itemIDs);
-            this->itemsSortedByTotalSupportCount.append(itemIDs);
-        }
-    }
-
-
+    /**
+     * Generate the frequent itemsets recursively
+     *
+     * @param ctree
+     *   Initially the entire FP-tree, but in subsequent (recursive) calls,
+     *   a conditional FP-tree.
+     * @param suffix
+     *   The current frequent itemset suffix. Empty in the initial call, but
+     *   automatically filled by this function when it recurses.
+     * @return
+     *   The entire list of frequent itemsets. The SupportCount for each Item
+     *   still needs to be cleaned: it should be set to the minimum of all
+     *   Items in each frequent itemset.
+     */
     QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suffix) {
 #ifdef FPGROWTH_DEBUG
         qDebug() << "---------------------------------generateFrequentItemsets()" << suffix;
@@ -209,7 +243,7 @@ namespace Analytics {
         // suffixes in analogous orders for different branches?
         ItemIDList orderedSuffixItemIDs;
         ItemIDList itemIDsInTree = ctree->getItemIDs();
-        foreach (ItemID itemID, this->itemsSortedByTotalSupportCount)
+        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount)
             if (itemIDsInTree.contains(itemID))
                 orderedSuffixItemIDs.append(itemID);
 
@@ -228,7 +262,7 @@ namespace Analytics {
             // support, it will be added as a frequent itemset (appended with
             // the received suffix of course).
             SupportCount suffixItemSupport = ctree->getItemSupport(suffixItemID);
-            if (suffixItemSupport >= this->minimumSupportAbsolute) {
+            if (suffixItemSupport >= this->minSupportAbsolute) {
                 // The current suffix item, when prepended to the received
                 // suffix, is the next frequent itemset. Additionally, it will
                 // serve as the next suffix.
@@ -257,7 +291,7 @@ namespace Analytics {
 #endif
 
                 // Calculate the support counts for the prefix paths.
-                ItemCountHash prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
+                QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
 
                 // Remove items from the prefix paths based on the support
                 // counts of the items *within* the prefix paths.
@@ -265,7 +299,7 @@ namespace Analytics {
                 ItemList filteredPrefixPath;
                 foreach (ItemList prefixPath, prefixPaths) {
                     foreach (Item item, prefixPath) {
-                        if (prefixPathsSupportCounts[item.id] >= this->minimumSupportAbsolute)
+                        if (prefixPathsSupportCounts[item.id] >= this->minSupportAbsolute)
                             filteredPrefixPath.append(item);
                     }
                     if (filteredPrefixPath.size() > 0)
@@ -308,23 +342,5 @@ namespace Analytics {
 #endif
 
         return frequentItemsets;
-    }
-
-
-    //------------------------------------------------------------------------------
-    // Protected slots.
-
-    /**
-  * Slot that receives a Transaction, optimizes it and adds it to the tree.
-  */
-    void FPGrowth::processTransaction(Transaction transaction) {
-        Transaction optimizedTransaction;
-        optimizedTransaction = this->optimizeTransaction(transaction);
-
-        // It's possible that the optimized transaction has become empty if
-        // none of the items in the given transaction meet or exceed the
-        // minimum support.
-        if (optimizedTransaction.size() > 0)
-            this->tree->addTransaction(optimizedTransaction);
     }
 }

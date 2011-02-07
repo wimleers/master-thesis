@@ -15,12 +15,9 @@ void TestRuleMiner::basic() {
 
     FPNode::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4);
+    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
-    fpgrowth->preprocessingPhase1();
-    fpgrowth->preprocessingPhase2();
-    QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
-
-    QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8);
+    QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, ItemList());
     QCOMPARE(associationRules.size(), 1);
     QCOMPARE(associationRules[0].antecedent, (ItemList() << Item(1)));
     QCOMPARE(associationRules[0].consequent, (ItemList() << Item(2)));

@@ -48,14 +48,9 @@ namespace Analytics {
 //        QTime timer;
         qDebug() << "starting mining";
         FPGrowth * fpgrowth = new FPGrowth(transactions, this->minSupport);
-        fpgrowth->setFilterItems(this->filterItems);
-        qDebug() << "set filter items complete";
-        fpgrowth->preprocessingPhase1();
-        qDebug() << "preprocessing phase 1 complete";
-        fpgrowth->preprocessingPhase2();
-        qDebug() << "preprocessing phase 2 complete";
-        QList<ItemList> frequentItemsets = fpgrowth->calculatingPhase1();
-        qDebug() << "calculating phase 1 complete";
+        fpgrowth->setTransactionRequirements(this->filterItems);
+        QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
+        qDebug() << "frequent itemset mining complete";
 
         ItemList requirements;
         foreach (ItemName name, this->ruleConsequentRequirements) {
