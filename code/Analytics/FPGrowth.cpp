@@ -258,7 +258,7 @@ namespace Analytics {
 
 #endif
 
-            // Only if this suffix item's support meets or exceeds the minim
+            // Only if this suffix item's support meets or exceeds the minimum
             // support, it will be added as a frequent itemset (appended with
             // the received suffix of course).
             SupportCount suffixItemSupport = ctree->getItemSupport(suffixItemID);
