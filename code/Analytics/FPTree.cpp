@@ -77,9 +77,12 @@ namespace Analytics {
             }
 
             // Store the built prefix path & clear it, so we can calculate the
-            // next.
-            prefixPaths.append(prefixPath);
-            prefixPath.clear();
+            // next. Of course only if there *is* a prefix path, which is not
+            // the case if the given itemID is at the root level.
+            if (prefixPath.size() > 0) {
+                prefixPaths.append(prefixPath);
+                prefixPath.clear();
+            }
         }
 
         return prefixPaths;
