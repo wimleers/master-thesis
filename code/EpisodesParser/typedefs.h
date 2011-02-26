@@ -6,6 +6,7 @@
 #include <QList>
 #include <QHostAddress>
 #include <QStringList>
+#include <QString>
 
 #ifdef DEBUG
 #include <QDebug>
@@ -158,12 +159,8 @@ struct UAHierarchyDetails {
                              << prefix + this->platform + s + this->browser_name
                              << prefix + this->platform + s + this->browser_name + s + browser_version_major
                              << prefix + this->platform + s + this->browser_name + s + browser_version_major + s + browser_version_minor
-                             // Cross-platform browsers.
-                             << prefix + this->browser_name
-                             << prefix + this->browser_name + s + browser_version_major
-                             << prefix + this->browser_name + s + browser_version_major + s + browser_version_minor
                              // Mobile or not.
-                             << prefix + ((this->is_mobile) ? "isMobile" : "isNotMobile");
+                             << ((this->is_mobile) ? prefix + "isMobile" : QString::null);
     }
 };
 typedef quint16 UAHierarchyID;
