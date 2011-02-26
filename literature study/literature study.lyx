@@ -25936,6 +25936,78 @@ Findings
 \end_layout
 
 \begin_layout Subsection
+General
+\end_layout
+
+\begin_layout Itemize
+QCachingLocale was necessary because QSystemLocale::query() calls (used
+ by Qt's internals for parsing dates) was extremely slow on OS X: what should
+ take 40 ms, was taking 4 seconds.
+ I.e.
+ 100 times slower than it should be.
+ (Windows and Linux were not affected.)
+\begin_inset Newline newline
+\end_inset
+
+Blog post: http://wimleers.com/blog/qcachinglocale-speeding-up-qsystemlocalequery
+-calls
+\begin_inset Newline newline
+\end_inset
+
+Qt bug report: http://bugreports.qt.nokia.com/browse/QTBUG-17271
+\end_layout
+
+\begin_layout Itemize
+A library had to be written to map user-agent strings to their corresponding
+ browser name and version, and operating system.
+ No such library existed yet in C/C++, or at least I could not find it after
+ lengthy searching.
+ Because it is impossible to write a single, standardized routine that parses
+ this information from the user-agent string, I had to rely on BrowsCap,
+ the Browsers Capabilities project.
+ This is the same dataset the PHP language relies on to identify browsers:
+ http://browsers.garykeith.com.
+\begin_inset Newline newline
+\end_inset
+
+I've developed a C++ library that makes it easy to download this dataset,
+ keep it up-to-date, maintain a SQLite-powered index for faster mapping
+ of user-agent strings.
+ To maximize performance, it even maintains an in-memory hash table.
+\begin_inset Newline newline
+\end_inset
+
+QBrowsCap has also been made thread-safe, to allow for concurrent user-agent
+ details lookup by multiple threads (therefor allowing greater user-agent
+ details lookup speeds).
+\end_layout
+
+\begin_layout Itemize
+Unfortunately, no library was available for Qt to map IP addresses to physical
+ locations either.
+ Fortunately, I did find a C library which I made easier to use by wrapping
+ it in QGeoIP.
+ It also simplifies the build process.
+\begin_inset Newline newline
+\end_inset
+
+QGeoIP uses MaxMind's libGeoIP.
+ GeoIP_delete() does 
+\emph on
+not
+\emph default
+ actually free the memory consumed by the in-memory cache.
+ I tried debugging this, but I can't get it to work.
+ Maybe it's an OS X-specific issue? I did not try on Linux.
+\begin_inset Newline newline
+\end_inset
+
+Likely related to these memory release issues, there is the problem that
+ it seems to be impossible to make QGeoIP work in a thread-safe manner,
+ thus not allowing for concurrent IP to physical location mapping.
+\end_layout
+
+\begin_layout Subsection
 Initial data mining: FP-Growth, not FP-Stream
 \end_layout
 
