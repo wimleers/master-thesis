@@ -379,7 +379,9 @@ namespace EpisodesParser {
         QList<QStringList> transactions;
         QStringList itemList;
         itemList << QString("url:") + QString(line.url)
-                 << QString("status:") + QString::number(line.status)
+                 // Only include the HTTP status code in the transaction if it's not a 200 status.
+                 // TODO: improve performance of this: by simply omitting this check, the entire process becomes 5% faster!
+                 << ((line.status != 200) ? QString("status:") + QString::number(line.status) : QString::null)
                  << Parser::hash_location_fromID.value(line.location).generateAssociationRuleItems()
                  << Parser::uaHierarchyIDDetailsHash.value(line.ua).generateAssociationRuleItems();
 
