@@ -115,7 +115,6 @@ struct Location{
                              << prefix + this->continent
                              << prefix + this->continent + s + this->country
                              << prefix + this->continent + s + this->country + s + this->region
-                             << prefix + this->continent + s + this->country + s + this->region + s + this->city
                              // ISP per country (global ISP does not make sense).
                              << prefix + "isp:" + this->country + s + this->isp;
     }
