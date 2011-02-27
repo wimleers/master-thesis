@@ -28,10 +28,10 @@ namespace Analytics {
         QList<ItemList> calculatePrefixPaths(ItemID itemID) const;
 
         // Modifiers.
-        void addTransaction(Transaction transaction);
+        void addTransaction(const Transaction & transaction);
 
         // Static (class) methods.
-        static QHash<ItemID, SupportCount> calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths);
+        static QHash<ItemID, SupportCount> calculateSupportCountsForPrefixPaths(const QList<ItemList> & prefixPaths);
 
     protected:
         FPNode * root;

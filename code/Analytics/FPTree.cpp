@@ -94,7 +94,8 @@ namespace Analytics {
         return prefixPaths;
     }
 
-    QHash<ItemID, SupportCount> FPTree::calculateSupportCountsForPrefixPaths(QList<ItemList> prefixPaths) {
+    // TODO: move to FPGrowth class.
+    QHash<ItemID, SupportCount> FPTree::calculateSupportCountsForPrefixPaths(const QList<ItemList> & prefixPaths) {
         QHash<ItemID, SupportCount> supportCounts;
 
         foreach (ItemList prefixPath, prefixPaths)
@@ -104,7 +105,7 @@ namespace Analytics {
         return supportCounts;
     }
 
-    void FPTree::addTransaction(Transaction transaction) {
+    void FPTree::addTransaction(const Transaction & transaction) {
         // The initial current node is the root node.
         FPNode * currentNode = root;
 
