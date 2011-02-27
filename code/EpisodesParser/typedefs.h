@@ -154,13 +154,19 @@ struct UAHierarchyDetails {
         const QString browser_version_major = QString::number(this->browser_version_major);
         const QString browser_version_minor = QString::number(this->browser_version_minor);
 
-        return QStringList() // Platform-specific browsers.
-                             << prefix + this->platform
-                             << prefix + this->platform + s + this->browser_name
-                             << prefix + this->platform + s + this->browser_name + s + browser_version_major
-                             << prefix + this->platform + s + this->browser_name + s + browser_version_major + s + browser_version_minor
-                             // Mobile or not.
-                             << ((this->is_mobile) ? prefix + "isMobile" : QString::null);
+        QStringList items;
+
+        // Platform-specific browsers.
+        items << prefix + this->platform
+              << prefix + this->platform + s + this->browser_name
+              << prefix + this->platform + s + this->browser_name + s + browser_version_major
+              << prefix + this->platform + s + this->browser_name + s + browser_version_major + s + browser_version_minor;
+
+        // Mobile or not.
+        if (this->is_mobile)
+            items << prefix + "isMobile";
+
+        return items;
     }
 };
 typedef quint16 UAHierarchyID;
