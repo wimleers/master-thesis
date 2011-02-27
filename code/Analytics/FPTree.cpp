@@ -6,10 +6,16 @@ namespace Analytics {
     // Public methods.
 
     FPTree::FPTree() {
-        Item rootItem;
-        rootItem.id = ROOT_ITEMID;
-        rootItem.supportCount = 0;
-        root = new FPNode(rootItem);
+        this->init();
+    }
+
+    // Alternative constructor
+    FPTree::FPTree(const QList<ItemList> & prefixPaths) {
+        this->init();
+
+        // Now insert all the prefix paths as transactions.
+        foreach (ItemList prefixPath, prefixPaths)
+            this->addTransaction(prefixPath);
     }
 
     FPTree::~FPTree() {
@@ -130,6 +136,13 @@ namespace Analytics {
 
     //------------------------------------------------------------------------
     // Protected methods.
+
+    void FPTree::init() {
+        Item rootItem;
+        rootItem.id = ROOT_ITEMID;
+        rootItem.supportCount = 0;
+        root = new FPNode(rootItem);
+    }
 
     void FPTree::addNodeToItemPath(FPNode * node) {
         FPNodeList itemPath;

@@ -15,6 +15,7 @@ namespace Analytics {
     class FPTree {
     public:
         FPTree();
+        FPTree(const QList<ItemList> & prefixPaths);
         ~FPTree();
 
         // Accessors.
@@ -36,6 +37,7 @@ namespace Analytics {
         FPNode * root;
         QHash<ItemID, FPNodeList> itemPaths;
 
+        void init();
         void addNodeToItemPath(FPNode * node);
     };
 
