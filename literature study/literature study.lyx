@@ -26076,7 +26076,7 @@ Don't include the city in the transactions.
 
 \end_deeper
 \begin_layout Itemize
-We can filter on 
+We can put a positive item constraint on 
 \begin_inset Quotes eld
 \end_inset
 
@@ -26085,8 +26085,13 @@ duration:slow
 \end_inset
 
  during frequent itemset generation.
- This means these calculations will only be as heavy as the user has defined
- each episode to be 
+ This strongly limits the search space for possible frequent itemsets, and
+ thus results in a major speed-up.
+\begin_inset Newline newline
+\end_inset
+
+This also means that the speed also depends on the user's definition of
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -26095,6 +26100,19 @@ slow
 \end_inset
 
 .
+\end_layout
+
+\begin_layout Itemize
+We want rules always to be about episodes.
+ Hence we can also put a positive wildcard item constraint of 
+\begin_inset Quotes eld
+\end_inset
+
+episodes:*
+\begin_inset Quotes erd
+\end_inset
+
+ on frequent itemset generation.
 \end_layout
 
 \begin_layout Itemize
@@ -26128,8 +26146,69 @@ duration:slow
 one
 \emph default
  possible association rule's confidence per frequent itemset!
+\begin_inset Newline newline
+\end_inset
+
+Also, we want some episode (
+\begin_inset Quotes eld
+\end_inset
+
+episode:*
+\begin_inset Quotes erd
+\end_inset
+
+) to be in the antecedent of the rule.
+ Since we've already required 
+\begin_inset Quotes eld
+\end_inset
+
+episode:*
+\begin_inset Quotes erd
+\end_inset
+
+ to be in the frequent itemset and we've only allowed 
+\begin_inset Quotes eld
+\end_inset
+
+duration:slow
+\begin_inset Quotes erd
+\end_inset
+
+ in the consequent, 
+\begin_inset Quotes eld
+\end_inset
+
+episode:*
+\begin_inset Quotes erd
+\end_inset
+
+ MUST be in the antecedent.
 \end_layout
 
+\begin_layout Itemize
+4 kinds of item constraints are supported:
+\end_layout
+
+\begin_deeper
+\begin_layout Itemize
+CONSTRAINT_POSITIVE_MATCH_ALL: all defined items must be present
+\end_layout
+
+\begin_layout Itemize
+CONSTRAINT_POSITIVE_MATCH_ANY: at least one of the defined items must be
+ present
+\end_layout
+
+\begin_layout Itemize
+CONSTRAINT_NEGATIVE_MATCH_ALL: none of the defined items must be present
+\end_layout
+
+\begin_layout Itemize
+CONSTRAINT_NEGATIVE_MATCH_ANY: at least one of the defined items must not
+ be present
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 More to follow.
 \end_layout

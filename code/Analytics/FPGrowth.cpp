@@ -2,11 +2,10 @@
 
 namespace Analytics {
 
-    FPGrowth::FPGrowth(const QList<QStringList> & transactions, float minSupportRelative) {
+    FPGrowth::FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute) {
         this->transactions = transactions;
 
-        this->minSupportRelative = minSupportRelative;
-        this->minSupportAbsolute = ceil(this->minSupportRelative * this->transactions.size());
+        this->minSupportAbsolute = minSupportAbsolute;
 
         this->tree = new FPTree();
     }
@@ -16,25 +15,126 @@ namespace Analytics {
     }
 
     /**
-     * Set the requirements for transactions: each transaction needs to have
-     * all of the required items. Wildcards are allowed, e.g. "episode:*" will
-     * match "episode:foo", "episode:bar", etc.
+     * Set the requirements for frequent itemset. Wildcards are allowed, e.g.
+     * "episode:*" will match "episode:foo", "episode:bar", etc.
      *
-     * @param requiredItems
-     *   A list of required transaction items.
+     * Note: wilcard items will be expanded to their corresponding item ids in
+     *       FPGrowth::scanTransactions().
+     *
+     * @param contraints
+     *   A list of constraints.
+     * @param type
+     *   The item constraint type.
      */
-    void FPGrowth::setTransactionRequirements(QList<ItemName> items) {
-        this->transactionRequirements = items;
+    void FPGrowth::setItemConstraints(const QSet<ItemName> & constraints, ItemConstraintType type) {
+        itemConstraints.insert(type, constraints);
     }
 
     /**
      * Mine frequent itemsets. (First scan the transactions, then build the
      * FP-tree, then generate the frequent itemsets from there.)
+     *
+     * @return
+     *   The frequent itemsets that were found.
      */
     QList<ItemList> FPGrowth::mineFrequentItemsets() {
         this->scanTransactions();
         this->buildFPTree();
         return this->generateFrequentItemsets(this->tree);
+    }
+
+    /**
+     * Calculate the upper bound of the support count for an itemset.
+     *
+     * @param itemset
+     *   The itemset to calculate the upper bound of its support count for.
+     * @return
+     *   The upper bound of the support count for this itemset.
+     */
+    SupportCount FPGrowth::calculateSupportCountUpperBound(const ItemList & itemset) const {
+        // For itemsets of size 1, we can simply use the QHash that contains
+        // all frequent items' support counts, since it contains the exact
+        // data we need (this is FPGrowth::totalFrequentSupportCounts). Thus,
+        // in this case, we don't really calculate the upper bound: we
+        // immediately return the correct support count.
+        // For larger itemsets, we'll have to calculate the upper bound by
+        // exploiting some properties. See the code below for details.
+        if (itemset.size() == 1) {
+            return this->totalFrequentSupportCounts[itemset[0].id];
+        }
+        else {
+            ItemList optimizedItemset = this->optimizeTransaction(itemset);
+
+            // The last item is the one with the least support, since it is
+            // optimized for this by FPGrowth::optimizeTransaction.
+            Item lastItem = optimizedItemset[optimizedItemset.size() - 1];
+
+            // Since all items in a frequent itemset must themselves also be
+            // frequent, it must be available in the previously calculated
+            // FPGrowth::totalFrequentSupportCounts. An itemset's support
+            // count is only as frequent as its least supported item, which is
+            // the last item thanks to the FPGrowth::optimizeTransaction()
+            // call.
+            // Hence the itemset's upper bound support count is equal to the
+            // support count of the last item in the itemset.
+            return this->totalFrequentSupportCounts[lastItem.id];
+        }
+    }
+
+    /**
+     * Calculate the exact support count for an itemset.
+     *
+     * @param itemset
+     *   The itemset to calculate the exact support count for.
+     * @return
+     *   The exact support count for this itemset
+     */
+    SupportCount FPGrowth::calculateSupportCountExactly(const ItemList & itemset) const {
+        // For itemsets of size 1, we can simply use the QHash that contains
+        // all frequent items' support counts, since it contains the exact
+        // data we need (this is FPGrowth::totalFrequentSupportCounts).
+        // For larger itemsets, we'll have to get the exact support count by
+        // examining the FP-tree.
+        if (itemset.size() == 1) {
+            return this->totalFrequentSupportCounts[itemset[0].id];
+        }
+        else {
+            // First optimize the itemset so that the item with the least
+            // support is the last item.
+            ItemList optimizedItemset = this->optimizeTransaction(itemset);
+
+            // Starting with the last item in the itemset:
+            // 1) calculate its prefix paths
+            // 2) filter these prefix paths to remove the items along these
+            //    paths that don't meet the minimum support
+            // 3) build the corresponding conditional FP-tree
+            // Repeat this until we've reached the second item in the itemset,
+            // then we have the support count for this item set.
+            int last = optimizedItemset.size() - 1;
+            FPTree * cfptree;
+            QList<ItemList> prefixPaths;
+            for (int whichItem = last; whichItem > 0; whichItem--) {
+                // Step 1: calculate prefix paths.
+                if (whichItem == last)
+                    prefixPaths = this->tree->calculatePrefixPaths(optimizedItemset[whichItem].id);
+                else {
+                    prefixPaths = cfptree->calculatePrefixPaths(optimizedItemset[whichItem].id);
+                    delete cfptree;
+                }
+                // Step 2: filter.
+                prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
+                // Step 3: build the conditional FP-tree.
+                // Note that it is impossible to end with zero prefix paths
+                // after filtering, since the itemset that is passed to this
+                // function consists of frequent items.
+                cfptree = new FPTree(prefixPaths);
+            }
+
+            // The conditional FP-tree for the second item in the itemset
+            // contains the support count for the itemset that was passed into
+            // this function.
+            return cfptree->getItemSupport(itemset[0].id);
+        }
     }
 
 
@@ -43,8 +143,11 @@ namespace Analytics {
 
     /**
      * Slot that receives a Transaction, optimizes it and adds it to the tree.
+     *
+     * @param transaction
+     *   The transaction to process.
      */
-    void FPGrowth::processTransaction(Transaction transaction) {
+    void FPGrowth::processTransaction(const Transaction & transaction) {
         Transaction optimizedTransaction;
         optimizedTransaction = this->optimizeTransaction(transaction);
 
@@ -60,18 +163,19 @@ namespace Analytics {
     // Protected static methods.
 
     /**
-     * Given an ItemID -> SupportCount dictionary, find sort ItemIDs by
-     * decreasing support count.
+     * Given an ItemID -> SupportCount hash, find sort ItemIDs by decreasing
+     * support count.
      *
      * @param itemSupportCounts
      *   A QHash of ItemID -> SupportCount pairs.
      * @return
      *   A QList of ItemIDs, sorted by decreasing support count.
      */
-    QList<ItemID> FPGrowth::sortItemIDsByDecreasingSupportCount(QHash<ItemID, SupportCount> itemSupportCounts){
+    QList<ItemID> FPGrowth::sortItemIDsByDecreasingSupportCount(const QHash<ItemID, SupportCount> & itemSupportCounts){
         QHash<SupportCount, ItemID> itemIDsBySupportCount;
         QSet<SupportCount> supportCounts;
         SupportCount supportCount;
+
         foreach (ItemID itemID, itemSupportCounts.keys()) {
             supportCount = itemSupportCounts[itemID];
 
@@ -103,6 +207,181 @@ namespace Analytics {
         return sortedItemIDs;
     }
 
+    /**
+     * Remove items from the prefix paths based on the support counts of the
+     * items *within* the prefix paths.
+     *
+     * @param prefixPaths
+     *   The prefix paths to filter.
+     * @param minSupportAbsolute
+     *   The minimum absolute support count that should be met.
+     * @return
+     *   The filtered prefix paths.
+     */
+    QList<ItemList> FPGrowth::filterPrefixPaths(const QList<ItemList> & prefixPaths, SupportCount minSupportAbsolute) {
+        QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
+
+        QList<ItemList> filteredPrefixPaths;
+        ItemList filteredPrefixPath;
+        foreach (ItemList prefixPath, prefixPaths) {
+            foreach (Item item, prefixPath) {
+                if (prefixPathsSupportCounts[item.id] >= minSupportAbsolute)
+                    filteredPrefixPath.append(item);
+            }
+            if (filteredPrefixPath.size() > 0)
+                filteredPrefixPaths.append(filteredPrefixPath);
+            filteredPrefixPath.clear();
+        }
+
+        return filteredPrefixPaths;
+    }
+
+
+    //------------------------------------------------------------------------
+    // Protected constraint methods.
+
+    /**
+     * Check if the given itemset matches the defined constraints.
+     *
+     * @param itemset
+     *   An itemset to check the constraints for.
+     * @return
+     *   True if the itemset matches the constraints, false otherwise.
+     */
+    bool FPGrowth::constraintMatcher(const ItemList & itemset) {
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            ItemConstraintType type = (ItemConstraintType) i;
+            foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
+                if (!FPGrowth::constraintMatchHelper(itemset, type, this->preprocessedItemConstraints[type][category]))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Check if a particular frequent itemset search space will be able to
+     * match the defined constraints. We can do this by matching all
+     * constraints over the itemset *and* prefix paths support count
+     * simultaneously (since this itemset will be extended with portions of
+     * the prefix paths).
+     *
+     * @param itemset
+     *   An itemset to check the constraints for.
+     * @param prefixPathsSupportCounts
+     *   A list of support counts for the prefix paths in this search space.
+     * @return
+     *   True if the itemset matches the constraints, false otherwise.
+     */
+    bool FPGrowth::searchSpaceConstraintMatcher(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) {
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            ItemConstraintType type = (ItemConstraintType) i;
+            foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
+                if (!FPGrowth::searchSpaceConstraintMatchHelper(frequentItemset, prefixPathsSupportCounts, type, this->preprocessedItemConstraints[type][category]))
+                    return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Helper function for FPGrowth::constraintMatcher().
+     */
+    bool FPGrowth::constraintMatchHelper(const ItemList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
+        foreach (ItemID id, constraintItems) {
+            switch (type) {
+            case CONSTRAINT_POSITIVE_MATCH_ALL:
+                if (!itemset.contains(id))
+                    return false;
+                break;
+
+            case CONSTRAINT_POSITIVE_MATCH_ANY:
+                if (itemset.contains(id))
+                    return true;
+                break;
+
+            case CONSTRAINT_NEGATIVE_MATCH_ALL:
+                if (itemset.contains(id))
+                    return false;
+                break;
+
+            case CONSTRAINT_NEGATIVE_MATCH_ANY:
+                if (!itemset.contains(id))
+                    return true;
+                break;
+            }
+        }
+
+        // In case we haven't returned yet: in the case of the "all matches",
+        // this is a good thing, since we haven't had any bad encounters.
+        // Hence we return true for those. For the "any matches", it's the
+        // other way around.
+        switch (type) {
+        case CONSTRAINT_POSITIVE_MATCH_ALL:
+        case CONSTRAINT_NEGATIVE_MATCH_ALL:
+            return true;
+            break;
+
+        case CONSTRAINT_POSITIVE_MATCH_ANY:
+        case CONSTRAINT_NEGATIVE_MATCH_ANY:
+            return false;
+            break;
+        }
+
+        // Satisfy the compiler.
+        return false;
+    }
+
+    /**
+     * Helper function for FPGrowth::searchSpaceConstraintMatcher().
+     */
+    bool FPGrowth::searchSpaceConstraintMatchHelper(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
+        foreach (ItemID id, constraintItems) {
+            switch (type) {
+            case CONSTRAINT_POSITIVE_MATCH_ALL:
+                if (!frequentItemset.contains(id) && prefixPathsSupportCounts[id] == 0)
+                    return false;
+                break;
+
+            case CONSTRAINT_POSITIVE_MATCH_ANY:
+                if (frequentItemset.contains(id) || prefixPathsSupportCounts[id] > 0)
+                    return true;
+                break;
+
+            case CONSTRAINT_NEGATIVE_MATCH_ALL:
+                if (prefixPathsSupportCounts[id] > 0)
+                    return false;
+                break;
+
+            case CONSTRAINT_NEGATIVE_MATCH_ANY:
+                if (prefixPathsSupportCounts[id] == 0)
+                    return true;
+                break;
+            }
+        }
+
+        // In case we haven't returned yet: in the case of the "all matches",
+        // this is a good thing, since we haven't had any bad encounters.
+        // Hence we return true or those. For the "any matches", it's the
+        // other way around.
+        switch (type) {
+        case CONSTRAINT_POSITIVE_MATCH_ALL:
+        case CONSTRAINT_NEGATIVE_MATCH_ALL:
+            return true;
+            break;
+
+        case CONSTRAINT_POSITIVE_MATCH_ANY:
+        case CONSTRAINT_NEGATIVE_MATCH_ANY:
+            return false;
+            break;
+        }
+
+        // Satisfy the compiler.
+        return false;
+    }
+
 
     //------------------------------------------------------------------------
     // Protected methods.
@@ -115,6 +394,9 @@ namespace Analytics {
      *    with step 1)
      * 3) discard infrequent items' support count
      * 4) sort the frequent items by decreasing support count
+     *
+     * Also, each time when a new item name is mapped to an item id, it is
+     * processed for use in constraints as well.
      */
     void FPGrowth::scanTransactions() {
         // Map the item names to item IDs. Maintain two dictionaries: one for
@@ -128,6 +410,9 @@ namespace Analytics {
                     this->itemNameIDHash.insert(itemName, itemID);
                     this->itemIDNameHash.insert(itemID, itemName);
                     this->totalFrequentSupportCounts.insert(itemID, 0);
+
+                    // Consider this item for use with constraints.
+                    this->preprocessItemForConstraints(itemName, itemID);
                 }
                 else
                     itemID = this->itemNameIDHash[itemName];
@@ -137,38 +422,40 @@ namespace Analytics {
         }
 
         // Discard infrequent items' SupportCount.
-        foreach (ItemID id, this->totalFrequentSupportCounts.keys())
-            if (this->totalFrequentSupportCounts[id] < this->minSupportAbsolute)
+        foreach (ItemID id, this->totalFrequentSupportCounts.keys()) {
+            if (this->totalFrequentSupportCounts[id] < this->minSupportAbsolute) {
                 this->totalFrequentSupportCounts.remove(id);
 
-        // Sort the frequent items' ItemIDs by decreasing SupportCount.
+                // Remove infrequent items' ids from the preprocessed
+                // constraints.
+                this->removeItemFromConstraints(id);
+            }
+        }
+
+        // Sort the frequent items' item ids by decreasing support count.
         this->frequentItemIDsSortedByTotalSupportCount = FPGrowth::sortItemIDsByDecreasingSupportCount(this->totalFrequentSupportCounts);
+
+#ifdef FPGROWTH_DEBUG
+        qDebug() << "order:";
+        foreach (itemID, this->frequentItemIDsSortedByTotalSupportCount) {
+            qDebug() << this->totalFrequentSupportCounts[itemID] << " times: " << Item(itemID, &(this->itemIDNameHash));
+        }
+#endif
     }
 
     /**
-     * Build the FP-tree, by using the results from scanTransactions() and
-     * taking into account the transactions requirements set through
-     * setTransactionRequirements().
+     * Build the FP-tree, by using the results from scanTransactions().
+     *
+     * TODO: figure out if this can be done in one pass with scanTransactions.
+     * This should be doable since we can use the generated itemIDs as they
+     * are being created.
      */
     void FPGrowth::buildFPTree() {
         Transaction transaction;
-        bool matchesFilter;
-
-        // When filter items have been set, require all transactions to match
-        // either of these filter items.
-        bool requiresFilterMatch = (this->transactionRequirements.size() > 0);
 
         foreach (QStringList transactionAsStrings, this->transactions) {
-            matchesFilter = false;
             transaction.clear();
             foreach (ItemName name, transactionAsStrings) {
-                // Filter transactions when appropriate.
-                // TODO: wildcard matches (e.g. "episode:*")
-                if (requiresFilterMatch && !matchesFilter) {
-                    foreach (ItemName filter, this->transactionRequirements)
-                        if (filter.compare(name) == 0)
-                            matchesFilter = true;
-                }
 #ifdef DEBUG
                 transaction << Item((ItemID) this->itemNameIDHash[name], &this->itemIDNameHash);
 #else
@@ -176,14 +463,90 @@ namespace Analytics {
 #endif
             }
 
-            if (!requiresFilterMatch || matchesFilter)
-                this->processTransaction(transaction);
+            // The transaction in QStringList form has been converted to
+            // QList<Item> form. Now process the transaction in this form.
+            this->processTransaction(transaction);
         }
 
 #ifdef FPGROWTH_DEBUG
         qDebug() << "Parsed" << this->transactions.size() << "transactions.";
         qDebug() << *this->tree;
 #endif
+    }
+
+    /**
+     * Consider the given item for use with constraints: store its item id in
+     * an optimized data structure to allow for fast constraint checking
+     * during frequent itemset generation.
+     *
+     * @param name
+     *   An item name.
+     * @param id
+     *   The corresponding item ID.
+     */
+    void FPGrowth::preprocessItemForConstraints(const ItemName & name, ItemID id) {
+        QRegExp rx;
+        rx.setPatternSyntax(QRegExp::Wildcard);
+
+        // Store the item IDs that correspond to the wildcard item
+        // constraints.
+        ItemConstraintType constraintType;
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            constraintType = (ItemConstraintType) i;
+            foreach (ItemName constraint, this->itemConstraints[constraintType]) {
+                // Map ItemNames to ItemIDs.
+                if (constraint.compare(name) == 0) {
+                    this->addPreprocessedItemConstraint(constraintType, "non-wildcards", id);
+                }
+                // Map ItemNames with wildcards in them to *all* corresponding
+                // ItemIDs.
+                else if (constraint.contains('*')) {
+                    rx.setPattern(constraint);
+                    if (rx.exactMatch(name))
+                        this->addPreprocessedItemConstraint(constraintType, constraint, id);
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove the given item id from the optimized constraint storage data
+     * structure, because it is infrequent.
+     *
+     * @param id
+     *   The item id to remove.
+     */
+    void FPGrowth::removeItemFromConstraints(ItemID id) {
+        ItemConstraintType type;
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            type = (ItemConstraintType) i;
+
+            if (!this->preprocessedItemConstraints.contains(type))
+                continue;
+
+            foreach (ItemName constraint, this->preprocessedItemConstraints[type].keys())
+                this->preprocessedItemConstraints[type][constraint].remove(id);
+        }
+    }
+
+    /**
+     * Store a preprocessed item constraint in the optimized constraint data
+     * structure.
+     *
+     * @param type
+     *   The item constraint type.
+     * @param category
+     *   The category, either "non-wildcards" or a constraint that contains a
+     *   wildcard ('*').
+     * @param id
+     *   The item id.
+     */
+    void FPGrowth::addPreprocessedItemConstraint(ItemConstraintType type, const ItemName & category, ItemID id) {
+        if (!this->preprocessedItemConstraints.contains(type))
+            this->preprocessedItemConstraints.insert(type, QHash<ItemName, QSet<ItemID> >());
+        if (!this->preprocessedItemConstraints[type].contains(category))
+            this->preprocessedItemConstraints[type].insert(category, QSet<ItemID>());
+        this->preprocessedItemConstraints[type][category].insert(id);
     }
 
     /**
@@ -200,9 +563,10 @@ namespace Analytics {
      * @return
      *   The optimized transaction.
      */
-    Transaction FPGrowth::optimizeTransaction(Transaction transaction) const {
+    Transaction FPGrowth::optimizeTransaction(const Transaction & transaction) const {
         Transaction optimizedTransaction;
         Item item;
+
         foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount) {
             item.id = itemID;
             if (transaction.contains(item))
@@ -226,46 +590,40 @@ namespace Analytics {
      *   still needs to be cleaned: it should be set to the minimum of all
      *   Items in each frequent itemset.
      */
-    QList<ItemList> FPGrowth::generateFrequentItemsets(FPTree * ctree, ItemList suffix) {
-#ifdef FPGROWTH_DEBUG
-        qDebug() << "---------------------------------generateFrequentItemsets()" << suffix;
-#endif
-
+    QList<ItemList> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const ItemList & suffix) {
         QList<ItemList> frequentItemsets;
         QList<ItemList> prefixPaths;
 
         // First determine the suffix order for the items in this particular
         // tree, based on the list that contains *all* items in this data set,
         // sorted by support count.
-        // TODO: Why does the order of the suffixes mather at all? We have to
-        // generate all of them anyway. Least or most support count first, it
-        // does not matter. Is this merely cosmetic, i.e. to always generate
-        // suffixes in analogous orders for different branches?
+        // We do this mostly for cosmetic reasons. However, it also implies
+        // that we will generate frequent itemsets for which the first item is
+        // the most frequent, the second item is the second most frequent, etc.
+        // Note: cannot replaced with a call to FPGrowth::optimizeTransaction()
+        // because that works over a QList<Item>, wheras we have to deal with
+        // a QList<ItemID> here.
         ItemIDList orderedSuffixItemIDs;
         ItemIDList itemIDsInTree = ctree->getItemIDs();
         foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount)
             if (itemIDsInTree.contains(itemID))
                 orderedSuffixItemIDs.append(itemID);
 
+        // We don't need the unsorted item IDs anymore.
+        itemIDsInTree.clear();
+
         // Now iterate over each of the ordered suffix items and generate
         // frequent itemsets!
         foreach (ItemID suffixItemID, orderedSuffixItemIDs) {
-#ifdef FPGROWTH_DEBUG
-            if (suffix.size() == 0)
-                qDebug() << "==========ROOT==========";
-            Item suffixItem(suffixItemID, ctree->getItemSupport(suffixItemID), &this->itemIDNameHash);
-            qDebug() << "suffix item" << suffixItem << ", meets min sup? " << (ctree->getItemSupport(suffixItemID) >= this->minimumSupport);
-
-#endif
-
             // Only if this suffix item's support meets or exceeds the minimum
             // support, it will be added as a frequent itemset (appended with
             // the received suffix of course).
             SupportCount suffixItemSupport = ctree->getItemSupport(suffixItemID);
             if (suffixItemSupport >= this->minSupportAbsolute) {
                 // The current suffix item, when prepended to the received
-                // suffix, is the next frequent itemset. Additionally, it will
-                // serve as the next suffix.
+                // suffix, is the next frequent itemset.
+                // Additionally, this new frequent itemset will become the
+                // next recursion's suffix.
                 Item suffixItem(suffixItemID, suffixItemSupport);
 #ifdef DEBUG
                 suffixItem.IDNameHash = &this->itemIDNameHash;
@@ -274,53 +632,37 @@ namespace Analytics {
                 frequentItemset.append(suffixItem);
                 frequentItemset.append(suffix);
 
+                // Only store the current frequent itemset if it matches the
+                // constraints.
+                if (this->constraintMatcher(frequentItemset)) {
+                    frequentItemsets.append(frequentItemset);
 #ifdef FPGROWTH_DEBUG
                 qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
 #endif
-
-                // Add the new frequent itemset to the list of frequent
-                // itemsets.
-                frequentItemsets.append(frequentItemset);
+                }
 
                 // Calculate the prefix paths for the current suffix item.
                 prefixPaths = ctree->calculatePrefixPaths(suffixItemID);
 
-#ifdef FPGROWTH_DEBUG
-                qDebug() << "prefix paths:";
-                qDebug() << prefixPaths;
-#endif
+                // Remove items from the prefix paths based that no longer
+                // have sufficient support.
+                prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
 
-                // Calculate the support counts for the prefix paths.
+                // If the conditional FP-tree won't contain the required items,
+                // then just don't bother generating it.
+                // This is effectively pruning the search space for frequent
+                // itemsets.
                 QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
-
-                // Remove items from the prefix paths based on the support
-                // counts of the items *within* the prefix paths.
-                QList<ItemList> filteredPrefixPaths;
-                ItemList filteredPrefixPath;
-                foreach (ItemList prefixPath, prefixPaths) {
-                    foreach (Item item, prefixPath) {
-                        if (prefixPathsSupportCounts[item.id] >= this->minSupportAbsolute)
-                            filteredPrefixPath.append(item);
-                    }
-                    if (filteredPrefixPath.size() > 0)
-                        filteredPrefixPaths.append(filteredPrefixPath);
-                    filteredPrefixPath.clear();
-                }
-
-#ifdef FPGROWTH_DEBUG
-                qDebug() << "filtered prefix paths: ";
-                qDebug() << filteredPrefixPaths;
-#endif
+                if (!this->searchSpaceConstraintMatcher(frequentItemset, prefixPathsSupportCounts))
+                    continue;
 
                 // If no prefix paths remain after filtering, we won't be able
                 // to generate any further frequent item sets.
-                if (filteredPrefixPaths.size() > 0) {
+                if (prefixPaths.size() > 0) {
                     // Build the conditional FP-tree for these prefix paths,
                     // by creating a new FP-tree and pretending the prefix
                     // paths are transactions.
-                    FPTree * cfptree = new FPTree();
-                    foreach (ItemList prefixPath, filteredPrefixPaths)
-                        cfptree->addTransaction(prefixPath);
+                    FPTree * cfptree = new FPTree(prefixPaths);
 #ifdef FPGROWTH_DEBUG
                     qDebug() << *cfptree;
 #endif
@@ -331,15 +673,12 @@ namespace Analytics {
 
                     delete cfptree;
                 }
+
+                // Unnecessary, but do this anyway to release memory as fast
+                // as possible.
+                prefixPaths.clear();
             }
-#ifdef FPGROWTH_DEBUG
-            else
-                qDebug() << "support count of" << suffixItem << "in the initial tree is less than minimum support";
-#endif
         }
-#ifdef FPGROWTH_DEBUG
-        qDebug() << "------END------------------------generateFrequentItemsets()" << suffix;
-#endif
 
         return frequentItemsets;
     }

@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTime>
 #include <QList>
+#include <QHash>
 #include <QStringList>
 
 #include "Item.h"
@@ -19,8 +20,8 @@ namespace Analytics {
 
     public:
         Analyst(float minSupport, float minConfidence);
-        void addRuleConsequentRequirement(ItemName item);
-        void addFilter(ItemName item);
+        void addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type);
+        void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
     protected slots:
         void analyzeTransactions(const QList<QStringList> & transactions);
@@ -28,10 +29,11 @@ namespace Analytics {
     protected:
         void performMining(const QList<QStringList> & transactions);
 
-        QList<ItemName> filterItems;
-        QList<ItemName> ruleConsequentRequirements;
         float minSupport;
         float minConfidence;
+
+        QHash<ItemConstraintType, QSet<ItemName> > frequentItemsetItemConstraints;
+        QHash<ItemConstraintType, QSet<ItemName> > ruleConsequentItemConstraints;
     };
 }
 

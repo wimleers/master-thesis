@@ -33,9 +33,15 @@ int main(int argc, char *argv[]) {
     parser = new EpisodesParser::Parser();
     // TODO: when these parameters have been figured out, they should be the defaults
     // and therefor they should be moved to the Analyst constructor.
-    analyst = new Analytics::Analyst(0.05, 0.8);
-    analyst->addFilter("episode:*");
-    analyst->addRuleConsequentRequirement("duration:slow");
+    analyst = new Analytics::Analyst(0.1, 0.6);
+
+    // Set constraints. This defines which associations will be found. By
+    // default, only causes for slow episodes will be searched.
+    analyst->addFrequentItemsetItemConstraint("episode:*", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
+    analyst->addRuleConsequentItemConstraint("duration:slow", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
+    //analyst->addRuleConsequentItemConstraint("duration:acceptable", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
+    //analyst->addRuleConsequentItemConstraint("duration:fast", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
+
     QObject::connect(parser, SIGNAL(processedChunk(QList<QStringList>)), analyst, SLOT(analyzeTransactions(QList<QStringList>)));
 
     timer.start();

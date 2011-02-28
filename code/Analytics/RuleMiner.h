@@ -14,12 +14,12 @@ namespace Analytics {
 
     class RuleMiner {
     public:
-        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements);
+        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements, const FPGrowth * fpgrowth);
 
     protected:
         static QList<SupportCount> calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets);
         static SupportCount calculateSupportCountForFrequentItemset(ItemList frequentItemset);
-        static QList<AssociationRule> generateAssociationRulesForFrequentItemset(ItemList frequentItemset, QList<ItemList> consequents, QList<ItemList> frequentItemsets, QList<SupportCount> frequentItemsetsSupportCounts, float minimumConfidence);
+        static QList<AssociationRule> generateAssociationRulesForFrequentItemset(ItemList frequentItemset, QList<ItemList> consequents, QList<ItemList> frequentItemsets, QList<SupportCount> frequentItemsetsSupportCounts, float minimumConfidence, const FPGrowth * fpgrowth);
         static ItemList getAntecedent(ItemList frequentItemset, ItemList consequent);
         static QList<ItemList> generateCandidateItemsets(QList<ItemList> frequentItemsubsets);
     };
