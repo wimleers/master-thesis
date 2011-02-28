@@ -27,7 +27,7 @@ namespace Analytics {
      *   The item constraint type.
      */
     void FPGrowth::setItemConstraints(const QSet<ItemName> & constraints, ItemConstraintType type) {
-        itemConstraints.insert(type, constraints);
+        this->constraints.setItemConstraints(constraints, type);
     }
 
     /**
@@ -238,152 +238,6 @@ namespace Analytics {
 
 
     //------------------------------------------------------------------------
-    // Protected constraint methods.
-
-    /**
-     * Check if the given itemset matches the defined constraints.
-     *
-     * @param itemset
-     *   An itemset to check the constraints for.
-     * @return
-     *   True if the itemset matches the constraints, false otherwise.
-     */
-    bool FPGrowth::constraintMatcher(const ItemList & itemset) {
-        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
-            ItemConstraintType type = (ItemConstraintType) i;
-            foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
-                if (!FPGrowth::constraintMatchHelper(itemset, type, this->preprocessedItemConstraints[type][category]))
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Check if a particular frequent itemset search space will be able to
-     * match the defined constraints. We can do this by matching all
-     * constraints over the itemset *and* prefix paths support count
-     * simultaneously (since this itemset will be extended with portions of
-     * the prefix paths).
-     *
-     * @param itemset
-     *   An itemset to check the constraints for.
-     * @param prefixPathsSupportCounts
-     *   A list of support counts for the prefix paths in this search space.
-     * @return
-     *   True if the itemset matches the constraints, false otherwise.
-     */
-    bool FPGrowth::searchSpaceConstraintMatcher(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) {
-        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
-            ItemConstraintType type = (ItemConstraintType) i;
-            foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
-                if (!FPGrowth::searchSpaceConstraintMatchHelper(frequentItemset, prefixPathsSupportCounts, type, this->preprocessedItemConstraints[type][category]))
-                    return false;
-            }
-        }
-
-        return true;
-    }
-
-    /**
-     * Helper function for FPGrowth::constraintMatcher().
-     */
-    bool FPGrowth::constraintMatchHelper(const ItemList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
-        foreach (ItemID id, constraintItems) {
-            switch (type) {
-            case CONSTRAINT_POSITIVE_MATCH_ALL:
-                if (!itemset.contains(id))
-                    return false;
-                break;
-
-            case CONSTRAINT_POSITIVE_MATCH_ANY:
-                if (itemset.contains(id))
-                    return true;
-                break;
-
-            case CONSTRAINT_NEGATIVE_MATCH_ALL:
-                if (itemset.contains(id))
-                    return false;
-                break;
-
-            case CONSTRAINT_NEGATIVE_MATCH_ANY:
-                if (!itemset.contains(id))
-                    return true;
-                break;
-            }
-        }
-
-        // In case we haven't returned yet: in the case of the "all matches",
-        // this is a good thing, since we haven't had any bad encounters.
-        // Hence we return true for those. For the "any matches", it's the
-        // other way around.
-        switch (type) {
-        case CONSTRAINT_POSITIVE_MATCH_ALL:
-        case CONSTRAINT_NEGATIVE_MATCH_ALL:
-            return true;
-            break;
-
-        case CONSTRAINT_POSITIVE_MATCH_ANY:
-        case CONSTRAINT_NEGATIVE_MATCH_ANY:
-            return false;
-            break;
-        }
-
-        // Satisfy the compiler.
-        return false;
-    }
-
-    /**
-     * Helper function for FPGrowth::searchSpaceConstraintMatcher().
-     */
-    bool FPGrowth::searchSpaceConstraintMatchHelper(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
-        foreach (ItemID id, constraintItems) {
-            switch (type) {
-            case CONSTRAINT_POSITIVE_MATCH_ALL:
-                if (!frequentItemset.contains(id) && prefixPathsSupportCounts[id] == 0)
-                    return false;
-                break;
-
-            case CONSTRAINT_POSITIVE_MATCH_ANY:
-                if (frequentItemset.contains(id) || prefixPathsSupportCounts[id] > 0)
-                    return true;
-                break;
-
-            case CONSTRAINT_NEGATIVE_MATCH_ALL:
-                if (prefixPathsSupportCounts[id] > 0)
-                    return false;
-                break;
-
-            case CONSTRAINT_NEGATIVE_MATCH_ANY:
-                if (prefixPathsSupportCounts[id] == 0)
-                    return true;
-                break;
-            }
-        }
-
-        // In case we haven't returned yet: in the case of the "all matches",
-        // this is a good thing, since we haven't had any bad encounters.
-        // Hence we return true or those. For the "any matches", it's the
-        // other way around.
-        switch (type) {
-        case CONSTRAINT_POSITIVE_MATCH_ALL:
-        case CONSTRAINT_NEGATIVE_MATCH_ALL:
-            return true;
-            break;
-
-        case CONSTRAINT_POSITIVE_MATCH_ANY:
-        case CONSTRAINT_NEGATIVE_MATCH_ANY:
-            return false;
-            break;
-        }
-
-        // Satisfy the compiler.
-        return false;
-    }
-
-
-    //------------------------------------------------------------------------
     // Protected methods.
 
     /**
@@ -412,7 +266,7 @@ namespace Analytics {
                     this->totalFrequentSupportCounts.insert(itemID, 0);
 
                     // Consider this item for use with constraints.
-                    this->preprocessItemForConstraints(itemName, itemID);
+                    this->constraints.preprocessItem(itemName, itemID);
                 }
                 else
                     itemID = this->itemNameIDHash[itemName];
@@ -428,7 +282,7 @@ namespace Analytics {
 
                 // Remove infrequent items' ids from the preprocessed
                 // constraints.
-                this->removeItemFromConstraints(id);
+                this->constraints.removeItem(id);
             }
         }
 
@@ -472,81 +326,6 @@ namespace Analytics {
         qDebug() << "Parsed" << this->transactions.size() << "transactions.";
         qDebug() << *this->tree;
 #endif
-    }
-
-    /**
-     * Consider the given item for use with constraints: store its item id in
-     * an optimized data structure to allow for fast constraint checking
-     * during frequent itemset generation.
-     *
-     * @param name
-     *   An item name.
-     * @param id
-     *   The corresponding item ID.
-     */
-    void FPGrowth::preprocessItemForConstraints(const ItemName & name, ItemID id) {
-        QRegExp rx;
-        rx.setPatternSyntax(QRegExp::Wildcard);
-
-        // Store the item IDs that correspond to the wildcard item
-        // constraints.
-        ItemConstraintType constraintType;
-        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
-            constraintType = (ItemConstraintType) i;
-            foreach (ItemName constraint, this->itemConstraints[constraintType]) {
-                // Map ItemNames to ItemIDs.
-                if (constraint.compare(name) == 0) {
-                    this->addPreprocessedItemConstraint(constraintType, "non-wildcards", id);
-                }
-                // Map ItemNames with wildcards in them to *all* corresponding
-                // ItemIDs.
-                else if (constraint.contains('*')) {
-                    rx.setPattern(constraint);
-                    if (rx.exactMatch(name))
-                        this->addPreprocessedItemConstraint(constraintType, constraint, id);
-                }
-            }
-        }
-    }
-
-    /**
-     * Remove the given item id from the optimized constraint storage data
-     * structure, because it is infrequent.
-     *
-     * @param id
-     *   The item id to remove.
-     */
-    void FPGrowth::removeItemFromConstraints(ItemID id) {
-        ItemConstraintType type;
-        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
-            type = (ItemConstraintType) i;
-
-            if (!this->preprocessedItemConstraints.contains(type))
-                continue;
-
-            foreach (ItemName constraint, this->preprocessedItemConstraints[type].keys())
-                this->preprocessedItemConstraints[type][constraint].remove(id);
-        }
-    }
-
-    /**
-     * Store a preprocessed item constraint in the optimized constraint data
-     * structure.
-     *
-     * @param type
-     *   The item constraint type.
-     * @param category
-     *   The category, either "non-wildcards" or a constraint that contains a
-     *   wildcard ('*').
-     * @param id
-     *   The item id.
-     */
-    void FPGrowth::addPreprocessedItemConstraint(ItemConstraintType type, const ItemName & category, ItemID id) {
-        if (!this->preprocessedItemConstraints.contains(type))
-            this->preprocessedItemConstraints.insert(type, QHash<ItemName, QSet<ItemID> >());
-        if (!this->preprocessedItemConstraints[type].contains(category))
-            this->preprocessedItemConstraints[type].insert(category, QSet<ItemID>());
-        this->preprocessedItemConstraints[type][category].insert(id);
     }
 
     /**
@@ -634,7 +413,7 @@ namespace Analytics {
 
                 // Only store the current frequent itemset if it matches the
                 // constraints.
-                if (this->constraintMatcher(frequentItemset)) {
+                if (this->constraints.matchItemset(frequentItemset)) {
                     frequentItemsets.append(frequentItemset);
 #ifdef FPGROWTH_DEBUG
                 qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
@@ -653,7 +432,7 @@ namespace Analytics {
                 // This is effectively pruning the search space for frequent
                 // itemsets.
                 QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
-                if (!this->searchSpaceConstraintMatcher(frequentItemset, prefixPathsSupportCounts))
+                if (!this->constraints.matchSearchSpace(frequentItemset, prefixPathsSupportCounts))
                     continue;
 
                 // If no prefix paths remain after filtering, we won't be able
