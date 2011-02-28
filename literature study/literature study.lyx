@@ -26019,7 +26019,7 @@ slow
 \begin_inset Quotes erd
 \end_inset
 
- episodes are marked as such through user configuration (duraiton intervals
+ episodes are marked as such through user configuration (duration intervals
  configurable by the user, configurable per episode).
 \end_layout
 
@@ -26041,10 +26041,10 @@ Each transaction looks like this:
 \begin_inset Quotes eld
 \end_inset
 
-episode:css duration:slow status:200 url:http://blah.com/sadfsdf ua:isNotMobile
- ua:WinXP ua:WinXP:Firefox ua:WinXP:Firefox:3 ua:WinXP:Firefox:3:6 location:EU
- location:EU:Belgium location:EU:Belgium:Limburg location:EU:Belgium:Limburg:Has
-selt …
+episode:css duration:slow url:http://blah.com/sadfsdf ua:isNotMobile ua:WinXP
+ ua:WinXP:Firefox ua:WinXP:Firefox:3 ua:WinXP:Firefox:3:6 location:EU location:E
+U:Belgium location:EU:Belgium:Limburg location:EU:Belgium:Limburg:Hasselt
+ …
 \begin_inset Quotes erd
 \end_inset
 
@@ -26054,8 +26054,27 @@ selt …
 
 I.e.
  the concept hierarchy is embedded in the transaction.
+\begin_inset Newline newline
+\end_inset
+
+Special cases:
 \end_layout
 
+\begin_deeper
+\begin_layout Itemize
+status:200 is ignored.
+ Only non-200 HTTP status codes are included in the transactions, since
+ 200 is the default status code and does not reveal anything interesting.
+\end_layout
+
+\begin_layout Itemize
+Don't include the city in the transactions.
+ It's unnecessarily detailed.
+ Only in extreme cases there will be enough traffic from one city to cause
+ a city to show up in the results.
+\end_layout
+
+\end_deeper
 \begin_layout Itemize
 We can filter on 
 \begin_inset Quotes eld
