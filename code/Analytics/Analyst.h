@@ -8,6 +8,7 @@
 #include <QStringList>
 
 #include "Item.h"
+#include "Constraints.h"
 #include "FPGrowth.h"
 #include "RuleMiner.h"
 #include "FPNode.h"
@@ -32,8 +33,8 @@ namespace Analytics {
         float minSupport;
         float minConfidence;
 
-        QHash<ItemConstraintType, QSet<ItemName> > frequentItemsetItemConstraints;
-        QHash<ItemConstraintType, QSet<ItemName> > ruleConsequentItemConstraints;
+        Constraints frequentItemsetItemConstraints;
+        Constraints ruleConsequentItemConstraints;
     };
 }
 

@@ -8,10 +8,10 @@ namespace Analytics {
     /**
      * An exact implementation of algorithm 6.2 on page 351 in the textbook.
      */
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, const Constraints &  ruleConsequentConstraints, const FPGrowth * fpgrowth) {
         QList<AssociationRule> associationRules;
         QList<ItemList> consequents;
-        bool hasConstraints = !ruleConsequentRequirements.empty();
+        bool hasConstraints = !ruleConsequentConstraints.empty();
 
         QList<SupportCount> frequentItemsetsSupportCounts = RuleMiner::calculateSupportCountsForFrequentItemsets(frequentItemsets);
 
@@ -29,7 +29,7 @@ namespace Analytics {
                     // Store this consequent whenever no constraints are
                     // defined, or when constraints are defined and the
                     // consequent matches the constraints.
-                    if (!hasConstraints || consequent.contains(ruleConsequentRequirements[0]))
+                    if (!hasConstraints || ruleConsequentConstraints.matchItemset(consequent))
                         consequents.append(consequent);
                 }
 

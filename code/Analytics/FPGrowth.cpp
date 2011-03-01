@@ -15,22 +15,6 @@ namespace Analytics {
     }
 
     /**
-     * Set the requirements for frequent itemset. Wildcards are allowed, e.g.
-     * "episode:*" will match "episode:foo", "episode:bar", etc.
-     *
-     * Note: wilcard items will be expanded to their corresponding item ids in
-     *       FPGrowth::scanTransactions().
-     *
-     * @param contraints
-     *   A list of constraints.
-     * @param type
-     *   The item constraint type.
-     */
-    void FPGrowth::setItemConstraints(const QSet<ItemName> & constraints, ItemConstraintType type) {
-        this->constraints.setItemConstraints(constraints, type);
-    }
-
-    /**
      * Mine frequent itemsets. (First scan the transactions, then build the
      * FP-tree, then generate the frequent itemsets from there.)
      *
@@ -267,6 +251,7 @@ namespace Analytics {
 
                     // Consider this item for use with constraints.
                     this->constraints.preprocessItem(itemName, itemID);
+                    this->constraintsToPreprocess.preprocessItem(itemName, itemID);
                 }
                 else
                     itemID = this->itemNameIDHash[itemName];
@@ -276,13 +261,14 @@ namespace Analytics {
         }
 
         // Discard infrequent items' SupportCount.
-        foreach (ItemID id, this->totalFrequentSupportCounts.keys()) {
-            if (this->totalFrequentSupportCounts[id] < this->minSupportAbsolute) {
-                this->totalFrequentSupportCounts.remove(id);
+        foreach (itemID, this->totalFrequentSupportCounts.keys()) {
+            if (this->totalFrequentSupportCounts[itemID] < this->minSupportAbsolute) {
+                this->totalFrequentSupportCounts.remove(itemID);
 
                 // Remove infrequent items' ids from the preprocessed
                 // constraints.
-                this->constraints.removeItem(id);
+                this->constraints.removeItem(itemID);
+                this->constraintsToPreprocess.removeItem(itemID);
             }
         }
 

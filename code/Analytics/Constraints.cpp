@@ -56,6 +56,10 @@ namespace Analytics {
         ItemConstraintType constraintType;
         for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
             constraintType = (ItemConstraintType) i;
+
+            if (!this->itemConstraints.contains(constraintType))
+                continue;
+
             foreach (ItemName constraint, this->itemConstraints[constraintType]) {
                 // Map ItemNames to ItemIDs.
                 if (constraint.compare(name) == 0) {

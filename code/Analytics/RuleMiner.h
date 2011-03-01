@@ -2,6 +2,7 @@
 #define RULEMINER_H
 
 #include "Item.h"
+#include "Constraints.h"
 #include "FPGrowth.h"
 #include <QList>
 
@@ -14,7 +15,7 @@ namespace Analytics {
 
     class RuleMiner {
     public:
-        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, ItemList ruleConsequentRequirements, const FPGrowth * fpgrowth);
+        static QList<AssociationRule> mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const FPGrowth * fpgrowth);
 
     protected:
         static QList<SupportCount> calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets);

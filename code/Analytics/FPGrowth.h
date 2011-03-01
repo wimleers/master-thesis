@@ -28,8 +28,10 @@ namespace Analytics {
         FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute);
         ~FPGrowth();
 
-        // Core functionality.
-        void setItemConstraints(const QSet<ItemName> & constraints, ItemConstraintType type);
+        void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
+        void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
+        const Constraints & getPreprocessedConstraints() const { return this->constraintsToPreprocess; }
+
         QList<ItemList> mineFrequentItemsets();
 
         // Ability to calculate support for any itemset; necessary to
@@ -59,6 +61,7 @@ namespace Analytics {
         // Properties.
         FPTree * tree;
         Constraints constraints;
+        Constraints constraintsToPreprocess;
         QList<QStringList> transactions;
 
         SupportCount minSupportAbsolute;

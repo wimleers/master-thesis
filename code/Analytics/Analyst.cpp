@@ -18,9 +18,7 @@ namespace Analytics {
      *   The constraint type.
      */
     void Analyst::addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type) {
-        if (!this->frequentItemsetItemConstraints.contains(type))
-            this->frequentItemsetItemConstraints.insert(type, QSet<ItemName>());
-        this->frequentItemsetItemConstraints[type].insert(item);
+        this->frequentItemsetItemConstraints.addItemConstraint(item, type);
     }
 
     /**
@@ -40,11 +38,9 @@ namespace Analytics {
         // frequent itemsets.
         // By also applying these item constraints to frequent itemset
         // generation, we reduce the amount of work to be done to a minimum.
-        this->addFrequentItemsetItemConstraint(item, type);
+        this->frequentItemsetItemConstraints.addItemConstraint(item, type);
 
-        if (!this->ruleConsequentItemConstraints.contains(type))
-            this->ruleConsequentItemConstraints.insert(type, QSet<ItemName>());
-        this->ruleConsequentItemConstraints[type].insert(item);
+        this->ruleConsequentItemConstraints.addItemConstraint(item, type);
     }
 
 
@@ -62,27 +58,18 @@ namespace Analytics {
     void Analyst::performMining(const QList<QStringList> & transactions) {
         qDebug() << "starting mining, # transactions: " << transactions.size();
         FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * 4000));
-        for (int type = CONSTRAINT_POSITIVE_MATCH_ALL; type <= CONSTRAINT_NEGATIVE_MATCH_ANY; type++)
-            fpgrowth->setItemConstraints(this->frequentItemsetItemConstraints[(ItemConstraintType) type], (ItemConstraintType) type);
+        fpgrowth->setConstraints(this->frequentItemsetItemConstraints);
+        fpgrowth->setConstraintsToPreprocess(this->ruleConsequentItemConstraints);
         QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
         qDebug() << "frequent itemset mining complete, # frequent itemsets:" << frequentItemsets.size();
 
-        ItemList requirements;
-        foreach (ItemName name, this->ruleConsequentItemConstraints[CONSTRAINT_POSITIVE_MATCH_ANY]) {
-#ifdef DEBUG
-            requirements.append(Item(fpgrowth->getItemID(name), fpgrowth->getItemIDNameHash()));
-#else
-            requirements.append(Item(fpgrowth->getItemID(name)));
-#endif
-        }
-
-        QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, this->minConfidence, requirements, fpgrowth);
+        this->ruleConsequentItemConstraints = fpgrowth->getPreprocessedConstraints();
+        QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, this->minConfidence, this->ruleConsequentItemConstraints, fpgrowth);
         qDebug() << "mining association rules complete, # association rules:" << associationRules.size();
 
         qDebug() << associationRules;
 
         delete fpgrowth;
-//        exit(1);
     }
 
 }
