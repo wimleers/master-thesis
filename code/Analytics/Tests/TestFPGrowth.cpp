@@ -14,7 +14,7 @@ void TestFPGrowth::basic() {
     transactions.append(QStringList() << "C" << "E");
 
     FPNode::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4);
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results:
@@ -38,9 +38,11 @@ void TestFPGrowth::basic() {
                                                  << (ItemList() << Item(2) << Item(1))
                                                  << (ItemList() << Item(3))
     );
+
+    delete fpgrowth;
 }
 
-void TestFPGrowth::withFilter() {
+void TestFPGrowth::withConstraints() {
     QList<QStringList> transactions;
     transactions.append(QStringList() << "A" << "B" << "C" << "D");
     transactions.append(QStringList() << "A" << "B");
@@ -53,12 +55,12 @@ void TestFPGrowth::withFilter() {
     transactions.append(QStringList() << "C" << "D");
     transactions.append(QStringList() << "C" << "E");
 
-    FPNode::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4);
+    Constraints constraints;
+    constraints.addItemConstraint("A", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
 
-    QList<ItemName> filter;
-    filter << "A";
-    fpgrowth->setTransactionRequirements(filter);
+    FPNode::resetLastNodeID();
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
+    fpgrowth->setConstraints(constraints);
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results
@@ -73,11 +75,12 @@ void TestFPGrowth::withFilter() {
     // * number of transactions: 10
     // * absolute min support: 4
     // * items qualifying: A, C
-    // * frequent itemsets: {{A}, {C}, {A, C}}
+    // * frequent itemsets: {{A}, {A, C}}
 
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(2))
-                                                 << (ItemList() << Item(0))
+    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(0))
                                                  << (ItemList() << Item(2) << Item(0))
     );
+
+    delete fpgrowth;
 }
