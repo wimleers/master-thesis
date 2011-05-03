@@ -13,13 +13,19 @@ void TestRuleMiner::basic() {
     transactions.append(QStringList() << "C" << "D");
     transactions.append(QStringList() << "C" << "E");
 
+    Constraints constraints;
+
     FPNode::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4);
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
-    QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, ItemList());
+    QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, constraints, fpgrowth);
+
+    // Verify the results.
     QCOMPARE(associationRules.size(), 1);
     QCOMPARE(associationRules[0].antecedent, (ItemList() << Item(1)));
     QCOMPARE(associationRules[0].consequent, (ItemList() << Item(2)));
     QCOMPARE(associationRules[0].confidence, (float) 0.8);
+
+    delete fpgrowth;
 }
