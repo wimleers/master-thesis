@@ -1,6 +1,7 @@
 #include "TestFPTree.h"
 #include "TestFPGrowth.h"
 #include "TestRuleMiner.h"
+#include "TestTiltedTimeWindow.h"
 
 int main() {
     TestFPTree FPTree;
@@ -11,6 +12,10 @@ int main() {
 
     TestRuleMiner ruleMiner;
     QTest::qExec(&ruleMiner);
+
+    // FP-Stream related classes & tests.
+    TestTiltedTimeWindow tiltedTimeWindow;
+    QTest::qExec(&tiltedTimeWindow);
 
     return 0;
 }

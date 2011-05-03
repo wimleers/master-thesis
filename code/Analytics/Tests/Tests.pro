@@ -10,8 +10,10 @@ TARGET = Tests
 
 HEADERS += TestFPTree.h \
            TestFPGrowth.h \
-           TestRuleMiner.h
+           TestRuleMiner.h \
+           TestTiltedTimeWindow.h
 SOURCES += Tests.cpp \
            TestFPTree.cpp \
            TestFPGrowth.cpp \
-           TestRuleMiner.cpp
+           TestRuleMiner.cpp \
+           TestTiltedTimeWindow.cpp
