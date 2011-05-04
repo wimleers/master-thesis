@@ -104,37 +104,6 @@ namespace Analytics {
     template <class T>
     unsigned int FPNode<T>::lastNodeID = 0;
 
-    // QDebug output operators for SupportCount.
-    QDebug operator<<(QDebug dbg, const FPNode<SupportCount> & node) {
-        if (node.getItemID() == ROOT_ITEMID)
-            dbg.nospace() << "(NULL)";
-        else {
-            QString itemOutput, nodeID;
-
-            itemOutput.clear();
-            Item item(node.getItemID(), node.getValue());
-            QDebug(&itemOutput) << item;
-
-            nodeID.sprintf("0x%04d", node.getNodeID());
-
-            dbg.nospace() << itemOutput.toStdString().c_str() << " (" << nodeID.toStdString().c_str() <<  ")";
-        }
-
-        return dbg.nospace();
-    }
-
-    QDebug operator<<(QDebug dbg, const QList<FPNode<SupportCount> *> & itemPath) {
-        dbg.nospace() << "[size=" << itemPath.size() << "] ";
-
-        for (int i = 0; i < itemPath.size(); i++) {
-            if (i > 0)
-                dbg.nospace() << " -> ";
-            dbg.nospace() << *(itemPath[i]);
-        }
-
-        return dbg.nospace();
-    }
-
 #endif
 }
 

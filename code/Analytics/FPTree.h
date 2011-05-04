@@ -44,8 +44,11 @@ namespace Analytics {
 #ifdef DEBUG
     QDebug operator<<(QDebug dbg, const FPTree & tree);
     QString dumpHelper(const FPNode<SupportCount> & node, QString prefix = "");
-#endif
 
+    // QDebug output operators for SupportCount.
+    QDebug operator<<(QDebug dbg, const FPNode<SupportCount> & node);
+    QDebug operator<<(QDebug dbg, const QList<FPNode<SupportCount> *> & itemPath);
+#endif
 }
 
 Q_DECLARE_METATYPE(Analytics::FPTree);
