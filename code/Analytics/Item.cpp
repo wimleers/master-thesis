@@ -13,6 +13,20 @@ namespace Analytics {
         return dbg.nospace();
     }
 
+    QDebug operator<<(QDebug dbg, const ItemIDList & pattern) {
+        dbg.nospace() << "[size=" << pattern.size() << "] {";
+
+        for (int i = 0; i < pattern.size(); i++) {
+            if (i > 0)
+                dbg.nospace() << ", ";
+
+            dbg.nospace() << pattern[i];
+        }
+        dbg.nospace() << "}";
+
+        return dbg.nospace();
+    }
+
     QDebug operator<<(QDebug dbg, const Transaction & transaction) {
         QString itemOutput;
 

@@ -80,6 +80,7 @@ namespace Analytics {
 #ifdef DEBUG
     // QDebug() streaming output operators.
     QDebug operator<<(QDebug dbg, const Item & item);
+    QDebug operator<<(QDebug dbg, const ItemIDList & pattern);
     QDebug operator<<(QDebug dbg, const Transaction & transaction);
     QDebug operator<<(QDebug dbg, const AssociationRule & associationRule);
 #endif
