@@ -26,23 +26,23 @@ namespace Analytics {
         return this->itemPaths.contains(itemID);
     }
 
-    FPNodeList FPTree::getItemPath(ItemID itemID) const {
+    QList<FPNode<SupportCount> *> FPTree::getItemPath(ItemID itemID) const {
         if (this->itemPaths.contains(itemID))
             return this->itemPaths[itemID];
         else {
-            FPNodeList empty;
+            QList<FPNode<SupportCount> *> empty;
             return empty;
         }
     }
 
-    bool FPTree::itemPathContains(ItemID itemID, FPNode * node) const {
+    bool FPTree::itemPathContains(ItemID itemID, FPNode<SupportCount> * node) const {
         return (this->itemPaths.contains(itemID) && this->itemPaths[itemID].contains(node));
     }
 
     SupportCount FPTree::getItemSupport(ItemID itemID) const {
         SupportCount supportCount = 0;
-        foreach (FPNode * node, this->itemPaths[itemID])
-            supportCount += node->getSupportCount();
+        foreach (FPNode<SupportCount> * node, this->itemPaths[itemID])
+            supportCount += node->getValue();
         return supportCount;
     }
 
@@ -62,12 +62,12 @@ namespace Analytics {
     QList<ItemList> FPTree::calculatePrefixPaths(ItemID itemID) const {
         QList<ItemList> prefixPaths;
         ItemList prefixPath;
-        FPNode * node;
+        FPNode<SupportCount> * node;
         SupportCount supportCount;
         Item item;
 
-        FPNodeList leafNodes = this->getItemPath(itemID);
-        foreach (FPNode * leafNode, leafNodes) {
+        QList<FPNode<SupportCount> *> leafNodes = this->getItemPath(itemID);
+        foreach (FPNode<SupportCount> * leafNode, leafNodes) {
             // Build the prefix path starting from the given leaf node, by
             // traversing up the tree (but do not include the leaf node's item
             // in the prefix path).
@@ -75,9 +75,9 @@ namespace Analytics {
             // node instead, because we're looking at only the paths that
             // include this leaf node.
             node = leafNode;
-            supportCount = leafNode->getSupportCount();
+            supportCount = leafNode->getValue();
             while ((node = node->getParent()) != NULL && node->getItemID() != ROOT_ITEMID) {
-                item = node->getItem();
+                item.id = node->getItemID();
                 item.supportCount = supportCount;
                 prefixPath.prepend(item);
             }
@@ -107,20 +107,20 @@ namespace Analytics {
 
     void FPTree::addTransaction(const Transaction & transaction) {
         // The initial current node is the root node.
-        FPNode * currentNode = root;
+        FPNode<SupportCount> * currentNode = root;
 
-        FPNode * nextNode;
+        FPNode<SupportCount> * nextNode;
 
         foreach (Item item, transaction) {
             if (currentNode->hasChild(item.id)) {
                 // There is already a node in the tree for the current
                 // transaction item, so reuse it: increase its support count.
                 nextNode = currentNode->getChild(item.id);
-                nextNode->increaseSupportCount(item.supportCount);
+                nextNode->increaseValue(item.supportCount);
             }
             else {
                 // Create a new node and add it as a child of the current node.
-                nextNode = new FPNode(item);
+                nextNode = new FPNode<SupportCount>(item);
                 nextNode->setParent(currentNode);
 
                 // Update the item path to include the new node.
@@ -142,11 +142,11 @@ namespace Analytics {
         Item rootItem;
         rootItem.id = ROOT_ITEMID;
         rootItem.supportCount = 0;
-        root = new FPNode(rootItem);
+        root = new FPNode<SupportCount>(rootItem);
     }
 
-    void FPTree::addNodeToItemPath(FPNode * node) {
-        FPNodeList itemPath;
+    void FPTree::addNodeToItemPath(FPNode<SupportCount> * node) {
+        QList<FPNode<SupportCount> *> itemPath;
 
         ItemID itemID = node->getItemID();
 
@@ -172,11 +172,14 @@ namespace Analytics {
 
         // Item paths.
         dbg.nospace() << "ITEM PATHS (size indicates the number of branches this item occurs in)" << endl;
-        FPNodeList itemPath;
+        QList<FPNode<SupportCount> *> itemPath;
         Item item;
         foreach (ItemID itemID, tree.getItemIDs()) {
+            item.id = itemID;
+
             itemPath = tree.getItemPath(itemID);
-            item = itemPath[0]->getItem();
+            item.supportCount = itemPath[0]->getValue();
+
             dbg.nospace() << " - item path for "
                     << item.IDNameHash->value(itemPath[0]->getItemID()).toStdString().c_str()
                     << ": " << itemPath << endl;
@@ -185,7 +188,7 @@ namespace Analytics {
         return dbg.nospace();
     }
 
-    QString dumpHelper(const FPNode &node, QString prefix) {
+    QString dumpHelper(const FPNode<SupportCount> &node, QString prefix) {
         static QString suffix = "\t";
         QString s;
         bool firstChild = true;
@@ -195,7 +198,7 @@ namespace Analytics {
 
         // Print all child nodes.
         if (node.numChildren() > 0) {
-            foreach (FPNode * child, node.getChildren()) {
+            foreach (FPNode<SupportCount> * child, node.getChildren()) {
                 if (firstChild)
                     s += prefix;
                 else

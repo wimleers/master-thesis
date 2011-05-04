@@ -30,31 +30,31 @@ void TestFPTree::basic() {
 
     // Verify the available item paths.
     QCOMPARE(tree->getItemIDs(), QList<ItemID>() << 1 << 2 << 3 << 4);
-    FPNodeList itemPath;
+    QList<FPNode<SupportCount> *> itemPath;
     // Item path for A(1): A(1)=3 (0x0001)
     itemPath = tree->getItemPath(1);
     QCOMPARE(itemPath.size(), 1);
     QCOMPARE(itemPath[0]->getNodeID(), (unsigned int) 1);
-    QCOMPARE(itemPath[0]->getSupportCount(), (SupportCount) 3);
+    QCOMPARE(itemPath[0]->getValue(), (SupportCount) 3);
     // Item path for B(2): B(2)=2 (0x0002) -> B(2)=1 (0x0003)
     itemPath = tree->getItemPath(2);
     QCOMPARE(itemPath.size(), 2);
     QCOMPARE(itemPath[0]->getNodeID(), (unsigned int) 2);
-    QCOMPARE(itemPath[0]->getSupportCount(), (SupportCount) 2);
+    QCOMPARE(itemPath[0]->getValue(), (SupportCount) 2);
     QCOMPARE(itemPath[1]->getNodeID(), (unsigned int) 3);
-    QCOMPARE(itemPath[1]->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(itemPath[1]->getValue(), (SupportCount) 1);
     // Item path for C(3): C(3)=1 (0x0004) -> C(3)=1 (0x0005)
     itemPath = tree->getItemPath(3);
     QCOMPARE(itemPath.size(), 2);
     QCOMPARE(itemPath[0]->getNodeID(), (unsigned int) 4);
-    QCOMPARE(itemPath[0]->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(itemPath[0]->getValue(), (SupportCount) 1);
     QCOMPARE(itemPath[1]->getNodeID(), (unsigned int) 5);
-    QCOMPARE(itemPath[1]->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(itemPath[1]->getValue(), (SupportCount) 1);
     // Item path for D(4): D(4)=1 (0x0006)
     itemPath = tree->getItemPath(4);
     QCOMPARE(itemPath.size(), 1);
     QCOMPARE(itemPath[0]->getNodeID(), (unsigned int) 6);
-    QCOMPARE(itemPath[0]->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(itemPath[0]->getValue(), (SupportCount) 1);
 
 
     // Verify the total item support counts.
@@ -65,8 +65,8 @@ void TestFPTree::basic() {
 
 
     // Verify the tree shape.
-    FPNode * node;
-    FPNode * root = tree->getRoot();
+    FPNode<SupportCount> * node;
+    FPNode<SupportCount> * root = tree->getRoot();
     QCOMPARE(root->getNodeID(), (unsigned int) 0);
     QCOMPARE(root->getItemID(), (ItemID) ROOT_ITEMID);
 
@@ -74,35 +74,35 @@ void TestFPTree::basic() {
     // root -> A(1)=3 (0x0001)
     node = root->getChild(1);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 3);
+    QCOMPARE(node->getValue(), (SupportCount) 3);
     QCOMPARE(node->getNodeID(), (unsigned int) 1);
-    FPNode * firstBranch = node;
+    FPNode<SupportCount> * firstBranch = node;
     // root -> A(1)=3 (0x0001) -> B(2)=2 (0x0002)
     node = firstBranch->getChild(2);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 2);
+    QCOMPARE(node->getValue(), (SupportCount) 2);
     QCOMPARE(node->getNodeID(), (unsigned int) 2);
     // root -> A(1)=3 (0x0001) -> C(3)=1 (0x0005)
     node = node->getChild(3);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 5);
     // root -> A(1)=3 (0x0001) -> D(4)=1 (0x0006)
     node = firstBranch->getChild(4);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 6);
 
     // Second branch.
     // root -> B(2)=1 (0x0003)
     node = root->getChild(2);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 3);
     // root -> B(2)=1 (0x0003) -> C(3)=1 (0x0004)
     node = node->getChild(3);
     QVERIFY(node != NULL);
-    QCOMPARE(node->getSupportCount(), (SupportCount) 1);
+    QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 4);
 
     delete tree;

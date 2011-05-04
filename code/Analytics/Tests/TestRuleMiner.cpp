@@ -15,7 +15,7 @@ void TestRuleMiner::basic() {
 
     Constraints constraints;
 
-    FPNode::resetLastNodeID();
+    FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 

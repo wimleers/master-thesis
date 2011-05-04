@@ -19,11 +19,11 @@ namespace Analytics {
         ~FPTree();
 
         // Accessors.
-        FPNode * getRoot() const { return this->root; }
+        FPNode<SupportCount> * getRoot() const { return this->root; }
         bool hasItemPath(ItemID itemID) const;
         QList<ItemID> getItemIDs() const { return this->itemPaths.keys(); }
-        FPNodeList getItemPath(ItemID itemID) const;
-        bool itemPathContains(ItemID itemID, FPNode * node) const;
+        QList<FPNode<SupportCount> *> getItemPath(ItemID itemID) const;
+        bool itemPathContains(ItemID itemID, FPNode<SupportCount> * node) const;
         SupportCount getItemSupport(ItemID item) const;
         QList<ItemList> calculatePrefixPaths(ItemID itemID) const;
 
@@ -34,16 +34,16 @@ namespace Analytics {
         static QHash<ItemID, SupportCount> calculateSupportCountsForPrefixPaths(const QList<ItemList> & prefixPaths);
 
     protected:
-        FPNode * root;
-        QHash<ItemID, FPNodeList> itemPaths;
+        FPNode<SupportCount> * root;
+        QHash<ItemID, QList<FPNode<SupportCount> *> > itemPaths;
 
         void init();
-        void addNodeToItemPath(FPNode * node);
+        void addNodeToItemPath(FPNode<SupportCount> * node);
     };
 
 #ifdef DEBUG
     QDebug operator<<(QDebug dbg, const FPTree & tree);
-    QString dumpHelper(const FPNode & node, QString prefix = "");
+    QString dumpHelper(const FPNode<SupportCount> & node, QString prefix = "");
 #endif
 
 }

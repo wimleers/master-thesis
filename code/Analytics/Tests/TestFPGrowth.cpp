@@ -13,7 +13,7 @@ void TestFPGrowth::basic() {
     transactions.append(QStringList() << "C" << "D");
     transactions.append(QStringList() << "C" << "E");
 
-    FPNode::resetLastNodeID();
+    FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
@@ -58,7 +58,7 @@ void TestFPGrowth::withConstraints() {
     Constraints constraints;
     constraints.addItemConstraint("A", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
 
-    FPNode::resetLastNodeID();
+    FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     fpgrowth->setConstraints(constraints);
     QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
