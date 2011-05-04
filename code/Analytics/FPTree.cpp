@@ -115,11 +115,11 @@ namespace Analytics {
                 // There is already a node in the tree for the current
                 // transaction item, so reuse it: increase its support count.
                 nextNode = currentNode->getChild(item.id);
-                nextNode->increaseValue(item.supportCount);
+                nextNode->addSupportCount(item.supportCount);
             }
             else {
                 // Create a new node and add it as a child of the current node.
-                nextNode = new FPNode<SupportCount>(item);
+                nextNode = new FPNode<SupportCount>(item.id, item.supportCount);
                 nextNode->setParent(currentNode);
 
                 // Update the item path to include the new node.
@@ -138,10 +138,7 @@ namespace Analytics {
     // Protected methods.
 
     void FPTree::init() {
-        Item rootItem;
-        rootItem.id = ROOT_ITEMID;
-        rootItem.supportCount = 0;
-        root = new FPNode<SupportCount>(rootItem);
+        root = new FPNode<SupportCount>(ROOT_ITEMID, 0);
     }
 
     void FPTree::addNodeToItemPath(FPNode<SupportCount> * node) {
