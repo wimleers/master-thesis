@@ -10,7 +10,8 @@ SOURCES += \
     $${PWD}/FPGrowth.cpp\
     $${PWD}/RuleMiner.cpp \
     $${PWD}/Analyst.cpp \
-    $${PWD}/Constraints.cpp
+    $${PWD}/Constraints.cpp \
+    $${PWD}/TiltedTimeWindow.cpp
 HEADERS += \
     $${PWD}/Item.h \
     $${PWD}/FPNode.h \
@@ -18,7 +19,8 @@ HEADERS += \
     $${PWD}/FPGrowth.h \
     $${PWD}/RuleMiner.h \
     $${PWD}/Analyst.h \
-    $${PWD}/Constraints.h
+    $${PWD}/Constraints.h \
+    $${PWD}/TiltedTimeWindow.h
 
 # Disable qDebug() output when in release mode.
 CONFIG(release, debug|release):DEFINES += QT_NO_DEBUG_OUTPUT
