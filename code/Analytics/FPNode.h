@@ -13,9 +13,9 @@ namespace Analytics {
     template <class T>
     class FPNode {
     public:
-        FPNode(Item item = Item()) {
-            this->itemID = item.id;
-            this->value  = item.supportCount;
+        FPNode(ItemID itemID, SupportCount count) {
+            this->itemID = itemID;
+            this->value  = count;
             this->parent = NULL;
 
 #ifdef DEBUG
@@ -44,6 +44,23 @@ namespace Analytics {
         QHash<ItemID, FPNode<T> *> getChildren() const { return this->children; }
         bool hasChild(ItemID itemID) const { return this->children.contains(itemID); }
         unsigned int numChildren() const { return this->children.size(); }
+        T const * findNodeByPattern(const ItemIDList & pattern) const {
+            // This method only works from the root node.
+            if (this->itemID != ROOT_ITEMID) {
+                qWarning("FPNode<T>::getPath() was called from a node other than the root node.");
+                return NULL;
+            }
+
+            FPNode<T> const * node = this;
+            foreach (ItemID itemID, pattern) {
+                if (node->hasChild(itemID))
+                    node = node->getChild(itemID);
+                else
+                    return NULL;
+            }
+
+            return &(node->value);
+        }
 
         // Modifiers.
         void addChild(FPNode<T> * child) { this->children.insert(child->getItemID(), child); }
@@ -56,7 +73,12 @@ namespace Analytics {
                 this->parent->addChild(this);
 
         }
-        void increaseValue(T count) { this->value += count; }
+        /**
+         * This adds a SupportCount to the existing value in this FPNode, but
+         * how this happens depends on the template parameter type's addition
+         * operator.
+         */
+        void addSupportCount(SupportCount count) { this->value += count; }
 
 #ifdef DEBUG
         unsigned int getNodeID() const { return this->nodeID; }
@@ -82,8 +104,8 @@ namespace Analytics {
     template <class T>
     unsigned int FPNode<T>::lastNodeID = 0;
 
-    template <class T>
-    QDebug operator<<(QDebug dbg, const FPNode<T> & node) {
+    // QDebug output operators for SupportCount.
+    QDebug operator<<(QDebug dbg, const FPNode<SupportCount> & node) {
         if (node.getItemID() == ROOT_ITEMID)
             dbg.nospace() << "(NULL)";
         else {
@@ -101,8 +123,7 @@ namespace Analytics {
         return dbg.nospace();
     }
 
-    template <class T>
-    QDebug operator<<(QDebug dbg, const QList<FPNode<T> *> & itemPath) {
+    QDebug operator<<(QDebug dbg, const QList<FPNode<SupportCount> *> & itemPath) {
         dbg.nospace() << "[size=" << itemPath.size() << "] ";
 
         for (int i = 0; i < itemPath.size(); i++) {
