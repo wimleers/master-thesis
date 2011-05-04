@@ -108,7 +108,6 @@ namespace Analytics {
     void FPTree::addTransaction(const Transaction & transaction) {
         // The initial current node is the root node.
         FPNode<SupportCount> * currentNode = root;
-
         FPNode<SupportCount> * nextNode;
 
         foreach (Item item, transaction) {
@@ -188,7 +187,7 @@ namespace Analytics {
         return dbg.nospace();
     }
 
-    QString dumpHelper(const FPNode<SupportCount> &node, QString prefix) {
+    QString dumpHelper(const FPNode<SupportCount> & node, QString prefix) {
         static QString suffix = "\t";
         QString s;
         bool firstChild = true;
