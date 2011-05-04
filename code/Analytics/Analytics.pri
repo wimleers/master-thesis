@@ -5,7 +5,6 @@ INCLUDEPATH += $${PWD}
 
 SOURCES += \
     $${PWD}/Item.cpp \
-    $${PWD}/FPNode.cpp \
     $${PWD}/FPTree.cpp \
     $${PWD}/FPGrowth.cpp\
     $${PWD}/RuleMiner.cpp \
