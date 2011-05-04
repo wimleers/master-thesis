@@ -10,12 +10,40 @@ namespace Analytics {
     // Public methods.
 
     TiltedTimeWindow::TiltedTimeWindow() {
-        this->buckets          = QVector<SupportCount>(TTW_NUM_BUCKETS, 0);
-        this->bucketLastFilled = QVector<int>(TTW_NUM_GRANULARITIES, -1);
+        for (int b = 0; b < TTW_NUM_BUCKETS; b++)
+            this->buckets[b] = -1;
+        for (int g = 0; g < TTW_NUM_GRANULARITIES; g++)
+            this->capacityUsed[g] = 0;
     }
 
     void TiltedTimeWindow::appendQuarter(SupportCount supportCount) {
         store(GRANULARITY_QUARTER, supportCount);
+    }
+
+    void TiltedTimeWindow::dropTail(int start) {
+        // Find the granularity to which it belongs and reset every
+        // granularity along the way.
+        Granularity g;
+        for (g = (Granularity) (TTW_NUM_GRANULARITIES - 1); g >= 0; g = (Granularity) ((int) g - 1)) {
+            if (start >= this->GranularityBucketOffset[g])
+                break;
+            else
+                this->reset(g);
+        }
+
+        // Now decide what to do with the granularity in which this tail
+        // was started to be pruned. Reset the granularity starting at
+        // the starting position of the tail pruning; this will
+        // automatically reset the entire granularity when this is the
+        // first bucket of the granularity.
+        this->reset(g, start);
+    }
+
+    const QVector<SupportCount> & TiltedTimeWindow::getBuckets() {
+        QVector<SupportCount> * v = new QVector<SupportCount>();
+        for (int i = 0; i < TTW_NUM_BUCKETS; i++)
+            v->append(this->buckets[i]);
+        return *v;
     }
 
 
@@ -23,21 +51,23 @@ namespace Analytics {
     // Private methods.
 
     /**
-     * Reset a granularity.
+     * Reset a granularity. Defaults to resetting the entire granularity,
+     * but allows for a partial reset.
      *
      * @param granularity
      *   The granularity that should be reset.
+     * @param startBucket
+     *   When performing a partial reset,
      */
-    void TiltedTimeWindow::reset(Granularity granularity) {
+    void TiltedTimeWindow::reset(Granularity granularity, int startBucket) {
         int offset = GranularityBucketOffset[granularity];
-        int count  = GranularityBucketCount[granularity];
+        int count = GranularityBucketCount[granularity];
 
         // Reset this granularity's buckets.
-        for (int bucket = 0; bucket < count; bucket++)
-            buckets[offset + bucket] = 0;
+        memset(this->buckets + offset + startBucket, -1, (count - startBucket ) * sizeof(int));
 
-        // Update this granularity's last filled bucket.
-        this->bucketLastFilled[granularity] = -1;
+        // Update this granularity's used capacity..
+        this->capacityUsed[granularity] = startBucket;
     }
 
     /**
@@ -75,17 +105,23 @@ namespace Analytics {
      *   The supportCount that should be appended.
      */
     void TiltedTimeWindow::store(Granularity granularity, SupportCount supportCount) {
-        int offset     = GranularityBucketOffset[granularity];
-        int count      = GranularityBucketCount[granularity];
+        int offset       = GranularityBucketOffset[granularity];
+        int count        = GranularityBucketCount[granularity];
+        int capacityUsed = this->capacityUsed[granularity];
 
-        // If the current granularity is full, then shift it to the next
-        // granularity in line.
-        if (this->bucketLastFilled[granularity] == count - 1)
+        // If the current granularity's maximum capacity has been reached,
+        // then shift it to the next (less granular) granularity.
+        if (capacityUsed == count) {
             this->shift(granularity);
+            capacityUsed = this->capacityUsed[granularity];
+        }
 
-        // Store the value and update this granularity's last filled bucket.
-        int nextBucket = this->bucketLastFilled[granularity] + 1;
-        buckets[offset + nextBucket] = supportCount;
-        this->bucketLastFilled[granularity] = nextBucket;
+        // Store the value (in the first bucket of this granularity, which
+        // means we'll have to move the data in previously filled in buckets
+        // in this granularity) and update this granularity's capacity.
+        if (capacityUsed > 0)
+            memmove(buckets + offset + 1, buckets + offset, capacityUsed * sizeof(int));
+        buckets[offset + 0] = supportCount;
+        this->capacityUsed[granularity]++;
     }
 }

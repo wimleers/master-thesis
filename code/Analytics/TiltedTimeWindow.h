@@ -3,7 +3,6 @@
 
 #include <stdint.h>
 #include <QVector>
-#include <QDebug>
 
 #include "Item.h"
 
@@ -26,18 +25,21 @@ namespace Analytics {
     public:
         TiltedTimeWindow();
         void appendQuarter(SupportCount s);
+        void dropTail(int start);
 
-        const QVector<SupportCount> & getBuckets() { return this->buckets; }
+        // Unit testing helper method.
+        const QVector<SupportCount> & getBuckets();
 
     protected:
         // Methods.
-        void reset(Granularity granularity);
+        void reset(Granularity granularity, int startBucket = 0);
         void shift(Granularity granularity);
         void store(Granularity granularity, SupportCount supportCount);
 
         // Properties.
-        QVector<SupportCount> buckets;
-        QVector<int> bucketLastFilled;
+        SupportCount buckets[TTW_NUM_BUCKETS];
+        int bucketLastFilled[TTW_NUM_GRANULARITIES];
+        int capacityUsed[TTW_NUM_GRANULARITIES];
         // TODO: support starting at another time of the day than 00:00
 //        QDateTime startTime;
 
