@@ -27,6 +27,17 @@ namespace Analytics {
         void appendQuarter(SupportCount s);
         void dropTail(int start);
 
+        // Operator overloads (must be defined in the header file).
+        // These allow for elegant reuse of the FPNode template class.
+        inline TiltedTimeWindow & operator+=(SupportCount support) {
+            this->appendQuarter(support);
+            return *this;
+        }
+        inline TiltedTimeWindow & operator=(SupportCount support) {
+            this->appendQuarter(support);
+            return *this;
+        }
+
         // Unit testing helper method.
         const QVector<SupportCount> & getBuckets();
 
