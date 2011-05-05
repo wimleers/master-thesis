@@ -14,7 +14,7 @@ namespace Analytics {
     }
 
     QDebug operator<<(QDebug dbg, const ItemIDList & pattern) {
-        dbg.nospace() << "[size=" << pattern.size() << "] {";
+        dbg.nospace() << "{";
 
         for (int i = 0; i < pattern.size(); i++) {
             if (i > 0)
