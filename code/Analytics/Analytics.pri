@@ -10,6 +10,7 @@ SOURCES += \
     $${PWD}/RuleMiner.cpp \
     $${PWD}/Analyst.cpp \
     $${PWD}/Constraints.cpp \
+    $${PWD}/PatternTree.cpp \
     $${PWD}/TiltedTimeWindow.cpp
 HEADERS += \
     $${PWD}/Item.h \
@@ -19,6 +20,7 @@ HEADERS += \
     $${PWD}/RuleMiner.h \
     $${PWD}/Analyst.h \
     $${PWD}/Constraints.h \
+    $${PWD}/PatternTree.h \
     $${PWD}/TiltedTimeWindow.h
 
 # Disable qDebug() output when in release mode.
