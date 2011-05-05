@@ -11,7 +11,6 @@
 #include "Constraints.h"
 #include "FPGrowth.h"
 #include "RuleMiner.h"
-#include "FPNode.h"
 
 
 namespace Analytics {
@@ -20,7 +19,7 @@ namespace Analytics {
         Q_OBJECT
 
     public:
-        Analyst(float minSupport, float minConfidence);
+        Analyst(double minSupport, double maxSupportError, double minConfidence);
         void addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type);
         void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
@@ -30,8 +29,9 @@ namespace Analytics {
     protected:
         void performMining(const QList<QStringList> & transactions);
 
-        float minSupport;
-        float minConfidence;
+        double minSupport;
+        double maxSupportError;
+        double minConfidence;
 
         Constraints frequentItemsetItemConstraints;
         Constraints ruleConsequentItemConstraints;

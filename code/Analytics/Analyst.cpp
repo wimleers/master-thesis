@@ -2,9 +2,11 @@
 
 namespace Analytics {
 
-    Analyst::Analyst(float minSupport, float minConfidence) {
-        this->minSupport = minSupport;
-        this->minConfidence = minConfidence;
+    Analyst::Analyst(double minSupport, double maxSupportError, double minConfidence) {
+        this->minSupport      = minSupport;
+        this->maxSupportError = maxSupportError;
+        this->minConfidence   = minConfidence;
+
     }
 
     /**
