@@ -39,7 +39,7 @@ namespace Analytics {
         }
 
         // Unit testing helper method.
-        const QVector<SupportCount> & getBuckets();
+        const QVector<SupportCount> & getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
 
     protected:
         // Methods.

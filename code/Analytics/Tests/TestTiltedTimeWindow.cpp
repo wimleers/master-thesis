@@ -24,33 +24,24 @@ void TestTiltedTimeWindow::basic() {
     // First hour.
     for (int i = 0; i < 4; i++)
         ttw->appendQuarter(supportCounts[i]);
-    QVector<SupportCount> buckets = ttw->getBuckets();
-    buckets.resize(4);
-    QCOMPARE(buckets, QVector<SupportCount>() << 93 << 88 << 67 << 45);
+    QCOMPARE(ttw->getBuckets(4), QVector<SupportCount>() << 93 << 88 << 67 << 45);
 
     // Second hour.
     for (int i = 4; i < 8; i++)
         ttw->appendQuarter(supportCounts[i]);
-    buckets = ttw->getBuckets();
-    buckets.resize(5);
-    QCOMPARE(buckets, QVector<SupportCount>() <<  97 << 36 << 49 << 34
+    QCOMPARE(ttw->getBuckets(5), QVector<SupportCount>() <<  97 << 36 << 49 << 34
                                               << 293);
 
     // Third hour.
     for (int i = 8; i < 12; i++)
         ttw->appendQuarter(supportCounts[i]);
-    buckets = ttw->getBuckets();
-    buckets.resize(6);
-    QCOMPARE(buckets, QVector<SupportCount>() <<  50 <<  50 <<  50 <<  50
+    QCOMPARE(ttw->getBuckets(6), QVector<SupportCount>() <<  50 <<  50 <<  50 <<  50
                                               << 216 << 293);
 
     // Hours 4-23.
     for (int i = 12; i < 96 ; i++)
         ttw->appendQuarter(supportCounts[i]);
-    buckets = ttw->getBuckets();
-    buckets.resize(28);
-
-    QCOMPARE(buckets, QVector<SupportCount>() <<  25 <<  25 <<  25 <<  25
+    QCOMPARE(ttw->getBuckets(28), QVector<SupportCount>() <<  25 <<  25 <<  25 <<  25
                                               << 100 << 100 << 100
                                               << 100 << 100 << 100
                                               << 100 << 100 << 100
@@ -63,9 +54,7 @@ void TestTiltedTimeWindow::basic() {
     // First quarter of second day to provide tipping point: now the 24
     // hour buckets are all filled.
     ttw->appendQuarter(supportCounts[96]);
-    buckets = ttw->getBuckets();
-    buckets.resize(28);
-    QCOMPARE(buckets, QVector<SupportCount>() <<  10 <<  -1 <<  -1 << -1
+    QCOMPARE(ttw->getBuckets(28), QVector<SupportCount>() <<  10 <<  -1 <<  -1 << -1
                                               << 100 << 100 << 100
                                               << 100 << 100 << 100
                                               << 100 << 100 << 100
@@ -80,9 +69,7 @@ void TestTiltedTimeWindow::basic() {
     // the tipping point to fill the first day bucket.
     for (int i = 97; i < 101 ; i++)
         ttw->appendQuarter(supportCounts[i]);
-    buckets = ttw->getBuckets();
-    buckets.resize(29);
-    QCOMPARE(buckets, QVector<SupportCount>() << 222 <<  -1 <<  -1 << -1
+    QCOMPARE(ttw->getBuckets(29), QVector<SupportCount>() << 222 <<  -1 <<  -1 << -1
                                               <<  40 <<  -1 <<  -1
                                               <<  -1 <<  -1 <<  -1
                                               <<  -1 <<  -1 <<  -1
@@ -97,7 +84,7 @@ void TestTiltedTimeWindow::basic() {
     // Drop tail starting at bucket 1. This means only the value in the
     // first bucket (bucket 0) is kept, and all the rest is reset.
     ttw->dropTail(1);
-    buckets = ttw->getBuckets();
+    QVector<SupportCount> buckets = ttw->getBuckets();
     QCOMPARE(buckets[0], (SupportCount) 222);
     for (int i = 1; i < TTW_NUM_BUCKETS; i++)
         QCOMPARE(buckets[i], (SupportCount) -1);

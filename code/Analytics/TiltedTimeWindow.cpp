@@ -39,9 +39,11 @@ namespace Analytics {
         this->reset(g, start);
     }
 
-    const QVector<SupportCount> & TiltedTimeWindow::getBuckets() {
+    const QVector<SupportCount> & TiltedTimeWindow::getBuckets(int numBuckets) const {
+        Q_ASSERT(numBuckets <= TTW_NUM_BUCKETS);
+
         QVector<SupportCount> * v = new QVector<SupportCount>();
-        for (int i = 0; i < TTW_NUM_BUCKETS; i++)
+        for (int i = 0; i < numBuckets; i++)
             v->append(this->buckets[i]);
         return *v;
     }
