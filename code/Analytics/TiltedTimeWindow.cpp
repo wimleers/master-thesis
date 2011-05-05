@@ -2,8 +2,9 @@
 
 namespace Analytics {
 
-    int TiltedTimeWindow::GranularityBucketCount[TTW_NUM_GRANULARITIES]      = {  4,  24, 31, 12,  1 };
-    int TiltedTimeWindow::GranularityBucketOffset[TTW_NUM_GRANULARITIES]     = {  0,   4, 28, 59, 71 };
+    int  TiltedTimeWindow::GranularityBucketCount[TTW_NUM_GRANULARITIES]      = {  4, 24, 31, 12,  1 };
+    int  TiltedTimeWindow::GranularityBucketOffset[TTW_NUM_GRANULARITIES]     = {  0,  4, 28, 59, 71 };
+    char TiltedTimeWindow::GranularityChar[TTW_NUM_GRANULARITIES]             = {'Q','H','D','M','Y' };
 
 
     //--------------------------------------------------------------------------
@@ -126,4 +127,41 @@ namespace Analytics {
         buckets[offset + 0] = supportCount;
         this->capacityUsed[granularity]++;
     }
+
+#ifdef DEBUG
+    QDebug operator<<(QDebug dbg, const TiltedTimeWindow & ttw) {
+        int capacityUsed, offset;
+        QVector<SupportCount> buckets = ttw.getBuckets();
+
+        dbg.nospace() << "{";
+
+        Granularity g;
+        for (g = (Granularity) 0; g < TTW_NUM_GRANULARITIES; g = (Granularity) ((int) g + 1)) {
+            capacityUsed = ttw.getCapacityUsed(g);
+            if (capacityUsed == 0)
+                break;
+
+            dbg.nospace() << TiltedTimeWindow::GranularityChar[g] << "={";
+
+            // Print the contents of this granularity.
+            offset = TiltedTimeWindow::GranularityBucketOffset[g];
+            for (int b = 0; b < capacityUsed; b++) {
+                if (b > 0)
+                    dbg.nospace() << ", ";
+
+                dbg.nospace() << buckets[offset + b];
+            }
+
+            dbg.nospace() << "}";
+            if (g < TTW_NUM_GRANULARITIES - 1 && ttw.getCapacityUsed((Granularity) (g + 1)) > 0)
+                dbg.nospace() << ", ";
+        }
+
+        dbg.nospace() << "}";
+
+        return dbg.nospace();
+    }
+
+
+#endif
 }

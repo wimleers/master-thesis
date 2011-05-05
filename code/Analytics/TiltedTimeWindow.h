@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <QVector>
+#include <QDebug>
 
 #include "Item.h"
 
@@ -38,8 +39,18 @@ namespace Analytics {
             return *this;
         }
 
+#ifdef DEBUG
+        // Debug output helper method.
+        int getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
+#endif
+
         // Unit testing helper method.
         const QVector<SupportCount> & getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
+
+        // Static properties
+        static  int GranularityBucketCount[TTW_NUM_GRANULARITIES];
+        static  int GranularityBucketOffset[TTW_NUM_GRANULARITIES];
+        static char GranularityChar[TTW_NUM_GRANULARITIES];
 
     protected:
         // Methods.
@@ -49,14 +60,14 @@ namespace Analytics {
 
         // Properties.
         SupportCount buckets[TTW_NUM_BUCKETS];
-        int bucketLastFilled[TTW_NUM_GRANULARITIES];
         int capacityUsed[TTW_NUM_GRANULARITIES];
         // TODO: support starting at another time of the day than 00:00
 //        QDateTime startTime;
-
-        static int GranularityBucketCount[TTW_NUM_GRANULARITIES];
-        static int GranularityBucketOffset[TTW_NUM_GRANULARITIES];
     };
+
+#ifdef DEBUG
+    QDebug operator<<(QDebug dbg, const TiltedTimeWindow & ttw);
+#endif
 }
 
 #endif // TILTEDTIMEWINDOW_H
