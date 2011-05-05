@@ -74,22 +74,26 @@ void TestFPTree::basic() {
     // root -> A(1)=3 (0x0001)
     node = root->getChild(1);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 1);
     QCOMPARE(node->getValue(), (SupportCount) 3);
     QCOMPARE(node->getNodeID(), (unsigned int) 1);
     FPNode<SupportCount> * firstBranch = node;
     // root -> A(1)=3 (0x0001) -> B(2)=2 (0x0002)
     node = firstBranch->getChild(2);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 2);
     QCOMPARE(node->getValue(), (SupportCount) 2);
     QCOMPARE(node->getNodeID(), (unsigned int) 2);
     // root -> A(1)=3 (0x0001) -> C(3)=1 (0x0005)
     node = node->getChild(3);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 3);
     QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 5);
     // root -> A(1)=3 (0x0001) -> D(4)=1 (0x0006)
     node = firstBranch->getChild(4);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 4);
     QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 6);
 
@@ -97,11 +101,13 @@ void TestFPTree::basic() {
     // root -> B(2)=1 (0x0003)
     node = root->getChild(2);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 2);
     QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 3);
     // root -> B(2)=1 (0x0003) -> C(3)=1 (0x0004)
     node = node->getChild(3);
     QVERIFY(node != NULL);
+    QCOMPARE(node->getItemID(), (ItemID) 3);
     QCOMPARE(node->getValue(), (SupportCount) 1);
     QCOMPARE(node->getNodeID(), (unsigned int) 4);
 
