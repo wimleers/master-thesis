@@ -11,6 +11,7 @@ namespace Analytics {
     // Public methods.
 
     TiltedTimeWindow::TiltedTimeWindow() {
+        this->oldestBucketFilled = -1;
         for (int b = 0; b < TTW_NUM_BUCKETS; b++)
             this->buckets[b] = -1;
         for (int g = 0; g < TTW_NUM_GRANULARITIES; g++)
@@ -49,19 +50,6 @@ namespace Analytics {
         return v;
     }
 
-    bool TiltedTimeWindow::isEmpty() const {
-        bool isEmpty = true;
-
-        for (Granularity g = (Granularity) (TTW_NUM_GRANULARITIES - 1); g >= 0; g = (Granularity) ((int) g - 1)) {
-            if (this->capacityUsed[g] > 0) {
-                isEmpty = false;
-                break;
-            }
-        }
-
-        return isEmpty;
-    }
-
 
     //--------------------------------------------------------------------------
     // Private methods.
@@ -84,6 +72,10 @@ namespace Analytics {
 
         // Update this granularity's used capacity..
         this->capacityUsed[granularity] = startBucket;
+
+        // Update oldestBucketFilled.
+        if (this->oldestBucketFilled > offset + startBucket - 1)
+            this->oldestBucketFilled = offset + startBucket - 1;
     }
 
     /**
@@ -139,6 +131,10 @@ namespace Analytics {
             memmove(buckets + offset + 1, buckets + offset, capacityUsed * sizeof(int));
         buckets[offset + 0] = supportCount;
         this->capacityUsed[granularity]++;
+
+        // Update oldestbucketFilled.
+        if (this->oldestBucketFilled < offset + this->capacityUsed[granularity] - 1)
+            this->oldestBucketFilled = offset + this->capacityUsed[granularity] - 1;
     }
 
 #ifdef DEBUG

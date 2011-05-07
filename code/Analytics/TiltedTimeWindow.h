@@ -26,7 +26,7 @@ namespace Analytics {
     public:
         TiltedTimeWindow();
         void appendQuarter(SupportCount s);
-        bool isEmpty() const;
+        bool isEmpty() const { return this->oldestBucketFilled == -1; }
         void dropTail(int start);
 
         // Operator overloads (must be defined in the header file).
@@ -40,6 +40,7 @@ namespace Analytics {
             return *this;
         }
 
+        int getOldestBucketFilled() const { return this->oldestBucketFilled; }
 #ifdef DEBUG
         // Debug output helper method.
         int getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
@@ -47,6 +48,10 @@ namespace Analytics {
 
         // Unit testing helper method.
         QVector<SupportCount> getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
+
+        // Properties.
+        SupportCount buckets[TTW_NUM_BUCKETS];
+        int oldestBucketFilled;
 
         // Static properties
         static  int GranularityBucketCount[TTW_NUM_GRANULARITIES];
@@ -60,8 +65,8 @@ namespace Analytics {
         void store(Granularity granularity, SupportCount supportCount);
 
         // Properties.
-        SupportCount buckets[TTW_NUM_BUCKETS];
         int capacityUsed[TTW_NUM_GRANULARITIES];
+
         // TODO: support starting at another time of the day than 00:00
 //        QDateTime startTime;
     };
