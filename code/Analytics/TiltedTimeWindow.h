@@ -26,6 +26,7 @@ namespace Analytics {
     public:
         TiltedTimeWindow();
         void appendQuarter(SupportCount s);
+        bool isEmpty() const;
         void dropTail(int start);
 
         // Operator overloads (must be defined in the header file).

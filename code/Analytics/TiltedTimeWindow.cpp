@@ -49,6 +49,19 @@ namespace Analytics {
         return v;
     }
 
+    bool TiltedTimeWindow::isEmpty() const {
+        bool isEmpty = true;
+
+        for (Granularity g = (Granularity) (TTW_NUM_GRANULARITIES - 1); g >= 0; g = (Granularity) ((int) g - 1)) {
+            if (this->capacityUsed[g] > 0) {
+                isEmpty = false;
+                break;
+            }
+        }
+
+        return isEmpty;
+    }
+
 
     //--------------------------------------------------------------------------
     // Private methods.
