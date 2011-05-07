@@ -29,12 +29,12 @@ namespace Analytics {
         void preprocessItem(const ItemName & name, ItemID id);
         void removeItem(ItemID id);
 
-        bool matchItemset(const ItemList & itemset) const;
-        bool matchSearchSpace(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const;
+        bool matchItemset(const ItemIDList & itemset) const;
+        bool matchSearchSpace(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const;
 
     protected:
-        static bool matchItemsetHelper(const ItemList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems);
-        static bool matchSearchSpaceHelper(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems);
+        static bool matchItemsetHelper(const ItemIDList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems);
+        static bool matchSearchSpaceHelper(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems);
 
         void addPreprocessedItemConstraint(ItemConstraintType type, const ItemName & category, ItemID id);
 

@@ -21,7 +21,7 @@ namespace Analytics {
      * @return
      *   The frequent itemsets that were found.
      */
-    QList<ItemList> FPGrowth::mineFrequentItemsets() {
+    QList<FrequentItemset> FPGrowth::mineFrequentItemsets() {
         this->scanTransactions();
         this->buildFPTree();
         return this->generateFrequentItemsets(this->tree);
@@ -35,7 +35,7 @@ namespace Analytics {
      * @return
      *   The upper bound of the support count for this itemset.
      */
-    SupportCount FPGrowth::calculateSupportCountUpperBound(const ItemList & itemset) const {
+    SupportCount FPGrowth::calculateSupportCountUpperBound(const ItemIDList & itemset) const {
         // For itemsets of size 1, we can simply use the QHash that contains
         // all frequent items' support counts, since it contains the exact
         // data we need (this is FPGrowth::totalFrequentSupportCounts). Thus,
@@ -44,14 +44,14 @@ namespace Analytics {
         // For larger itemsets, we'll have to calculate the upper bound by
         // exploiting some properties. See the code below for details.
         if (itemset.size() == 1) {
-            return this->totalFrequentSupportCounts[itemset[0].id];
+            return this->totalFrequentSupportCounts[itemset[0]];
         }
         else {
-            ItemList optimizedItemset = this->optimizeTransaction(itemset);
+            ItemIDList optimizedItemset = this->optimizeItemset(itemset);
 
             // The last item is the one with the least support, since it is
-            // optimized for this by FPGrowth::optimizeTransaction.
-            Item lastItem = optimizedItemset[optimizedItemset.size() - 1];
+            // optimized for this by FPGrowth::optimizeItemset.
+            ItemID lastItemID = optimizedItemset[optimizedItemset.size() - 1];
 
             // Since all items in a frequent itemset must themselves also be
             // frequent, it must be available in the previously calculated
@@ -61,7 +61,7 @@ namespace Analytics {
             // call.
             // Hence the itemset's upper bound support count is equal to the
             // support count of the last item in the itemset.
-            return this->totalFrequentSupportCounts[lastItem.id];
+            return this->totalFrequentSupportCounts[lastItemID];
         }
     }
 
@@ -73,19 +73,19 @@ namespace Analytics {
      * @return
      *   The exact support count for this itemset
      */
-    SupportCount FPGrowth::calculateSupportCountExactly(const ItemList & itemset) const {
+    SupportCount FPGrowth::calculateSupportCountExactly(const ItemIDList & itemset) const {
         // For itemsets of size 1, we can simply use the QHash that contains
         // all frequent items' support counts, since it contains the exact
         // data we need (this is FPGrowth::totalFrequentSupportCounts).
         // For larger itemsets, we'll have to get the exact support count by
         // examining the FP-tree.
         if (itemset.size() == 1) {
-            return this->totalFrequentSupportCounts[itemset[0].id];
+            return this->totalFrequentSupportCounts[itemset[0]];
         }
         else {
             // First optimize the itemset so that the item with the least
             // support is the last item.
-            ItemList optimizedItemset = this->optimizeTransaction(itemset);
+            ItemIDList optimizedItemset = this->optimizeItemset(itemset);
 
             // Starting with the last item in the itemset:
             // 1) calculate its prefix paths
@@ -100,9 +100,9 @@ namespace Analytics {
             for (int whichItem = last; whichItem > 0; whichItem--) {
                 // Step 1: calculate prefix paths.
                 if (whichItem == last)
-                    prefixPaths = this->tree->calculatePrefixPaths(optimizedItemset[whichItem].id);
+                    prefixPaths = this->tree->calculatePrefixPaths(optimizedItemset[whichItem]);
                 else {
-                    prefixPaths = cfptree->calculatePrefixPaths(optimizedItemset[whichItem].id);
+                    prefixPaths = cfptree->calculatePrefixPaths(optimizedItemset[whichItem]);
                     delete cfptree;
                 }
                 // Step 2: filter.
@@ -117,7 +117,7 @@ namespace Analytics {
             // The conditional FP-tree for the second item in the itemset
             // contains the support count for the itemset that was passed into
             // this function.
-            return cfptree->getItemSupport(itemset[0].id);
+            return cfptree->getItemSupport(itemset[0]);
         }
     }
 
@@ -341,6 +341,17 @@ namespace Analytics {
         return optimizedTransaction;
     }
 
+    ItemIDList FPGrowth::optimizeItemset(const ItemIDList & itemset) const {
+        ItemIDList optimizedItemset;
+
+        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount) {
+            if (itemset.contains(itemID))
+                optimizedItemset.append(itemID);
+        }
+
+        return optimizedItemset;
+    }
+
     /**
      * Generate the frequent itemsets recursively
      *
@@ -355,12 +366,12 @@ namespace Analytics {
      *   still needs to be cleaned: it should be set to the minimum of all
      *   Items in each frequent itemset.
      */
-    QList<ItemList> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const ItemList & suffix) {
-        QList<ItemList> frequentItemsets;
+    QList<FrequentItemset> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const FrequentItemset & suffix) {
+        QList<FrequentItemset> frequentItemsets;
         QList<ItemList> prefixPaths;
 
-        // First determine the suffix order for the items in this particular
-        // tree, based on the list that contains *all* items in this data set,
+        // First determine the order for the items in this particular tree,
+        // based on the list that contains *all* items in this data set,
         // sorted by support count.
         // We do this mostly for cosmetic reasons. However, it also implies
         // that we will generate frequent itemsets for which the first item is
@@ -368,57 +379,56 @@ namespace Analytics {
         // Note: cannot replaced with a call to FPGrowth::optimizeTransaction()
         // because that works over a QList<Item>, wheras we have to deal with
         // a QList<ItemID> here.
-        ItemIDList orderedSuffixItemIDs;
+        ItemIDList orderedItemIDs;
         ItemIDList itemIDsInTree = ctree->getItemIDs();
         foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount)
             if (itemIDsInTree.contains(itemID))
-                orderedSuffixItemIDs.append(itemID);
+                orderedItemIDs.append(itemID);
 
         // We don't need the unsorted item IDs anymore.
         itemIDsInTree.clear();
 
         // Now iterate over each of the ordered suffix items and generate
-        // frequent itemsets!
-        foreach (ItemID suffixItemID, orderedSuffixItemIDs) {
-            // Only if this suffix item's support meets or exceeds the minimum
+        // candidate frequent itemsets!
+        foreach (ItemID prefixItemID, orderedItemIDs) {
+            // Only if this prefix item's support meets or exceeds the minimum
             // support, it will be added as a frequent itemset (appended with
             // the received suffix of course).
-            SupportCount suffixItemSupport = ctree->getItemSupport(suffixItemID);
-            if (suffixItemSupport >= this->minSupportAbsolute) {
+            SupportCount prefixItemSupport = ctree->getItemSupport(prefixItemID);
+            if (prefixItemSupport >= this->minSupportAbsolute) {
                 // The current suffix item, when prepended to the received
                 // suffix, is the next frequent itemset.
                 // Additionally, this new frequent itemset will become the
                 // next recursion's suffix.
-                Item suffixItem(suffixItemID, suffixItemSupport);
+                FrequentItemset frequentItemset(prefixItemID, prefixItemSupport, suffix);
 #ifdef DEBUG
-                suffixItem.IDNameHash = &this->itemIDNameHash;
+                frequentItemset.IDNameHash = &this->itemIDNameHash;
 #endif
-                ItemList frequentItemset;
-                frequentItemset.append(suffixItem);
-                frequentItemset.append(suffix);
 
                 // Only store the current frequent itemset if it matches the
                 // constraints.
-                if (this->constraints.matchItemset(frequentItemset)) {
+                if (this->constraints.matchItemset(frequentItemset.itemset)) {
                     frequentItemsets.append(frequentItemset);
 #ifdef FPGROWTH_DEBUG
                 qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
 #endif
                 }
 
-                // Calculate the prefix paths for the current suffix item.
-                prefixPaths = ctree->calculatePrefixPaths(suffixItemID);
+                // Calculate the prefix paths for the current prefix item.
+                prefixPaths = ctree->calculatePrefixPaths(prefixItemID);
 
                 // Remove items from the prefix paths based that no longer
                 // have sufficient support.
                 prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
 
-                // If the conditional FP-tree won't contain the required items,
-                // then just don't bother generating it.
+                // If the conditional FP-tree would not be able to match the
+                // constraints (which we can now by looking at the current
+                // frequent itemset and the prefix paths support counts), then
+                // just don't bother generating it.
                 // This is effectively pruning the search space for frequent
                 // itemsets.
                 QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
-                if (!this->constraints.matchSearchSpace(frequentItemset, prefixPathsSupportCounts))
+                if (!this->constraints.matchSearchSpace(frequentItemset.itemset, prefixPathsSupportCounts))
                     continue;
 
                 // If no prefix paths remain after filtering, we won't be able

@@ -66,14 +66,52 @@ namespace Analytics {
     typedef QList<Item> ItemList;
     typedef QList<SupportCount> ItemCountList;
     typedef QList<Item> Transaction;
+    struct FrequentItemset {
+        FrequentItemset() : support(0) {}
+        FrequentItemset(ItemIDList itemset, SupportCount support)
+            : itemset(itemset), support(support) {}
+        FrequentItemset(ItemList itemset) {
+            SupportCount minSupport = MAX_SUPPORT;
+            foreach (Item item, itemset) {
+                this->itemset.append(item.id);
+                minSupport = (item.supportCount < minSupport) ? item.supportCount : minSupport;
+            }
+            this->support = minSupport;
+        }
+        // This constructor can be used while generating new candidate
+        // frequent itemsets.
+        FrequentItemset(ItemID itemID, SupportCount itemIDSupport, const FrequentItemset & suffix) {
+            this->itemset.append(itemID);
+            this->itemset.append(suffix.itemset);
+            this->support = (itemIDSupport < suffix.support || suffix.itemset.isEmpty()) ? itemIDSupport : suffix.support;
+        }
+
+        ItemIDList itemset;
+        SupportCount support;
+
+#ifdef DEBUG
+        ItemIDNameHash * IDNameHash;
+#endif
+    };
+    inline bool operator==(const FrequentItemset & fis1, const FrequentItemset & fis2) {
+        // Important! We don't require a match on the supportCount attribute!
+        return fis1.support == fis2.support && fis1.itemset == fis2.itemset;
+    }
+    inline bool operator!=(const FrequentItemset & fis1, const FrequentItemset & fis2) {
+        return !(fis1 == fis2);
+    }
     struct AssociationRule {
         AssociationRule() {}
-        AssociationRule(ItemList antecedent, ItemList consequent, float confidence)
+        AssociationRule(ItemIDList antecedent, ItemIDList consequent, float confidence)
             : antecedent(antecedent), consequent(consequent), confidence(confidence) {}
 
-        ItemList antecedent;
-        ItemList consequent;
+        ItemIDList antecedent;
+        ItemIDList consequent;
         float confidence;
+
+#ifdef DEBUG
+        ItemIDNameHash * IDNameHash;
+#endif
     };
 
 
@@ -82,7 +120,9 @@ namespace Analytics {
     QDebug operator<<(QDebug dbg, const Item & item);
     QDebug operator<<(QDebug dbg, const ItemIDList & pattern);
     QDebug operator<<(QDebug dbg, const Transaction & transaction);
+    QDebug operator<<(QDebug dbg, const FrequentItemset & frequentItemset);
     QDebug operator<<(QDebug dbg, const AssociationRule & associationRule);
+    QDebug itemIDHelper(QDebug dbg, const ItemIDList & itemset, ItemIDNameHash const * const IDNameHash);
 #endif
 
 }

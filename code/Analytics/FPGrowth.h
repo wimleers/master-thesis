@@ -32,12 +32,12 @@ namespace Analytics {
         void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
         const Constraints & getPreprocessedConstraints() const { return this->constraintsToPreprocess; }
 
-        QList<ItemList> mineFrequentItemsets();
+        QList<FrequentItemset> mineFrequentItemsets();
 
         // Ability to calculate support for any itemset; necessary to
         // calculate confidence for candidate association rules.
-        SupportCount calculateSupportCountUpperBound(const ItemList & itemset) const;
-        SupportCount calculateSupportCountExactly(const ItemList & itemset) const;
+        SupportCount calculateSupportCountUpperBound(const ItemIDList & itemset) const;
+        SupportCount calculateSupportCountExactly(const ItemIDList & itemset) const;
 
         ItemID getItemID(ItemName name) const { return this->itemNameIDHash[name]; }
 #ifdef DEBUG
@@ -56,7 +56,8 @@ namespace Analytics {
         void scanTransactions();
         void buildFPTree();
         Transaction optimizeTransaction(const Transaction & transaction) const;
-        QList<ItemList> generateFrequentItemsets(const FPTree * tree, const ItemList & suffix = ItemList());
+        ItemIDList optimizeItemset(const ItemIDList & itemset) const;
+        QList<FrequentItemset> generateFrequentItemsets(const FPTree * tree, const FrequentItemset & suffix = FrequentItemset());
 
         // Properties.
         FPTree * tree;

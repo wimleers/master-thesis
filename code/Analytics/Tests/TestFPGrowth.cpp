@@ -15,7 +15,7 @@ void TestFPGrowth::basic() {
 
     FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
-    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -30,13 +30,18 @@ void TestFPGrowth::basic() {
     // * items qualifying: A, B, C, D
     // * frequent itemsets: {{A}, {B}, {C}, {D}, {C, B}, {C, A}}
 
+    // Helpful for debugging/expanding this test.
+    // Currently, this should match:
+    // (({C(2)}, sup: 8), ({A(0)}, sup: 6), ({C(2), A(0)}, sup: 4), ({B(1)}, sup: 5), ({C(2), B(1)}, sup: 4), ({D(3)}, sup: 4))
+    //qDebug() << frequentItemsets;
+
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(2))
-                                                 << (ItemList() << Item(0))
-                                                 << (ItemList() << Item(2) << Item(0))
-                                                 << (ItemList() << Item(1))
-                                                 << (ItemList() << Item(2) << Item(1))
-                                                 << (ItemList() << Item(3))
+    QCOMPARE(frequentItemsets, QList<FrequentItemset>() << FrequentItemset(ItemIDList() << 2     , 8)
+                                                        << FrequentItemset(ItemIDList() << 0     , 6)
+                                                        << FrequentItemset(ItemIDList() << 2 << 0, 4)
+                                                        << FrequentItemset(ItemIDList() << 1     , 5)
+                                                        << FrequentItemset(ItemIDList() << 2 << 1, 4)
+                                                        << FrequentItemset(ItemIDList() << 3     , 4)
     );
 
     delete fpgrowth;
@@ -61,7 +66,7 @@ void TestFPGrowth::withConstraints() {
     FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     fpgrowth->setConstraints(constraints);
-    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     // Characteristics about the transactions above, and the found results
     // (*after* applying filtering):
@@ -77,9 +82,14 @@ void TestFPGrowth::withConstraints() {
     // * items qualifying: A, C
     // * frequent itemsets: {{A}, {A, C}}
 
+    // Helpful for debugging/expanding this test.
+    // Currently, this should match:
+    // (({A(0)}, sup: 6), ({C(2), A(0)}, sup: 4))
+    //qDebug() << frequentItemsets;
+
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<ItemList>() << (ItemList() << Item(0))
-                                                 << (ItemList() << Item(2) << Item(0))
+    QCOMPARE(frequentItemsets, QList<FrequentItemset>() << FrequentItemset(ItemIDList() << 0     , 6)
+                                                        << FrequentItemset(ItemIDList() << 2 << 0, 4)
     );
 
     delete fpgrowth;

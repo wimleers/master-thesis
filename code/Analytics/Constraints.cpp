@@ -104,7 +104,7 @@ namespace Analytics {
      * @return
      *   True if the itemset matches the constraints, false otherwise.
      */
-    bool Constraints::matchItemset(const ItemList & itemset) const {
+    bool Constraints::matchItemset(const ItemIDList & itemset) const {
         for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
             ItemConstraintType type = (ItemConstraintType) i;
             foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
@@ -130,7 +130,7 @@ namespace Analytics {
      * @return
      *   True if the itemset matches the constraints, false otherwise.
      */
-    bool Constraints::matchSearchSpace(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const {
+    bool Constraints::matchSearchSpace(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const {
         for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
             ItemConstraintType type = (ItemConstraintType) i;
             foreach (ItemName category, this->preprocessedItemConstraints[type].keys()) {
@@ -149,7 +149,7 @@ namespace Analytics {
     /**
      * Helper function for Constraints::matchItemSet().
      */
-    bool Constraints::matchItemsetHelper(const ItemList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
+    bool Constraints::matchItemsetHelper(const ItemIDList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
         foreach (ItemID id, constraintItems) {
             switch (type) {
             case CONSTRAINT_POSITIVE_MATCH_ALL:
@@ -197,7 +197,7 @@ namespace Analytics {
     /**
      * Helper function for Constraints::matchSearchSpace().
      */
-    bool Constraints::matchSearchSpaceHelper(const ItemList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
+    bool Constraints::matchSearchSpaceHelper(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts, ItemConstraintType type, const QSet<ItemID> & constraintItems) {
         foreach (ItemID id, constraintItems) {
             switch (type) {
             case CONSTRAINT_POSITIVE_MATCH_ALL:

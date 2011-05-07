@@ -8,23 +8,21 @@ namespace Analytics {
     /**
      * An exact implementation of algorithm 6.2 on page 351 in the textbook.
      */
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<ItemList> frequentItemsets, float minimumConfidence, const Constraints &  ruleConsequentConstraints, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints &  ruleConsequentConstraints, const FPGrowth * fpgrowth) {
         QList<AssociationRule> associationRules;
-        QList<ItemList> consequents;
+        QList<ItemIDList> consequents;
         bool hasConstraints = !ruleConsequentConstraints.empty();
 
-        QList<SupportCount> frequentItemsetsSupportCounts = RuleMiner::calculateSupportCountsForFrequentItemsets(frequentItemsets);
-
         // Iterate over all frequent itemsets.
-        foreach (ItemList frequentItemset, frequentItemsets) {
+        foreach (FrequentItemset frequentItemset, frequentItemsets) {
             // It's only possible to generate an association rule if there are at
             // least two items in the frequent itemset.
-            if (frequentItemset.size() >= 2) {
+            if (frequentItemset.itemset.size() >= 2) {
                 // Generate all 1-item consequents.
                 consequents.clear();
-                foreach (Item item, frequentItemset) {
-                    ItemList consequent;
-                    consequent.append(item);
+                foreach (ItemID itemID, frequentItemset.itemset) {
+                    ItemIDList consequent;
+                    consequent.append(itemID);
 
                     // Store this consequent whenever no constraints are
                     // defined, or when constraints are defined and the
@@ -39,7 +37,7 @@ namespace Analytics {
 
                 // Attempt to generate association rules for this frequent
                 // itemset and store the results.
-                associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, consequents, frequentItemsets, frequentItemsetsSupportCounts, minimumConfidence, fpgrowth));
+                associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, consequents, minimumConfidence, fpgrowth));
             }
         }
         return associationRules;
@@ -50,85 +48,56 @@ namespace Analytics {
     // Protected static methods.
 
     /**
-     * Runs RuleMiner::calculateSupportForFrequentItemset() on a list of
-     * frequent itemsets.
-     *
-     * @see RuleMiner::calculateSupportForFrequentItemset()
-     */
-    QList<SupportCount> RuleMiner::calculateSupportCountsForFrequentItemsets(QList<ItemList> frequentItemsets) {
-        QList<SupportCount> supportCounts;
-        foreach (ItemList frequentItemset, frequentItemsets)
-            supportCounts.append(RuleMiner::calculateSupportCountForFrequentItemset(frequentItemset));
-        return supportCounts;
-    }
-
-    /**
-     * Given a frequent itemset, calculate its support count.
-     * Do this by finding the minimum support count of all items in the
-     * frequent itemset.
-     */
-    SupportCount RuleMiner::calculateSupportCountForFrequentItemset(ItemList frequentItemset) {
-        SupportCount supportCount = MAX_SUPPORT;
-        foreach (Item item, frequentItemset)
-            if (item.supportCount < supportCount)
-                supportCount = item.supportCount;
-        return supportCount;
-    }
-
-    /**
      * A.k.a. "ap-genrules", but slightly different to fix a bug in that
      * algorithm: it accepts consequents of size 1, but doesn't generate
      * antecedents for these, instead it immediately generates consequents of
      * size 2. Algorithm 6.3 on page 352 in the textbook.
      * This variation of that algorithm fixes that.
      */
-    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(ItemList frequentItemset, QList<ItemList> consequents, QList<ItemList> frequentItemsets, QList<SupportCount> frequentItemsetsSupportCounts, float minimumConfidence, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const FPGrowth * fpgrowth) {
         Q_ASSERT_X(consequents.size() > 0, "RuleMiner::generateAssociationRulesForFrequentItemset", "List of consequents may not be empty.");
 
         QList<AssociationRule> associationRules;
-        SupportCount frequentItemsetSupportCount, antecedentSupportCount;
-        ItemList antecedent;
+        SupportCount antecedentSupportCount;
+        ItemIDList antecedent;
         float confidence;
-        unsigned int k = frequentItemset.size(); // Size of the frequent itemset.
+        unsigned int k = frequentItemset.itemset.size(); // Size of the frequent itemset.
         unsigned int m = consequents[0].size(); // Size of a single consequent.
 
         // Iterate over all given consequents.
-        foreach (ItemList consequent, consequents) {
-            // Get the antecedent for the current consequent, so we effectively
-            // get a candidate rule.
-            antecedent = RuleMiner::getAntecedent(frequentItemset, consequent);
+        foreach (ItemIDList consequent, consequents) {
+            // Get the antecedent for the current consequent, so we
+            // effectively get a candidate association rule.
+            antecedent = RuleMiner::getAntecedent(frequentItemset.itemset, consequent);
 
-            // Calculate the confidence of this rule.
-            frequentItemsetSupportCount = RuleMiner::calculateSupportCountForFrequentItemset(frequentItemset);
-            // Take advantage of precalculated frequent itemset support counts
-            // when they are available, and calculate the support count for
-            // the antecedent on-the-fly otherwise.
-//            antecedentSupportCount = (frequentItemsetsSupportCounts.size() > 0 && frequentItemsets.contains(antecedent)) ? frequentItemsetsSupportCounts[frequentItemsets.indexOf(antecedent)] : RuleMiner::calculateSupportCountForFrequentItemset(antecedent);
-
-            // First calculate it with the upper bound (which is cheap to calculate).
+            // First calculate the confidence of this association rule with
+            // the upper bound (which is cheap to calculate).
             // If the minimum confidence threshold is then not yet being met,
             // then there is no need to calculate the exact confidence, which
             // can only be lower and will thus most definitely result in not
             // accepting this association rule.
             antecedentSupportCount = fpgrowth->calculateSupportCountUpperBound(antecedent);
-            confidence = 1.0 * frequentItemsetSupportCount / antecedentSupportCount;
+            confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
 
-            // If the upper bound confidence is already insufficient, then give up
-            // this possible frequent itemset.
-            // When it is sufficient, calculate the exact confidence and check if that is
-            // sufficient, too.
+            // If the upper bound confidence is already insufficient, then
+            // give up this candidate association rule
+            // When it is sufficient, calculate the exact confidence and check
+            // if it is sufficient as well.
             if (confidence >= minimumConfidence) {
                 antecedentSupportCount = fpgrowth->calculateSupportCountExactly(antecedent);
-                confidence = 1.0 * frequentItemsetSupportCount / antecedentSupportCount;
+                confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
             }
 
             // If the confidence is sufficiently high, we've found an
             // association rule that meets our requirements.
 #ifdef RULEMINER_DEBUG
-            qDebug () << "confidence" << confidence << ", frequent itemset support" << frequentItemsetSupportCount << ", antecedent support" << antecedentSupportCount << ", antecedent" << antecedent << ", consequent" << consequent;
+            qDebug () << "confidence" << confidence << ", frequent itemset support" << frequentItemset.support << ", antecedent support" << antecedentSupportCount << ", antecedent" << antecedent << ", consequent" << consequent;
 #endif
             if (confidence >= minimumConfidence) {
                 AssociationRule rule(antecedent, consequent, confidence);
+#ifdef DEBUG
+                rule.IDNameHash = frequentItemset.IDNameHash;
+#endif
                 associationRules.append(rule);
             }
             // If the confidence is not sufficiently high, delete this
@@ -144,8 +113,8 @@ namespace Analytics {
         // still alows them to be expanded, expand the consequents and attempt
         // to generate more association rules with them.
         if (consequents.size() >= 2 && k > m + 1) {
-            QList<ItemList> candidateConsequents = RuleMiner::generateCandidateItemsets(consequents);
-            associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, candidateConsequents, frequentItemsets, frequentItemsetsSupportCounts, minimumConfidence, fpgrowth));
+            QList<ItemIDList> candidateConsequents = RuleMiner::generateCandidateItemsets(consequents);
+            associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, candidateConsequents, minimumConfidence, fpgrowth));
         }
 
         return associationRules;
@@ -156,11 +125,11 @@ namespace Analytics {
      * Build the antecedent for this candidate consequent, which are all items
      * in the frequent itemset except for those in the candidate consequent.
      */
-    ItemList RuleMiner::getAntecedent(ItemList frequentItemset, ItemList consequent) {
-        ItemList antecedent;
-        foreach (Item item, frequentItemset)
-            if (!consequent.contains(item))
-                antecedent.append(item);
+    ItemIDList RuleMiner::getAntecedent(const ItemIDList & frequentItemset, const ItemIDList & consequent) {
+        ItemIDList antecedent;
+        foreach (ItemID itemID, frequentItemset)
+            if (!consequent.contains(itemID))
+                antecedent.append(itemID);
         return antecedent;
     }
 
@@ -170,12 +139,12 @@ namespace Analytics {
      * algorithm. We solely need this function for association rule mining,
      * not for frequent itemset generation.
      */
-    QList<ItemList> RuleMiner::generateCandidateItemsets(QList<ItemList> frequentItemsubsets) {
+    QList<ItemIDList> RuleMiner::generateCandidateItemsets(const QList<ItemIDList> & frequentItemsubsets) {
         // Phase 1: candidate generation.
-        QList<ItemList> candidateItemsets;
+        QList<ItemIDList> candidateItemsets;
         int allButOne = frequentItemsubsets[0].size() - 1;
-        foreach (ItemList frequentItemsubset, frequentItemsubsets) {
-            foreach (ItemList otherFrequentItemsubset, frequentItemsubsets) {
+        foreach (ItemIDList frequentItemsubset, frequentItemsubsets) {
+            foreach (ItemIDList otherFrequentItemsubset, frequentItemsubsets) {
                 if (allButOne == 0) {
                     if (frequentItemsubset[0] == otherFrequentItemsubset[0]) {
                         break;
@@ -196,7 +165,7 @@ namespace Analytics {
                 //   frequent itemsubset (outer)
                 // - last (k == allButOne + 1) item is copied from the second
                 //   frequent itemsubset (inner)
-                ItemList candidateItemset;
+                ItemIDList candidateItemset;
                 candidateItemset.append(frequentItemsubset);
                 candidateItemset.append(otherFrequentItemsubset[allButOne]);
                 // Store this candidate set.

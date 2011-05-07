@@ -17,14 +17,19 @@ void TestRuleMiner::basic() {
 
     FPNode<SupportCount>::resetLastNodeID();
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
-    QList<ItemList> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
 
     QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, constraints, fpgrowth);
 
+    // Helpful for debugging/expanding this test.
+    // Currently, this should match:
+    // ({B(1)} => {C(2)} (conf=0.8))
+    //qDebug() << associationRules;
+
     // Verify the results.
     QCOMPARE(associationRules.size(), 1);
-    QCOMPARE(associationRules[0].antecedent, (ItemList() << Item(1)));
-    QCOMPARE(associationRules[0].consequent, (ItemList() << Item(2)));
+    QCOMPARE(associationRules[0].antecedent, (ItemIDList() << 1));
+    QCOMPARE(associationRules[0].consequent, (ItemIDList() << 2));
     QCOMPARE(associationRules[0].confidence, (float) 0.8);
 
     delete fpgrowth;

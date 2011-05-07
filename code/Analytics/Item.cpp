@@ -47,25 +47,44 @@ namespace Analytics {
         return dbg.nospace();
     }
 
+    QDebug operator<<(QDebug dbg, const FrequentItemset & frequentItemset) {
+        QString itemOutput;
+
+        dbg.nospace() << "({";
+        itemIDHelper(dbg, frequentItemset.itemset, frequentItemset.IDNameHash);
+        dbg.nospace() << "}, sup: "
+                      << frequentItemset.support
+                      << ")";
+
+        return dbg.nospace();
+    }
+
     QDebug operator<<(QDebug dbg, const AssociationRule & associationRule) {
         dbg.nospace() << "{";
-        for (int i = 0; i < associationRule.antecedent.size(); i++) {
-            if (i > 0)
-                dbg.nospace() << ", ";
-            dbg.nospace() << associationRule.antecedent[i];
-        }
+        itemIDHelper(dbg, associationRule.antecedent, associationRule.IDNameHash);
         dbg.nospace() << "} => {";
-        for (int i = 0; i < associationRule.consequent.size(); i++) {
-            if (i > 0)
-                dbg.nospace() << ", ";
-            dbg.nospace() << associationRule.consequent[i];
-        }
+        itemIDHelper(dbg, associationRule.consequent, associationRule.IDNameHash);
         dbg.nospace() << "}";
 
         dbg.nospace() << " (conf=" << associationRule.confidence << ")";
 
         return dbg.nospace();
     }
+
+    QDebug itemIDHelper(QDebug dbg, const ItemIDList & itemset, ItemIDNameHash const * const IDNameHash) {
+        for (int i = 0; i < itemset.size(); i++) {
+            if (i > 0)
+                dbg.nospace() << ", ";
+
+            dbg.nospace() << IDNameHash->value(itemset[i]).toStdString().c_str()
+                            << "("
+                            << itemset[i]
+                            << ")";
+        }
+
+        return dbg.nospace();
+    }
+
 #endif
 
 }
