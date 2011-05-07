@@ -17,21 +17,17 @@ namespace Analytics {
         return this->root->findNodeByPattern(pattern);
     }
 
-    void PatternTree::addPattern(const ItemIDList & pattern, SupportCount support) {
+    void PatternTree::addPattern(const FrequentItemset & pattern) {
         // The initial current node is the root node.
         FPNode<TiltedTimeWindow> * currentNode = root;
         FPNode<TiltedTimeWindow> * nextNode;
 
-        foreach (ItemID itemID, pattern) {
-            if (currentNode->hasChild(itemID)) {
-                // There is already a node in the tree for the current
-                // transaction item, so reuse it: increase its support count.
+        foreach (ItemID itemID, pattern.itemset) {
+            if (currentNode->hasChild(itemID))
                 nextNode = currentNode->getChild(itemID);
-                nextNode->addSupportCount(support);
-            }
             else {
                 // Create a new node and add it as a child of the current node.
-                nextNode = new FPNode<TiltedTimeWindow>(itemID, support);
+                nextNode = new FPNode<TiltedTimeWindow>(itemID);
                 nextNode->setParent(currentNode);
             }
 
@@ -40,6 +36,8 @@ namespace Analytics {
             currentNode = nextNode;
             nextNode = NULL;
         }
+
+        currentNode->addSupportCount(pattern.support);
     }
 
     ItemIDList PatternTree::getPatternForNode(FPNode<TiltedTimeWindow> const * const node) {

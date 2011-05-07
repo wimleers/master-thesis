@@ -22,6 +22,14 @@ namespace Analytics {
             this->nodeID = FPNode<T>::nextNodeID();
 #endif
         }
+        FPNode(ItemID itemID) {
+            this->itemID = itemID;
+            this->parent = NULL;
+
+#ifdef DEBUG
+            this->nodeID = FPNode<T>::nextNodeID();
+#endif
+        }
         ~FPNode() {
             // Delete all child nodes.
             foreach (FPNode<T> * child, this->children)

@@ -20,7 +20,7 @@ namespace Analytics {
         TiltedTimeWindow const * getPatternSupport(const ItemIDList & pattern) const;
 
         // Modifiers.
-        void addPattern(const ItemIDList & pattern, SupportCount support);
+        void addPattern(const FrequentItemset & pattern);
 
         // Static (class) methods.
         static ItemIDList getPatternForNode(FPNode<TiltedTimeWindow> const * const node);
