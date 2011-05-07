@@ -1,4 +1,4 @@
-#LyX 1.6.7 created this file. For more info see http://www.lyx.org/
+#LyX 1.6.9 created this file. For more info see http://www.lyx.org/
 \lyxformat 345
 \begin_document
 \begin_header
@@ -26218,7 +26218,29 @@ Going from FP-Growth to FP-Stream
 \end_layout
 
 \begin_layout Itemize
-Not yet implemented.
+TiltedTimeWindow: its core is relatively easy to implement, but the tail
+ pruning is very hard.
+ The FP-Stream paper only deals with some details of the logarithmic window
+ approach, and none of the details of the natural window approach.
+\begin_inset Newline newline
+\end_inset
+
+A.o., it assumes that each bucket of transactions to process is of equal size,
+ which is only true if an equal amount of data is generated for each period.
+ Clearly, this is not true in the case of web visits and thus web logs.
+ This assumption is wrong, even for logarithmic window sizes.
+ Are there no problems when one window in the tilted-time window model contains
+ 100,000 transactions and another only 100?
+\begin_inset Newline newline
+\end_inset
+
+But what's worse, is that there is zero explanation at all about how to
+ deal with information that is correlated to time.
+ I.e.
+ instead of just blindly processing the data, we want each window in a natural
+ tilted-time window model to correspond to events that actually occurred
+ during that period of time.
+ How does tail pruning affect this?
 \end_layout
 
 \begin_layout Standard

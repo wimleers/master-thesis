@@ -45,7 +45,7 @@ namespace Analytics {
 #endif
 
         // Unit testing helper method.
-        const QVector<SupportCount> & getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
+        QVector<SupportCount> getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
 
         // Static properties
         static  int GranularityBucketCount[TTW_NUM_GRANULARITIES];
