@@ -52,14 +52,14 @@ namespace Analytics {
         QHash<ItemID, FPNode<T> *> getChildren() const { return this->children; }
         bool hasChild(ItemID itemID) const { return this->children.contains(itemID); }
         unsigned int numChildren() const { return this->children.size(); }
-        T const * findNodeByPattern(const ItemIDList & pattern) const {
+        T * findNodeByPattern(const ItemIDList & pattern) const {
             // This method only works from the root node.
             if (this->itemID != ROOT_ITEMID) {
                 qWarning("FPNode<T>::getPath() was called from a node other than the root node.");
                 return NULL;
             }
 
-            FPNode<T> const * node = this;
+            FPNode<T> * node = const_cast<FPNode<T> *>(this);
             foreach (ItemID itemID, pattern) {
                 if (node->hasChild(itemID))
                     node = node->getChild(itemID);

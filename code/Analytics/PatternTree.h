@@ -17,7 +17,7 @@ namespace Analytics {
 
         // Accessors.
         FPNode<TiltedTimeWindow> * getRoot() const { return this->root; }
-        TiltedTimeWindow const * getPatternSupport(const ItemIDList & pattern) const;
+        TiltedTimeWindow * getPatternSupport(const ItemIDList & pattern) const;
 
         // Modifiers.
         void addPattern(const FrequentItemset & pattern);

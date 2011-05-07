@@ -13,7 +13,7 @@ namespace Analytics {
         delete root;
     }
 
-    TiltedTimeWindow const * PatternTree::getPatternSupport(const ItemIDList & pattern) const {
+    TiltedTimeWindow * PatternTree::getPatternSupport(const ItemIDList & pattern) const {
         return this->root->findNodeByPattern(pattern);
     }
 
