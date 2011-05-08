@@ -6,7 +6,7 @@ namespace Analytics {
     // Public methods.
 
     PatternTree::PatternTree() {
-        root = new FPNode<TiltedTimeWindow>(ROOT_ITEMID, 0);
+        root = new FPNode<TiltedTimeWindow>(ROOT_ITEMID);
     }
 
     PatternTree::~PatternTree() {
@@ -17,7 +17,7 @@ namespace Analytics {
         return this->root->findNodeByPattern(pattern);
     }
 
-    void PatternTree::addPattern(const FrequentItemset & pattern) {
+    void PatternTree::addPattern(const FrequentItemset & pattern, uint32_t updateID) {
         // The initial current node is the root node.
         FPNode<TiltedTimeWindow> * currentNode = root;
         FPNode<TiltedTimeWindow> * nextNode;
@@ -37,7 +37,8 @@ namespace Analytics {
             nextNode = NULL;
         }
 
-        currentNode->addSupportCount(pattern.support);
+        TiltedTimeWindow * ttw = currentNode->getPointerToValue();
+        ttw->appendQuarter(pattern.support, updateID);
     }
 
     ItemIDList PatternTree::getPatternForNode(FPNode<TiltedTimeWindow> const * const node) {

@@ -12,13 +12,15 @@ namespace Analytics {
 
     TiltedTimeWindow::TiltedTimeWindow() {
         this->oldestBucketFilled = -1;
+        this->lastUpdate = 0;
         for (int b = 0; b < TTW_NUM_BUCKETS; b++)
             this->buckets[b] = -1;
         for (int g = 0; g < TTW_NUM_GRANULARITIES; g++)
             this->capacityUsed[g] = 0;
     }
 
-    void TiltedTimeWindow::appendQuarter(SupportCount supportCount) {
+    void TiltedTimeWindow::appendQuarter(SupportCount supportCount, uint32_t updateID) {
+        this->lastUpdate = updateID;
         store(GRANULARITY_QUARTER, supportCount);
     }
 
@@ -170,7 +172,6 @@ namespace Analytics {
 
         return dbg.nospace();
     }
-
 
 #endif
 }

@@ -1,6 +1,7 @@
 #ifndef PATTERNTREE_H
 #define PATTERNTREE_H
 
+#include <stdint.h>
 #include <QDebug>
 #include <QMetaType>
 
@@ -20,7 +21,7 @@ namespace Analytics {
         TiltedTimeWindow * getPatternSupport(const ItemIDList & pattern) const;
 
         // Modifiers.
-        void addPattern(const FrequentItemset & pattern);
+        void addPattern(const FrequentItemset & pattern, uint32_t updateID);
 
         // Static (class) methods.
         static ItemIDList getPatternForNode(FPNode<TiltedTimeWindow> const * const node);

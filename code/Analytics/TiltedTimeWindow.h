@@ -25,22 +25,12 @@ namespace Analytics {
     class TiltedTimeWindow {
     public:
         TiltedTimeWindow();
-        void appendQuarter(SupportCount s);
+        void appendQuarter(SupportCount s, uint32_t updateID);
         bool isEmpty() const { return this->oldestBucketFilled == -1; }
+        uint32_t getLastUpdate() const { return this->lastUpdate; }
         void dropTail(int start);
-
-        // Operator overloads (must be defined in the header file).
-        // These allow for elegant reuse of the FPNode template class.
-        inline TiltedTimeWindow & operator+=(SupportCount support) {
-            this->appendQuarter(support);
-            return *this;
-        }
-        inline TiltedTimeWindow & operator=(SupportCount support) {
-            this->appendQuarter(support);
-            return *this;
-        }
-
         int getOldestBucketFilled() const { return this->oldestBucketFilled; }
+
 #ifdef DEBUG
         // Debug output helper method.
         int getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
@@ -66,9 +56,7 @@ namespace Analytics {
 
         // Properties.
         int capacityUsed[TTW_NUM_GRANULARITIES];
-
-        // TODO: support starting at another time of the day than 00:00
-//        QDateTime startTime;
+        uint32_t lastUpdate;
     };
 
 #ifdef DEBUG
