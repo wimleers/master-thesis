@@ -131,6 +131,10 @@ namespace Analytics {
             currentNode = nextNode;
             nextNode = NULL;
         }
+
+#ifdef DEBUG
+        currentNode->itemIDNameHash = transaction.first().IDNameHash;
+#endif
     }
 
 

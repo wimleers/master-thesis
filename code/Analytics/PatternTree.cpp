@@ -39,6 +39,10 @@ namespace Analytics {
             nextNode = NULL;
         }
 
+#ifdef DEBUG
+        currentNode->itemIDNameHash = pattern.IDNameHash;
+#endif
+
         TiltedTimeWindow * ttw = currentNode->getPointerToValue();
         ttw->appendQuarter(pattern.support, updateID);
     }
@@ -107,7 +111,9 @@ namespace Analytics {
             ItemIDList pattern = PatternTree::getPatternForNode(&node);
             nodeID.sprintf("0x%04d", node.getNodeID());
 
-            dbg.nospace() << "(" << pattern << ", " << node.getValue() << ") (" << nodeID.toStdString().c_str() <<  ")";
+            dbg.nospace() << "({";
+            itemIDHelper(dbg, pattern, node.itemIDNameHash);
+            dbg.nospace() << "}, " << node.getValue() << ") (" << nodeID.toStdString().c_str() <<  ")";
         }
 
         return dbg.nospace();
