@@ -6,16 +6,7 @@ namespace Analytics {
     // Public methods.
 
     FPTree::FPTree() {
-        this->init();
-    }
-
-    // Alternative constructor
-    FPTree::FPTree(const QList<ItemList> & prefixPaths) {
-        this->init();
-
-        // Now insert all the prefix paths as transactions.
-        foreach (ItemList prefixPath, prefixPaths)
-            this->addTransaction(prefixPath);
+        root = new FPNode<SupportCount>(ROOT_ITEMID, 0);
     }
 
     FPTree::~FPTree() {
@@ -126,24 +117,26 @@ namespace Analytics {
                 this->addNodeToItemPath(nextNode);
             }
 
+#ifdef DEBUG
+            nextNode->itemIDNameHash = this->itemIDNameHash;
+#endif
+
             // We've processed this item in the transaction, time to move on
             // to the next!
             currentNode = nextNode;
             nextNode = NULL;
         }
+    }
 
-#ifdef DEBUG
-        currentNode->itemIDNameHash = transaction.first().IDNameHash;
-#endif
+    void FPTree::buildTreeFromPrefixPaths(const QList<ItemList> & prefixPaths) {
+        // Now insert all the prefix paths as transactions.
+        foreach (ItemList prefixPath, prefixPaths)
+            this->addTransaction(prefixPath);
     }
 
 
     //------------------------------------------------------------------------
     // Protected methods.
-
-    void FPTree::init() {
-        root = new FPNode<SupportCount>(ROOT_ITEMID, 0);
-    }
 
     void FPTree::addNodeToItemPath(FPNode<SupportCount> * node) {
         QList<FPNode<SupportCount> *> itemPath;
@@ -164,7 +157,7 @@ namespace Analytics {
     // Other.
 
 #ifdef DEBUG
-    QDebug operator<<(QDebug dbg, const FPTree &tree) {
+    QDebug operator<<(QDebug dbg, const FPTree & tree) {
         // Tree.
         dbg.nospace() << "TREE" << endl;
         dbg.nospace() << dumpHelper(*(tree.getRoot())).toStdString().c_str();
@@ -173,15 +166,10 @@ namespace Analytics {
         // Item paths.
         dbg.nospace() << "ITEM PATHS (size indicates the number of branches this item occurs in)" << endl;
         QList<FPNode<SupportCount> *> itemPath;
-        Item item;
         foreach (ItemID itemID, tree.getItemIDs()) {
-            item.id = itemID;
-
             itemPath = tree.getItemPath(itemID);
-            item.supportCount = itemPath[0]->getValue();
-
             dbg.nospace() << " - item path for "
-                    << item.IDNameHash->value(itemPath[0]->getItemID()).toStdString().c_str()
+                    << tree.itemIDNameHash->value(itemID).toStdString().c_str()
                     << ": " << itemPath << endl;
         }
 
@@ -214,15 +202,12 @@ namespace Analytics {
         if (node.getItemID() == ROOT_ITEMID)
             dbg.nospace() << "(NULL)";
         else {
-            QString itemOutput, nodeID;
-
-            itemOutput.clear();
-            Item item(node.getItemID(), node.getValue());
-            QDebug(&itemOutput) << item;
+            QString nodeID;
+            Item item(node.getItemID(), node.getValue(), node.itemIDNameHash);
 
             nodeID.sprintf("0x%04d", node.getNodeID());
 
-            dbg.nospace() << itemOutput.toStdString().c_str() << " (" << nodeID.toStdString().c_str() <<  ")";
+            dbg.nospace() << item << " (" << nodeID.toStdString().c_str() <<  ")";
         }
 
         return dbg.nospace();

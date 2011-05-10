@@ -7,6 +7,7 @@ void TestFPTree::basic() {
     // Build ItemIDNameHash;
     ItemIDNameHash itemIDNameHash;
     ItemIDNameHash * hash = &itemIDNameHash;
+    tree->itemIDNameHash = hash;
     itemIDNameHash.insert(1, "A");
     itemIDNameHash.insert(2, "B");
     itemIDNameHash.insert(3, "C");
@@ -15,10 +16,10 @@ void TestFPTree::basic() {
     // Create a few transactions.
     Transaction t1, t2, t3, t4;
 
-    t1 << Item(1, hash) << Item(2, hash);
-    t2 << Item(2, hash) << Item(3, hash);
-    t3 << Item(1, hash) << Item(2, hash) << Item(3, hash);
-    t4 << Item(1, hash) << Item(4, hash);
+    t1 << Item(1) << Item(2);
+    t2 << Item(2) << Item(3);
+    t3 << Item(1) << Item(2) << Item(3);
+    t4 << Item(1) << Item(4);
 
     tree->addTransaction(t1);
     tree->addTransaction(t2);

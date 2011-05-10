@@ -16,8 +16,10 @@ void TestRuleMiner::basic() {
     Constraints constraints;
 
     FPNode<SupportCount>::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    ItemIDNameHash itemIDNameHash;
+    ItemNameIDHash itemNameIDHash;
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
 
     QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, constraints, fpgrowth);
 

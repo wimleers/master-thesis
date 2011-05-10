@@ -2,12 +2,18 @@
 
 namespace Analytics {
 
-    FPGrowth::FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute) {
+    FPGrowth::FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash) {
+        this->itemIDNameHash = itemIDNameHash;
+        this->itemNameIDHash = itemNameIDHash;
+
         this->transactions = transactions;
 
         this->minSupportAbsolute = minSupportAbsolute;
 
         this->tree = new FPTree();
+#ifdef DEBUG
+        this->tree->itemIDNameHash = this->itemIDNameHash;
+#endif
     }
 
     FPGrowth::~FPGrowth() {
@@ -111,7 +117,11 @@ namespace Analytics {
                 // Note that it is impossible to end with zero prefix paths
                 // after filtering, since the itemset that is passed to this
                 // function consists of frequent items.
-                cfptree = new FPTree(prefixPaths);
+                cfptree = new FPTree();
+#ifdef DEBUG
+                cfptree->itemIDNameHash = this->itemIDNameHash;
+#endif
+                cfptree->buildTreeFromPrefixPaths(prefixPaths);
             }
 
             // The conditional FP-tree for the second item in the itemset
@@ -243,10 +253,10 @@ namespace Analytics {
         foreach (QStringList transaction, this->transactions) {
             foreach (QString itemName, transaction) {
                 // Look up the itemID for this itemName, or create it.
-                if (!this->itemNameIDHash.contains(itemName)) {
-                    itemID = this->itemNameIDHash.size();
-                    this->itemNameIDHash.insert(itemName, itemID);
-                    this->itemIDNameHash.insert(itemID, itemName);
+                if (!this->itemNameIDHash->contains(itemName)) {
+                    itemID = this->itemNameIDHash->size();
+                    this->itemNameIDHash->insert(itemName, itemID);
+                    this->itemIDNameHash->insert(itemID, itemName);
                     this->totalFrequentSupportCounts.insert(itemID, 0);
 
                     // Consider this item for use with constraints.
@@ -254,7 +264,7 @@ namespace Analytics {
                     this->constraintsToPreprocess.preprocessItem(itemName, itemID);
                 }
                 else
-                    itemID = this->itemNameIDHash[itemName];
+                    itemID = this->itemNameIDHash->value(itemName);
 
                 this->totalFrequentSupportCounts[itemID]++;
             }
@@ -278,7 +288,7 @@ namespace Analytics {
 #ifdef FPGROWTH_DEBUG
         qDebug() << "order:";
         foreach (itemID, this->frequentItemIDsSortedByTotalSupportCount) {
-            qDebug() << this->totalFrequentSupportCounts[itemID] << " times: " << Item(itemID, &(this->itemIDNameHash));
+            qDebug() << this->totalFrequentSupportCounts[itemID] << " times: " << Item(itemID, this->itemIDNameHash);
         }
 #endif
     }
@@ -297,9 +307,9 @@ namespace Analytics {
             transaction.clear();
             foreach (ItemName name, transactionAsStrings) {
 #ifdef DEBUG
-                transaction << Item((ItemID) this->itemNameIDHash[name], &this->itemIDNameHash);
+                transaction << Item((ItemID) this->itemNameIDHash->value(name), this->itemIDNameHash);
 #else
-                transaction << Item((ItemID) this->itemNameIDHash[name]);
+                transaction << Item((ItemID) this->itemNameIDHash->value(name);
 #endif
             }
 
@@ -402,7 +412,7 @@ namespace Analytics {
                 // next recursion's suffix.
                 FrequentItemset frequentItemset(prefixItemID, prefixItemSupport, suffix);
 #ifdef DEBUG
-                frequentItemset.IDNameHash = &this->itemIDNameHash;
+                frequentItemset.IDNameHash = this->itemIDNameHash;
 #endif
 
                 // Only store the current frequent itemset if it matches the
@@ -437,7 +447,11 @@ namespace Analytics {
                     // Build the conditional FP-tree for these prefix paths,
                     // by creating a new FP-tree and pretending the prefix
                     // paths are transactions.
-                    FPTree * cfptree = new FPTree(prefixPaths);
+                    FPTree * cfptree = new FPTree();
+#ifdef DEBUG
+                    cfptree->itemIDNameHash = this->itemIDNameHash;
+#endif
+                    cfptree->buildTreeFromPrefixPaths(prefixPaths);
 #ifdef FPGROWTH_DEBUG
                     qDebug() << *cfptree;
 #endif

@@ -14,8 +14,10 @@ void TestFPGrowth::basic() {
     transactions.append(QStringList() << "C" << "E");
 
     FPNode<SupportCount>::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
+    ItemIDNameHash itemIDNameHash;
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    ItemNameIDHash itemNameIDHash;
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -64,9 +66,11 @@ void TestFPGrowth::withConstraints() {
     constraints.addItemConstraint("A", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
 
     FPNode<SupportCount>::resetLastNodeID();
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size());
-    fpgrowth->setConstraints(constraints);
+    ItemIDNameHash itemIDNameHash;
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
+    ItemNameIDHash itemNameIDHash;
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
+    fpgrowth->setConstraints(constraints);
 
     // Characteristics about the transactions above, and the found results
     // (*after* applying filtering):

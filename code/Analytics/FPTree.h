@@ -15,7 +15,6 @@ namespace Analytics {
     class FPTree {
     public:
         FPTree();
-        FPTree(const QList<ItemList> & prefixPaths);
         ~FPTree();
 
         // Accessors.
@@ -29,9 +28,14 @@ namespace Analytics {
 
         // Modifiers.
         void addTransaction(const Transaction & transaction);
+        void buildTreeFromPrefixPaths(const QList<ItemList> & prefixPaths);
 
         // Static (class) methods.
         static QHash<ItemID, SupportCount> calculateSupportCountsForPrefixPaths(const QList<ItemList> & prefixPaths);
+
+#ifdef DEBUG
+        ItemIDNameHash * itemIDNameHash;
+#endif
 
     protected:
         FPNode<SupportCount> * root;

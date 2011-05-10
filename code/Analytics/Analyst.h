@@ -35,6 +35,9 @@ namespace Analytics {
 
         Constraints frequentItemsetItemConstraints;
         Constraints ruleConsequentItemConstraints;
+
+        ItemIDNameHash itemIDNameHash;
+        ItemNameIDHash itemNameIDHash;
     };
 }
 

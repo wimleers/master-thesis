@@ -99,6 +99,8 @@ namespace Analytics {
 #ifdef DEBUG
         unsigned int getNodeID() const { return this->nodeID; }
         static void resetLastNodeID() { FPNode<T>::lastNodeID = 0; }
+
+        ItemIDNameHash * itemIDNameHash;
 #endif
 
     protected:
@@ -109,7 +111,6 @@ namespace Analytics {
 
 #ifdef DEBUG
         unsigned int nodeID;
-        ItemIDNameHash * itemIDNameHash;
         static unsigned int lastNodeID;
         static unsigned int nextNodeID() { return FPNode<T>::lastNodeID++; }
 #endif

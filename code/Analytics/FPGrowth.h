@@ -25,7 +25,7 @@ namespace Analytics {
         Q_OBJECT
 
     public:
-        FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute);
+        FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash);
         ~FPGrowth();
 
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
@@ -39,9 +39,9 @@ namespace Analytics {
         SupportCount calculateSupportCountUpperBound(const ItemIDList & itemset) const;
         SupportCount calculateSupportCountExactly(const ItemIDList & itemset) const;
 
-        ItemID getItemID(ItemName name) const { return this->itemNameIDHash[name]; }
+        ItemID getItemID(ItemName name) const { return this->itemNameIDHash->value(name); }
 #ifdef DEBUG
-        ItemIDNameHash * getItemIDNameHash() { return &this->itemIDNameHash; }
+        ItemIDNameHash * getItemIDNameHash() { return this->itemIDNameHash; }
 #endif
 
     protected slots:
@@ -63,15 +63,15 @@ namespace Analytics {
         FPTree * tree;
         Constraints constraints;
         Constraints constraintsToPreprocess;
+        ItemIDNameHash * itemIDNameHash;
+        ItemNameIDHash * itemNameIDHash;
+
         QList<QStringList> transactions;
 
         SupportCount minSupportAbsolute;
 
         QHash<ItemID, SupportCount> totalFrequentSupportCounts;
         QList<ItemID> frequentItemIDsSortedByTotalSupportCount;
-
-        ItemIDNameHash itemIDNameHash;
-        ItemNameIDHash itemNameIDHash;
     };
 
 }
