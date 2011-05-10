@@ -19,15 +19,18 @@ namespace Analytics {
         // Accessors.
         FPNode<TiltedTimeWindow> * getRoot() const { return this->root; }
         TiltedTimeWindow * getPatternSupport(const ItemIDList & pattern) const;
+        unsigned int getNodeCount() const { return this->nodeCount; }
 
         // Modifiers.
         void addPattern(const FrequentItemset & pattern, uint32_t updateID);
+        void removePattern(FPNode<TiltedTimeWindow> * const node);
 
         // Static (class) methods.
         static ItemIDList getPatternForNode(FPNode<TiltedTimeWindow> const * const node);
 
     protected:
         FPNode<TiltedTimeWindow> * root;
+        unsigned int nodeCount;
     };
 
 #ifdef DEBUG

@@ -6,7 +6,8 @@ namespace Analytics {
     // Public methods.
 
     PatternTree::PatternTree() {
-        root = new FPNode<TiltedTimeWindow>(ROOT_ITEMID);
+        this->root = new FPNode<TiltedTimeWindow>(ROOT_ITEMID);
+        this->nodeCount = 0;
     }
 
     PatternTree::~PatternTree() {
@@ -28,6 +29,7 @@ namespace Analytics {
             else {
                 // Create a new node and add it as a child of the current node.
                 nextNode = new FPNode<TiltedTimeWindow>(itemID);
+                this->nodeCount++;
                 nextNode->setParent(currentNode);
             }
 
@@ -40,6 +42,15 @@ namespace Analytics {
         TiltedTimeWindow * ttw = currentNode->getPointerToValue();
         ttw->appendQuarter(pattern.support, updateID);
     }
+
+    void PatternTree::removePattern(FPNode<TiltedTimeWindow> * const node) {
+        this->nodeCount -= (1 + node->getNumDescendants());
+        delete node;
+    }
+
+
+    //------------------------------------------------------------------------
+    // Static public methods.
 
     ItemIDList PatternTree::getPatternForNode(FPNode<TiltedTimeWindow> const * const node) {
         ItemIDList pattern;

@@ -52,6 +52,14 @@ namespace Analytics {
         QHash<ItemID, FPNode<T> *> getChildren() const { return this->children; }
         bool hasChild(ItemID itemID) const { return this->children.contains(itemID); }
         unsigned int numChildren() const { return this->children.size(); }
+        unsigned int getNumDescendants() const {
+            unsigned int n = this->children.size();
+            if (n > 0) {
+                foreach (FPNode<T> * child, this->children.values())
+                    n += child->getNumDescendants();
+            }
+            return n;
+        }
         T * findNodeByPattern(const ItemIDList & pattern) const {
             // This method only works from the root node.
             if (this->itemID != ROOT_ITEMID) {
