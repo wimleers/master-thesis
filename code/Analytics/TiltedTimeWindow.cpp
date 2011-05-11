@@ -168,7 +168,7 @@ namespace Analytics {
                 dbg.nospace() << ", ";
         }
 
-        dbg.nospace() << "}";
+        dbg.nospace() << "} (lastUpdate=" << ttw.getLastUpdate() << ")";
 
         return dbg.nospace();
     }
