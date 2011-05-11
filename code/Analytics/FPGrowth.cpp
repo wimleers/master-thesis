@@ -191,7 +191,7 @@ namespace Analytics {
 
         // Store all ItemIDs, sorted by support count. If multiple ItemIDs
         // have the same SupportCount, sort them from small to large.
-        QList<ItemID> sortedItemIDs;
+        ItemIDList sortedItemIDs;
         foreach (SupportCount support, sortedSupportCounts) {
             ItemIDList itemIDs = itemIDsBySupportCount.values(support);
             qSort(itemIDs);

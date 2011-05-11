@@ -30,7 +30,7 @@ void TestFPTree::basic() {
     //qDebug() << *tree;
 
     // Verify the available item paths.
-    QCOMPARE(tree->getItemIDs(), QList<ItemID>() << 1 << 2 << 3 << 4);
+    QCOMPARE(tree->getItemIDs(), ItemIDList() << 1 << 2 << 3 << 4);
     QList<FPNode<SupportCount> *> itemPath;
     // Item path for A(1): A(1)=3 (0x0001)
     itemPath = tree->getItemPath(1);

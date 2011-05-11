@@ -20,7 +20,7 @@ namespace Analytics {
         // Accessors.
         FPNode<SupportCount> * getRoot() const { return this->root; }
         bool hasItemPath(ItemID itemID) const;
-        QList<ItemID> getItemIDs() const { return this->itemPaths.keys(); }
+        ItemIDList getItemIDs() const { return this->itemPaths.keys(); }
         QList<FPNode<SupportCount> *> getItemPath(ItemID itemID) const;
         bool itemPathContains(ItemID itemID, FPNode<SupportCount> * node) const;
         SupportCount getItemSupport(ItemID item) const;
