@@ -40,7 +40,7 @@ namespace Analytics {
         // the starting position of the tail pruning; this will
         // automatically reset the entire granularity when this is the
         // first bucket of the granularity.
-        this->reset(g, start);
+        this->reset(g, start - this->GranularityBucketOffset[g]);
     }
 
     QVector<SupportCount> TiltedTimeWindow::getBuckets(int numBuckets) const {
