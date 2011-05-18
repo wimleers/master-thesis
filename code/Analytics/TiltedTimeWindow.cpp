@@ -76,8 +76,31 @@ namespace Analytics {
         this->capacityUsed[granularity] = startBucket;
 
         // Update oldestBucketFilled.
-        if (this->oldestBucketFilled > offset + startBucket - 1)
-            this->oldestBucketFilled = offset + startBucket - 1;
+        if (this->oldestBucketFilled > offset + startBucket - 1) {
+            // Reset from first bucket in the first granularity: it's now
+            // completely empty again.
+            if (startBucket == 0 && granularity == GRANULARITY_QUARTER) {
+                this->oldestBucketFilled = -1;
+            }
+            // When the start bucket is zero and we're not in the first
+            // granularity, then we should look at the preceding granularity
+            // to determine what the oldest filled bucket is.
+            // After all, suppose we have the case {Q={1}, H={1}} and we are
+            // resetting the second granularity (hour) with start position 0.
+            // Without this special check, the oldest filled bucket would then
+            // become bucket 3, whereas it really is bucket 0!
+            else if (startBucket == 0 && granularity > 0) {
+                Granularity oneLess = (Granularity) (granularity - 1);
+                this->oldestBucketFilled = GranularityBucketOffset[oneLess] + this->capacityUsed[oneLess];
+            }
+            // Finally, the simple case where the start bucket is not zero
+            // (meaning that we're not resetting the entire granularity. Then
+            // we can simply move the oldestBucketFilled to just before the
+            // start bucket.
+            else if (startBucket > 0) {
+                this->oldestBucketFilled = offset + startBucket - 1;
+            }
+        }
     }
 
     /**
