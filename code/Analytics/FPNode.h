@@ -32,16 +32,22 @@ namespace Analytics {
         }
         ~FPNode() {
             // Delete all child nodes.
-            foreach (FPNode<T> * child, this->children)
+            foreach (FPNode<T> * child, this->children) {
                 delete child;
+            }
             this->children.clear();
+
+            // Remove this node from its parent's children.
+            if (this->parent != NULL)
+                this->parent->children.remove(this->itemID);
         }
 
         // Accessors.
         bool isRoot() const { return this->itemID == ROOT_ITEMID; }
         bool isLeaf() const { return this->children.size() == 0; }
         ItemID getItemID() const { return this->itemID; }
-        T getValue() const { return this->value; }
+        const T & getValue() const { return this->value; }
+        T * getPointerToValue() { return &this->value; }
         FPNode<T> * getParent() const { return this->parent; }
         FPNode<T> * getChild(ItemID itemID) const {
             if (this->children.contains(itemID))
@@ -49,7 +55,7 @@ namespace Analytics {
             else
                 return NULL;
         }
-        QHash<ItemID, FPNode<T> *> getChildren() const { return this->children; }
+        const QHash<ItemID, FPNode<T> *> & getChildren() const { return this->children; }
         bool hasChild(ItemID itemID) const { return this->children.contains(itemID); }
         unsigned int numChildren() const { return this->children.size(); }
         unsigned int getNumDescendants() const {
