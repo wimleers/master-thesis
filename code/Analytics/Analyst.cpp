@@ -7,7 +7,7 @@ namespace Analytics {
         this->maxSupportError = maxSupportError;
         this->minConfidence   = minConfidence;
 
-        this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash);
+        this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
     }
 
     /**
@@ -59,8 +59,13 @@ namespace Analytics {
     // Protected methods.
 
     void Analyst::performMining(const QList<QStringList> & transactions) {
+        // Clear these every time, to ensure the original behavior.
+        this->itemIDNameHash.clear();
+        this->itemNameIDHash.clear();
+        this->sortedFrequentItemIDs.clear();
+
         qDebug() << "starting mining, # transactions: " << transactions.size();
-        FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * 4000), &this->itemIDNameHash, &this->itemNameIDHash);
+        FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * 4000), &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
         fpgrowth->setConstraints(this->frequentItemsetItemConstraints);
         fpgrowth->setConstraintsToPreprocess(this->ruleConsequentItemConstraints);
         QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();

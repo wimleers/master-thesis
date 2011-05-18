@@ -19,7 +19,8 @@ void TestRuleMiner::basic() {
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
     ItemIDNameHash itemIDNameHash;
     ItemNameIDHash itemNameIDHash;
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
+    ItemIDList sortedFrequentItemIDs;
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash, &sortedFrequentItemIDs);
 
     QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, 0.8, constraints, fpgrowth);
 

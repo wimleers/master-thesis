@@ -2,9 +2,10 @@
 
 namespace Analytics {
 
-    FPGrowth::FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash) {
-        this->itemIDNameHash = itemIDNameHash;
-        this->itemNameIDHash = itemNameIDHash;
+    FPGrowth::FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash, ItemIDList * sortedFrequentItemIDs) {
+        this->itemIDNameHash        = itemIDNameHash;
+        this->itemNameIDHash        = itemNameIDHash;
+        this->sortedFrequentItemIDs = sortedFrequentItemIDs;
 
         this->transactions = transactions;
 
@@ -157,20 +158,25 @@ namespace Analytics {
     // Protected static methods.
 
     /**
-     * Given an ItemID -> SupportCount hash, find sort ItemIDs by decreasing
+     * Given an ItemID -> SupportCount hash, sort ItemIDs by decreasing
      * support count.
      *
      * @param itemSupportCounts
      *   A QHash of ItemID -> SupportCount pairs.
+     * @param ignoreList
+     *   A list of ItemIDs to ignore (i.e. not include in the result).
      * @return
      *   A QList of ItemIDs, sorted by decreasing support count.
      */
-    QList<ItemID> FPGrowth::sortItemIDsByDecreasingSupportCount(const QHash<ItemID, SupportCount> & itemSupportCounts){
+    ItemIDList FPGrowth::sortItemIDsByDecreasingSupportCount(const QHash<ItemID, SupportCount> & itemSupportCounts, const ItemIDList * const ignoreList){
         QHash<SupportCount, ItemID> itemIDsBySupportCount;
         QSet<SupportCount> supportCounts;
         SupportCount supportCount;
 
         foreach (ItemID itemID, itemSupportCounts.keys()) {
+            if (ignoreList->contains(itemID))
+                continue;
+
             supportCount = itemSupportCounts[itemID];
 
             // Fill itemsBySupport by using QHash::insertMulti(), which allows
@@ -283,12 +289,13 @@ namespace Analytics {
         }
 
         // Sort the frequent items' item ids by decreasing support count.
-        this->frequentItemIDsSortedByTotalSupportCount = FPGrowth::sortItemIDsByDecreasingSupportCount(this->totalFrequentSupportCounts);
+        this->sortedFrequentItemIDs->append(FPGrowth::sortItemIDsByDecreasingSupportCount(this->totalFrequentSupportCounts, this->sortedFrequentItemIDs));
 
 #ifdef FPGROWTH_DEBUG
         qDebug() << "order:";
-        foreach (itemID, this->frequentItemIDsSortedByTotalSupportCount) {
-            qDebug() << this->totalFrequentSupportCounts[itemID] << " times: " << Item(itemID, this->itemIDNameHash);
+        foreach (itemID, *(this->sortedFrequentItemIDs)) {
+            if (this->totalFrequentSupportCounts.contains(itemID))
+                qDebug() << this->totalFrequentSupportCounts[itemID] << " times: " << Item(itemID, this->itemIDNameHash);
         }
 #endif
     }
@@ -328,10 +335,10 @@ namespace Analytics {
      * Optimize a transaction.
      *
      * This is achieved by sorting the items by decreasing support count. To
-     * do this as fast as possible,
-     * this->frequentItemIDsSortedByTotalSupportCount is reused. Because
-     * this->itemIDsSortedByTotalSupportCount does not include infrequent
-     * items, these are also automatically removed by this simple routine.
+     * do this as fast as possible, this->sortedFrequentItemIDs is reused.
+     * Because this->itemIDsSortedByTotalSupportCount does not include
+     * infrequent items, these are also automatically removed by this simple
+     * routine.
      *
      * @param transaction
      *   A transaction.
@@ -342,7 +349,7 @@ namespace Analytics {
         Transaction optimizedTransaction;
         Item item;
 
-        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount) {
+        foreach (ItemID itemID, *(this->sortedFrequentItemIDs)) {
             item.id = itemID;
             if (transaction.contains(item))
                 optimizedTransaction.append(transaction.at(transaction.indexOf(item)));
@@ -354,7 +361,7 @@ namespace Analytics {
     ItemIDList FPGrowth::optimizeItemset(const ItemIDList & itemset) const {
         ItemIDList optimizedItemset;
 
-        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount) {
+        foreach (ItemID itemID, *(this->sortedFrequentItemIDs)) {
             if (itemset.contains(itemID))
                 optimizedItemset.append(itemID);
         }
@@ -391,7 +398,7 @@ namespace Analytics {
         // a QList<ItemID> here.
         ItemIDList orderedItemIDs;
         ItemIDList itemIDsInTree = ctree->getItemIDs();
-        foreach (ItemID itemID, this->frequentItemIDsSortedByTotalSupportCount)
+        foreach (ItemID itemID, *(this->sortedFrequentItemIDs))
             if (itemIDsInTree.contains(itemID))
                 orderedItemIDs.append(itemID);
 

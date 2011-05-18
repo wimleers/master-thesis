@@ -17,7 +17,8 @@ void TestFPGrowth::basic() {
     ItemIDNameHash itemIDNameHash;
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
     ItemNameIDHash itemNameIDHash;
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
+    ItemIDList sortedFrequentItemIDs;
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash, &sortedFrequentItemIDs);
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -69,7 +70,7 @@ void TestFPGrowth::withConstraints() {
     ItemIDNameHash itemIDNameHash;
     QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
     ItemNameIDHash itemNameIDHash;
-    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash);
+    FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash, &sortedFrequentItemIDs);
     fpgrowth->setConstraints(constraints);
 
     // Characteristics about the transactions above, and the found results

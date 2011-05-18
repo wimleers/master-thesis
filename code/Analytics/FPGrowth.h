@@ -25,7 +25,7 @@ namespace Analytics {
         Q_OBJECT
 
     public:
-        FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash);
+        FPGrowth(const QList<QStringList> & transactions, SupportCount minSupportAbsolute, ItemIDNameHash * itemIDNameHash, ItemNameIDHash * itemNameIDHash, ItemIDList * sortedFrequentItemIDs);
         ~FPGrowth();
 
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
@@ -49,7 +49,7 @@ namespace Analytics {
 
     protected:
         // Static methods.
-        static QList<ItemID> sortItemIDsByDecreasingSupportCount(const QHash<ItemID, SupportCount> & itemSupportCounts);
+        static ItemIDList sortItemIDsByDecreasingSupportCount(const QHash<ItemID, SupportCount> & itemSupportCounts, const ItemIDList * const ignoreList);
         static QList<ItemList> filterPrefixPaths(const QList<ItemList> & prefixPaths, SupportCount minSupportAbsolute);
 
         // Methods.
@@ -65,13 +65,13 @@ namespace Analytics {
         Constraints constraintsToPreprocess;
         ItemIDNameHash * itemIDNameHash;
         ItemNameIDHash * itemNameIDHash;
+        ItemIDList     * sortedFrequentItemIDs;
 
         QList<QStringList> transactions;
 
         SupportCount minSupportAbsolute;
 
         QHash<ItemID, SupportCount> totalFrequentSupportCounts;
-        QList<ItemID> frequentItemIDsSortedByTotalSupportCount;
     };
 
 }

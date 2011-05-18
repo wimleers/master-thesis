@@ -38,6 +38,7 @@ namespace Analytics {
 
         ItemIDNameHash itemIDNameHash;
         ItemNameIDHash itemNameIDHash;
+        ItemIDList sortedFrequentItemIDs;
     };
 }
 
