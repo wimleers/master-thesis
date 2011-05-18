@@ -14,7 +14,7 @@ namespace Analytics {
         this->oldestBucketFilled = -1;
         this->lastUpdate = 0;
         for (int b = 0; b < TTW_NUM_BUCKETS; b++)
-            this->buckets[b] = -1;
+            this->buckets[b] = TTW_BUCKET_UNUSED;
         for (int g = 0; g < TTW_NUM_GRANULARITIES; g++)
             this->capacityUsed[g] = 0;
     }
@@ -70,7 +70,7 @@ namespace Analytics {
         int count = GranularityBucketCount[granularity];
 
         // Reset this granularity's buckets.
-        memset(this->buckets + offset + startBucket, -1, (count - startBucket ) * sizeof(int));
+        memset(this->buckets + offset + startBucket, TTW_BUCKET_UNUSED, (count - startBucket ) * sizeof(int));
 
         // Update this granularity's used capacity..
         this->capacityUsed[granularity] = startBucket;

@@ -20,6 +20,7 @@ namespace Analytics {
 
     #define TTW_NUM_GRANULARITIES 5
     #define TTW_NUM_BUCKETS 72
+    #define TTW_BUCKET_UNUSED -1
 
 
     class TiltedTimeWindow {

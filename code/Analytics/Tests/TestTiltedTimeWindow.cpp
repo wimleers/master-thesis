@@ -1,5 +1,12 @@
 #include "TestTiltedTimeWindow.h"
 
+
+/**
+ * IMPORTANT NOTE:
+ * Each time when the SupportCount -1 is being used in this test, it's meant
+ * to be TTW_BUCKET_UNUSED. However, for legibility purposes, I've opted to
+ * directly write -1 instead.
+ */
 void TestTiltedTimeWindow::basic() {
     TiltedTimeWindow * ttw = new TiltedTimeWindow();
 
