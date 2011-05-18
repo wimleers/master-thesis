@@ -25,13 +25,16 @@ namespace Analytics {
      * Mine frequent itemsets. (First scan the transactions, then build the
      * FP-tree, then generate the frequent itemsets from there.)
      *
+     * @param asynchronous
+     *   See the explanation for the identically named parameter of @fn
+     *   generateFrequentItemsets().
      * @return
      *   The frequent itemsets that were found.
      */
-    QList<FrequentItemset> FPGrowth::mineFrequentItemsets() {
+    QList<FrequentItemset> FPGrowth::mineFrequentItemsets(bool asynchronous) {
         this->scanTransactions();
         this->buildFPTree();
-        return this->generateFrequentItemsets(this->tree);
+        return this->generateFrequentItemsets(this->tree, FrequentItemset(), asynchronous);
     }
 
     /**
@@ -358,6 +361,17 @@ namespace Analytics {
         return optimizedTransaction;
     }
 
+    /**
+     * Optimize an ItemIDList.
+     *
+     * @see FPGrowth::optimizeTransaction(), which optimizes a list of Items,
+     * whereas this method optimized a list of ItemIDs.
+     *
+     * @param itemset
+     *   A list of ItemIDs.
+     * @return
+     *   The optimized list of ItemIDs.
+     */
     ItemIDList FPGrowth::optimizeItemset(const ItemIDList & itemset) const {
         ItemIDList optimizedItemset;
 
@@ -378,14 +392,26 @@ namespace Analytics {
      * @param suffix
      *   The current frequent itemset suffix. Empty in the initial call, but
      *   automatically filled by this function when it recurses.
+     * @param asynchronous
+     *   FPGROWTH_ASYNC or FPGROWTH_SYNC
+     *   By default, this method runs in a non-blocking (asynchronous)
+     *   manner: it emits a signal for every frequent itemset it finds at a
+     *   level. It is then up to the recipient of this signal to call this
+     *   method again (i.e. to cause recursion) if it wants supersets of the
+     *   signaled frequent itemset to be mined.
+     *   When passing FPGROWTH_SYNC to this parameter, this method will run
+     *   in a blocking (synchronous) manner, and will thus not allow another
+     *   object to decide if supersets should also be mined. It will collect
+     *   all frequent itemsets that can be found and then return all of them
+     *   at once.
      * @return
      *   The entire list of frequent itemsets. The SupportCount for each Item
      *   still needs to be cleaned: it should be set to the minimum of all
      *   Items in each frequent itemset.
      */
-    QList<FrequentItemset> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const FrequentItemset & suffix) {
+    QList<FrequentItemset> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const FrequentItemset & suffix, bool asynchronous) {
+        bool frequentItemsetMatchesConstraints;
         QList<FrequentItemset> frequentItemsets;
-        QList<ItemList> prefixPaths;
 
         // First determine the order for the items in this particular tree,
         // based on the list that contains *all* items in this data set,
@@ -424,58 +450,93 @@ namespace Analytics {
 
                 // Only store the current frequent itemset if it matches the
                 // constraints.
-                if (this->constraints.matchItemset(frequentItemset.itemset)) {
+                frequentItemsetMatchesConstraints = this->constraints.matchItemset(frequentItemset.itemset);
+                if (!asynchronous && frequentItemsetMatchesConstraints) {
                     frequentItemsets.append(frequentItemset);
 #ifdef FPGROWTH_DEBUG
                 qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
 #endif
                 }
 
-                // Calculate the prefix paths for the current prefix item.
-                prefixPaths = ctree->calculatePrefixPaths(prefixItemID);
 
-                // Remove items from the prefix paths based that no longer
-                // have sufficient support.
-                prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
-
-                // If the conditional FP-tree would not be able to match the
-                // constraints (which we can now by looking at the current
-                // frequent itemset and the prefix paths support counts), then
-                // just don't bother generating it.
-                // This is effectively pruning the search space for frequent
-                // itemsets.
-                QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
-                if (!this->constraints.matchSearchSpace(frequentItemset.itemset, prefixPathsSupportCounts))
-                    continue;
-
-                // If no prefix paths remain after filtering, we won't be able
-                // to generate any further frequent item sets.
-                if (prefixPaths.size() > 0) {
-                    // Build the conditional FP-tree for these prefix paths,
-                    // by creating a new FP-tree and pretending the prefix
-                    // paths are transactions.
-                    FPTree * cfptree = new FPTree();
-#ifdef DEBUG
-                    cfptree->itemIDNameHash = this->itemIDNameHash;
-#endif
-                    cfptree->buildTreeFromPrefixPaths(prefixPaths);
-#ifdef FPGROWTH_DEBUG
-                    qDebug() << *cfptree;
-#endif
-
+                // Check if there are supersets to be mined.
+                FPTree * cfptree = this->considerFrequentItemsupersets(ctree, frequentItemset.itemset);
+                if (cfptree != NULL && !asynchronous) {
                     // Attempt to generate more frequent itemsets, with the
                     // current frequent itemset as the suffix.
-                    frequentItemsets.append(this->generateFrequentItemsets(cfptree, frequentItemset));
+                    frequentItemsets.append(this->generateFrequentItemsets(cfptree, frequentItemset, asynchronous));
 
+                    // This will make sure every conditional FP-tree gets
+                    // deleted, but *not* the original tree. This is exactly
+                    // what we want, since the original tree will be deleted
+                    // in the destructor.
+                    // This is the synchronous case, i.e. the case where no
+                    // signals are emitted.
                     delete cfptree;
                 }
 
-                // Unnecessary, but do this anyway to release memory as fast
-                // as possible.
-                prefixPaths.clear();
+                if (asynchronous)
+                    emit this->minedFrequentItemset(frequentItemset, frequentItemsetMatchesConstraints, cfptree);
             }
         }
 
+        if (asynchronous) {
+            // This will make sure every conditional FP-tree gets deleted,
+            // but *not* the original tree. This is exactly what we want,
+            // since the original tree will be deleted in the destructor.
+            // This is the asynchronous case, i.e. the case where no signals
+            // are emitted.
+            if (ctree != this->tree)
+                delete ctree;
+
+            // Necessary to terminate the algorithm in the asynchronous case.
+            emit this->branchCompleted(suffix.itemset);
+        }
+
         return frequentItemsets;
+    }
+
+    FPTree * FPGrowth::considerFrequentItemsupersets(const FPTree * ctree, ItemIDList frequentItemset) {
+        // Calculate the prefix paths for the current prefix item
+        // (which is a prefix to the current suffix, but when
+        // calculating prefix paths, it's actually considered the
+        // leading item ID of the suffix, i.e. as if it were the
+        // leading item ID of the future suffix, which is in fact the
+        // frequent itemset that we've just found).
+        QList<ItemList> prefixPaths = ctree->calculatePrefixPaths(frequentItemset[0]);
+
+        // Remove items from the prefix paths based that no longer
+        // have sufficient support.
+        prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
+
+        // If the conditional FP-tree would not be able to match the
+        // constraints (which we can now by looking at the current
+        // frequent itemset and the prefix paths support counts), then
+        // just don't bother generating it.
+        // This is effectively pruning the search space for frequent
+        // itemsets.
+        QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
+        if (!this->constraints.matchSearchSpace(frequentItemset, prefixPathsSupportCounts))
+            return NULL;
+
+        // If no prefix paths remain after filtering, we won't be able
+        // to generate any further frequent item sets.
+        if (prefixPaths.size() > 0) {
+            // Build the conditional FP-tree for these prefix paths,
+            // by creating a new FP-tree and pretending the prefix
+            // paths are transactions.
+            FPTree * cfptree = new FPTree();
+#ifdef DEBUG
+            cfptree->itemIDNameHash = this->itemIDNameHash;
+#endif
+            cfptree->buildTreeFromPrefixPaths(prefixPaths);
+#ifdef FPGROWTH_DEBUG
+            qDebug() << *cfptree;
+#endif
+
+            return cfptree;
+        }
+        else
+            return NULL;
     }
 }

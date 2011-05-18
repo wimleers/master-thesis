@@ -68,7 +68,7 @@ namespace Analytics {
         FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * 4000), &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
         fpgrowth->setConstraints(this->frequentItemsetItemConstraints);
         fpgrowth->setConstraintsToPreprocess(this->ruleConsequentItemConstraints);
-        QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
+        QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets(false);
         qDebug() << "frequent itemset mining complete, # frequent itemsets:" << frequentItemsets.size();
 
         this->ruleConsequentItemConstraints = fpgrowth->getPreprocessedConstraints();

@@ -15,10 +15,10 @@ void TestFPGrowth::basic() {
 
     FPNode<SupportCount>::resetLastNodeID();
     ItemIDNameHash itemIDNameHash;
-    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
     ItemNameIDHash itemNameIDHash;
     ItemIDList sortedFrequentItemIDs;
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash, &sortedFrequentItemIDs);
+    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets(FPGROWTH_SYNC);
 
     // Characteristics about the transactions above, and the found results:
     // * support:
@@ -68,10 +68,11 @@ void TestFPGrowth::withConstraints() {
 
     FPNode<SupportCount>::resetLastNodeID();
     ItemIDNameHash itemIDNameHash;
-    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets();
     ItemNameIDHash itemNameIDHash;
+    ItemIDList sortedFrequentItemIDs;
     FPGrowth * fpgrowth = new FPGrowth(transactions, 0.4 * transactions.size(), &itemIDNameHash, &itemNameIDHash, &sortedFrequentItemIDs);
     fpgrowth->setConstraints(constraints);
+    QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets(FPGROWTH_SYNC);
 
     // Characteristics about the transactions above, and the found results
     // (*after* applying filtering):

@@ -21,6 +21,9 @@ namespace Analytics {
 //    #define FPGROWTH_DEBUG 1
 #endif
 
+#define FPGROWTH_ASYNC true
+#define FPGROWTH_SYNC false
+
     class FPGrowth : public QObject {
         Q_OBJECT
 
@@ -32,7 +35,7 @@ namespace Analytics {
         void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
         const Constraints & getPreprocessedConstraints() const { return this->constraintsToPreprocess; }
 
-        QList<FrequentItemset> mineFrequentItemsets();
+        QList<FrequentItemset> mineFrequentItemsets(bool asynchronous = true);
 
         // Ability to calculate support for any itemset; necessary to
         // calculate confidence for candidate association rules.
@@ -43,6 +46,13 @@ namespace Analytics {
 #ifdef DEBUG
         ItemIDNameHash * getItemIDNameHash() { return this->itemIDNameHash; }
 #endif
+
+    signals:
+        void minedFrequentItemset(const FrequentItemset & frequentItemset, bool frequentItemsetMatchesConstraints, const FPTree * ctree);
+        void branchCompleted(const ItemIDList & itemset);
+
+    public slots:
+        QList<FrequentItemset> generateFrequentItemsets(const FPTree * tree, const FrequentItemset & suffix, bool asynchronous = FPGROWTH_ASYNC);
 
     protected slots:
         void processTransaction(const Transaction & transaction);
@@ -55,9 +65,9 @@ namespace Analytics {
         // Methods.
         void scanTransactions();
         void buildFPTree();
+        FPTree * considerFrequentItemsupersets(const FPTree * ctree, ItemIDList frequentItemset);
         Transaction optimizeTransaction(const Transaction & transaction) const;
         ItemIDList optimizeItemset(const ItemIDList & itemset) const;
-        QList<FrequentItemset> generateFrequentItemsets(const FPTree * tree, const FrequentItemset & suffix = FrequentItemset());
 
         // Properties.
         FPTree * tree;
