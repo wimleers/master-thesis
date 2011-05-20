@@ -65,7 +65,7 @@ namespace Analytics {
         // Methods.
         void scanTransactions();
         void buildFPTree();
-        FPTree * considerFrequentItemsupersets(const FPTree * ctree, ItemIDList frequentItemset);
+        FPTree * considerFrequentItemsupersets(const FPTree * ctree, const ItemIDList & frequentItemset);
         Transaction optimizeTransaction(const Transaction & transaction) const;
         ItemIDList optimizeItemset(const ItemIDList & itemset) const;
 

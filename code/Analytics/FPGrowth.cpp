@@ -496,7 +496,7 @@ namespace Analytics {
         return frequentItemsets;
     }
 
-    FPTree * FPGrowth::considerFrequentItemsupersets(const FPTree * ctree, ItemIDList frequentItemset) {
+    FPTree * FPGrowth::considerFrequentItemsupersets(const FPTree * ctree, const ItemIDList & frequentItemset) {
         // Calculate the prefix paths for the current prefix item
         // (which is a prefix to the current suffix, but when
         // calculating prefix paths, it's actually considered the
