@@ -45,10 +45,9 @@ namespace EpisodesParser {
         void parsedChunk(QStringList chunk);
         void processedChunk(QList<QStringList> transactions, double transactionsPerEvent);
 
-    public slots:
-
     protected slots:
         void processParsedChunk(const QStringList & chunk);
+        void processBatch(const QList<EpisodesLogLine> batch);
 
     protected:
         // QHashes that are used to minimize memory usage.

@@ -408,28 +408,45 @@ namespace EpisodesParser {
     // Protected slots.
 
     void Parser::processParsedChunk(const QStringList & chunk) {
-        double transactionsPerEvent;
+        static unsigned int quarterID = 0;
+        static QList<EpisodesLogLine> batch;
 
-        qDebug() << "STARTING CHUNK" << chunk[0];
+        qDebug() << "STARTING CHUNK, remaining lines in previous batch" << batch.size();
+
+        // Perform the mapping from strings to EpisodesLogLine concurrently.
+//        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+        QString rawLine;
+        EpisodesLogLine line;
+        foreach (rawLine, chunk) {
+            line = Parser::mapLineToEpisodesLogLine(rawLine);
+
+            // Create a batch for each quarter (900 seconds) and process it.
+            if (line.time / 900 > quarterID) {
+                quarterID = line.time / 900;
+                if (!batch.isEmpty())
+                    this->processBatch(batch);
+                batch.clear();
+            }
+
+            batch.append(line);
+        }
+
+        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!";
+    }
+
+    void Parser::processBatch(const QList<EpisodesLogLine> batch) {
+        double transactionsPerEvent;
 
         // This 100% concurrent approach fails, because QGeoIP still has
         // thread-safety issues. Hence, we only do the mapping from a QString
         // to an EpisodesLogLine concurrently for now.
         // QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
 
-        // Perform the mapping from strings to EpisodesLogLine concurrently.
-//        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
-        QList<EpisodesLogLine> mappedChunk;
-        QString rawLine;
-        foreach (rawLine, chunk) {
-            mappedChunk << Parser::mapLineToEpisodesLogLine(rawLine);
-        }
-
         // Perform the expanding of the EpisodesLogLines sequentially.
         // Reason: see above.
         QList<ExpandedEpisodesLogLine> expandedChunk;
         EpisodesLogLine line;
-        foreach (line, mappedChunk) {
+        foreach (line, batch) {
             expandedChunk << Parser::expandEpisodesLogLine(line);
         }
 
@@ -450,12 +467,15 @@ namespace EpisodesParser {
             transactions.append(transactionGroup);
         }
 
-        transactionsPerEvent = ((double) transactions.size()) / chunk.size();
+        transactionsPerEvent = ((double) transactions.size()) / batch.size();
 
-        qDebug() << transactions[0];
-        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!"
+        qDebug() << "Processed batch of" << batch.size() << "lines!"
                  << "Transactions generated:" << transactions.size() << "."
-                 << "(" << transactionsPerEvent << " transactions/event)";
+                 << "(" << transactionsPerEvent << "transactions/event)"
+                 << "Events occurred between"
+                 << QDateTime::fromTime_t(batch.first().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str()
+                 << "and"
+                 << QDateTime::fromTime_t(batch.last().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str();
 
         emit processedChunk(transactions, transactionsPerEvent);
     }
