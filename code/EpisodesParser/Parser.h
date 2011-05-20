@@ -43,7 +43,7 @@ namespace EpisodesParser {
 
     signals:
         void parsedChunk(QStringList chunk);
-        void processedChunk(QList<QStringList> transactions);
+        void processedChunk(QList<QStringList> transactions, double transactionsPerEvent);
 
     public slots:
 

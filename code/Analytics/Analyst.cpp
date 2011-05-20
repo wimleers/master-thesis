@@ -50,22 +50,22 @@ namespace Analytics {
     //------------------------------------------------------------------------
     // Protected slots.
 
-    void Analyst::analyzeTransactions(const QList<QStringList> &transactions) {
-        this->performMining(transactions);
+    void Analyst::analyzeTransactions(const QList<QStringList> &transactions, double transactionsPerEvent) {
+        this->performMining(transactions, transactionsPerEvent);
     }
 
 
     //------------------------------------------------------------------------
     // Protected methods.
 
-    void Analyst::performMining(const QList<QStringList> & transactions) {
+    void Analyst::performMining(const QList<QStringList> & transactions, double transactionsPerEvent) {
         // Clear these every time, to ensure the original behavior.
         this->itemIDNameHash.clear();
         this->itemNameIDHash.clear();
         this->sortedFrequentItemIDs.clear();
 
         qDebug() << "starting mining, # transactions: " << transactions.size();
-        FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * 4000), &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
+        FPGrowth * fpgrowth = new FPGrowth(transactions, ceil(this->minSupport * transactions.size() / transactionsPerEvent), &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
         fpgrowth->setConstraints(this->frequentItemsetItemConstraints);
         fpgrowth->setConstraintsToPreprocess(this->ruleConsequentItemConstraints);
         QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets(false);

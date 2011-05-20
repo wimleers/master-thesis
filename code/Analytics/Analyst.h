@@ -24,10 +24,10 @@ namespace Analytics {
         void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
     protected slots:
-        void analyzeTransactions(const QList<QStringList> & transactions);
+        void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent);
 
     protected:
-        void performMining(const QList<QStringList> & transactions);
+        void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
 
         double minSupport;
         double maxSupportError;

@@ -408,6 +408,8 @@ namespace EpisodesParser {
     // Protected slots.
 
     void Parser::processParsedChunk(const QStringList & chunk) {
+        double transactionsPerEvent;
+
         qDebug() << "STARTING CHUNK" << chunk[0];
 
         // This 100% concurrent approach fails, because QGeoIP still has
@@ -448,9 +450,13 @@ namespace EpisodesParser {
             transactions.append(transactionGroup);
         }
 
-        qDebug() << transactions[0];
-        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines! Transactions generated:" << transactions.size();
+        transactionsPerEvent = ((double) transactions.size()) / chunk.size();
 
-        emit processedChunk(transactions);
+        qDebug() << transactions[0];
+        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!"
+                 << "Transactions generated:" << transactions.size() << "."
+                 << "(" << transactionsPerEvent << " transactions/event)";
+
+        emit processedChunk(transactions, transactionsPerEvent);
     }
 }
