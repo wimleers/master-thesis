@@ -31,6 +31,9 @@ namespace Analytics {
                 nextNode = new FPNode<TiltedTimeWindow>(itemID);
                 this->nodeCount++;
                 nextNode->setParent(currentNode);
+#ifdef DEBUG
+        nextNode->itemIDNameHash = pattern.IDNameHash;
+#endif
             }
 
             // We've processed this item in the transaction, time to move on
@@ -38,10 +41,6 @@ namespace Analytics {
             currentNode = nextNode;
             nextNode = NULL;
         }
-
-#ifdef DEBUG
-        currentNode->itemIDNameHash = pattern.IDNameHash;
-#endif
 
         TiltedTimeWindow * ttw = currentNode->getPointerToValue();
         ttw->appendQuarter(pattern.support, updateID);

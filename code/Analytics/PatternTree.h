@@ -39,7 +39,6 @@ namespace Analytics {
 
     // QDebug output operators for FPNode<TiltedTimeWindow>.
     QDebug operator<<(QDebug dbg, const FPNode<TiltedTimeWindow> & node);
-
 #endif
 
 }
