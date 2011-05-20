@@ -10,6 +10,7 @@ SOURCES += \
     $${PWD}/RuleMiner.cpp \
     $${PWD}/Analyst.cpp \
     $${PWD}/Constraints.cpp \
+    $${PWD}/FPStream.cpp \
     $${PWD}/PatternTree.cpp \
     $${PWD}/TiltedTimeWindow.cpp
 HEADERS += \
@@ -20,6 +21,7 @@ HEADERS += \
     $${PWD}/RuleMiner.h \
     $${PWD}/Analyst.h \
     $${PWD}/Constraints.h \
+    $${PWD}/FPStream.h \
     $${PWD}/PatternTree.h \
     $${PWD}/TiltedTimeWindow.h
 

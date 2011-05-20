@@ -12,10 +12,12 @@ HEADERS += TestFPTree.h \
            TestFPGrowth.h \
            TestRuleMiner.h \
            TestTiltedTimeWindow.h \
-           TestPatternTree.h
+           TestPatternTree.h \
+           TestFPStream.h
 SOURCES += Tests.cpp \
            TestFPTree.cpp \
            TestFPGrowth.cpp \
            TestRuleMiner.cpp \
            TestTiltedTimeWindow.cpp \
-           TestPatternTree.cpp
+           TestPatternTree.cpp \
+           TestFPStream.cpp

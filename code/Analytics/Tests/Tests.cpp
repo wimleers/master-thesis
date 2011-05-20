@@ -3,6 +3,7 @@
 #include "TestRuleMiner.h"
 #include "TestTiltedTimeWindow.h"
 #include "TestPatternTree.h"
+#include "TestFPStream.h"
 
 int main() {
     TestFPTree FPTree;
@@ -20,6 +21,9 @@ int main() {
 
     TestPatternTree patternTree;
     QTest::qExec(&patternTree);
+
+    TestFPStream FPStream;
+    QTest::qExec(&FPStream);
 
     return 0;
 }

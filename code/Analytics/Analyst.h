@@ -10,6 +10,7 @@
 #include "Item.h"
 #include "Constraints.h"
 #include "FPGrowth.h"
+#include "FPStream.h"
 #include "RuleMiner.h"
 
 
@@ -29,6 +30,7 @@ namespace Analytics {
     protected:
         void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
 
+        FPStream * fpstream;
         double minSupport;
         double maxSupportError;
         double minConfidence;

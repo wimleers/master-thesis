@@ -59,6 +59,10 @@ namespace Analytics {
     // Protected methods.
 
     void Analyst::performMining(const QList<QStringList> & transactions, double transactionsPerEvent) {
+        bool fpstream = true;
+
+        if (!fpstream) {
+//            qDebug() << "----------------------> FPGROWTH";
         // Clear these every time, to ensure the original behavior.
         this->itemIDNameHash.clear();
         this->itemNameIDHash.clear();
@@ -71,13 +75,34 @@ namespace Analytics {
         QList<FrequentItemset> frequentItemsets = fpgrowth->mineFrequentItemsets(false);
         qDebug() << "frequent itemset mining complete, # frequent itemsets:" << frequentItemsets.size();
 
+        /*
         this->ruleConsequentItemConstraints = fpgrowth->getPreprocessedConstraints();
         QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(frequentItemsets, this->minConfidence, this->ruleConsequentItemConstraints, fpgrowth);
         qDebug() << "mining association rules complete, # association rules:" << associationRules.size();
 
         qDebug() << associationRules;
+        */
 
         delete fpgrowth;
+
+        } else {
+//            qDebug() << "----------------------> FPSTREAM";
+
+        // Temporary show the FPStream datastructure (PatternTree) as it's
+        // being built, until rule mining has also been implemented.
+        static bool initial = true;
+        if (initial) {
+            this->fpstream->setConstraints(this->frequentItemsetItemConstraints);
+            this->fpstream->setConstraintsToPreprocess(this->ruleConsequentItemConstraints);
+            initial = false;
+        }
+        this->fpstream->processBatchTransactions(transactions, transactionsPerEvent);
+        /*
+        qDebug() << this->fpstream->getPatternTree().getNodeCount();
+        qDebug() << this->itemIDNameHash.size() << this->itemNameIDHash.size() << this->sortedFrequentItemIDs.size();
+        qDebug() << this->fpstream->getPatternTree();
+        */
+        }
     }
 
 }
