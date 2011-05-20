@@ -416,7 +416,12 @@ namespace EpisodesParser {
         // QtConcurrent::blockingMapped(chunk, Parser::mapAndExpandToEpisodesLogLine);
 
         // Perform the mapping from strings to EpisodesLogLine concurrently.
-        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+//        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+        QList<EpisodesLogLine> mappedChunk;
+        QString rawLine;
+        foreach (rawLine, chunk) {
+            mappedChunk << Parser::mapLineToEpisodesLogLine(rawLine);
+        }
 
         // Perform the expanding of the EpisodesLogLines sequentially.
         // Reason: see above.
@@ -428,7 +433,12 @@ namespace EpisodesParser {
 
         // Perform the mapping from ExpandedEpisodesLogLines to groups of
         // transactions concurrently
-        QList< QList<QStringList> > groupedTransactions = QtConcurrent::blockingMapped(expandedChunk, Parser::mapExpandedEpisodesLogLineToTransactions);
+//        QList< QList<QStringList> > groupedTransactions = QtConcurrent::blockingMapped(expandedChunk, Parser::mapExpandedEpisodesLogLineToTransactions);
+        QList< QList<QStringList> > groupedTransactions;
+        ExpandedEpisodesLogLine expLine;
+        foreach (expLine, expandedChunk) {
+            groupedTransactions << Parser::mapExpandedEpisodesLogLineToTransactions(expLine);
+        }
 
         // Perform the merging of transaction groups into a single list of
         // transactions sequentially (impossible to do concurrently).
