@@ -256,6 +256,16 @@ namespace Analytics {
      * processed for use in constraints as well.
      */
     void FPGrowth::scanTransactions() {
+        // Consider items with item names that have been mapped to  item IDs
+        // in previous executions of FPGrowth for use with constraints.
+        if (!this->itemIDNameHash->isEmpty()) {
+            foreach (ItemID itemID, this->itemIDNameHash->keys()) {
+                ItemName itemName = this->itemIDNameHash->value(itemID);
+                this->constraints.preprocessItem(itemName, itemID);
+                this->constraintsToPreprocess.preprocessItem(itemName, itemID);
+            }
+        }
+
         // Map the item names to item IDs. Maintain two dictionaries: one for
         // each look-up direction (name -> id and id -> name).
         ItemID itemID;
