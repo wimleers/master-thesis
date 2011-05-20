@@ -42,7 +42,7 @@ int main(int argc, char *argv[]) {
     //analyst->addRuleConsequentItemConstraint("duration:acceptable", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
     //analyst->addRuleConsequentItemConstraint("duration:fast", Analytics::CONSTRAINT_POSITIVE_MATCH_ANY);
 
-    QObject::connect(parser, SIGNAL(processedChunk(QList<QStringList>)), analyst, SLOT(analyzeTransactions(QList<QStringList>)));
+    QObject::connect(parser, SIGNAL(processedChunk(QList<QStringList>, double)), analyst, SLOT(analyzeTransactions(QList<QStringList>, double)));
 
     timer.start();
 
