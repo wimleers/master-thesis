@@ -515,12 +515,14 @@ namespace Analytics {
         // frequent itemset that we've just found).
         QList<ItemList> prefixPaths = ctree->calculatePrefixPaths(frequentItemset[0]);
 
-        // Remove items from the prefix paths based that no longer
-        // have sufficient support.
+        // Remove items from the prefix paths that no longer have sufficient
+        // support.
+        // (i.e. remove items *within* prefix paths; this keeps every prefix
+        // path, unless of course it becomes empty, then it is discarded.)
         prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
 
         // If the conditional FP-tree would not be able to match the
-        // constraints (which we can now by looking at the current
+        // constraints (which we can know by looking at the current
         // frequent itemset and the prefix paths support counts), then
         // just don't bother generating it.
         // This is effectively pruning the search space for frequent
