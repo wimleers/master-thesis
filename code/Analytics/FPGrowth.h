@@ -68,6 +68,7 @@ namespace Analytics {
         FPTree * considerFrequentItemsupersets(const FPTree * ctree, const ItemIDList & frequentItemset);
         Transaction optimizeTransaction(const Transaction & transaction) const;
         ItemIDList optimizeItemset(const ItemIDList & itemset) const;
+        ItemIDList orderItemsetBySupport(const ItemIDList & itemset) const;
 
         // Properties.
         FPTree * tree;

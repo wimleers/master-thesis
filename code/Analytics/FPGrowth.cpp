@@ -57,10 +57,10 @@ namespace Analytics {
             return this->totalFrequentSupportCounts[itemset[0]];
         }
         else {
-            ItemIDList optimizedItemset = this->optimizeItemset(itemset);
+            ItemIDList optimizedItemset = this->orderItemsetBySupport(itemset);
 
             // The last item is the one with the least support, since it is
-            // optimized for this by FPGrowth::optimizeItemset.
+            // optimized for this by FPGrowth::orderItemsetBySupport.
             ItemID lastItemID = optimizedItemset[optimizedItemset.size() - 1];
 
             // Since all items in a frequent itemset must themselves also be
@@ -95,7 +95,7 @@ namespace Analytics {
         else {
             // First optimize the itemset so that the item with the least
             // support is the last item.
-            ItemIDList optimizedItemset = this->optimizeItemset(itemset);
+            ItemIDList optimizedItemset = this->orderItemsetBySupport(itemset);
 
             // Starting with the last item in the itemset:
             // 1) calculate its prefix paths
@@ -349,9 +349,20 @@ namespace Analytics {
      *
      * This is achieved by sorting the items by decreasing support count. To
      * do this as fast as possible, this->sortedFrequentItemIDs is reused.
-     * Because this->itemIDsSortedByTotalSupportCount does not include
-     * infrequent items, these are also automatically removed by this simple
-     * routine.
+     * Because this->sortedFrequentItemIDs does not include infrequent items,
+     * these are also automatically removed by this simple routine.
+     * However, that's not all: we want to ensure that item IDs for positive
+     * rule consequent constraints are at the top of the FP-tree. Because the
+     * mining process employed by FP-Growth ensures that we start at the leaf
+     * nodes and gradually grow frequent itemsets to include nodes towards the
+     * the root of the tree, that means that all subsets of frequent itemsets
+     * that do match the constraints are generated first. This implies that
+     * supersets of frequent itemsets match the constraints. We can then
+     * exploit this property to ensure all frequent itemsets that correspond
+     * to rule antecedents are generated before the frequent itemsets that
+     * correspond to entire rules. This is necessary if we want to use
+     * FP-Stream for rule mining: if we don't do this, we won't know what the
+     * support is for rule antecedents.
      *
      * @param transaction
      *   A transaction.
@@ -359,30 +370,77 @@ namespace Analytics {
      *   The optimized transaction.
      */
     Transaction FPGrowth::optimizeTransaction(const Transaction & transaction) const {
-        Transaction optimizedTransaction;
+        Transaction optimizedTransaction, front, back;
         Item item;
+        QSet<ItemID> frontItemIDs;
+
+        // Determine which items should be at the front.
+        frontItemIDs.unite(this->constraintsForRuleConsequents.getItemIDsForConstraintType(CONSTRAINT_POSITIVE_MATCH_ANY));
+        frontItemIDs.unite(this->constraintsForRuleConsequents.getItemIDsForConstraintType(CONSTRAINT_POSITIVE_MATCH_ALL));
 
         foreach (ItemID itemID, *(this->sortedFrequentItemIDs)) {
             item.id = itemID;
-            if (transaction.contains(item))
-                optimizedTransaction.append(transaction.at(transaction.indexOf(item)));
+            if (transaction.contains(item)) {
+                // Ensure items are either sent to the front or the back.
+                if (frontItemIDs.contains(itemID))
+                    front.append(transaction.at(transaction.indexOf(item)));
+                else
+                    back.append(transaction.at(transaction.indexOf(item)));
+            }
         }
+
+        // Build the optimized transaction by gluing together front and back.
+        optimizedTransaction << front << back;
 
         return optimizedTransaction;
     }
 
     /**
-     * Optimize an ItemIDList.
+     * Optimize an itemset (ItemIDList), like @fn{FPGrowth::optimizedTransaction}.
      *
-     * @see FPGrowth::optimizeTransaction(), which optimizes a list of Items,
-     * whereas this method optimized a list of ItemIDs.
+     * We need this in @fn{FPGrowth::calculateSupportCountExactly}, to ensure
+     * that we calculate the support by gradually moving from the leaf nodes
+     * towards the root nodes. We can only achieve that by ensuring we
+     * traverse the tree in an identical manner.
+     *
+     * @param itemset
+     *   An itemset.
+     * @return
+     *   The optimized itemset.
+     */
+    ItemIDList FPGrowth::optimizeItemset(const ItemIDList & itemset) const {
+        ItemIDList optimizedItemset, front, back;
+        QSet<ItemID> frontItemIDs;
+
+        // Determine which items should be at the front.
+        frontItemIDs.unite(this->constraintsForRuleConsequents.getItemIDsForConstraintType(CONSTRAINT_POSITIVE_MATCH_ANY));
+        frontItemIDs.unite(this->constraintsForRuleConsequents.getItemIDsForConstraintType(CONSTRAINT_POSITIVE_MATCH_ALL));
+
+        foreach (ItemID itemID, *(this->sortedFrequentItemIDs)) {
+            if (itemset.contains(itemID)) {
+                // Ensure items are either sent to the front or the back.
+                if (frontItemIDs.contains(itemID))
+                    front.append(itemID);
+                else
+                    back.append(itemID);
+            }
+        }
+
+        // Build the optimized itemset by gluing together front and back.
+        optimizedItemset << front << back;
+
+        return optimizedItemset;
+    }
+
+    /**
+     * Optimize an ItemIDList by ordering its items by descending support.
      *
      * @param itemset
      *   A list of ItemIDs.
      * @return
      *   The optimized list of ItemIDs.
      */
-    ItemIDList FPGrowth::optimizeItemset(const ItemIDList & itemset) const {
+    ItemIDList FPGrowth::orderItemsetBySupport(const ItemIDList & itemset) const {
         ItemIDList optimizedItemset;
 
         foreach (ItemID itemID, *(this->sortedFrequentItemIDs)) {
