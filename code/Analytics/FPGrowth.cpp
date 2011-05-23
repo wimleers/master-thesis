@@ -262,7 +262,7 @@ namespace Analytics {
             foreach (ItemID itemID, this->itemIDNameHash->keys()) {
                 ItemName itemName = this->itemIDNameHash->value(itemID);
                 this->constraints.preprocessItem(itemName, itemID);
-                this->constraintsToPreprocess.preprocessItem(itemName, itemID);
+                this->constraintsForRuleConsequents.preprocessItem(itemName, itemID);
             }
         }
 
@@ -280,7 +280,7 @@ namespace Analytics {
 
                     // Consider this item for use with constraints.
                     this->constraints.preprocessItem(itemName, itemID);
-                    this->constraintsToPreprocess.preprocessItem(itemName, itemID);
+                    this->constraintsForRuleConsequents.preprocessItem(itemName, itemID);
                 }
                 else
                     itemID = this->itemNameIDHash->value(itemName);
@@ -297,7 +297,7 @@ namespace Analytics {
                 // Remove infrequent items' ids from the preprocessed
                 // constraints.
                 this->constraints.removeItem(itemID);
-                this->constraintsToPreprocess.removeItem(itemID);
+                this->constraintsForRuleConsequents.removeItem(itemID);
             }
         }
 

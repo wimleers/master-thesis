@@ -32,8 +32,8 @@ namespace Analytics {
         ~FPGrowth();
 
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
-        void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
-        const Constraints & getPreprocessedConstraints() const { return this->constraintsToPreprocess; }
+        void setConstraintsForRuleConsequents(const Constraints & constraints) { this->constraintsForRuleConsequents = constraints; }
+        const Constraints & getConstraintsForRuleConsequents() const { return this->constraintsForRuleConsequents; }
 
         QList<FrequentItemset> mineFrequentItemsets(bool asynchronous = true);
 
@@ -72,7 +72,7 @@ namespace Analytics {
         // Properties.
         FPTree * tree;
         Constraints constraints;
-        Constraints constraintsToPreprocess;
+        Constraints constraintsForRuleConsequents;
         ItemIDNameHash * itemIDNameHash;
         ItemNameIDHash * itemNameIDHash;
         ItemIDList     * sortedFrequentItemIDs;
