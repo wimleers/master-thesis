@@ -4,6 +4,7 @@
 #include "Item.h"
 #include "Constraints.h"
 #include "FPGrowth.h"
+#include "PatternTree.h"
 #include <QList>
 
 
@@ -16,9 +17,11 @@ namespace Analytics {
     class RuleMiner {
     public:
         static QList<AssociationRule> mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const FPGrowth * fpgrowth);
+        static QList<AssociationRule> mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const PatternTree & patternTree, uint from, uint to);
 
     protected:
         static QList<AssociationRule> generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const FPGrowth * fpgrowth);
+        static QList<AssociationRule> generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const PatternTree & patternTree, uint from, uint to);
         static ItemIDList getAntecedent(const ItemIDList & frequentItemset, const ItemIDList & consequent);
         static QList<ItemIDList> generateCandidateItemsets(const QList<ItemIDList> & frequentItemsubsets);
     };

@@ -8,7 +8,7 @@ namespace Analytics {
     /**
      * An exact implementation of algorithm 6.2 on page 351 in the textbook.
      */
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints &  ruleConsequentConstraints, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const FPGrowth * fpgrowth) {
         QList<AssociationRule> associationRules;
         QList<ItemIDList> consequents;
         bool hasConstraints = !ruleConsequentConstraints.empty();
@@ -38,6 +38,47 @@ namespace Analytics {
                 // Attempt to generate association rules for this frequent
                 // itemset and store the results.
                 associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, consequents, minimumConfidence, fpgrowth));
+            }
+        }
+        return associationRules;
+    }
+
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const PatternTree & patternTree, uint from, uint to) {
+        QList<AssociationRule> associationRules;
+        QList<ItemIDList> consequents;
+        bool hasConstraints = !ruleConsequentConstraints.empty();
+
+        // Iterate over all frequent itemsets.
+        foreach (FrequentItemset frequentItemset, frequentItemsets) {
+            // It's only possible to generate an association rule if there are at
+            // least two items in the frequent itemset.
+            if (frequentItemset.itemset.size() >= 2) {
+                // Generate all 1-item consequents.
+                consequents.clear();
+                foreach (ItemID itemID, frequentItemset.itemset) {
+                    ItemIDList consequent;
+                    consequent.append(itemID);
+
+                    // Store this consequent whenever no constraints are
+                    // defined, or when constraints are defined and the
+                    // consequent matches the constraints.
+                    if (!hasConstraints || ruleConsequentConstraints.matchItemset(consequent))
+                        consequents.append(consequent);
+                }
+
+#ifdef RULEMINER_DEBUG
+                qDebug() << "Generating rules for frequent itemset" << frequentItemset << " and consequents " << consequents;
+#endif
+
+                // If no valid consequents could be found (due to none if the
+                // items matching the constraints), then don't attempt to
+                // generate association rules.
+                if (consequents.isEmpty())
+                    continue;
+
+                // Attempt to generate association rules for this frequent
+                // itemset and store the results.
+                associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, consequents, minimumConfidence, patternTree, from, to));
             }
         }
         return associationRules;
@@ -120,6 +161,61 @@ namespace Analytics {
         return associationRules;
     }
 
+    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const PatternTree & patternTree, uint from, uint to) {
+        Q_ASSERT_X(consequents.size() > 0, "RuleMiner::generateAssociationRulesForFrequentItemset", "List of consequents may not be empty.");
+
+        QList<AssociationRule> associationRules;
+        SupportCount antecedentSupportCount;
+        ItemIDList antecedent;
+        float confidence;
+        unsigned int k = frequentItemset.itemset.size(); // Size of the frequent itemset.
+        unsigned int m = consequents[0].size(); // Size of a single consequent.
+
+        // Iterate over all given consequents.
+        foreach (ItemIDList consequent, consequents) {
+            // Get the antecedent for the current consequent, so we
+            // effectively get a candidate association rule.
+            antecedent = RuleMiner::getAntecedent(frequentItemset.itemset, consequent);
+
+            // Calculate the support for the frequent itemsets over the given
+            // range.
+            TiltedTimeWindow * ttw = patternTree.getPatternSupport(antecedent);
+            Q_ASSERT(ttw != NULL);
+            antecedentSupportCount = ttw->getSupportForRange(from, to);
+            confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
+
+            // If the confidence is sufficiently high, we've found an
+            // association rule that meets our requirements.
+#ifdef RULEMINER_DEBUG
+            qDebug () << "confidence" << confidence << ", frequent itemset support" << frequentItemset.support << ", antecedent support" << antecedentSupportCount << ", antecedent" << antecedent << ", consequent" << consequent;
+#endif
+
+            if (confidence >= minimumConfidence) {
+                AssociationRule rule(antecedent, consequent, confidence);
+#ifdef DEBUG
+                rule.IDNameHash = frequentItemset.IDNameHash;
+#endif
+                associationRules.append(rule);
+            }
+            // If the confidence is not sufficiently high, delete this
+            // consequent, to prevent other consequents to be generated that
+            // build upon this one since those consequents would have the same
+            // insufficiently high confidence in the best case.
+            else
+                consequents.removeAll(consequent);
+        }
+
+        // If there are still consequents left (i.e. consequents with a
+        // sufficiently high confidence), and the size of the consequents
+        // still alows them to be expanded, expand the consequents and attempt
+        // to generate more association rules with them.
+        if (consequents.size() >= 2 && k > m + 1) {
+            QList<ItemIDList> candidateConsequents = RuleMiner::generateCandidateItemsets(consequents);
+            associationRules.append(RuleMiner::generateAssociationRulesForFrequentItemset(frequentItemset, candidateConsequents, minimumConfidence, patternTree, from, to));
+        }
+
+        return associationRules;
+    }
 
     /**
      * Build the antecedent for this candidate consequent, which are all items
