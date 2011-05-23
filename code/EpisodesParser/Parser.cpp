@@ -436,6 +436,9 @@ namespace EpisodesParser {
 
     void Parser::processBatch(const QList<EpisodesLogLine> batch) {
         double transactionsPerEvent;
+#ifdef DEBUG
+        uint items = 0;
+#endif
 
         // This 100% concurrent approach fails, because QGeoIP still has
         // thread-safety issues. Hence, we only do the mapping from a QString
@@ -465,6 +468,10 @@ namespace EpisodesParser {
         QList<QStringList> transactionGroup;
         foreach (transactionGroup, groupedTransactions) {
             transactions.append(transactionGroup);
+#ifdef DEBUG
+            foreach (const QStringList & transaction, transactionGroup)
+                items += transaction.size();
+#endif
         }
 
         transactionsPerEvent = ((double) transactions.size()) / batch.size();
@@ -472,6 +479,8 @@ namespace EpisodesParser {
         qDebug() << "Processed batch of" << batch.size() << "lines!"
                  << "Transactions generated:" << transactions.size() << "."
                  << "(" << transactionsPerEvent << "transactions/event)"
+                 << "Avg. transaction length:" << 1.0 * items / transactions.size() << "."
+                 << "(" << items << "items in total)"
                  << "Events occurred between"
                  << QDateTime::fromTime_t(batch.first().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str()
                  << "and"
