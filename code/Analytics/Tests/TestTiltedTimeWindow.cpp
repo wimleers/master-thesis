@@ -26,7 +26,10 @@ void TestTiltedTimeWindow::basic() {
     // Four more quarters, meaning that the first hour of the second day
     // will be completed *and* another quarter is added, which will provide
     // the tipping point to fill the first day bucket.
-    supportCounts << 10 << 10 << 10 << 222;
+    supportCounts << 10 << 10 << 10 << 20;
+    // And finally, four more quarters, which will ensure there are 2 hours
+    // of the second day.
+    supportCounts << 20 << 20 << 20 << 30;
 
     // First hour.
     for (int i = 0; i < 4; i++)
@@ -86,7 +89,7 @@ void TestTiltedTimeWindow::basic() {
     // the tipping point to fill the first day bucket.
     for (int i = 97; i < 101 ; i++)
         ttw->appendQuarter(supportCounts[i], i);
-    QCOMPARE(ttw->getBuckets(29), QVector<SupportCount>() << 222 <<  -1 <<  -1 << -1
+    QCOMPARE(ttw->getBuckets(29), QVector<SupportCount>() << 20 <<  -1 <<  -1 << -1
                                               <<  40 <<  -1 <<  -1
                                               <<  -1 <<  -1 <<  -1
                                               <<  -1 <<  -1 <<  -1
@@ -99,17 +102,27 @@ void TestTiltedTimeWindow::basic() {
     QCOMPARE(ttw->oldestBucketFilled, 28);
     QCOMPARE(ttw->getLastUpdate(), (unsigned int) 100);
 
+    // Four more quarters, meaning that the second hour of the second day will
+    // be completed. This is a test to check if the "oldestBucketFilled"
+    // variable updates correctly: it should remain set to 28, and should not
+    // be reset to 5. Since the second hour is added (which means the first
+    // hour shifts from bucket 4 to bucket 5), this is a logic edge case that
+    // may be expected.
+    for (int i = 101; i < 105; i++)
+        ttw->appendQuarter(supportCounts[i], i);
+    QCOMPARE(ttw->oldestBucketFilled, 28);
+    QCOMPARE(ttw->getLastUpdate(), (unsigned int) 104);
 
     // Drop tail starting at Granularity 1. This means only the value in the
-    // first granularity (buckets 0, 1, 2 and 3) are is kept, and all
-    // subsequent granularities (and buckets) are reset.
+    // first granularity (buckets 0, 1, 2 and 3) are kept, and all subsequent
+    // granularities (and buckets) are reset.
     ttw->dropTail((Granularity) 1);
     QVector<SupportCount> buckets = ttw->getBuckets();
-    QCOMPARE(buckets[0], (SupportCount) 222);
+    QCOMPARE(buckets[0], (SupportCount) 30);
     for (int i = 1; i < TTW_NUM_BUCKETS; i++)
         QCOMPARE(buckets[i], (SupportCount) -1);
     QCOMPARE(ttw->oldestBucketFilled, 3);
-    QCOMPARE(ttw->getLastUpdate(), (unsigned int) 100);
+    QCOMPARE(ttw->getLastUpdate(), (unsigned int) 104);
 
     delete ttw;
 }

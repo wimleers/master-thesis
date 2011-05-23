@@ -38,7 +38,7 @@ namespace Analytics {
         // Find the granularity to which it belongs and reset every
         // granularity along the way.
         Granularity g;
-        for (g = start; g < (Granularity) TTW_NUM_GRANULARITIES; g = (Granularity) ((int) g + 1))
+        for (g = (Granularity) (TTW_NUM_GRANULARITIES - 1); g >= start; g = (Granularity) ((int) g - 1))
             this->reset(g);
     }
 
@@ -101,8 +101,11 @@ namespace Analytics {
         // Update this granularity's used capacity..
         this->capacityUsed[granularity] = 0;
 
-        // Update oldestBucketFilled.
-        if (this->oldestBucketFilled > offset - 1)
+        // Update oldestBucketFilled by resetting it to the beginning of this
+        // granularity, but only if it is in fact currently pointing to a
+        // position *within* this granularity (i.e. if it is in the range
+        // [offset, offset + count - 1]).
+        if (this->oldestBucketFilled > offset - 1 && this->oldestBucketFilled < offset + count)
             this->oldestBucketFilled = offset - 1;
     }
 
