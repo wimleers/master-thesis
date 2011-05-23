@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
     parser = new EpisodesParser::Parser();
     // TODO: when these parameters have been figured out, they should be the defaults
     // and therefor they should be moved to the Analyst constructor.
-    analyst = new Analytics::Analyst(0.05, 0.05, 0.2);
+    analyst = new Analytics::Analyst(0.05, 0.04, 0.2);
 
     // Set constraints. This defines which associations will be found. By
     // default, only causes for slow episodes will be searched.
