@@ -39,11 +39,11 @@ void TestFPGrowth::basic() {
     //qDebug() << frequentItemsets;
 
     // Verify the results.
-    QCOMPARE(frequentItemsets, QList<FrequentItemset>() << FrequentItemset(ItemIDList() << 2     , 8)
-                                                        << FrequentItemset(ItemIDList() << 0     , 6)
+    QCOMPARE(frequentItemsets, QList<FrequentItemset>() << FrequentItemset(ItemIDList() << 0     , 6)
                                                         << FrequentItemset(ItemIDList() << 2 << 0, 4)
                                                         << FrequentItemset(ItemIDList() << 1     , 5)
                                                         << FrequentItemset(ItemIDList() << 2 << 1, 4)
+                                                        << FrequentItemset(ItemIDList() << 2     , 8)
                                                         << FrequentItemset(ItemIDList() << 3     , 4)
     );
 
