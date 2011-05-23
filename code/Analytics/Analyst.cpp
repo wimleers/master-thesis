@@ -25,7 +25,7 @@ namespace Analytics {
     }
 
     /**
-     * Add a rule consequentitem constraint of a given constraint type. When
+     * Add a rule consequent item constraint of a given constraint type. When
      * rules are being mined, only those will be considered that match the
      * constraints defined here.
      *
@@ -48,10 +48,44 @@ namespace Analytics {
 
 
     //------------------------------------------------------------------------
-    // Protected slots.
+    // Public slots.
 
     void Analyst::analyzeTransactions(const QList<QStringList> &transactions, double transactionsPerEvent) {
         this->performMining(transactions, transactionsPerEvent);
+    }
+
+    /**
+     * Mine rules over a range of buckets (i.e., a range of time).
+     *
+     * @param from
+     *   The range starts at this bucket.
+     * @param to
+     *   The range ends at this bucket.
+     */
+    void Analyst::mineRules(uint from, uint to) {
+        // First, consider each item for use with constraints.
+        foreach (ItemID itemID, this->itemIDNameHash.keys()) {
+            ItemName itemName = this->itemIDNameHash[itemID];
+            this->ruleConsequentItemConstraints.preprocessItem(itemName, itemID);
+        }
+
+        // Now, mine for association rules.
+        QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(
+                this->fpstream->getPatternTree().getFrequentItemsetsForRange(
+                        this->fpstream->calculateMinSupportForRange(from, to),
+                        this->frequentItemsetItemConstraints,
+                        from,
+                        to
+                ),
+                this->minConfidence,
+                this->ruleConsequentItemConstraints,
+                this->fpstream->getPatternTree(),
+                from,
+                to
+        );
+
+        qDebug() << "mining association rules complete, # association rules:" << associationRules.size();
+        qDebug() << associationRules;
     }
 
 

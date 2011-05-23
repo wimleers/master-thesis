@@ -24,8 +24,9 @@ namespace Analytics {
         void addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type);
         void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
-    protected slots:
+    public slots:
         void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent);
+        void mineRules(uint from, uint to);
 
     protected:
         void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
