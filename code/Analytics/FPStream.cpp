@@ -153,10 +153,10 @@ namespace Analytics {
             // Add the frequent itemset to the pattern tree.
             this->patternTree.addPattern(frequentItemset, this->currentBatchID);
 
-                // Conduct tail pruning.
-                dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
-                if (dropTailStartGranularity != (Granularity) -1)
-                    tiltedTimeWindow->dropTail(dropTailStartGranularity);
+            // Conduct tail pruning.
+            dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
+            if (dropTailStartGranularity != (Granularity) -1)
+                tiltedTimeWindow->dropTail(dropTailStartGranularity);
 
             // If the tilted time window is empty, then tell FP-Growth to
             // stop mining supersets of this frequent itemset (type II
