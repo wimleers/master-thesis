@@ -150,21 +150,10 @@ namespace Analytics {
 
         // If the current pattern exists in the pattern tree.
         if (tiltedTimeWindow != NULL) {
-            // Perform the regular processing (as described by the FP-Stream
-            // algorithm) only when the frequent itemset matched the
-            // contraints.
-            if (frequentItemsetMatchesConstraints) {
-                // Add the frequent itemset to the pattern tree.
-                this->patternTree.addPattern(frequentItemset, this->currentBatchID);
+            // Add the frequent itemset to the pattern tree.
+            this->patternTree.addPattern(frequentItemset, this->currentBatchID);
 
                 // Conduct tail pruning.
-            }
-
-            // But *always* execute the code below. Even if a frequent
-            // itemset did not match its constraints, its supersets still
-            // might!
-            // The above if-test is a logical, simple extension of the
-            // FP-Stream algorithm to support constraints.
                 dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
                 if (dropTailStartGranularity != (Granularity) -1)
                     tiltedTimeWindow->dropTail(dropTailStartGranularity);
@@ -177,7 +166,8 @@ namespace Analytics {
             // FP-Growth now it should continue to mine supersets. But if
             // the received ctree (conditional tree) is NULL, then it was
             // determined through constraint search space matching that it
-            // would be impossible to find frequent supersets.
+            // would be impossible to find frequent supersets that match the
+            // constraints.
             if (!tiltedTimeWindow->isEmpty() && ctree != NULL) {
                 this->statusMutex.lock();
                 this->supersetsBeingCalculated.append(frequentItemset.itemset);
@@ -204,33 +194,17 @@ namespace Analytics {
         else if (tiltedTimeWindow == NULL) {
             // Perform the regular processing (as described by the FP-Stream
             // algorithm) only when the frequent itemset matched the
-            // contraints.
-            if (frequentItemsetMatchesConstraints) {
+            // contraints *OR* when its superset has the potential to match
+            // the constraints.
+            // The latter is necessary because *if* the superset matches the
+            // constraints, then its antecedent's SupportCount also needs to
+            // to be known, to be able to calculate the confidence of
+            // potential association rules.
+            if (frequentItemsetMatchesConstraints || ctree != NULL) {
                 // Add it (it meets the minimum support minus the error rate
                 // because it was returned by FP-Growth).
                 this->patternTree.addPattern(frequentItemset, this->currentBatchID);
             }
-            // If the frequent itemset didn't match its constraints, a
-            // superset still might! However, since the FP-Stream algorithm
-            // prescribes that no supersets should be mined when the current
-            // pattern does not yet exist in the pattern tree, but this
-            // pattern should be added to the pattern tree; and we didn't add
-            // it to the pattern tree because it didn't match its contraints,
-            // we *will* continue to mine supersets.
-            // As soon as we'll find a superset that matches it constraints,
-            // the preceding if-statement will evaluate to true and hence the
-            // pattern will be added. Hence this is a logical, simple
-            // extension of the FP-Stream algorithm to support constraints.
-            else if (ctree != NULL) {
-                this->statusMutex.lock();
-                this->supersetsBeingCalculated.append(frequentItemset.itemset);
-                this->statusMutex.unlock();
-#ifdef FPSTREAM_DEBUG
-                qDebug() << "\t\t\t\t\tbranch started (b):" << frequentItemset.itemset << ", remainder: " << this->supersetsBeingCalculated << "(" << this->supersetsBeingCalculated.size() << ")";
-#endif
-                emit this->mineForFrequentItemsupersets(ctree, frequentItemset);
-            }
-
 
             // Note: this also applies type I pruning: this pattern was not
             // yet found in the pattern tree, and thus none of its supersets
