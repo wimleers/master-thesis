@@ -19,6 +19,65 @@ namespace Analytics {
         return this->root->findNodeByPattern(pattern);
     }
 
+    /**
+     * Get the frequent itemsets that match given constraints for a range of
+     * buckets in the TiltedTimeWindows in this PatternTree.
+     *
+     * @param minSupport
+     *   The minimum support that the itemset must have over the given range
+     *   to qualify as "frequent".
+     * @param frequentItemsetConstraints
+     *   The constraints that frequent itemsets must match.
+     * @param from
+     *   The range starts at this bucket.
+     * @param to
+     *   The range starts at this bucket.
+     * @param prefix
+     *   Internal parameter (for recursive calls).
+     * @param node
+     *   Internal parameter (for recursive calls).
+     * @return
+     *   The frequent itemsets over the given range that match the given
+     *   constraints.
+     */
+    QList<FrequentItemset> PatternTree::getFrequentItemsetsForRange(SupportCount minSupport, const Constraints & frequentItemsetConstraints, uint from, uint to, const ItemIDList & prefix, FPNode<TiltedTimeWindow> * node) const {
+        QList<FrequentItemset> frequentItemsets;
+        FrequentItemset frequentItemset;
+
+        // Start at the root.
+        if (node == NULL)
+            node = this->root;
+        // If it's not the root node, set the current frequent itemset.
+        else {
+            frequentItemset.itemset = prefix;
+            frequentItemset.itemset.append(node->getItemID());
+            frequentItemset.support = node->getValue().getSupportForRange(from, to);
+#ifdef DEBUG
+            frequentItemset.IDNameHash = node->itemIDNameHash;
+#endif
+        }
+
+        // Add this frequent itemset to the list of frequent itemsets if
+        // it qualifies through its support and if it matches the
+        // constraints.
+        if (frequentItemset.support > minSupport && frequentItemsetConstraints.matchItemset(frequentItemset.itemset))
+            frequentItemsets.append(frequentItemset);
+
+        // Recursive call for each child node of the current node.
+        foreach (FPNode<TiltedTimeWindow> * child, node->getChildren()) {
+            frequentItemsets.append(this->getFrequentItemsetsForRange(
+                    minSupport,
+                    frequentItemsetConstraints,
+                    from,
+                    to,
+                    frequentItemset.itemset,
+                    child
+            ));
+        }
+
+        return frequentItemsets;
+    }
+
     void PatternTree::addPattern(const FrequentItemset & pattern, uint32_t updateID) {
         // The initial current node is the root node.
         FPNode<TiltedTimeWindow> * currentNode = root;

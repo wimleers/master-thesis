@@ -8,6 +8,7 @@
 #include "Item.h"
 #include "TiltedTimeWindow.h"
 #include "FPNode.h"
+#include "Constraints.h"
 
 
 namespace Analytics {
@@ -21,6 +22,12 @@ namespace Analytics {
         TiltedTimeWindow * getPatternSupport(const ItemIDList & pattern) const;
         unsigned int getNodeCount() const { return this->nodeCount; }
         uint getCurrentQuarter() const { return this->currentQuarter; }
+        QList<FrequentItemset> getFrequentItemsetsForRange(SupportCount minSupport,
+                                                           const Constraints & frequentItemsetConstraints,
+                                                           uint from,
+                                                           uint to,
+                                                           const ItemIDList & prefix = ItemIDList(),
+                                                           FPNode<TiltedTimeWindow> * node = NULL) const;
 
         // Modifiers.
         void addPattern(const FrequentItemset & pattern, uint32_t updateID);
