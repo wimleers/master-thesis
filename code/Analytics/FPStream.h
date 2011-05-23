@@ -29,6 +29,7 @@ namespace Analytics {
                  ItemIDNameHash * itemIDNameHash,
                  ItemNameIDHash * itemNameIDHash,
                  ItemIDList * sortedFrequentItemIDs);
+        SupportCount calculateMinSupportForRange(uint from, uint to) const;
 
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
         void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }

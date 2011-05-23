@@ -24,6 +24,21 @@ namespace Analytics {
     // Public slots.
 
     /**
+     * Calculate the minimum support for frequent itemsets for a range of
+     * buckets, based on the batch sizes.
+     *
+     * @param from
+     *   The range starts at this bucket.
+     * @param to
+     *   The range ends at this bucket.
+     * @return
+     *   The minimum support for this range.
+     */
+    SupportCount FPStream::calculateMinSupportForRange(uint from, uint to) const {
+        return ceil(this->minSupport * this->batchSizes.getSupportForRange(from, to));
+    }
+
+    /**
      * Process a batch of transactions. Each batch should cover a 15-minute
      * window (i.e. a quarter).
      *
