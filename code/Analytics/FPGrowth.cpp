@@ -480,28 +480,11 @@ namespace Analytics {
     QList<FrequentItemset> FPGrowth::generateFrequentItemsets(const FPTree * ctree, const FrequentItemset & suffix, bool asynchronous) {
         bool frequentItemsetMatchesConstraints;
         QList<FrequentItemset> frequentItemsets;
-
-        // First determine the order for the items in this particular tree,
-        // based on the list that contains *all* items in this data set,
-        // sorted by support count.
-        // We do this mostly for cosmetic reasons. However, it also implies
-        // that we will generate frequent itemsets for which the first item is
-        // the most frequent, the second item is the second most frequent, etc.
-        // Note: cannot replaced with a call to FPGrowth::optimizeTransaction()
-        // because that works over a QList<Item>, wheras we have to deal with
-        // a QList<ItemID> here.
-        ItemIDList orderedItemIDs;
         ItemIDList itemIDsInTree = ctree->getItemIDs();
-        foreach (ItemID itemID, *(this->sortedFrequentItemIDs))
-            if (itemIDsInTree.contains(itemID))
-                orderedItemIDs.append(itemID);
-
-        // We don't need the unsorted item IDs anymore.
-        itemIDsInTree.clear();
 
         // Now iterate over each of the ordered suffix items and generate
         // candidate frequent itemsets!
-        foreach (ItemID prefixItemID, orderedItemIDs) {
+        foreach (ItemID prefixItemID, itemIDsInTree) {
             // Only if this prefix item's support meets or exceeds the minimum
             // support, it will be added as a frequent itemset (appended with
             // the received suffix of course).
@@ -525,7 +508,6 @@ namespace Analytics {
                 qDebug() << "\t\t\t\t new frequent itemset:" << frequentItemset;
 #endif
                 }
-
 
                 // Check if there are supersets to be mined.
                 FPTree * cfptree = this->considerFrequentItemsupersets(ctree, frequentItemset.itemset);
