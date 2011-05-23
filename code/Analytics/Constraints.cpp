@@ -119,7 +119,7 @@ namespace Analytics {
     /**
      * Check if a particular frequent itemset search space will be able to
      * match the defined constraints. We can do this by matching all
-     * constraints over the itemset *and* prefix paths support count
+     * constraints over the itemset *and* prefix paths support counts
      * simultaneously (since this itemset will be extended with portions of
      * the prefix paths).
      *
