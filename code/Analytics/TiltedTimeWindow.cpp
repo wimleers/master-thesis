@@ -42,6 +42,36 @@ namespace Analytics {
             this->reset(g);
     }
 
+    /**
+     * Get the support in this TiltedTimeWindow for a range of buckets.
+     *
+     * @param from
+     *   The range starts at this bucket.
+     * @param to
+     *   The range ends at this bucket.
+     * @return
+     *   The total support in the buckets in the given range.
+     */
+    SupportCount TiltedTimeWindow::getSupportForRange(uint from, uint to) const {
+        Q_ASSERT(from <= to);
+        Q_ASSERT(from < TTW_NUM_BUCKETS);
+        Q_ASSERT(to   < TTW_NUM_BUCKETS);
+        // "from" and "to" are unsigned integers, hence they're always >= 0.
+
+        // Return 0 if this TiltedTimeWindow is empty.
+        if (this->oldestBucketFilled == -1)
+            return 0;
+
+        // Otherwise, count the sum.
+        SupportCount sum = 0;
+        for (uint i = from; i <= to && i <= (uint) this->oldestBucketFilled; i++) {
+            if (this->buckets[i] != (uint) TTW_BUCKET_UNUSED)
+                sum += this->buckets[i];
+        }
+
+        return sum;
+    }
+
     QVector<SupportCount> TiltedTimeWindow::getBuckets(int numBuckets) const {
         Q_ASSERT(numBuckets <= TTW_NUM_BUCKETS);
 
