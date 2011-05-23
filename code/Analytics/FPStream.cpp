@@ -263,8 +263,6 @@ namespace Analytics {
             qDebug() << "\tPatternTree size: " << this->patternTree.getNodeCount();
             qDebug() << "\tItemIDNameHash size: " << this->itemIDNameHash->size();
             qDebug() << "\tf_list size: " << this->f_list->size();
-//            if (this->patternTree.getNodeCount() > 4000 || this->patternTree.getNodeCount() == 1908)
-//                qDebug() << this->patternTree;
 #endif
         }
     }
