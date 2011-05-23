@@ -51,7 +51,7 @@ namespace Analytics {
         this->currentFPGrowth = new FPGrowth(transactions, (SupportCount) (this->maxSupportError * transactions.size() / transactionsPerEvent), this->itemIDNameHash, this->itemNameIDHash, this->f_list);
 //        this->currentFPGrowth = new FPGrowth(transactions, (SupportCount) ceil(this->minSupport * transactions.size() / transactionsPerEvent), this->itemIDNameHash, this->itemNameIDHash, this->f_list);
         this->currentFPGrowth->setConstraints(this->constraints);
-        this->currentFPGrowth->setConstraintsToPreprocess(this->constraintsToPreprocess);
+        this->currentFPGrowth->setConstraintsForRuleConsequents(this->constraintsToPreprocess);
 
         // Initial batch.
         if (!this->initialBatchProcessed) {
