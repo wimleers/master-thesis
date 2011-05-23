@@ -76,10 +76,14 @@ namespace Analytics {
             if (i > 0)
                 dbg.nospace() << ", ";
 
-            dbg.nospace() << IDNameHash->value(itemset[i]).toStdString().c_str()
-                            << "("
-                            << itemset[i]
-                            << ")";
+            if (IDNameHash != NULL) {
+                dbg.nospace() << IDNameHash->value(itemset[i]).toStdString().c_str()
+                        << "("
+                        << itemset[i]
+                        << ")";
+            }
+            else
+                dbg.nospace() << itemset[i];
         }
 
         return dbg.nospace();

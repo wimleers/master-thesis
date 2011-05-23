@@ -90,6 +90,9 @@ namespace Analytics {
         SupportCount support;
 
 #ifdef DEBUG
+        FrequentItemset(ItemIDList itemset, SupportCount support, ItemIDNameHash * IDNameHash)
+            : itemset(itemset), support(support), IDNameHash(IDNameHash) {}
+
         ItemIDNameHash * IDNameHash;
 #endif
     };

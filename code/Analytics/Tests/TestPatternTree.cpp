@@ -7,20 +7,20 @@ void TestPatternTree::basic() {
     ItemIDList p1;
     p1 << 1 << 2 << 3;
     SupportCount s1 = 1;
-    patternTree->addPattern(FrequentItemset(p1, s1), 0);
+    patternTree->addPattern(FrequentItemset(p1, s1, NULL), 0);
 
     // Pattern 2: {1, 2}, support: 2, add this twice..
     ItemIDList p2;
     p2 << 1 << 2;
     SupportCount s2 = 2;
-    patternTree->addPattern(FrequentItemset(p2, s2), 0);
-    patternTree->addPattern(FrequentItemset(p2, s2), 1);
+    patternTree->addPattern(FrequentItemset(p2, s2, NULL), 0);
+    patternTree->addPattern(FrequentItemset(p2, s2, NULL), 1);
 
     // Pattern 3: {1, 4}, support: 5.
     ItemIDList p3;
     p3 << 1 << 4;
     SupportCount s3 = 5;
-    patternTree->addPattern(FrequentItemset(p3, s3), 0);
+    patternTree->addPattern(FrequentItemset(p3, s3, NULL), 0);
 
     // Helpful for debugging/expanding this test.
     // Currently, this should match:
