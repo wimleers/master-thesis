@@ -73,6 +73,11 @@ namespace Analytics {
             // be mined as well). Hence, subsequent batches are handled by
             // FPStream::processFrequentItemset().
 
+            // Keep track of the current quarter we're in, in case we're
+            // starting a new TiltedTimeWindow (by adding a new pattern to the
+            // PatternTree).
+            this->patternTree.nextQuarter();
+
             // Connect signals/slots using queued connections, because TODO.
             // TODO: make Qt::QueuedConnection actually work, by running
             // FPGrowth in another thread.
@@ -123,7 +128,7 @@ namespace Analytics {
 #endif
 
         TiltedTimeWindow * tiltedTimeWindow;
-        int dropTailStartPos;
+        Granularity dropTailStartGranularity;
 
         // Get the tilted time window for the current pattern.
         tiltedTimeWindow = this->patternTree.getPatternSupport(frequentItemset.itemset);
@@ -138,9 +143,6 @@ namespace Analytics {
                 this->patternTree.addPattern(frequentItemset, this->currentBatchID);
 
                 // Conduct tail pruning.
-                dropTailStartPos = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
-                if (dropTailStartPos > -1)
-                    tiltedTimeWindow->dropTail(dropTailStartPos);
             }
 
             // But *always* execute the code below. Even if a frequent
@@ -148,6 +150,9 @@ namespace Analytics {
             // might!
             // The above if-test is a logical, simple extension of the
             // FP-Stream algorithm to support constraints.
+                dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
+                if (dropTailStartGranularity != (Granularity) -1)
+                    tiltedTimeWindow->dropTail(dropTailStartGranularity);
 
             // If the tilted time window is empty, then tell FP-Growth to
             // stop mining supersets of this frequent itemset (type II
@@ -286,16 +291,18 @@ namespace Analytics {
      *   -1 if nothing is droppable, a position in the [0, TTW_NUM_BUCKETS-1]
      *   range if a tail can be dropped.
      */
-    int FPStream::calculateDroppableTail(const TiltedTimeWindow & window, double minSupport, double maxSupportError, const TiltedTimeWindow & batchSizes) {
+    Granularity FPStream::calculateDroppableTail(const TiltedTimeWindow & window, double minSupport, double maxSupportError, const TiltedTimeWindow & batchSizes) {
+        Q_ASSERT(window.oldestBucketFilled <= batchSizes.oldestBucketFilled);
+
         // Iterate over all buckets in the tilted time window, starting at the
         // tail (i.e. the last/oldest bucket).
         int n = window.oldestBucketFilled;
         int l = -1, m = -1;
         SupportCount cumulativeSupport = 0, cumulativeBatchSize = 0;
         for (int i = n; i >= 0; i--) {
-            // Stop as soon as an unused bucket is encountered.
+            // Ignore unused buckets: continue.
             if (window.buckets[i] == (unsigned int) TTW_BUCKET_UNUSED)
-                break;
+                continue;
 
             // Continue going to the front of the vector as long as the
             // support of each bucket does not meet the minimum support, while
@@ -308,15 +315,19 @@ namespace Analytics {
         }
 
         // The variable "l" now contains the youngest bucket that does not
-        // meet the minimum support (but we didn't look beyond unused buckets).
+        // meet the minimum support.
 
         // If no such l is found, then there is no tail that can be dropped.
         if (l == -1)
-            return -1;
+            return (Granularity) -1;
 
         // Iterate again over all buckets in the tilted time window, starting
         // at the tail (i.e. the last/oldest bucket).
         for (int i = n; i >= l; i--) {
+            // Ignore unused buckets: continue.
+            if (window.buckets[i] == (unsigned int) TTW_BUCKET_UNUSED)
+                continue;
+
             cumulativeBatchSize += batchSizes.buckets[i];
             cumulativeSupport   += window.buckets[i];
 
@@ -338,7 +349,20 @@ namespace Analytics {
         // value of -1, which is then a correct answer too: there is *no*
         // droppable tail in that case.
 
-        return m;
+        // If m > -1, that means there are buckets that can be dropped.
+        // However, to ensure that TiltedTimeWindows stay in sync, we can only
+        // drop entire granularities. Hence, find the lowest granularity after
+        // m that can be dropped in its entirety (when m corresponds to the
+        // first bucket of a granularity, it is of course *that* granularity
+        // that can be dropped).
+        Granularity g;
+        if (m > -1) {
+            for (g = (Granularity) 0; g < (Granularity) TTW_NUM_GRANULARITIES; g = (Granularity) ((int) g + 1))
+                if ((uint) m <= TiltedTimeWindow::GranularityBucketOffset[g] && (uint) m < TiltedTimeWindow::GranularityBucketOffset[(Granularity) g + 1])
+                    return g;
+        }
+
+        return (Granularity) -1;
     }
 
 
@@ -385,9 +409,9 @@ namespace Analytics {
             tiltedTimeWindow->appendQuarter(0, this->currentBatchID);
 
             // Conduct tail pruning.
-            int dropTailStartPos = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
-            if (dropTailStartPos > -1)
-                tiltedTimeWindow->dropTail(dropTailStartPos);
+            Granularity dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
+            if (dropTailStartGranularity != (Granularity) -1)
+                tiltedTimeWindow->dropTail(dropTailStartGranularity);
 
             // If this node is a leaf node and its tilted time window is
             // empty, then drop the leaf.

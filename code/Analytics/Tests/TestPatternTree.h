@@ -11,6 +11,7 @@ class TestPatternTree : public QObject {
 
 private slots:
     void basic();
+    void additionsRemainInSync();
 };
 
 #endif // TESTPATTERNTREE_H

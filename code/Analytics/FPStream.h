@@ -37,10 +37,10 @@ namespace Analytics {
         const PatternTree & getPatternTree() const { return this->patternTree; }
 
         // Static methods (public to allow for unit testing).
-        static int calculateDroppableTail(const TiltedTimeWindow & window,
-                                          double minSupport,
-                                          double maxSupportError,
-                                          const TiltedTimeWindow & batchSizes);
+        static Granularity calculateDroppableTail(const TiltedTimeWindow & window,
+                                                  double minSupport,
+                                                  double maxSupportError,
+                                                  const TiltedTimeWindow & batchSizes);
 
     signals:
         void mineForFrequentItemsupersets(const FPTree * tree, const FrequentItemset & suffix);

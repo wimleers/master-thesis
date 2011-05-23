@@ -29,13 +29,10 @@ namespace Analytics {
         void appendQuarter(SupportCount s, uint32_t updateID);
         bool isEmpty() const { return this->oldestBucketFilled == -1; }
         uint32_t getLastUpdate() const { return this->lastUpdate; }
-        void dropTail(int start);
+        void dropTail(Granularity start);
         int getOldestBucketFilled() const { return this->oldestBucketFilled; }
+        uint getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
 
-#ifdef DEBUG
-        // Debug output helper method.
-        int getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
-#endif
 
         // Unit testing helper method.
         QVector<SupportCount> getBuckets(int numBuckets = TTW_NUM_BUCKETS) const;
@@ -45,18 +42,18 @@ namespace Analytics {
         int oldestBucketFilled;
 
         // Static properties
-        static  int GranularityBucketCount[TTW_NUM_GRANULARITIES];
-        static  int GranularityBucketOffset[TTW_NUM_GRANULARITIES];
+        static uint GranularityBucketCount[TTW_NUM_GRANULARITIES];
+        static uint GranularityBucketOffset[TTW_NUM_GRANULARITIES];
         static char GranularityChar[TTW_NUM_GRANULARITIES];
 
     protected:
         // Methods.
-        void reset(Granularity granularity, int startBucket = 0);
+        void reset(Granularity granularity);
         void shift(Granularity granularity);
         void store(Granularity granularity, SupportCount supportCount);
 
         // Properties.
-        int capacityUsed[TTW_NUM_GRANULARITIES];
+        uint capacityUsed[TTW_NUM_GRANULARITIES];
         uint32_t lastUpdate;
     };
 

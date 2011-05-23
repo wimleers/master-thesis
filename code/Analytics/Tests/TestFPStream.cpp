@@ -20,28 +20,28 @@ void TestFPStream::calculateDroppableTail() {
     // Not lower than minimum support.
     // - min sup: 1 < ceil(0.4 * 2)  <=>  1 < 1  <=>  false
     batchSizes.buckets[4] = 2;
-    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), -1);
+    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), (Granularity) -1);
 
     // Lower than minimum support, but not lower than cumulative maximum
     // support error.
     // - min sup: 1 < ceil(0.4 * 3)  <=>  1 < 2  <=>  true
     // - max err: 1 < ceil(0.05* 3)  <=>  1 < 1  <=>  false
     batchSizes.buckets[4] = 3;
-    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), -1);
+    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), (Granularity) -1);
 
     // Lower than minimum support, but not lower than cumulative maximum
     // support error (although it is equal and thus barely not lower!).
     // - min sup: 1 < ceil(0.4 * 20)  <=>  1 < 8  <=>  true
     // - max err: 1 < ceil(0.05* 20)  <=>  1 < 1  <=>  false
     batchSizes.buckets[4] = 20;
-    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), -1);
+    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), (Granularity) -1);
 
     // Lower than minimum support, and also lower than cumulative maximum
     // support error.
     // - min sup: 1 < ceil(0.4 * 21)  <=>  1 < 9  <=>  true
     // - max err: 1 < ceil(0.05* 21)  <=>  1 < 2  <=>  true
     batchSizes.buckets[4] = 21;
-    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), 4);
+    QCOMPARE(FPStream::calculateDroppableTail(ttw, 0.4, 0.05, batchSizes), (Granularity) 1);
 }
 
 void TestFPStream::basic() {
@@ -237,10 +237,8 @@ void TestFPStream::basic() {
     // Since we're working with minSupport = 0.4 and maxSupportError = 0.05,
     // that means bucket 4 (the first hour bucket) will be thrown away when
     // the support in bucket 4 is smaller than ceil(0.05 * 73) = 4.
-    // The fifth batch of transactions cannot affect the support for the first
-    // hour bucket (bucket 4), since it will equal the sum of the first 4
-    // quarter buckets, which are displayed above. Based on this, the
-    // following buckets should have their first hour bucket tail pruned:
+    // Based on this, the following buckets should have their first hour
+    // bucket tail pruned:
     // - A -> B -> D
     // - B -> D
     // - C -> A -> B
@@ -250,79 +248,96 @@ void TestFPStream::basic() {
     // - E
     // The edge case can be found in C -> B, where the support equals 4, which
     // makes it just qualified enough to remain.
+    // Also, since the suport for all patterns except {E} is 0 in bucket 0
+    // (the first quarter bucket), it means that bucket 0 will be thrown away
+    // when the support in bucket 0 is smaller than ceil (0.05 * 1) = 1.
+    // Based on this, the following buckets should have their first quarter
+    // bucket tail pruned:
+    // - A -> B -> D
+    // - B -> D
+    // - C -> A -> B
+    // - C -> A -> B -> D
+    // - C -> B -> D
+    // - C -> E
+    // And hence, since no support data is left anymore (bucket 0 has been
+    // thrown away!), all of these 6 patterns' nodes should be removed from
+    // the PatternTree altogether.
+
 
     // Helpful for debugging/expanding this test.
     // Currently, this should match:
     // (NULL)
     // -> ({A(0)}, {Q={0}, H={68}} (lastUpdate=4)) (0x0001)
     //     -> ({A(0), B(1)}, {Q={0}, H={23}} (lastUpdate=4)) (0x0005)
-    //         -> ({A(0), B(1), D(3)}, {Q={0}} (lastUpdate=4)) (0x0012)
     //     -> ({A(0), D(3)}, {Q={0}, H={43}} (lastUpdate=4)) (0x0009)
     // -> ({B(1)}, {Q={0}, H={25}} (lastUpdate=4)) (0x0004)
-    //     -> ({B(1), D(3)}, {Q={0}} (lastUpdate=4)) (0x0011)
     // -> ({C(2)}, {Q={0}, H={29}} (lastUpdate=4)) (0x0002)
     //     -> ({C(2), A(0)}, {Q={0}, H={24}} (lastUpdate=4)) (0x0003)
-    //         -> ({C(2), A(0), B(1)}, {Q={0}} (lastUpdate=4)) (0x0006)
-    //             -> ({C(2), A(0), B(1), D(3)}, {Q={0}} (lastUpdate=4)) (0x0013)
     //         -> ({C(2), A(0), D(3)}, {Q={0}, H={22}} (lastUpdate=4)) (0x0010)
     //     -> ({C(2), B(1)}, {Q={0}, H={4}} (lastUpdate=4)) (0x0007)
-    //         -> ({C(2), B(1), D(3)}, {Q={0}} (lastUpdate=4)) (0x0014)
     //     -> ({C(2), D(3)}, {Q={0}, H={23}} (lastUpdate=4)) (0x0015)
-    //     -> ({C(2), E(4)}, {Q={0}} (lastUpdate=4)) (0x0017)
     // -> ({D(3)}, {Q={0}, H={44}} (lastUpdate=4)) (0x0008)
     // -> ({E(4)}, {Q={1}} (lastUpdate=4)) (0x0016)
-    QCOMPARE(patternTree.getNodeCount(), (unsigned int) 17);
+    QCOMPARE(patternTree.getNodeCount(), (unsigned int) 11);
     //qDebug() << fpstream->getPatternTree();
 
     // Verify the above claims.
+    FPNode<TiltedTimeWindow> * noNode = NULL;
+    TiltedTimeWindow * noTTW = NULL;
     // root -> A -> B -> D
     node = root->getChild(0)->getChild(1)->getChild(3);
-    this->verifyNode(patternTree, node, 3, 12, ItemIDList() << 0 << 1 << 3, QVector<SupportCount>() << 0);
+    QCOMPARE(node, noNode);
     // root -> B -> D
     node = root->getChild(1)->getChild(3);
-    this->verifyNode(patternTree, node, 3, 11, ItemIDList() << 1 << 3, QVector<SupportCount>() << 0);
+    QCOMPARE(node, noNode);
     // root -> C -> A -> B
     node = root->getChild(2)->getChild(0)->getChild(1);
-    this->verifyNode(patternTree, node, 1, 6, ItemIDList() << 2 << 0 << 1, QVector<SupportCount>() << 0);
+    QCOMPARE(node, noNode);
     // root -> C -> A -> B -> D
-    node = root->getChild(2)->getChild(0)->getChild(1)->getChild(3);
-    this->verifyNode(patternTree, node, 3, 13, ItemIDList() << 2 << 0 << 1 << 3, QVector<SupportCount>() << 0);
+    TiltedTimeWindow * ttw = patternTree.getPatternSupport(ItemIDList() << 2 << 0 << 1 << 3);
+    QCOMPARE(ttw, noTTW);
     // root -> C -> B -> D
     node = root->getChild(2)->getChild(1)->getChild(3);
-    this->verifyNode(patternTree, node, 3, 14, ItemIDList() << 2 << 1 << 3, QVector<SupportCount>() << 0);
+    QCOMPARE(node, noNode);
     // root -> C -> E
     node = root->getChild(2)->getChild(4);
-    this->verifyNode(patternTree, node, 4, 17, ItemIDList() << 2 << 4, QVector<SupportCount>() << 0);
+    QCOMPARE(node, noNode);
     // root -> E
     node = root->getChild(4);
     this->verifyNode(patternTree, node, 4, 16, ItemIDList() << 4, QVector<SupportCount>() << 1);
 
-    // Sixth batch of transactions, this will provide the tipping point to
-    // actually make the previously tail pruned windows be dropped. Except for
-    // the "E" pattern, since we've used that in both the previous and current
-    // batch as the transaction, hence its tilted time window will not be
-    // empty.
-    // Hence, six patterns will be dropped from the PatternTree, and the node
-    // count of the PatternTree will drop from 17 to 11.
+    // Sixth batch of transactions.
     transactions.clear();
     transactions.append(QStringList() << "E");
+    fpstream->processBatchTransactions(transactions);
+
+    // Seventh batch of transactions. This is another verification of
+    // PatternTree's ability to keep quarters in sync, and thus to keep time
+    // in sync among TiltedTimeWindows and thus make the stored data actually
+    // comparable and usable. If this would not be done, then the various
+    // TiltedTimeWindows would reach their tipping points at different
+    // positions in time, which would clearly cause errors.
+    transactions.clear();
+    transactions.append(QStringList() << "F");
     fpstream->processBatchTransactions(transactions);
 
     // Helpful for debugging/expanding this test.
     // Currently, this should match:
     // (NULL)
-    // -> ({A(0)}, {Q={0, 0}, H={68}} (lastUpdate=5)) (0x0001)
-    //     -> ({A(0), B(1)}, {Q={0, 0}, H={23}} (lastUpdate=5)) (0x0005)
-    //     -> ({A(0), D(3)}, {Q={0, 0}, H={43}} (lastUpdate=5)) (0x0009)
-    // -> ({B(1)}, {Q={0, 0}, H={25}} (lastUpdate=5)) (0x0004)
-    // -> ({C(2)}, {Q={0, 0}, H={29}} (lastUpdate=5)) (0x0002)
-    //     -> ({C(2), A(0)}, {Q={0, 0}, H={24}} (lastUpdate=5)) (0x0003)
-    //         -> ({C(2), A(0), D(3)}, {Q={0, 0}, H={22}} (lastUpdate=5)) (0x0010)
-    //     -> ({C(2), B(1)}, {Q={0, 0}, H={4}} (lastUpdate=5)) (0x0007)
-    //     -> ({C(2), D(3)}, {Q={0, 0}, H={23}} (lastUpdate=5)) (0x0015)
-    // -> ({D(3)}, {Q={0, 0}, H={44}} (lastUpdate=5)) (0x0008)
-    // -> ({E(4)}, {Q={1, 1}} (lastUpdate=5)) (0x0016)
-    QCOMPARE(patternTree.getNodeCount(), (unsigned int) 11);
+    // -> ({A(0)}, {Q={0, 0, 0}, H={68}} (lastUpdate=6)) (0x0001)
+    //     -> ({A(0), B(1)}, {Q={0, 0, 0}, H={23}} (lastUpdate=6)) (0x0005)
+    //     -> ({A(0), D(3)}, {Q={0, 0, 0}, H={43}} (lastUpdate=6)) (0x0009)
+    // -> ({B(1)}, {Q={0, 0, 0}, H={25}} (lastUpdate=6)) (0x0004)
+    // -> ({C(2)}, {Q={0, 0, 0}, H={29}} (lastUpdate=6)) (0x0002)
+    //     -> ({C(2), A(0)}, {Q={0, 0, 0}, H={24}} (lastUpdate=6)) (0x0003)
+    //         -> ({C(2), A(0), D(3)}, {Q={0, 0, 0}, H={22}} (lastUpdate=6)) (0x0010)
+    //     -> ({C(2), B(1)}, {Q={0, 0, 0}, H={4}} (lastUpdate=6)) (0x0007)
+    //     -> ({C(2), D(3)}, {Q={0, 0, 0}, H={23}} (lastUpdate=6)) (0x0015)
+    // -> ({D(3)}, {Q={0, 0, 0}, H={44}} (lastUpdate=6)) (0x0008)
+    // -> ({E(4)}, {Q={0, 1, 1}} (lastUpdate=6)) (0x0016)
+    // -> ({F(5)}, {Q={1, 0, 0}} (lastUpdate=6)) (0x0018)
+    node = root->getChild(5);
+    this->verifyNode(patternTree, node, 5, 18, ItemIDList() << 5, QVector<SupportCount>() << 1 << 0 << 0);
     //qDebug() << fpstream->getPatternTree();
 
     delete fpstream;

@@ -1,6 +1,7 @@
 #include "TestPatternTree.h"
 
 void TestPatternTree::basic() {
+    FPNode<TiltedTimeWindow>::resetLastNodeID();
     PatternTree * patternTree = new PatternTree();
 
     // Pattern 1: {1, 2, 3}, support: 1.
@@ -9,7 +10,7 @@ void TestPatternTree::basic() {
     SupportCount s1 = 1;
     patternTree->addPattern(FrequentItemset(p1, s1, NULL), 0);
 
-    // Pattern 2: {1, 2}, support: 2, add this twice..
+    // Pattern 2: {1, 2}, support: 2, add this twice.
     ItemIDList p2;
     p2 << 1 << 2;
     SupportCount s2 = 2;
@@ -83,4 +84,62 @@ void TestPatternTree::basic() {
     QCOMPARE(patternTree->getPatternSupport(referencePattern)->getBuckets(1), referenceBuckets);
 
     delete patternTree;
+}
+
+
+void TestPatternTree::additionsRemainInSync() {
+    FPNode<TiltedTimeWindow>::resetLastNodeID();
+    PatternTree * patternTree = new PatternTree();
+    uint updateID;
+
+
+
+    //
+    // Batch 1 (quarter 1).
+    //
+
+    updateID = 1;
+
+    // Pattern 1: {1, 2, 3}, support: 1.
+    ItemIDList p1;
+    p1 << 1 << 2 << 3;
+    SupportCount s1 = 1;
+    patternTree->addPattern(FrequentItemset(p1, s1, NULL), updateID);
+
+
+
+    //
+    // Batch 2 (quarter 2).
+    //
+
+    updateID = 2;
+    patternTree->nextQuarter();
+
+    // Repeat pattern 1.
+    patternTree->addPattern(FrequentItemset(p1, s1, NULL), updateID);
+
+    // Pattern 2: {4, 5}, support: 2.
+    ItemIDList p2;
+    p2 << 4 << 5;
+    SupportCount s2 = 2;
+    patternTree->addPattern(FrequentItemset(p2, s2, NULL), updateID);
+
+
+
+    // Helpful for debugging/expanding this test.
+    // Currently, this should match:
+    // (NULL)
+    // -> ({1}, {} (lastUpdate=0)) (0x0001)
+    //     -> ({1, 2}, {} (lastUpdate=0)) (0x0002)
+    //         -> ({1, 2, 3}, {Q={1, 1}} (lastUpdate=2)) (0x0003)
+    // -> ({4}, {} (lastUpdate=0)) (0x0004)
+    //     -> ({4, 5}, {Q={2, 0}} (lastUpdate=2)) (0x0005)
+    //qDebug() << *patternTree;
+
+    // Verify that the TiltedTimeWindow for the node for the pattern {4, 5}
+    // has a 0 for the second quarter, which would make it in sync with the
+    // first pattern, which also has two quarters stored.
+    FPNode<TiltedTimeWindow> * node = patternTree->getRoot()->getChild(4)->getChild(5);
+    QVector<SupportCount> referenceBuckets = QVector<SupportCount>() << 2 << 0;
+    QCOMPARE(node->getValue().getBuckets(2), referenceBuckets);
 }

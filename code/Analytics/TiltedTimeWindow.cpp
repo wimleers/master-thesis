@@ -2,8 +2,8 @@
 
 namespace Analytics {
 
-    int  TiltedTimeWindow::GranularityBucketCount[TTW_NUM_GRANULARITIES]      = {  4, 24, 31, 12,  1 };
-    int  TiltedTimeWindow::GranularityBucketOffset[TTW_NUM_GRANULARITIES]     = {  0,  4, 28, 59, 71 };
+    uint TiltedTimeWindow::GranularityBucketCount[TTW_NUM_GRANULARITIES]      = {  4, 24, 31, 12,  1 };
+    uint TiltedTimeWindow::GranularityBucketOffset[TTW_NUM_GRANULARITIES]     = {  0,  4, 28, 59, 71 };
     char TiltedTimeWindow::GranularityChar[TTW_NUM_GRANULARITIES]             = {'Q','H','D','M','Y' };
 
 
@@ -24,23 +24,22 @@ namespace Analytics {
         store(GRANULARITY_QUARTER, supportCount);
     }
 
-    void TiltedTimeWindow::dropTail(int start) {
+    /**
+     * Drop the tail. Only allow entire granularities to be dropped. Otherwise
+     * tail dropping/pruning may result in out-of-sync TiltedTimeWindows. This
+     * of course leads to TiltedTimeWindows tipping over to the higher-level
+     * granularities at different points in time, which would cause incorrect
+     * results.
+     *
+     * @param start
+     *   The granularity starting from which all buckets should be dropped.
+     */
+    void TiltedTimeWindow::dropTail(Granularity start) {
         // Find the granularity to which it belongs and reset every
         // granularity along the way.
         Granularity g;
-        for (g = (Granularity) (TTW_NUM_GRANULARITIES - 1); g >= 0; g = (Granularity) ((int) g - 1)) {
-            if (start >= this->GranularityBucketOffset[g])
-                break;
-            else
-                this->reset(g);
-        }
-
-        // Now decide what to do with the granularity in which this tail
-        // was started to be pruned. Reset the granularity starting at
-        // the starting position of the tail pruning; this will
-        // automatically reset the entire granularity when this is the
-        // first bucket of the granularity.
-        this->reset(g, start - this->GranularityBucketOffset[g]);
+        for (g = start; g < (Granularity) TTW_NUM_GRANULARITIES; g = (Granularity) ((int) g + 1))
+            this->reset(g);
     }
 
     QVector<SupportCount> TiltedTimeWindow::getBuckets(int numBuckets) const {
@@ -57,50 +56,24 @@ namespace Analytics {
     // Private methods.
 
     /**
-     * Reset a granularity. Defaults to resetting the entire granularity,
-     * but allows for a partial reset.
+     * Reset a granularity.
      *
      * @param granularity
      *   The granularity that should be reset.
-     * @param startBucket
-     *   When performing a partial reset,
      */
-    void TiltedTimeWindow::reset(Granularity granularity, int startBucket) {
+    void TiltedTimeWindow::reset(Granularity granularity) {
         int offset = GranularityBucketOffset[granularity];
         int count = GranularityBucketCount[granularity];
 
         // Reset this granularity's buckets.
-        memset(this->buckets + offset + startBucket, TTW_BUCKET_UNUSED, (count - startBucket ) * sizeof(int));
+        memset(this->buckets + offset, TTW_BUCKET_UNUSED, count * sizeof(int));
 
         // Update this granularity's used capacity..
-        this->capacityUsed[granularity] = startBucket;
+        this->capacityUsed[granularity] = 0;
 
         // Update oldestBucketFilled.
-        if (this->oldestBucketFilled > offset + startBucket - 1) {
-            // Reset from first bucket in the first granularity: it's now
-            // completely empty again.
-            if (startBucket == 0 && granularity == GRANULARITY_QUARTER) {
-                this->oldestBucketFilled = -1;
-            }
-            // When the start bucket is zero and we're not in the first
-            // granularity, then we should look at the preceding granularity
-            // to determine what the oldest filled bucket is.
-            // After all, suppose we have the case {Q={1}, H={1}} and we are
-            // resetting the second granularity (hour) with start position 0.
-            // Without this special check, the oldest filled bucket would then
-            // become bucket 3, whereas it really is bucket 0!
-            else if (startBucket == 0 && granularity > 0) {
-                Granularity oneLess = (Granularity) (granularity - 1);
-                this->oldestBucketFilled = GranularityBucketOffset[oneLess] + this->capacityUsed[oneLess];
-            }
-            // Finally, the simple case where the start bucket is not zero
-            // (meaning that we're not resetting the entire granularity. Then
-            // we can simply move the oldestBucketFilled to just before the
-            // start bucket.
-            else if (startBucket > 0) {
-                this->oldestBucketFilled = offset + startBucket - 1;
-            }
-        }
+        if (this->oldestBucketFilled > offset - 1)
+            this->oldestBucketFilled = offset - 1;
     }
 
     /**
@@ -158,7 +131,7 @@ namespace Analytics {
         this->capacityUsed[granularity]++;
 
         // Update oldestbucketFilled.
-        if (this->oldestBucketFilled < offset + this->capacityUsed[granularity] - 1)
+        if (this->oldestBucketFilled < (int) (offset + this->capacityUsed[granularity] - 1))
             this->oldestBucketFilled = offset + this->capacityUsed[granularity] - 1;
     }
 

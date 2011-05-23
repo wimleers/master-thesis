@@ -8,6 +8,7 @@ namespace Analytics {
     PatternTree::PatternTree() {
         this->root = new FPNode<TiltedTimeWindow>(ROOT_ITEMID);
         this->nodeCount = 0;
+        this->currentQuarter = 0;
     }
 
     PatternTree::~PatternTree() {
@@ -43,6 +44,12 @@ namespace Analytics {
         }
 
         TiltedTimeWindow * ttw = currentNode->getPointerToValue();
+
+        // Make sure the quarters are in sync.
+        for (uint i = ttw->getCapacityUsed(GRANULARITY_QUARTER); i < this->currentQuarter; i++)
+            ttw->appendQuarter(0, updateID);
+
+        // Now that the quarters are in sync, finally append the quarter.
         ttw->appendQuarter(pattern.support, updateID);
     }
 

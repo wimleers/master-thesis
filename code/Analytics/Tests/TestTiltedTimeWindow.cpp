@@ -100,14 +100,15 @@ void TestTiltedTimeWindow::basic() {
     QCOMPARE(ttw->getLastUpdate(), (unsigned int) 100);
 
 
-    // Drop tail starting at bucket 1. This means only the value in the
-    // first bucket (bucket 0) is kept, and all the rest is reset.
-    ttw->dropTail(1);
+    // Drop tail starting at Granularity 1. This means only the value in the
+    // first granularity (buckets 0, 1, 2 and 3) are is kept, and all
+    // subsequent granularities (and buckets) are reset.
+    ttw->dropTail((Granularity) 1);
     QVector<SupportCount> buckets = ttw->getBuckets();
     QCOMPARE(buckets[0], (SupportCount) 222);
     for (int i = 1; i < TTW_NUM_BUCKETS; i++)
         QCOMPARE(buckets[i], (SupportCount) -1);
-    QCOMPARE(ttw->oldestBucketFilled, 0);
+    QCOMPARE(ttw->oldestBucketFilled, 3);
     QCOMPARE(ttw->getLastUpdate(), (unsigned int) 100);
 
     delete ttw;
