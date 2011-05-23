@@ -38,6 +38,24 @@ namespace Analytics {
     }
 
     /**
+     * Get the item IDs for a given item constraint type. Clearly, this only
+     * returns item IDs after all item IDs have been preprocessed.
+     *
+     * @param type
+     *   An item constraint type to get all item IDs for.
+     * @return
+     *   All item IDs for the given item constraint type.
+     */
+    QSet<ItemID> Constraints::getItemIDsForConstraintType(ItemConstraintType type) const {
+        QSet<ItemID> preprocessedItemIDs;
+
+        foreach (ItemName key, this->preprocessedItemConstraints[type].keys())
+            preprocessedItemIDs.unite(this->preprocessedItemConstraints[type][key]);
+
+        return preprocessedItemIDs;
+    }
+
+    /**
      * Consider the given item for use with constraints: store its item id in
      * an optimized data structure to allow for fast constraint checking
      * during frequent itemset generation.

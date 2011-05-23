@@ -26,6 +26,8 @@ namespace Analytics {
         void addItemConstraint(ItemName item, ItemConstraintType type);
         void setItemConstraints(const QSet<ItemName> & constraints, ItemConstraintType type);
 
+        QSet<ItemID> getItemIDsForConstraintType(ItemConstraintType type) const;
+
         void preprocessItem(const ItemName & name, ItemID id);
         void removeItem(ItemID id);
 
