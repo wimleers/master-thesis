@@ -60,6 +60,10 @@ int main(int argc, char *argv[]) {
 
     EpisodesParser::Parser::clearParserHelperCaches();
 
+    // Mine association rules.
+    analyst->mineRules(0, (uint) TTW_NUM_BUCKETS - 1); // Rules over the entire dataset.
+    analyst->mineRules(4, 4); // Rules over the past hour.
+
     // FIXME: remove this eventually. This is merely here to check on memory
     // consumption after everything has been deleted from memory.
     QTextStream in(stdin);
