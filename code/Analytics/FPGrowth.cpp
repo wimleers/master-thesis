@@ -38,52 +38,14 @@ namespace Analytics {
     }
 
     /**
-     * Calculate the upper bound of the support count for an itemset.
+     * Calculate the support count for an itemset.
      *
      * @param itemset
-     *   The itemset to calculate the upper bound of its support count for.
+     *   The itemset to calculate the support count for.
      * @return
-     *   The upper bound of the support count for this itemset.
+     *   The support count for this itemset
      */
-    SupportCount FPGrowth::calculateSupportCountUpperBound(const ItemIDList & itemset) const {
-        // For itemsets of size 1, we can simply use the QHash that contains
-        // all frequent items' support counts, since it contains the exact
-        // data we need (this is FPGrowth::totalFrequentSupportCounts). Thus,
-        // in this case, we don't really calculate the upper bound: we
-        // immediately return the correct support count.
-        // For larger itemsets, we'll have to calculate the upper bound by
-        // exploiting some properties. See the code below for details.
-        if (itemset.size() == 1) {
-            return this->totalFrequentSupportCounts[itemset[0]];
-        }
-        else {
-            ItemIDList optimizedItemset = this->orderItemsetBySupport(itemset);
-
-            // The last item is the one with the least support, since it is
-            // optimized for this by FPGrowth::orderItemsetBySupport.
-            ItemID lastItemID = optimizedItemset[optimizedItemset.size() - 1];
-
-            // Since all items in a frequent itemset must themselves also be
-            // frequent, it must be available in the previously calculated
-            // FPGrowth::totalFrequentSupportCounts. An itemset's support
-            // count is only as frequent as its least supported item, which is
-            // the last item thanks to the FPGrowth::optimizeTransaction()
-            // call.
-            // Hence the itemset's upper bound support count is equal to the
-            // support count of the last item in the itemset.
-            return this->totalFrequentSupportCounts[lastItemID];
-        }
-    }
-
-    /**
-     * Calculate the exact support count for an itemset.
-     *
-     * @param itemset
-     *   The itemset to calculate the exact support count for.
-     * @return
-     *   The exact support count for this itemset
-     */
-    SupportCount FPGrowth::calculateSupportCountExactly(const ItemIDList & itemset) const {
+    SupportCount FPGrowth::calculateSupportCount(const ItemIDList & itemset) const {
         // For itemsets of size 1, we can simply use the QHash that contains
         // all frequent items' support counts, since it contains the exact
         // data we need (this is FPGrowth::totalFrequentSupportCounts).

@@ -39,8 +39,7 @@ namespace Analytics {
 
         // Ability to calculate support for any itemset; necessary to
         // calculate confidence for candidate association rules.
-        SupportCount calculateSupportCountUpperBound(const ItemIDList & itemset) const;
-        SupportCount calculateSupportCountExactly(const ItemIDList & itemset) const;
+        SupportCount calculateSupportCount(const ItemIDList & itemset) const;
 
         ItemID getItemID(ItemName name) const { return this->itemNameIDHash->value(name); }
 #ifdef DEBUG

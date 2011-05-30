@@ -110,27 +110,11 @@ namespace Analytics {
             // Get the antecedent for the current consequent, so we
             // effectively get a candidate association rule.
             antecedent = RuleMiner::getAntecedent(frequentItemset.itemset, consequent);
-
-            // First calculate the confidence of this association rule with
-            // the upper bound (which is cheap to calculate).
-            // If the minimum confidence threshold is then not yet being met,
-            // then there is no need to calculate the exact confidence, which
-            // can only be lower and will thus most definitely result in not
-            // accepting this association rule.
-            antecedentSupportCount = fpgrowth->calculateSupportCountUpperBound(antecedent);
-            confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
-
-            // If the upper bound confidence is already insufficient, then
-            // give up this candidate association rule
-            // When it is sufficient, calculate the exact confidence and check
-            // if it is sufficient as well.
-            if (confidence >= minimumConfidence) {
-                antecedentSupportCount = fpgrowth->calculateSupportCountExactly(antecedent);
-                confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
-            }
+            antecedentSupportCount = fpgrowth->calculateSupportCount(antecedent);
 
             // If the confidence is sufficiently high, we've found an
             // association rule that meets our requirements.
+            confidence = 1.0 * frequentItemset.support / antecedentSupportCount;
 #ifdef RULEMINER_DEBUG
             qDebug () << "confidence" << confidence << ", frequent itemset support" << frequentItemset.support << ", antecedent support" << antecedentSupportCount << ", antecedent" << antecedent << ", consequent" << consequent;
 #endif
