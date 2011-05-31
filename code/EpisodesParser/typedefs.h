@@ -48,7 +48,7 @@ inline bool operator==(const Episode &e1, const Episode &e2) {
 typedef QList<Episode> EpisodeList;
 
 // 510 is the highest HTTP status code, so 9 bits would be sufficient, but
-// that's not possible, so we use 16 instead.
+// that's not possible, so we use 16 bits instead.
 typedef quint16 HTTPStatus;
 
 typedef QString URL;
@@ -121,8 +121,8 @@ struct Location{
     }
 };
 typedef quint32 LocationID;
-typedef QHash<Location, LocationID> TYPE_hash_location_toID;
-typedef QHash<LocationID, Location> TYPE_hash_location_fromID;
+typedef QHash<Location, LocationID> LocationToIDHash;
+typedef QHash<LocationID, Location> LocationFromIDHash;
 uint qHash(const Location & location);
 
 struct UAHierarchyDetails {
@@ -182,7 +182,7 @@ struct ExpandedEpisodesLogLine {
     URL url;
     UAHierarchyID ua;
 
-    TYPE_hash_location_fromID * hash_location_fromID;
+    LocationFromIDHash * locationFromIDHash;
     UAHierarchyIDDetailsHash * uaHierarchyIDDetailsHash;
 #ifdef DEBUG
     EpisodeIDNameHash * episodeIDNameHash;

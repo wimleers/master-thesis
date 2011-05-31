@@ -55,8 +55,8 @@ namespace EpisodesParser {
         static DomainNameIDHash domainNameIDHash;
         static UAHierarchyDetailsIDHash uaHierarchyDetailsIDHash;
         static UAHierarchyIDDetailsHash uaHierarchyIDDetailsHash;
-        static TYPE_hash_location_toID hash_location_toID;
-        static TYPE_hash_location_fromID hash_location_fromID;
+        static LocationToIDHash locationToIDHash;
+        static LocationFromIDHash locationFromIDHash;
 #ifdef DEBUG
         static EpisodeIDNameHash episodeIDNameHash;
         static DomainIDNameHash domainIDNameHash;
@@ -80,7 +80,7 @@ namespace EpisodesParser {
         static EpisodeID mapEpisodeNameToID(EpisodeName name);
         static DomainID mapDomainNameToID(DomainName name);
         static UAHierarchyID mapUAHierarchyToID(UAHierarchyDetails ua);
-        static LocationID hash_location_mapToID(const Location & location);
+        static LocationID mapLocationToID(const Location & location);
     };
 
 }

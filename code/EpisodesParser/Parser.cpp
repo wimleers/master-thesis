@@ -5,8 +5,8 @@ namespace EpisodesParser {
     DomainNameIDHash Parser::domainNameIDHash;
     UAHierarchyDetailsIDHash Parser::uaHierarchyDetailsIDHash;
     UAHierarchyIDDetailsHash Parser::uaHierarchyIDDetailsHash;
-    TYPE_hash_location_toID   Parser::hash_location_toID;
-    TYPE_hash_location_fromID Parser::hash_location_fromID;
+    LocationToIDHash   Parser::locationToIDHash;
+    LocationFromIDHash Parser::locationFromIDHash;
 #ifdef DEBUG
     EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainIDNameHash Parser::domainIDNameHash;
@@ -221,18 +221,18 @@ namespace EpisodesParser {
      * inserted in the QHash), hence we need to use a mutex to ensure thread
      * safety.
      */
-    LocationID Parser::hash_location_mapToID(const Location & location) {
-        if (!Parser::hash_location_toID.contains(location)) {
+    LocationID Parser::mapLocationToID(const Location & location) {
+        if (!Parser::locationToIDHash.contains(location)) {
             Parser::mutex_hashAccess_location.lock();
 
-            LocationID id = Parser::hash_location_toID.size();
-            Parser::hash_location_toID.insert(location, id);
-            Parser::hash_location_fromID.insert(id, location);
+            LocationID id = Parser::locationToIDHash.size();
+            Parser::locationToIDHash.insert(location, id);
+            Parser::locationFromIDHash.insert(id, location);
 
             Parser::mutex_hashAccess_location.unlock();
         }
 
-        return Parser::hash_location_toID[location];
+        return Parser::locationToIDHash[location];
     }
 
     /**
@@ -339,8 +339,8 @@ namespace EpisodesParser {
         location.region    = geoIPRecord.region;
         location.isp       = geoIPRecord.isp;
 
-        expandedLine.location = Parser::hash_location_mapToID(location);
-        expandedLine.hash_location_fromID = &Parser::hash_location_fromID;
+        expandedLine.location = Parser::mapLocationToID(location);
+        expandedLine.locationFromIDHash = &Parser::locationFromIDHash;
 
         // Time.
         expandedLine.time = line.time;
@@ -379,7 +379,7 @@ namespace EpisodesParser {
         QList<QStringList> transactions;
         QStringList itemList;
         itemList << QString("url:") + QString(line.url)
-                 << Parser::hash_location_fromID.value(line.location).generateAssociationRuleItems()
+                 << Parser::locationFromIDHash.value(line.location).generateAssociationRuleItems()
                  << Parser::uaHierarchyIDDetailsHash.value(line.ua).generateAssociationRuleItems();
 
         // Only include the HTTP status code in the transaction if it's not a 200 status.
