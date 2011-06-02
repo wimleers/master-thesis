@@ -78,7 +78,7 @@ namespace Analytics {
         // Properties relating to the current batch being processed.
         QMutex statusMutex;
         bool processingBatch;
-        uint32_t currentBatchID;
+        quint32 currentBatchID;
         FPGrowth * currentFPGrowth;
         QList<ItemIDList> supersetsBeingCalculated;
     };

@@ -1,7 +1,6 @@
 #ifndef ITEM_H
 #define ITEM_H
 
-#include "stdint.h"
 #include <QHash>
 #include <QList>
 #include <QString>
@@ -13,12 +12,17 @@
 
 namespace Analytics {
 
-    // Generic data mining types.
-    typedef uint32_t ItemID; // Supports 2^32 *different* items. Upgradable to uint64_t.
-#define ROOT_ITEMID 4294967295 // Largest supported value for uint32_t.
+    /**
+     * Generic data mining types.
+     */
+    // Supports 2^32 *different* items. Upgradable to quint64.
+    typedef quint32 ItemID;
+    // Largest supported value for quint32.
+    #define ROOT_ITEMID 4294967295
     typedef QString ItemName;
-    typedef uint32_t SupportCount; // Supports 2^32 count. Upgradable to uint64_t.
-#define MAX_SUPPORT 4294967295
+    // Supports 2^32 count. Upgradable to quint64.
+    typedef quint32 SupportCount;
+    #define MAX_SUPPORT 4294967295
     typedef QHash<ItemID, ItemName> ItemIDNameHash;
     typedef QHash<ItemName, ItemID> ItemNameIDHash;
     struct Item {
@@ -61,10 +65,11 @@ namespace Analytics {
     }
 
 
-    // Generic data mining container types.
+    /**
+     * Generic data mining container types.
+     */
     typedef QList<ItemID> ItemIDList;
     typedef QList<Item> ItemList;
-    typedef QList<SupportCount> ItemCountList;
     typedef QList<Item> Transaction;
     struct FrequentItemset {
         FrequentItemset() : support(0) {}

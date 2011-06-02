@@ -1,7 +1,6 @@
 #ifndef PATTERNTREE_H
 #define PATTERNTREE_H
 
-#include <stdint.h>
 #include <QDebug>
 #include <QMetaType>
 
@@ -30,7 +29,7 @@ namespace Analytics {
                                                            FPNode<TiltedTimeWindow> * node = NULL) const;
 
         // Modifiers.
-        void addPattern(const FrequentItemset & pattern, uint32_t updateID);
+        void addPattern(const FrequentItemset & pattern, quint32 updateID);
         void removePattern(FPNode<TiltedTimeWindow> * const node);
         void nextQuarter() { this->currentQuarter = (currentQuarter + 1) % 4; }
 

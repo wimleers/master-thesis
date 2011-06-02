@@ -19,7 +19,7 @@ namespace Analytics {
             this->capacityUsed[g] = 0;
     }
 
-    void TiltedTimeWindow::appendQuarter(SupportCount supportCount, uint32_t updateID) {
+    void TiltedTimeWindow::appendQuarter(SupportCount supportCount, quint32 updateID) {
         this->lastUpdate = updateID;
         store(GRANULARITY_QUARTER, supportCount);
     }

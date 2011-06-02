@@ -78,7 +78,7 @@ namespace Analytics {
         return frequentItemsets;
     }
 
-    void PatternTree::addPattern(const FrequentItemset & pattern, uint32_t updateID) {
+    void PatternTree::addPattern(const FrequentItemset & pattern, quint32 updateID) {
         // The initial current node is the root node.
         FPNode<TiltedTimeWindow> * currentNode = root;
         FPNode<TiltedTimeWindow> * nextNode;

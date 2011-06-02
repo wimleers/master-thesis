@@ -1,7 +1,6 @@
 #ifndef TILTEDTIMEWINDOW_H
 #define TILTEDTIMEWINDOW_H
 
-#include <stdint.h>
 #include <QVector>
 #include <QDebug>
 
@@ -26,9 +25,9 @@ namespace Analytics {
     class TiltedTimeWindow {
     public:
         TiltedTimeWindow();
-        void appendQuarter(SupportCount s, uint32_t updateID);
+        void appendQuarter(SupportCount s, quint32 updateID);
         bool isEmpty() const { return this->oldestBucketFilled == -1; }
-        uint32_t getLastUpdate() const { return this->lastUpdate; }
+        quint32 getLastUpdate() const { return this->lastUpdate; }
         void dropTail(Granularity start);
         int getOldestBucketFilled() const { return this->oldestBucketFilled; }
         uint getCapacityUsed(Granularity g) const { return this->capacityUsed[g]; }
@@ -54,7 +53,7 @@ namespace Analytics {
 
         // Properties.
         uint capacityUsed[TTW_NUM_GRANULARITIES];
-        uint32_t lastUpdate;
+        quint32 lastUpdate;
     };
 
 #ifdef DEBUG
