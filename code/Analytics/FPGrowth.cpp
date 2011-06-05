@@ -523,19 +523,19 @@ namespace Analytics {
         // path, unless of course it becomes empty, then it is discarded.)
         prefixPaths = FPGrowth::filterPrefixPaths(prefixPaths, this->minSupportAbsolute);
 
-        // If the conditional FP-tree would not be able to match the
-        // constraints (which we can know by looking at the current
-        // frequent itemset and the prefix paths support counts), then
-        // just don't bother generating it.
-        // This is effectively pruning the search space for frequent
-        // itemsets.
-        QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
-        if (!this->constraints.matchSearchSpace(frequentItemset, prefixPathsSupportCounts))
-            return NULL;
-
         // If no prefix paths remain after filtering, we won't be able
         // to generate any further frequent item sets.
-        if (prefixPaths.size() > 0) {
+        if (!prefixPaths.isEmpty()) {
+            // If the conditional FP-tree would not be able to match the
+            // constraints (which we can know by looking at the current
+            // frequent itemset and the prefix paths support counts), then
+            // just don't bother generating it.
+            // This is effectively pruning the search space for frequent
+            // itemsets.
+            QHash<ItemID, SupportCount> prefixPathsSupportCounts = FPTree::calculateSupportCountsForPrefixPaths(prefixPaths);
+            if (!this->constraints.matchSearchSpace(frequentItemset, prefixPathsSupportCounts))
+                return NULL;
+
             // Build the conditional FP-tree for these prefix paths,
             // by creating a new FP-tree and pretending the prefix
             // paths are transactions.
