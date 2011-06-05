@@ -22271,8 +22271,7 @@ Wrote
 \family typewriter
 EpisodesDurationDiscretizer
 \family default
-, a class that can discretize episodes durations based on a user-defined
- intervals.
+, a class that can discretize episodes durations based on user-defined intervals.
 \end_layout
 
 \begin_layout Enumerate
@@ -22348,7 +22347,7 @@ TODO!
 
 \end_inset
 
-
+ (TODO)
 \end_layout
 
 \end_deeper
@@ -22427,7 +22426,100 @@ Episodes Log Mining
 .
 \end_layout
 
+\begin_layout Enumerate
+Added section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:implementation"
+
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+Implementation
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Added section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:wpo-attention"
+
+\end_inset
+
+, 
+\begin_inset Quotes eld
+\end_inset
+
+WPO Gaining attention
+\begin_inset Quotes erd
+\end_inset
+
+.
+\end_layout
+
 \end_deeper
+\begin_layout Subsubsection*
+License
+\end_layout
+
+\begin_layout Standard
+Every piece of software that was written for this thesis, has been released
+ as open source software.
+ As a license, I opted for the UNLICENSE, which allows anybody to reuse
+ the code, for either commercial or non-commercial use since it places the
+ code in the public domain.
+\end_layout
+
+\begin_layout Standard
+The UNLICENSE was modeled after the SQLite license.
+ SQLite is a piece of open source software that has become incredibly ubiquitous.
+ If you have a smart phone, it probably uses SQLite for something.
+ Many pc applications also use SQLite.
+\end_layout
+
+\begin_layout Standard
+As the name already indicates, the UNLICENSE is not really a license.
+ It is in fact a 
+\emph on
+copyright waiver
+\emph default
+: it is meant to 
+\begin_inset Quotes eld
+\end_inset
+
+un-license
+\begin_inset Quotes erd
+\end_inset
+
+ your code, so that it is 
+\emph on
+free
+\emph default
+ of licenses, i.e., so that it is in the public domain.
+\end_layout
+
+\begin_layout Standard
+See 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://unlicense.org/
+\end_layout
+
+\end_inset
+
+ for details.
+\end_layout
+
 \begin_layout Standard
 \begin_inset Newpage clearpage
 \end_inset
@@ -22948,10 +23040,17 @@ pre-processing
 \begin_layout Plain Layout
 
 \series bold
-section 
+sections 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:episodes-log-mining:attributes"
+
+\end_inset
+
+ & 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:implementation:EpisodesParser"
 
 \end_inset
 
@@ -23052,6 +23151,13 @@ log
 sections 
 \begin_inset CommandInset ref
 LatexCommand ref
+reference "sec:stream-mining"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
 reference "sec:episodes-log-mining"
 
 \end_inset
@@ -23059,7 +23165,7 @@ reference "sec:episodes-log-mining"
  & 
 \begin_inset CommandInset ref
 LatexCommand ref
-reference "sec:stream-mining"
+reference "sec:implementation"
 
 \end_inset
 
@@ -23141,10 +23247,24 @@ reference "sub:episodes-log-mining:detection"
 
 \end_inset
 
- & 
+, 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:stream-mining"
+
+\end_inset
+
+, 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:analytics-phase1"
+
+\end_inset
+
+ & 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:analytics-phase2"
 
 \end_inset
 
@@ -26087,7 +26207,7 @@ circumstantial
 \begin_inset Quotes erd
 \end_inset
 
- categorial attributes that were associated with this page view.
+ categorical attributes that were associated with this page view.
 \end_layout
 
 \begin_layout Standard
@@ -26120,17 +26240,7 @@ name "sub:implementation:general"
 \end_layout
 
 \begin_layout Standard
-The implementation consists of two modules: 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: update when the GUI is complete.
-\end_layout
-
-\end_inset
-
-
+The implementation consists of three modules: 
 \end_layout
 
 \begin_layout Enumerate
@@ -26178,6 +26288,17 @@ UI
 Analytics
 \family default
 .
+ (TODO) 
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+TODO: update when the UI is complete.
+\end_layout
+
+\end_inset
+
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -26200,7 +26321,8 @@ reference "sub:episodes-log-mining:attributes"
 
 \end_inset
 
-, but some additional, more technical and in-depth explanation is desirable.
+, but some additional, more technical and in-depth explanation is required
+ for a full understanding.
 \end_layout
 
 \begin_layout Subsubsection
@@ -26221,7 +26343,7 @@ Roughly, each line in the Episodes log file that is currently being processed
 QString
 \family default
 .
- This is then converted into an 
+ It is then converted into an 
 \family typewriter
 EpisodesLogLine
 \family default
@@ -26315,7 +26437,7 @@ allowbreak{}
 
 LogLine
 \family default
-? There is a major, very compelling reason: by using this clean separation,
+? There is a simple, yet very compelling reason: by using this clean separation,
  it becomes easier to test and to add new features at a later point in time.
 \end_layout
 
@@ -26828,8 +26950,8 @@ EpisodesLogLine
 Parser::mapLineToEpisodesLogLine()
 \family default
 ), splits the chunk into 15-minute batches, i.e.
- chunks are split and merged to get all Episodes log lines in each 900-second
- window (15 minutes 
+ chunks are split and merged as is necessary to get all Episodes log lines
+ in each 900-second window (15 minutes 
 \begin_inset Formula $\times$
 \end_inset
 
@@ -26839,14 +26961,20 @@ Parser::mapLineToEpisodesLogLine()
 
  = 900 seconds) in a single batch
 \begin_inset Foot
-status collapsed
+status open
 
 \begin_layout Plain Layout
 Note that it is required to work with 
 \family typewriter
 EpisodesLogLine
 \family default
-s to be able to retrieve the time for the given log line!
+s to be able to retrieve the time for the given log line! I.e.
+ it is impossible to efficiently know when a page view occurred, given only
+ a 
+\family typewriter
+QString
+\family default
+.
 \end_layout
 
 \end_inset
@@ -26912,7 +27040,7 @@ status collapsed
 
 \begin_layout Plain Layout
 As many transactions are generated as there are episodes in the given Episodes
- log line, see the conclusion of section 
+ log line — see the conclusion of section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sec:episodes-log-mining"
@@ -27192,7 +27320,7 @@ ToThePointShowHideChangelog:15,DrupalBehaviors:141,frontend:1547
 
 \end_inset
 
-maps to
+is mapped to
 \end_layout
 
 \begin_layout Standard
@@ -27567,7 +27695,7 @@ query()
 \begin_layout Standard
 Unfortunately, this method apparently suffers from severe performance issues
  on Mac OS X — at least its implementation in version 4.7 of Qt.
- On Windows and Linux, thousand calls to 
+ On Windows and Linux, 1,000 calls to 
 \family typewriter
 QDateTime::fromString()
 \family default
@@ -27609,16 +27737,6 @@ key "Wim Leers: QCachingLocale project"
 
  under the UNLICENSE, but of course with the necessary credits towards Hasselt
  University.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-explain why UNLICENSE at beggining of the implementation text!
-\end_layout
-
-\end_inset
-
-
 \begin_inset Newline newline
 \end_inset
 
@@ -27654,9 +27772,8 @@ I had expected and hoped such a C/C++ library would exist — after all, surely
 \emph on
 somebody
 \emph default
- must have done that in the past, is it not? Well, unfortunately, no such
- library existed yet, or at least I could not find it after a lengthy search
- session.
+ must have done that in the past? Well, unfortunately, no such library existed
+ yet, or at least I could not find it after a lengthy search session.
  
 \end_layout
 
@@ -27671,13 +27788,12 @@ key "BrowsCap"
 \end_inset
 
 .
- This is the same dataset the PHP language relies on to identify browsers:
- .
+ This is the same data set the PHP language relies on to identify browsers.
 \end_layout
 
 \begin_layout Standard
 I've developed a C++ library (optimized for use with applications that also
- use Qt) that makes it easy to download this dataset, keep it up-to-date,
+ use Qt) that makes it easy to download this data set, keep it up-to-date,
  maintain a SQLite-powered index for faster mapping of user agent strings
  (BrowsCap relies on 'globbing' 
 \begin_inset CommandInset citation
@@ -28228,7 +28344,7 @@ QList<QString>
 \family typewriter
 QList< QList<QString> >
 \family default
-), .
+).
 \end_layout
 
 \begin_layout Standard
@@ -28365,7 +28481,15 @@ This more efficient representation is used
 \emph on
 everywhere
 \emph default
- from this point onwards: in the FP-Tree, each node stores only the 
+ from this point onwards: in the FP-Tree (
+\family typewriter
+FPTree
+\family default
+), each node (
+\family typewriter
+FPNode
+\family default
+) stores only the 
 \family typewriter
 ItemID
 \family default
@@ -28703,7 +28827,7 @@ typedef
 \family typewriter
 QString
 \family default
-s).
+s — see the earlier program listing).
 \end_layout
 
 \begin_layout Standard
@@ -28776,7 +28900,7 @@ Frequent Pattern Tree
 \emph on
 prefix tree
 \emph default
-, some of you may know this as the 
+; some of you may know this as the 
 \emph on
 trie
 \emph default
@@ -29061,7 +29185,7 @@ Instead of passing around (huge amounts of) strings (i.e.
 \end_layout
 
 \begin_layout Standard
-See 
+See section 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "sub:analytics-phase1:information-representation"
@@ -29223,9 +29347,10 @@ conditional FP-Trees
  over these trees.
  However, in my implementation, this happens far more efficiently: the prefix
  paths (i.e.
- the paths from the current prefix item's nodes to the root node) are extracted
- as regular transactions (which already contain the correct support counts
- for building the conditional FP-Tree) and these are inserted in a new tree.
+ the paths from the current prefix item's nodes to the root node — this
+ concept is explained in detail in the FP-Growth paper) are extracted as
+ regular transactions (which already contain the correct support counts
+ for building the conditional FP-Tree) and these are inserted in a new FP-Tree.
  This is far less complex and thus faster.
 \begin_inset Newline newline
 \end_inset
@@ -29665,7 +29790,7 @@ name "sub:analytics-phase1:obstacles:minsup"
 
 \begin_layout Standard
 The absolute minimum support is calculated as follows: 
-\begin_inset Formula $minSupAbs=minSupRel\times batchSize/transactionsPerEvent$
+\begin_inset Formula $minSupAbs=minSupRel\times batchSize\div transactionsPerEvent$
 \end_inset
 
 , whereas the expected calculation is probably 
@@ -29694,7 +29819,7 @@ a frequent itemset is frequent if its occurs
 \end_inset
 
 .
- That is, an itemset is frequent if it occurs 5% of the time.
+ For example, an itemset is frequent if it occurs 5% of the time.
  Suppose there are 1000 pageviews and 10 episodes per pageview on average.
  That means there 10.000 transactions will have been generated.
  This now means that an itemset must occur 
@@ -29706,7 +29831,7 @@ a frequent itemset is frequent if its occurs
  times at most, so clearly, our calculation must be wrong, since we are
  now requiring an effective 50% minimum support.
  Now, if we use the adjusted formula, we get 
-\begin_inset Formula $minSupAbs=0.05\times10.000/10=50$
+\begin_inset Formula $minSupAbs=0.05\times10.000\div10=50$
 \end_inset
 
  times.
@@ -29731,8 +29856,8 @@ name "sub:analytics-phase1:obstacles:constraints"
 
 \begin_layout Standard
 My initial implementation of FP-Growth that supposedly supported constraints
- was completely wrong: I had assumed that if I ignored transactions that
- didn't contain 
+ was completely wrong: I had assumed that if I simply ignored transactions
+ that didn't contain 
 \family typewriter
 duration:slow
 \family default
@@ -29913,7 +30038,7 @@ After all, antecedents are frequent too: subsets of frequent itemsets are
  Thus, to retrieve the support of an antecedent, all that needs to be done
  is looking up the antecedent in the set of frequent itemsets generated
  by FP-Growth.
- One can then calculate the confidence of hte candidate association rule
+ One can then calculate the confidence of the candidate association rule
  and decide whether to accept or discard it.
 \end_layout
 
@@ -29966,7 +30091,11 @@ order
  in which the frequent itemset (from which the candidate association rule
  was distilled) was built by the FP-Growth algorithm whether the frequent
  itemset that corresponds to the antecedent of the candidate association
- rule also has been generated, and thus whether its support is readily available.
+ rule 
+\emph on
+also
+\emph default
+ has been generated, and thus whether its support is readily available.
  Suppose 
 \begin_inset Formula \[
 {\tt \{duration:slow,\, episodes:css,\, location:EU\}}\]
@@ -30014,9 +30143,9 @@ Fortunately, we know exactly which frequent itemset we're looking for (i.e.,
 \begin_inset Newline newline
 \end_inset
 
-The algorithm employed is identical to the previous step in the program
- flow, in which frequent itemsets are grown from the FP-Tree, but this time
- we don't have to generate 
+The algorithm employed is identical to the step in the program flow in which
+ frequent itemsets are grown from the FP-Tree, but this time we do not have
+ to generate 
 \emph on
 all
 \emph default
@@ -30152,9 +30281,9 @@ Association rule mining complete: 1 found
 \end_layout
 
 \begin_layout Standard
-If I'd decrease the minimum confidence, the number of association rules
+If we would decrease the minimum confidence, the number of association rules
  that will be found will of course increase significantly.
- The important point is that I've got a working implementation of association
+ The important point is that we have a working implementation of association
  rule mining with support for constraints.
  However, it is only capable to work over static data sets, while we need
  it to work over 
@@ -30182,7 +30311,7 @@ name "sub:analytics-phase1:performance"
 \end_layout
 
 \begin_layout Standard
-On my 2.66 GHz Core 2 Duo machine, I’m able to mine the association rules
+On my 2.66 GHz Core 2 Duo machine, I am able to mine the association rules
  of a 51,927-line long sample Episodes log file per chunk of 4,000 lines
  at over 1,500 lines per second or over 16,500 transactions per second (and
  that 
@@ -30220,7 +30349,7 @@ EpisodesParser
 \emph on
 no
 \emph default
- memory leaks.
+ memory leaks whatsoever.
 \end_layout
 
 \begin_layout Subsection
@@ -30273,7 +30402,7 @@ name "sub:analytics-phase2:information-representation"
 \begin_layout Standard
 Much of the data and many of the data structures used by FP-Growth are also
  used by FP-Stream.
- Hence, this can remain relatively brief.
+ Hence, this explanation is brief, since there is not much to explain.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -30306,9 +30435,9 @@ In the context of my thesis, a natural tilted time window model makes more
  sense, since it allows you to mine frequent itemsets over the last week,
  the last month, and so on, whereas a logarithmic tilted time window model
  would only allow for the last hour, the last 2 hours, the last 4, 8, 16,
- 32 hours, andhomo so on.
+ 32 hours, and so on.
  These windows are clearly harder to interpret the results for in the context
- of WPO analytics.
+ of WPO analytics than a natural tilted time window.
 \begin_inset Newline newline
 \end_inset
 
@@ -30394,7 +30523,7 @@ w in each node.
 \family typewriter
 FPNode
 \family default
-), but made it into a template class.
+), but refactored it into a template class.
  For FP-Growth's FP-Tree, I thus use 
 \family typewriter
 FPNode<SupportCount>
@@ -30658,7 +30787,7 @@ name "sub:analytics-phase2:program-flow:batch-initial"
 \end_layout
 
 \begin_layout Standard
-The first batch is treated differently from the rest: it is used as an initializ
+The first batch is treated differently than the rest: it is used as an initializ
 ation step.
  An empty 
 \family typewriter
@@ -30973,7 +31102,7 @@ reference "sub:analytics-phase2:obstacles:tilted-time-window"
 \end_layout
 
 \begin_layout Standard
-Finally, the user can ask to retrieve the frequent itemsets over any desirable
+Finally, the user can ask to retrieve the frequent itemsets over any desired
  time range, after which the 
 \family typewriter
 PatternTree
@@ -31180,6 +31309,14 @@ initial minimum support
 \begin_inset Quotes erd
 \end_inset
 
+ or 
+\begin_inset Quotes eld
+\end_inset
+
+Pattern Tree minimum support
+\begin_inset Quotes erd
+\end_inset
+
 .
 \end_layout
 
@@ -31196,6 +31333,10 @@ name "sub:analytics-phase2:obstacles:tilted-time-window"
 
 \begin_layout Standard
 Its core functionality is relatively easy to implement, but the tail pruning
+ of 
+\family typewriter
+TiltedTimeWindow
+\family default
  is very hard.
  The FP-Stream paper only deals with some details of the logarithmic window
  approach, and none of the details of the natural window approach.
@@ -31210,7 +31351,7 @@ Amongst others, it assumes that each bucket of transactions to process is
 \end_layout
 
 \begin_layout Standard
-But what's worse, is that there is zero explanation at all about how to
+But what is worse, is that there is zero explanation at all about how to
  deal with information that is correlated to time.
  I.e.
  instead of just blindly processing the data, we want each window in a natural
@@ -31222,6 +31363,16 @@ in sync
 \emph default
 .
  How this can be achieved, is explained nowhere.
+\begin_inset Foot
+status open
+
+\begin_layout Plain Layout
+Possibly the authors considered this a trivial implementation detail.
+\end_layout
+
+\end_inset
+
+
 \begin_inset Newline newline
 \end_inset
 
@@ -31230,12 +31381,9 @@ A related question is: how
  
 \emph default
 does tail pruning affect this? (Assuming we can manage to keep the tilted
- time windows in sync.)
-\end_layout
-
-\begin_layout Standard
-So, clearly keeping tilted time windows in sync and the implementation of
- tail pruning can affect one another.
+ time windows in sync.) Because keeping tilted time windows in sync and the
+ implementation of tail pruning can affect one another: tail pruning can
+ cause tilted time windows to get out of sync.
 \end_layout
 
 \begin_layout Standard
@@ -31251,31 +31399,59 @@ tipping point
 \end_inset
 
 ).
- Suppose the 4 quarter buckets of a 
+\begin_inset Newline newline
+\end_inset
+
+Suppose the 4 quarter buckets of a 
 \family typewriter
 TiltedTimeWindow
 \family default
  are filled with 
 \family typewriter
-SupportCount
+Support
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+allowbreak{}
+\end_layout
+
+\end_inset
+
+Count
 \family default
-s (10, 12, 11 and 13 respectively) and all other buckets are empty.
+s (7, 9, 8 and 6 respectively) and all other buckets are empty (situation
+ 
+\begin_inset Formula $S_{0}$
+\end_inset
+
+).
 \begin_inset Newline newline
 \end_inset
 
-Now we must insert another 
+Now, we must insert another 
 \family typewriter
 SupportCount
 \family default
- (5) for a quarter.
+ (5) — for the next quarter that has passed.
  But there are only 4 quarters in an hour, so now it is time to summarize
  (sum, really) the 
 \family typewriter
 SupportCount
 \family default
 s in the 4 quarter buckets and store the result in the first hour bucket.
- Hence we sum the 4 quarter buckets, reset them and store the resulting
- sum in the first hour bucket.
+ Hence we sum the 4 quarter buckets, reset them (situation 
+\begin_inset Formula $S_{1}$
+\end_inset
+
+) and store the resulting sum in the first hour bucket (situation 
+\begin_inset Formula $S_{2}$
+\end_inset
+
+).
  Then, we can insert the new 
 \family typewriter
 SupportCount
@@ -31285,15 +31461,31 @@ SupportCount
 
 \begin_layout Standard
 \begin_inset Formula \[
-\text{initial situation:}\begin{array}{cccccccc}
-10 & 12 & 11 & 13 & \emptyset & \emptyset & \emptyset & \text{…}\end{array}\]
+S_{0}= \begin{array}{|cccc|cccc}
+0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
+\hline 7 & 9 & 8 & 6 & \emptyset & \emptyset & \emptyset & \text{…}\end{array}\]
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Formula \[
-\text{after insertion:}\begin{array}{cccccccc}
-5 & \emptyset & \emptyset & \emptyset & 36 & \emptyset & \emptyset & \text{…}\end{array}\]
+S_{1}= \begin{array}{|cccc|cccc}
+0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
+\hline \emptyset & \emptyset & \emptyset & \emptyset & 30 & \emptyset & \emptyset & \text{…}\end{array}\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula \[
+S_{2}= \begin{array}{|cccc|cccc}
+0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
+\hline 5 & \emptyset & \emptyset & \emptyset & 30 & \emptyset & \emptyset & \text{…}\end{array}\]
 
 \end_inset
 
@@ -31310,7 +31502,7 @@ TiltedTimeWindow
 TiltedTimeWindow
 \family default
 s to get out of sync.
- There are three key insights that lead to the solution:
+ There are two aspects that lead to the solution:
 \end_layout
 
 \begin_layout Enumerate
@@ -31318,9 +31510,9 @@ The
 \family typewriter
 PatternTree
 \family default
- class maintains which quarter of an hour of an hour we are currently at
- (we always process a batch of transactions which all ocurred in the same
- quarter, so all 
+ class maintains which quarter of an hour we are currently at (we always
+ process a batch of transactions which all ocurred in the same quarter,
+ so all 
 \family typewriter
 TiltedTimeWindow
 \family default
@@ -31346,7 +31538,7 @@ SupportCount
 \begin_inset Formula $c$
 \end_inset
 
- zeros in this 
+ zeros into this 
 \family typewriter
 TiltedTimeWindow
 \family default
@@ -31377,7 +31569,15 @@ The FP-Stream paper claims we can drop tail sequences simply when it holds
 \emph on
 and
 \emph default
- cumulative minimum approximation frequency is not met.
+ cumulative minimum approximation frequency is not met (see the FP-Stream
+ paper 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream"
+
+\end_inset
+
+ for details).
  When we implement tail pruning like this, however, the various 
 \family typewriter
 TiltedTimeWindow
@@ -31387,9 +31587,9 @@ s are bound to get out of sync.
 \end_inset
 
 This is easy to see.
- The quarter granularity will always stay in sync thanks to insight 1.
- The hour granularity, however, will not, unless we implement it in a different
- way than described in the paper.
+ The quarter granularity will always stay in sync thanks to aspect 1.
+ The hour granularity, however, will not, unless we implement the tail pruning
+ in a different way than described in the paper.
  Suppose we did implement it like in the paper and suppose we had two 
 \family typewriter
 TiltedTimeWindow
@@ -31430,9 +31630,9 @@ and
 
  both look like this:
 \begin_inset Formula \[
-\begin{array}{cccc|ccccc|cc}
+\begin{array}{|cccc|ccccc|cc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…} & 23 & 0 & \text{…}\\
-q_{0} & q_{1} & q_{2} & q_{3} & h_{0} & h_{1} & h_{2} & \text{…} & h_{23} & d_{0} & \text{…}\end{array}\]
+\hline q_{0} & q_{1} & q_{2} & q_{3} & h_{0} & h_{1} & h_{2} & \text{…} & h_{23} & \emptyset & \text{…}\end{array}\]
 
 \end_inset
 
@@ -31453,11 +31653,11 @@ In the new situation,
 \begin_inset Formula $B$
 \end_inset
 
- looks like this:
+ now looks like this:
 \begin_inset Formula \[
-\begin{array}{cccc|ccccc|cc}
+\begin{array}{|cccc|ccccc|cc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…} & 23 & 0 & \text{…}\\
-q_{0} & q_{1} & q_{2} & q_{3} & h_{0} & h_{1} & \emptyset & \text{…} & \emptyset & \emptyset & \text{…}\end{array}\]
+\hline q_{0} & q_{1} & q_{2} & q_{3} & h_{0} & h_{1} & \emptyset & \text{…} & \emptyset & \emptyset & \text{…}\end{array}\]
 
 \end_inset
 
@@ -31498,9 +31698,9 @@ SupportCount
 
  now looks like this:
 \begin_inset Formula \[
-\begin{array}{cccc|ccccc|cc}
+\begin{array}{|cccc|ccccc|cc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…} & 23 & 0 & \text{…}\\
-q_{0} & \emptyset & \emptyset & \emptyset & h_{0} & \emptyset & \emptyset & \text{…} & \emptyset & d_{0} & \text{…}\end{array}\]
+\hline q_{0} & \emptyset & \emptyset & \emptyset & h_{0} & \emptyset & \emptyset & \text{…} & \emptyset & d_{0} & \text{…}\end{array}\]
 
 \end_inset
 
@@ -31510,15 +31710,16 @@ But,
 
 's hour buckets are not all filled, only 2 of them are, due to the earlier
  tail pruning.
+ Thus, there is still plenty of room in the hour granularity.
  Hence, 
 \begin_inset Formula $B$
 \end_inset
 
  now looks like this:
 \begin_inset Formula \[
-\begin{array}{cccc|ccccc|cc}
+\begin{array}{|cccc|ccccc|cc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…} & 23 & 0 & \text{…}\\
-q_{0} & \emptyset & \emptyset & \emptyset & h_{0} & h_{1} & h_{2} & \text{…} & \emptyset & \emptyset & \text{…}\end{array}\]
+\hline q_{0} & \emptyset & \emptyset & \emptyset & h_{0} & h_{1} & h_{2} & \text{…} & \emptyset & \emptyset & \text{…}\end{array}\]
 
 \end_inset
 
@@ -31550,6 +31751,10 @@ It should be clear that
 \end_inset
 
  does too, but 
+\begin_inset Formula $B$
+\end_inset
+
+'s 
 \begin_inset Formula $h_{1}$
 \end_inset
 
@@ -31594,21 +31799,25 @@ name "sub:analytics-phase2:obstacles:constraints"
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-not described in literature, bla bla
-\end_layout
+FP-Stream was not designed with constraint matching in mind.
+ A thorough search session through related literature only lead to the discovery
+ of a single paper on the subject 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "FP-stream + constraints"
 
 \end_inset
 
-
+, but this paper unfortunately only provided trivial extensions that I had
+ already figured out on my own, whereas the truly difficult thing was to
+ also get the support of antecedents, to be able to perform association
+ rule mining.
 \end_layout
 
 \begin_layout Standard
-FP-Stream was not designed with constraint matching in mind.
- Whether supersets of an itemset are considered, depends solely on two factors:
+In FP-Stream, whether supersets of an itemset are considered to be mined
+ for through FP-Growth and then included in the Pattern Tree, depends solely
+ on two factors:
 \end_layout
 
 \begin_layout Enumerate
@@ -31628,7 +31837,11 @@ the corresponding node in the
 \family typewriter
 PatternTree
 \family default
- must not have an empty 
+ must 
+\emph on
+not
+\emph default
+ have an empty 
 \family typewriter
 TiltedTimeWindow
 \family default
@@ -31642,8 +31855,8 @@ However, when adding support for constraints, it becomes obvious that these
 \end_layout
 
 \begin_layout Itemize
-a frequent itemset is not necessarily accepted: if it doesn't match the
- constraints, it is not accepted
+a frequent itemset is not accepted: if it doesn't match the constraints,
+ it is not accepted
 \end_layout
 
 \begin_layout Itemize
@@ -31977,8 +32190,8 @@ In this case, the FP-Stream paper states that the frequent itemset should
 \end_inset
 
 When the pattern does not match the constraints, I added the following logic
- to the algorithm.
- If the conditional FP-Tree that was passed with the signal does 
+ to the algorithm: if the conditional FP-Tree that was passed with the signal
+ does 
 \emph on
 not
 \emph default
@@ -32044,11 +32257,11 @@ reference "sub:analytics-phase1:obstacles:antecedents"
 \end_layout
 
 \begin_layout Standard
-When 
+When I finally got 
 \family typewriter
 FPStream
 \family default
- was finally working, there was the next problem.
+ working, there was another problem.
  I had always thought that once I got 
 \family typewriter
 FPStream
@@ -32114,8 +32327,15 @@ PatternTree
 after
 \emph default
  mining frequent itemsets).
- This solution is: if a (sub)frequent itemset's superset has the potential
- to match the constraints, then store it in the PatternTree.
+\begin_inset Newline newline
+\end_inset
+
+This solution is: if a (sub)frequent itemset's superset has the potential
+ to match the constraints, then store it in the 
+\family typewriter
+PatternTree
+\family default
+ anyway.
 \end_layout
 
 \begin_layout Standard
@@ -32147,7 +32367,11 @@ the pattern does not yet exist in the Pattern Tree
 \end_inset
 
 This time, I add the frequent itemset not only when it matches the constraints,
- but also when the conditional FP-Tree does 
+ but 
+\emph on
+also
+\emph default
+ when the conditional FP-Tree does 
 \emph on
 not
 \emph default
@@ -32163,11 +32387,15 @@ NULL
 \family typewriter
 NULL
 \family default
-).
+ and thus has potential).
  The supersets aren't evaluated though, but since the antecedent is already
  stored, its direct supersets will be evaluated in the next batch (if they
  occur in that batch).
- This is exactly how the original algorithm works.
+ This is 
+\emph on
+exactly
+\emph default
+ how the original algorithm works.
 \end_layout
 
 \begin_layout Standard
@@ -32348,7 +32576,12 @@ FPTree
 \family typewriter
 FPGrowth
 \family default
- instance in memory.
+ instance in memory (remember that one
+\family typewriter
+ FPGrowth
+\family default
+ instance is created for each batch, and upon completion this instance is
+ deleted).
 \end_layout
 
 \begin_layout Standard
@@ -32435,23 +32668,15 @@ on rule consequent items.
 \end_layout
 
 \begin_layout Standard
-Implementing this was trivial: it only required a minor modification
-\begin_inset Foot
-status open
-
-\begin_layout Plain Layout
-It still orders items in the transaction by descending frequency, but it
- ensures that positive rule consequent constraints end up at the front of
- the transaction.
-\end_layout
-
-\end_inset
-
- to 
+Implementing this was trivial: it only required a minor modification to
+ 
 \family typewriter
 FPGrowth::optimizeTransaction()
 \family default
- — transactions are always passed through this method before they are inserted
+: it still orders items in the transaction by descending frequency, but
+ it ensures that positive rule consequent constraints end up at the front
+ of the transaction.
+ Transactions are always passed through this method before they are inserted
  into the 
 \family typewriter
 FPTree
@@ -32693,7 +32918,7 @@ Noticeable properties are:
 
 \begin_layout Itemize
 each batch contains the transactions generated from the Episodes log lines
- over a 15-minute window, as evidenced by the printed timestamps
+ over a 15-minute window, this is evidenced by the timestamps
 \end_layout
 
 \begin_layout Itemize
@@ -32784,8 +33009,8 @@ many
 \emph default
 FPGrowth
 \family default
- instances need to be created (one for every batch corresponding to a 15-minute
- window).
+ instances need to be created (one for every batch that corresponds to a
+ 15-minute window).
 \end_layout
 
 \begin_layout Standard
@@ -32835,6 +33060,31 @@ TODO: describe memory consumption, need to fix memleaks in FP-Stream first
 \end_layout
 
 \begin_layout Subsection
+UI
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:implementation:ui"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+(TODO)
+\begin_inset Note Note
+status open
+
+\begin_layout Plain Layout
+update when UI is complete
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
 Conclusion
 \begin_inset CommandInset label
 LatexCommand label
@@ -32858,7 +33108,7 @@ name "sub:implementation:conclusion:unit-tests"
 
 \begin_layout Standard
 For each major piece of functionality, there are unit tests that ensured
- I either didn't encounter 
+ I either did not encounter 
 \emph on
 any
 \emph default
@@ -32872,7 +33122,7 @@ it just
 worked
 \emph default
 .
- However, I'm not perfect, so the coverage of a few of my unit tests turned
+ However, I am not perfect, so the coverage of a few of my unit tests turned
  out to be insufficient.
  Overall, the writing of unit tests helped 
 \emph on
@@ -32996,9 +33246,9 @@ Then it is possible to analyze a live site's data stream of Episodes log
  with more than 100 million page views per day (or 3 billion page views
  per month).
  Hence, it is sufficient for more than 99% of all websites.
-\begin_inset Newline newline
-\end_inset
+\end_layout
 
+\begin_layout Standard
 The largest sites in the world could in theory also use my application,
  but they would probably want to collect data for e.g.
  only each in every ten page views.
@@ -33067,6 +33317,13 @@ Since the results are very satisfying (especially given the preceding section
 
 \begin_layout Section
 WPO Gaining Attention
+\begin_inset CommandInset label
+LatexCommand label
+name "sec:wpo-attention"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
