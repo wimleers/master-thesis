@@ -184,14 +184,24 @@ namespace Analytics {
                 // though.
                 emit this->mineForFrequentItemsupersets(ctree, frequentItemset);
             }
+            else {
+                // Delete the conditional FP-Tree since it will not be used
+                // anyway.
+                if (ctree != NULL)
+                    delete ctree;
 #ifdef FPSTREAM_DEBUG
-            else
                 qDebug() << "\t\t\t\ttype II pruning applied!";
 #endif
+            }
         }
         // If the current pattern does not yet exist in the pattern
         // tree.
         else if (tiltedTimeWindow == NULL) {
+            // Delete the conditional FP-Tree since it will not be used
+            // anyway.
+            if (ctree != NULL)
+                delete ctree;
+
             // Perform the regular processing (as described by the FP-Stream
             // algorithm) only when the frequent itemset matched the
             // contraints *OR* when its superset has the potential to match
