@@ -3,6 +3,7 @@
 
 #include <QString>
 #include <QList>
+#include <QMap>
 #include <QFile>
 #include <QTextStream>
 #include "typedefs.h"

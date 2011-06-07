@@ -67,7 +67,7 @@ namespace Analytics {
             // Repeat this until we've reached the second item in the itemset,
             // then we have the support count for this item set.
             int last = optimizedItemset.size() - 1;
-            FPTree * cfptree;
+            FPTree * cfptree = NULL;
             QList<ItemList> prefixPaths;
             for (int whichItem = last; whichItem > 0; whichItem--) {
                 // Step 1: calculate prefix paths.
@@ -291,7 +291,7 @@ namespace Analytics {
 #ifdef DEBUG
                 transaction << Item((ItemID) this->itemNameIDHash->value(name), this->itemIDNameHash);
 #else
-                transaction << Item((ItemID) this->itemNameIDHash->value(name);
+                transaction << Item((ItemID) this->itemNameIDHash->value(name));
 #endif
             }
 

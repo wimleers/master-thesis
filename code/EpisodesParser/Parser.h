@@ -52,15 +52,13 @@ namespace EpisodesParser {
     protected:
         // QHashes that are used to minimize memory usage.
         static EpisodeNameIDHash episodeNameIDHash;
+        static EpisodeIDNameHash episodeIDNameHash;
         static DomainNameIDHash domainNameIDHash;
+        static DomainIDNameHash domainIDNameHash;
         static UAHierarchyDetailsIDHash uaHierarchyDetailsIDHash;
         static UAHierarchyIDDetailsHash uaHierarchyIDDetailsHash;
         static LocationToIDHash locationToIDHash;
         static LocationFromIDHash locationFromIDHash;
-#ifdef DEBUG
-        static EpisodeIDNameHash episodeIDNameHash;
-        static DomainIDNameHash domainIDNameHash;
-#endif
 
         static bool parserHelpersInitialized;
         static QBrowsCap browsCap;

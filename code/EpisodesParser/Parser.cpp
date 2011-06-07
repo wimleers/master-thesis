@@ -2,15 +2,13 @@
 
 namespace EpisodesParser {
     EpisodeNameIDHash Parser::episodeNameIDHash;
+    EpisodeIDNameHash Parser::episodeIDNameHash;
     DomainNameIDHash Parser::domainNameIDHash;
+    DomainIDNameHash Parser::domainIDNameHash;
     UAHierarchyDetailsIDHash Parser::uaHierarchyDetailsIDHash;
     UAHierarchyIDDetailsHash Parser::uaHierarchyIDDetailsHash;
     LocationToIDHash   Parser::locationToIDHash;
     LocationFromIDHash Parser::locationFromIDHash;
-#ifdef DEBUG
-    EpisodeIDNameHash Parser::episodeIDNameHash;
-    DomainIDNameHash Parser::domainIDNameHash;
-#endif
     bool Parser::parserHelpersInitialized = false;
 
     QBrowsCap Parser::browsCap;
@@ -144,9 +142,7 @@ namespace EpisodesParser {
 
             EpisodeID id = Parser::episodeNameIDHash.size();
             Parser::episodeNameIDHash.insert(name, id);
-#ifdef DEBUG
             Parser::episodeIDNameHash.insert(id, name);
-#endif
 
             Parser::episodeHashMutex.unlock();
         }
@@ -391,7 +387,7 @@ namespace EpisodesParser {
         EpisodeName episodeName;
         QStringList transaction;
         foreach (episode, line.episodes) {
-            episodeName = episode.IDNameHash->value(episode.id);
+            episodeName = Parser::episodeIDNameHash[episode.id];
             transaction << QString("episode:") + episodeName
                         << QString("duration:") + Parser::episodeDiscretizer.mapToSpeed(episodeName, episode.duration)
                         // Append the shared items.
@@ -479,8 +475,10 @@ namespace EpisodesParser {
         qDebug() << "Processed batch of" << batch.size() << "lines!"
                  << "Transactions generated:" << transactions.size() << "."
                  << "(" << transactionsPerEvent << "transactions/event)"
+#ifdef DEBUG
                  << "Avg. transaction length:" << 1.0 * items / transactions.size() << "."
                  << "(" << items << "items in total)"
+#endif
                  << "Events occurred between"
                  << QDateTime::fromTime_t(batch.first().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str()
                  << "and"

@@ -7,6 +7,7 @@
 #include <QHostAddress>
 #include <QStringList>
 #include <QString>
+#include <QHash>
 
 #ifdef DEBUG
 #include <QDebug>
