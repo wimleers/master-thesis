@@ -28221,11 +28221,15 @@ On my 2.66 GHz Core 2 Duo machine, I'm able to achieve over 4,000 parsed
  & processed lines per second, resulting in ±40,000 transactions.
 \end_layout
 
+\begin_layout Subsubsection*
+Memory Consumption
+\end_layout
+
 \begin_layout Standard
-While performing the calculations, memory consumption reaches an all-time
- high of ±57 MB, but upon completion it drops to ±30 MB, which corresponds
- to the memory consumed by QBrowsCap's and QGeoIP's in-memory caches, plus
- the Qt libraries.
+While performing the calculations for a ±50,000 lines long Episodes log
+ file, memory consumption reaches an all-time high of ±51 MB, but upon completio
+n it drops to ±21 MB, which corresponds to the memory consumed by QBrowsCap's
+ and QGeoIP's in-memory caches, plus the Qt libraries.
 \end_layout
 
 \begin_layout Subsection
@@ -30303,11 +30307,20 @@ reference "sub:implementation:EpisodesParser"
 ) on my 2.66 GHz Core 2 Duo machine.
 \end_layout
 
+\begin_layout Subsubsection*
+Memory Consumption
+\end_layout
+
 \begin_layout Standard
-While performing the calculations, memory consumption reaches an all-time
- high of ±68 MB, but upon completion it drops to ±30 MB, which corresponds
- to the memory consumed by QBrowsCap's and QGeoIP's in-memory caches, plus
- the Qt libraries.
+While performing the calculations for a ±50,000 lines long Episodes log
+ file, memory consumption reaches an all-time high of ±61 MB, but upon completio
+n it drops to ±25 MB, which corresponds to the memory consumed by QBrowsCap's
+ and QGeoIP's in-memory caches, the Qt libraries, plus some data cached
+ by the 
+\family typewriter
+Analytics
+\family default
+ module.
 \begin_inset Newline newline
 \end_inset
 
@@ -31432,7 +31445,7 @@ SupportCount
 
 \begin_layout Standard
 \begin_inset Formula \[
-S_{0}= \begin{array}{|cccc|cccc}
+S_{0}=\begin{array}{|cccc|cccc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
 \hline 7 & 9 & 8 & 6 & \emptyset & \emptyset & \emptyset & \text{…}\end{array}\]
 
@@ -31443,7 +31456,7 @@ S_{0}= \begin{array}{|cccc|cccc}
 
 \begin_layout Standard
 \begin_inset Formula \[
-S_{1}= \begin{array}{|cccc|cccc}
+S_{1}=\begin{array}{|cccc|cccc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
 \hline \emptyset & \emptyset & \emptyset & \emptyset & 30 & \emptyset & \emptyset & \text{…}\end{array}\]
 
@@ -31454,7 +31467,7 @@ S_{1}= \begin{array}{|cccc|cccc}
 
 \begin_layout Standard
 \begin_inset Formula \[
-S_{2}= \begin{array}{|cccc|cccc}
+S_{2}=\begin{array}{|cccc|cccc}
 0 & 1 & 2 & 3 & 0 & 1 & 2 & \text{…}\\
 \hline 5 & \emptyset & \emptyset & \emptyset & 30 & \emptyset & \emptyset & \text{…}\end{array}\]
 
@@ -33017,12 +33030,64 @@ Due to the overhead incurred by having FP-Stream deciding for each individual
  will be lower in practice, but the point is nevertheless clear.
 \end_layout
 
+\begin_layout Subsubsection*
+Debug Mode Versus Release Mode
+\end_layout
+
 \begin_layout Standard
-\begin_inset Note Note
+It's worth mentioning that in this test case of 50,000 lines (which covers
+ X days, from A to B), the processing takes 6 to 7 minutes in debug mode,
+ but only 2 minutes in release mode.
+ Clearly, release mode is far more efficient!
+\end_layout
+
+\begin_layout Subsubsection*
+Memory Consumption
+\end_layout
+
+\begin_layout Standard
+While performing the calculations for a ±50,000 lines long Episodes log
+ file, memory consumption reaches an all-time high of ±46 MB, but upon completio
+n it drops to ±28 MB, which corresponds to the memory consumed by QBrowsCap's
+ and QGeoIP's in-memory caches, the Qt libraries, plus some data cached
+ by the 
+\family typewriter
+Analytics
+\family default
+ module, plus the 
+\family typewriter
+PatternTree
+\family default
+.
+\begin_inset Newline newline
+\end_inset
+
+When you compare this to the memory consumption of 
+\family typewriter
+EpisodesParser
+\family default
+ and 
+\family typewriter
+Analytics
+\family default
+ at the end of phase 1, it is clear that the memory consumption by the 
+\family typewriter
+PatternTree
+\family default
+ is very small (a few megabytes); and that there are likely 
+\emph on
+no
+\emph default
+ memory leaks whatsoever.
+\begin_inset Foot
 status open
 
 \begin_layout Plain Layout
-TODO: describe memory consumption, need to fix memleaks in FP-Stream first
+Running the application through valgrind also reveals 
+\emph on
+no
+\emph default
+ memory leaks.
 \end_layout
 
 \end_inset
