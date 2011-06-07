@@ -27948,38 +27948,9 @@ key "MaxMind GeoIP C API"
 
 \family default
 .
- This library has one major problem though: 
-\family typewriter
-GeoIP_delete()
-\family default
- does 
-\emph on
-not
-\emph default
- actually free the memory consumed by 
-\family typewriter
-libGeoIP
-\family default
-'s in-memory cache.
- I tried debugging this, but I can't get it to work.
- Maybe it's an OS X-specific issue, but that is doubtful
-\begin_inset Foot
-status collapsed
-
-\begin_layout Plain Layout
-I did not try on Linux or Windows.
-\end_layout
-
-\end_inset
-
-.
-\begin_inset Newline newline
-\end_inset
-
-Likely related to these memory release issues, there is the problem that
- it seems to be impossible to make QGeoIP work in a thread-safe manner,
- thus not allowing for concurrent IP to physical location mapping by using
- multiple threads.
+ This library has one major problem though: it seems to be impossible to
+ make QGeoIP work in a thread-safe manner, thus not allowing for concurrent
+ IP to physical location mapping by using multiple threads.
  Like QBrowsCap, QGeoIP also includes unit tests that ensure it works correctly.
 \end_layout
 
@@ -27991,7 +27962,7 @@ key "Wim Leers: QGeoIP project"
 
 \end_inset
 
-, too, is an open source project that is available unde rthe UNLICENSE (with
+, too, is an open source project that is available under the UNLICENSE (with
  again the necessary credits towards Hasselt University).
  It was also covered by the same blog post 
 \begin_inset CommandInset citation
