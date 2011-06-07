@@ -33,6 +33,7 @@ void TestRuleMiner::basic() {
     QCOMPARE(associationRules.size(), 1);
     QCOMPARE(associationRules[0].antecedent, (ItemIDList() << 1));
     QCOMPARE(associationRules[0].consequent, (ItemIDList() << 2));
+    QCOMPARE(associationRules[0].support,    (SupportCount) 4);
     QCOMPARE(associationRules[0].confidence, (float) 0.8);
 
     delete fpgrowth;

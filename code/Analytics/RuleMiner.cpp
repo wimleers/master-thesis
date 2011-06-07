@@ -119,7 +119,7 @@ namespace Analytics {
             qDebug () << "confidence" << confidence << ", frequent itemset support" << frequentItemset.support << ", antecedent support" << antecedentSupportCount << ", antecedent" << antecedent << ", consequent" << consequent;
 #endif
             if (confidence >= minimumConfidence) {
-                AssociationRule rule(antecedent, consequent, confidence);
+                AssociationRule rule(antecedent, consequent, frequentItemset.support, confidence);
 #ifdef DEBUG
                 rule.IDNameHash = frequentItemset.IDNameHash;
 #endif
@@ -175,7 +175,7 @@ namespace Analytics {
 #endif
 
             if (confidence >= minimumConfidence) {
-                AssociationRule rule(antecedent, consequent, confidence);
+                AssociationRule rule(antecedent, consequent, frequentItemset.support, confidence);
 #ifdef DEBUG
                 rule.IDNameHash = frequentItemset.IDNameHash;
 #endif

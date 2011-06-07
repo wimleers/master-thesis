@@ -110,11 +110,12 @@ namespace Analytics {
     }
     struct AssociationRule {
         AssociationRule() {}
-        AssociationRule(ItemIDList antecedent, ItemIDList consequent, float confidence)
-            : antecedent(antecedent), consequent(consequent), confidence(confidence) {}
+        AssociationRule(ItemIDList antecedent, ItemIDList consequent, SupportCount support, float confidence)
+            : antecedent(antecedent), consequent(consequent), support(support), confidence(confidence) {}
 
         ItemIDList antecedent;
         ItemIDList consequent;
+        SupportCount support;
         float confidence;
 
 #ifdef DEBUG

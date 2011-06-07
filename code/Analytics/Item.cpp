@@ -66,7 +66,10 @@ namespace Analytics {
         itemIDHelper(dbg, associationRule.consequent, associationRule.IDNameHash);
         dbg.nospace() << "}";
 
-        dbg.nospace() << " (conf=" << associationRule.confidence << ")";
+        dbg.nospace() << " ("
+                      << "sup=" << associationRule.support
+                      << ", conf=" << associationRule.confidence
+                      << ")";
 
         return dbg.nospace();
     }
