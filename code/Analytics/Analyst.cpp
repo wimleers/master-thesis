@@ -64,10 +64,7 @@ namespace Analytics {
      */
     void Analyst::mineRules(uint from, uint to) {
         // First, consider each item for use with constraints.
-        foreach (ItemID itemID, this->itemIDNameHash.keys()) {
-            ItemName itemName = this->itemIDNameHash[itemID];
-            this->ruleConsequentItemConstraints.preprocessItem(itemName, itemID);
-        }
+        this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
 
         // Now, mine for association rules.
         QList<AssociationRule> associationRules = RuleMiner::mineAssociationRules(
