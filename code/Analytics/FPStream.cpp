@@ -35,7 +35,7 @@ namespace Analytics {
      *   The minimum support for this range.
      */
     SupportCount FPStream::calculateMinSupportForRange(uint from, uint to) const {
-        return ceil(this->minSupport * this->batchSizes.getSupportForRange(from, to));
+        return ceil(this->minSupport * this->eventsPerBatch.getSupportForRange(from, to));
     }
 
     /**
@@ -58,9 +58,8 @@ namespace Analytics {
         // Store the batch sizes. By storing it in a tilted time window, they
         // will automatically be summed in the same way as any other tilted
         // time window's support counts.
-        // Don't store the actual batch size, but the adjusted one, so we
-        // won't need to also store the transactionsPerEvent.
-        this->batchSizes.appendQuarter(transactions.size() / transactionsPerEvent, this->currentBatchID);
+        this->transactionsPerBatch.appendQuarter(transactions.size(), this->currentBatchID);
+        this->eventsPerBatch.appendQuarter(transactions.size() / transactionsPerEvent, this->currentBatchID);
 
         // Mine the frequent itemsets in this batch.
         this->currentFPGrowth = new FPGrowth(transactions, (SupportCount) (this->maxSupportError * transactions.size() / transactionsPerEvent), this->itemIDNameHash, this->itemNameIDHash, this->f_list);
@@ -154,7 +153,7 @@ namespace Analytics {
             this->patternTree.addPattern(frequentItemset, this->currentBatchID);
 
             // Conduct tail pruning.
-            dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
+            dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->eventsPerBatch);
             if (dropTailStartGranularity != (Granularity) -1)
                 tiltedTimeWindow->dropTail(dropTailStartGranularity);
 
@@ -406,7 +405,7 @@ namespace Analytics {
             tiltedTimeWindow->appendQuarter(0, this->currentBatchID);
 
             // Conduct tail pruning.
-            Granularity dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->batchSizes);
+            Granularity dropTailStartGranularity = FPStream::calculateDroppableTail(*tiltedTimeWindow, this->minSupport, this->maxSupportError, this->eventsPerBatch);
             if (dropTailStartGranularity != (Granularity) -1)
                 tiltedTimeWindow->dropTail(dropTailStartGranularity);
 

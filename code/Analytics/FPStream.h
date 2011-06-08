@@ -41,7 +41,7 @@ namespace Analytics {
         static Granularity calculateDroppableTail(const TiltedTimeWindow & window,
                                                   double minSupport,
                                                   double maxSupportError,
-                                                  const TiltedTimeWindow & batchSizes);
+                                                  const TiltedTimeWindow & eventsPerBatch);
 
     signals:
         void mineForFrequentItemsupersets(const FPTree * tree, const FrequentItemset & suffix);
@@ -59,7 +59,8 @@ namespace Analytics {
 
         // Properties related to the entire state over time.
         PatternTree patternTree;
-        TiltedTimeWindow batchSizes;
+        TiltedTimeWindow transactionsPerBatch;
+        TiltedTimeWindow eventsPerBatch;
 
         // Properties related to configuration.
         bool initialBatchProcessed;
