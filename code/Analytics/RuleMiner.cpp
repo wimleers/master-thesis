@@ -8,7 +8,7 @@ namespace Analytics {
     /**
      * An exact implementation of algorithm 6.2 on page 351 in the textbook.
      */
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, Confidence minimumConfidence, const Constraints & ruleConsequentConstraints, const FPGrowth * fpgrowth) {
         QList<AssociationRule> associationRules;
         QList<ItemIDList> consequents;
         bool hasConstraints = !ruleConsequentConstraints.empty();
@@ -43,7 +43,7 @@ namespace Analytics {
         return associationRules;
     }
 
-    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, float minimumConfidence, const Constraints & ruleConsequentConstraints, const PatternTree & patternTree, uint from, uint to) {
+    QList<AssociationRule> RuleMiner::mineAssociationRules(QList<FrequentItemset> frequentItemsets, Confidence minimumConfidence, const Constraints & ruleConsequentConstraints, const PatternTree & patternTree, uint from, uint to) {
         QList<AssociationRule> associationRules;
         QList<ItemIDList> consequents;
         bool hasConstraints = !ruleConsequentConstraints.empty();
@@ -95,13 +95,13 @@ namespace Analytics {
      * size 2. Algorithm 6.3 on page 352 in the textbook.
      * This variation of that algorithm fixes that.
      */
-    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const FPGrowth * fpgrowth) {
+    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, Confidence minimumConfidence, const FPGrowth * fpgrowth) {
         Q_ASSERT_X(consequents.size() > 0, "RuleMiner::generateAssociationRulesForFrequentItemset", "List of consequents may not be empty.");
 
         QList<AssociationRule> associationRules;
         SupportCount antecedentSupportCount;
         ItemIDList antecedent;
-        float confidence;
+        Confidence confidence;
         unsigned int k = frequentItemset.itemset.size(); // Size of the frequent itemset.
         unsigned int m = consequents[0].size(); // Size of a single consequent.
 
@@ -145,13 +145,13 @@ namespace Analytics {
         return associationRules;
     }
 
-    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, float minimumConfidence, const PatternTree & patternTree, uint from, uint to) {
+    QList<AssociationRule> RuleMiner::generateAssociationRulesForFrequentItemset(FrequentItemset frequentItemset, QList<ItemIDList> consequents, Confidence minimumConfidence, const PatternTree & patternTree, uint from, uint to) {
         Q_ASSERT_X(consequents.size() > 0, "RuleMiner::generateAssociationRulesForFrequentItemset", "List of consequents may not be empty.");
 
         QList<AssociationRule> associationRules;
         SupportCount antecedentSupportCount;
         ItemIDList antecedent;
-        float confidence;
+        Confidence confidence;
         unsigned int k = frequentItemset.itemset.size(); // Size of the frequent itemset.
         unsigned int m = consequents[0].size(); // Size of a single consequent.
 

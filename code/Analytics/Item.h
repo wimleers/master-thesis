@@ -23,6 +23,7 @@ namespace Analytics {
     // Supports 2^32 count. Upgradable to quint64.
     typedef quint32 SupportCount;
     #define MAX_SUPPORT 4294967295
+    typedef float Confidence;
     typedef QHash<ItemID, ItemName> ItemIDNameHash;
     typedef QHash<ItemName, ItemID> ItemNameIDHash;
     struct Item {
@@ -110,13 +111,13 @@ namespace Analytics {
     }
     struct AssociationRule {
         AssociationRule() {}
-        AssociationRule(ItemIDList antecedent, ItemIDList consequent, SupportCount support, float confidence)
+        AssociationRule(ItemIDList antecedent, ItemIDList consequent, SupportCount support, Confidence confidence)
             : antecedent(antecedent), consequent(consequent), support(support), confidence(confidence) {}
 
         ItemIDList antecedent;
         ItemIDList consequent;
         SupportCount support;
-        float confidence;
+        Confidence confidence;
 
 #ifdef DEBUG
         ItemIDNameHash * IDNameHash;
