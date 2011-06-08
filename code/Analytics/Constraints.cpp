@@ -3,6 +3,7 @@
 namespace Analytics {
 
     Constraints::Constraints() {
+        this->highestPreprocessedItemID = ROOT_ITEMID;
     }
 
     /**
@@ -56,6 +57,27 @@ namespace Analytics {
     }
 
     /**
+     * Consider the given item ID -> name hash for use with constraints, but
+     * only if its size exceeds the highest preprocessed item, or no items have
+     * been preprocessed yet.
+     *
+     * This method is supposed to be used when all item IDs are already known.
+     *
+     * @param hash
+     *   An item ID -> name hash.
+     */
+    void Constraints::preprocessItemIDNameHash(const ItemIDNameHash & hash) {
+        if (this->highestPreprocessedItemID == ROOT_ITEMID || this->highestPreprocessedItemID + 1 < (uint) hash.size()) {
+            this->clearPreprocessedItems();
+
+            foreach (ItemID itemID, hash.keys()) {
+                ItemName itemName = hash[itemID];
+                this->preprocessItem(itemName, itemID);
+            }
+        }
+    }
+
+    /**
      * Consider the given item for use with constraints: store its item id in
      * an optimized data structure to allow for fast constraint checking
      * during frequent itemset generation.
@@ -92,6 +114,10 @@ namespace Analytics {
                 }
             }
         }
+
+        // Always keep the highest preprocessed item ID.
+        if (this->highestPreprocessedItemID == ROOT_ITEMID || id > this->highestPreprocessedItemID)
+            this->highestPreprocessedItemID = id;
     }
 
     /**

@@ -28,8 +28,12 @@ namespace Analytics {
 
         QSet<ItemID> getItemIDsForConstraintType(ItemConstraintType type) const;
 
+        void preprocessItemIDNameHash(const ItemIDNameHash & hash);
+
         void preprocessItem(const ItemName & name, ItemID id);
         void removeItem(ItemID id);
+        ItemID getHighestPreprocessedItemID() const { return this->highestPreprocessedItemID; }
+        void clearPreprocessedItems() { this->preprocessedItemConstraints.clear(); this->highestPreprocessedItemID = ROOT_ITEMID; }
 
         bool matchItemset(const ItemIDList & itemset) const;
         bool matchSearchSpace(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const;
@@ -42,6 +46,7 @@ namespace Analytics {
 
         QHash<ItemConstraintType, QSet<ItemName> > itemConstraints;
         QHash<ItemConstraintType, QHash<ItemName, QSet<ItemID> > > preprocessedItemConstraints;
+        ItemID highestPreprocessedItemID;
     };
 }
 
