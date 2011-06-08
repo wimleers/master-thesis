@@ -123,6 +123,14 @@ namespace Analytics {
         ItemIDNameHash * IDNameHash;
 #endif
     };
+    uint qHash(const AssociationRule & r);
+    inline bool operator==(const AssociationRule & r1, const AssociationRule & r2) {
+        // Important! We don't require a match on the support and consequent attributes!
+        return r1.antecedent == r2.antecedent && r1.consequent == r2.consequent;
+    }
+    inline bool operator!=(const AssociationRule & r1, const AssociationRule & r2) {
+        return !(r1 == r2);
+    }
 
 
 #ifdef DEBUG
