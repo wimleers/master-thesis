@@ -31,6 +31,8 @@ namespace Analytics {
                  ItemIDList * sortedFrequentItemIDs);
         SupportCount calculateMinSupportForRange(uint from, uint to) const;
 
+        const TiltedTimeWindow * const getTransactionsPerBatch() const { return &this->transactionsPerBatch; }
+        const TiltedTimeWindow * const getEventsPerBatch() const { return &this->eventsPerBatch; }
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
         void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
 
