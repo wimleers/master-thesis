@@ -87,6 +87,66 @@ namespace Analytics {
         emit minedRules(from, to, associationRules);
     }
 
+    void Analyst::mineAndCompareRules(uint fromOlder, uint toOlder, uint fromNewer, uint toNewer) {
+        // First, consider each item for use with constraints.
+        this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
+
+        // Now, mine the association rules for the "older" range.
+        QList<AssociationRule> olderRules = RuleMiner::mineAssociationRules(
+                this->fpstream->getPatternTree().getFrequentItemsetsForRange(
+                        this->fpstream->calculateMinSupportForRange(fromOlder, toOlder),
+                        this->frequentItemsetItemConstraints,
+                        fromOlder,
+                        toOlder
+                ),
+                this->minConfidence,
+                this->ruleConsequentItemConstraints,
+                this->fpstream->getPatternTree(),
+                fromOlder,
+                toOlder
+        );
+
+        // Now, mine the association rules for the "newer" range.
+        QList<AssociationRule> newerRules = RuleMiner::mineAssociationRules(
+                this->fpstream->getPatternTree().getFrequentItemsetsForRange(
+                        this->fpstream->calculateMinSupportForRange(fromNewer, toNewer),
+                        this->frequentItemsetItemConstraints,
+                        fromNewer,
+                        toNewer
+                ),
+                this->minConfidence,
+                this->ruleConsequentItemConstraints,
+                this->fpstream->getPatternTree(),
+                fromNewer,
+                toNewer
+        );
+
+        // Finally, compare the rules for the "older" and "newer" range.
+        TiltedTimeWindow const * const eventsPerBatch = this->fpstream->getEventsPerBatch();
+        SupportCount supportForNewerRange = eventsPerBatch->getSupportForRange(fromNewer, toNewer);
+        SupportCount supportForOlderRange = eventsPerBatch->getSupportForRange(fromOlder, toOlder);
+
+        QList<AssociationRule> intersectedRules = newerRules.toSet().intersect(olderRules.toSet()).toList();
+        QList<Confidence> confidenceVariance;
+        QList<float> supportVariance;
+        int n, o;
+        foreach (AssociationRule rule, intersectedRules) {
+            n = newerRules.indexOf(rule);
+            o = olderRules.indexOf(rule);
+            confidenceVariance.append(newerRules[n].confidence - olderRules[o].confidence);
+            supportVariance.append((1.0 * newerRules[n].support / supportForNewerRange) - (1.0 * olderRules[o].support / supportForOlderRange));
+        }
+
+        qDebug() << olderRules.size() << newerRules.size() << intersectedRules.size() << supportVariance;
+        emit comparedMinedRules(fromOlder, toOlder,
+                                fromNewer, toNewer,
+                                olderRules,
+                                newerRules,
+                                intersectedRules,
+                                confidenceVariance,
+                                supportVariance);
+    }
+
 
     //------------------------------------------------------------------------
     // Protected methods.

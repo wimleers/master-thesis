@@ -26,9 +26,18 @@ namespace Analytics {
 
     signals:
         void minedRules(uint from, uint to, QList<AssociationRule> associationRules);
+        void comparedMinedRules(uint fromOlder, uint toOlder,
+                                uint fromNewer, uint toNewer,
+                                QList<AssociationRule> olderRules,
+                                QList<AssociationRule> newerRules,
+                                QList<AssociationRule> intersectedRules,
+                                QList<Confidence> confidenceVariance,
+                                QList<float> supportVariance);
+
     public slots:
         void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent);
         void mineRules(uint from, uint to);
+        void mineAndCompareRules(uint fromOlder, uint toOlder, uint fromNewer, uint toNewer);
 
     protected:
         void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
