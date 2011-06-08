@@ -83,6 +83,8 @@ namespace Analytics {
 
         qDebug() << "mining association rules complete, # association rules:" << associationRules.size();
         qDebug() << associationRules;
+
+        emit minedRules(from, to, associationRules);
     }
 
 
