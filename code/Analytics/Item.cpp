@@ -2,15 +2,15 @@
 
 namespace Analytics {
 
-uint qHash(const AssociationRule & r) {
-    QString s;
-    foreach (const ItemID & id, r.antecedent)
-        s += QString::number(id) + ':';
-    s += "=>";
-    foreach (const ItemID & id, r.consequent)
-        s += QString::number(id) + ':';
-    return qHash(s);
-}
+    uint qHash(const AssociationRule & r) {
+        QString s;
+        foreach (const ItemID & id, r.antecedent)
+            s += QString::number(id) + ':';
+        s += "=>";
+        foreach (const ItemID & id, r.consequent)
+            s += QString::number(id) + ':';
+        return qHash(s);
+    }
 
 #ifdef DEBUG
     QDebug operator<<(QDebug dbg, const Item & i) {
