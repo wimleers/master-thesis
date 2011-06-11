@@ -78,6 +78,10 @@ namespace Analytics {
                 this->patternTree.addPattern(frequentItemset, this->currentBatchID);
 
             this->initialBatchProcessed = true;
+
+            this->statusMutex.lock();
+            this->processingBatch = false;
+            this->statusMutex.unlock();
         }
         // Subsequent batches.
         else {
