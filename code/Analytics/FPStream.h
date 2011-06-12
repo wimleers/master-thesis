@@ -36,6 +36,10 @@ namespace Analytics {
         void setConstraints(const Constraints & constraints) { this->constraints = constraints; }
         void setConstraintsToPreprocess(const Constraints & constraints) { this->constraintsToPreprocess = constraints; }
 
+        // Stats for UI.
+        int getNumFrequentItems() const { return this->f_list->size(); }
+        int getPatternTreeSize() const { return this->patternTree.getNodeCount(); }
+
         // Unit testing helper method.
         const PatternTree & getPatternTree() const { return this->patternTree; }
 
