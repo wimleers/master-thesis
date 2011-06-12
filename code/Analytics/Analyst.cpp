@@ -50,6 +50,15 @@ namespace Analytics {
         this->ruleConsequentItemConstraints.addItemConstraint(item, type);
     }
 
+    /**
+     * Override of QObject::moveToThread(), to automatically also move the
+     * FPStream object to the other thread.
+     */
+    void Analyst::moveToThread(QThread * thread) {
+        QObject::moveToThread(thread);
+        this->fpstream->moveToThread(thread);
+    }
+
 
     //------------------------------------------------------------------------
     // Public slots.

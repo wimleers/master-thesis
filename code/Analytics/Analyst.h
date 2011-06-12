@@ -25,6 +25,9 @@ namespace Analytics {
         void addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type);
         void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
+        // Override moveToThread to also move the FPStream instance.
+        void moveToThread(QThread * thread);
+
     signals:
         void minedRules(uint from, uint to, QList<AssociationRule> associationRules);
         void comparedMinedRules(uint fromOlder, uint toOlder,
