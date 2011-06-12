@@ -28,8 +28,6 @@ namespace EpisodesParser {
         if (!Parser::parserHelpersInitialized)
             qFatal("Call Parser::initParserHelper()  before creating Parser instances.");
         Parser::parserHelpersInitMutex.unlock();
-
-        connect(this, SIGNAL(parsedChunk(QStringList)), SLOT(processParsedChunk(QStringList)));
     }
 
     void Parser::initParserHelpers(const QString & browsCapCSV,
@@ -106,14 +104,14 @@ namespace EpisodesParser {
                 chunk.append(in.readLine());
                 numLines++;
                 if (chunk.size() == CHUNK_SIZE) {
-                    emit parsedChunk(chunk);
+                    this->processParsedChunk(chunk);
                     chunk.clear();
                 }
             }
 
             // Check if we have another chunk (with size < CHUNK_SIZE).
             if (chunk.size() > 0) {
-                emit parsedChunk(chunk);
+                this->processParsedChunk(chunk);
             }
 
             return numLines;
@@ -403,33 +401,6 @@ namespace EpisodesParser {
     //---------------------------------------------------------------------------
     // Protected slots.
 
-    void Parser::processParsedChunk(const QStringList & chunk) {
-        static unsigned int quarterID = 0;
-        static QList<EpisodesLogLine> batch;
-
-        qDebug() << "STARTING CHUNK, remaining lines in previous batch" << batch.size();
-
-        // Perform the mapping from strings to EpisodesLogLine concurrently.
-//        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
-        QString rawLine;
-        EpisodesLogLine line;
-        foreach (rawLine, chunk) {
-            line = Parser::mapLineToEpisodesLogLine(rawLine);
-
-            // Create a batch for each quarter (900 seconds) and process it.
-            if (line.time / 900 > quarterID) {
-                quarterID = line.time / 900;
-                if (!batch.isEmpty())
-                    this->processBatch(batch);
-                batch.clear();
-            }
-
-            batch.append(line);
-        }
-
-        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!";
-    }
-
     void Parser::processBatch(const QList<EpisodesLogLine> batch) {
         double transactionsPerEvent;
 #ifdef DEBUG
@@ -483,7 +454,33 @@ namespace EpisodesParser {
                  << QDateTime::fromTime_t(batch.first().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str()
                  << "and"
                  << QDateTime::fromTime_t(batch.last().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str();
+    //---------------------------------------------------------------------------
+    // Protected methods.
 
-        emit processedChunk(transactions, transactionsPerEvent);
+    void Parser::processParsedChunk(const QStringList & chunk) {
+        static unsigned int quarterID = 0;
+        static QList<EpisodesLogLine> batch;
+
+        qDebug() << "STARTING CHUNK, remaining lines in previous batch" << batch.size();
+
+        // Perform the mapping from strings to EpisodesLogLine concurrently.
+//        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
+        QString rawLine;
+        EpisodesLogLine line;
+        foreach (rawLine, chunk) {
+            line = Parser::mapLineToEpisodesLogLine(rawLine);
+
+            // Create a batch for each quarter (900 seconds) and process it.
+            if (line.time / 900 > quarterID) {
+                quarterID = line.time / 900;
+                if (!batch.isEmpty())
+                    this->processBatch(batch);
+                batch.clear();
+            }
+
+            batch.append(line);
+        }
+
+        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!";
     }
 }

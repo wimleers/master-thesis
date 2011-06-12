@@ -42,14 +42,13 @@ namespace EpisodesParser {
         static QList<QStringList> mapExpandedEpisodesLogLineToTransactions(const ExpandedEpisodesLogLine & line);
 
     signals:
-        void parsedChunk(QStringList chunk);
         void processedChunk(QList<QStringList> transactions, double transactionsPerEvent);
 
     protected slots:
-        void processParsedChunk(const QStringList & chunk);
         void processBatch(const QList<EpisodesLogLine> batch);
 
     protected:
+        void processParsedChunk(const QStringList & chunk);
         // QHashes that are used to minimize memory usage.
         static EpisodeNameIDHash episodeNameIDHash;
         static EpisodeIDNameHash episodeIDNameHash;
