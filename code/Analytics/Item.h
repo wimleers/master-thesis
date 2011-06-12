@@ -4,6 +4,7 @@
 #include <QHash>
 #include <QList>
 #include <QString>
+#include <QMetaType>
 
 #ifdef DEBUG
 #include <QDebug>
@@ -132,6 +133,7 @@ namespace Analytics {
         return !(r1 == r2);
     }
 
+    void registerBasicMetaTypes();
 
 #ifdef DEBUG
     // QDebug() streaming output operators.
@@ -144,4 +146,9 @@ namespace Analytics {
 #endif
 
 }
+
+Q_DECLARE_METATYPE(Analytics::ItemIDList);
+Q_DECLARE_METATYPE(Analytics::FrequentItemset);
+
+
 #endif // ITEM_H

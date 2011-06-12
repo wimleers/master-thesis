@@ -2,6 +2,19 @@
 
 namespace Analytics {
 
+    /**
+     * It's necessary to register the metatypes defined in Item.h to allow
+     * these types to be used in queued signal/slot connections, for example.
+     *
+     * An extra difficulty is the combination with namespaces. See
+     * http://ktutorial.wordpress.com/2009/04/26/qt-meta-object-system-and-namespaces/
+     * and http://lists.trolltech.com/qt-interest/2007-11/thread00465-0.html
+     */
+    void registerBasicMetaTypes() {
+        qRegisterMetaType<Analytics::ItemIDList>("ItemIDList");
+        qRegisterMetaType<Analytics::FrequentItemset>("FrequentItemset");
+    }
+
     uint qHash(const AssociationRule & r) {
         QString s;
         foreach (const ItemID & id, r.antecedent)
