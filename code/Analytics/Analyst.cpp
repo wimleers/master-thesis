@@ -10,6 +10,10 @@ namespace Analytics {
         this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
     }
 
+    Analyst::~Analyst() {
+        delete this->fpstream;
+    }
+
     /**
      * Add a frequent itemset item constraint of a given constraint type. When
      * frequent itemsets are being generated, only those will be considered

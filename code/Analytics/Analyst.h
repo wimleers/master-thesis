@@ -21,6 +21,7 @@ namespace Analytics {
 
     public:
         Analyst(double minSupport, double maxSupportError, double minConfidence);
+        ~Analyst();
         void addFrequentItemsetItemConstraint(ItemName item, ItemConstraintType type);
         void addRuleConsequentItemConstraint(ItemName item, ItemConstraintType type);
 
