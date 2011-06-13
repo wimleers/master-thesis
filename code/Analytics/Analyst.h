@@ -6,6 +6,11 @@
 #include <QList>
 #include <QHash>
 #include <QStringList>
+#include <QPair>
+
+#include <QThread>
+#include <QWaitCondition>
+#include <QMutex>
 
 #include "Item.h"
 #include "Constraints.h"
@@ -13,6 +18,7 @@
 #include "FPStream.h"
 #include "RuleMiner.h"
 
+typedef uint Time;
 
 namespace Analytics {
 
@@ -28,8 +34,20 @@ namespace Analytics {
         // Override moveToThread to also move the FPStream instance.
         void moveToThread(QThread * thread);
 
+        // Helper methods for UI.
+        QPair<ItemName, ItemNameList> extractEpisodeFromItemset(ItemIDList itemset) const;
+
     signals:
-        void minedRules(uint from, uint to, QList<AssociationRule> associationRules);
+        // Signals for UI.
+        void analyzing(bool, Time start, Time end, int pageViews, int transactions);
+        void analyzedDuration(int duration);
+        void stats(Time start, Time end, int pageViews, int transactions, int uniqueItems, int frequentItems, int patternTreeSize);
+        void mining(bool);
+        void minedDuration(int duration);
+
+        // Signals for calculations.
+        void processedBatch();
+        void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules);
         void comparedMinedRules(uint fromOlder, uint toOlder,
                                 uint fromNewer, uint toNewer,
                                 QList<AssociationRule> olderRules,
@@ -39,9 +57,12 @@ namespace Analytics {
                                 QList<float> supportVariance);
 
     public slots:
-        void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent);
+        void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent, Time start, Time end);
         void mineRules(uint from, uint to);
         void mineAndCompareRules(uint fromOlder, uint toOlder, uint fromNewer, uint toNewer);
+
+    protected slots:
+        void fpstreamProcessedBatch();
 
     protected:
         void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
@@ -57,6 +78,16 @@ namespace Analytics {
         ItemIDNameHash itemIDNameHash;
         ItemNameIDHash itemNameIDHash;
         ItemIDList sortedFrequentItemIDs;
+
+        // Stats for the UI.
+        int currentBatchStartTime;
+        int currentBatchEndTime;
+        int currentBatchNumPageViews;
+        int currentBatchNumTransactions;
+        int allBatchesStartTime;
+        int allBatchesNumPageViews;
+        int allBatchesNumTransactions;
+        QTime timer;
     };
 }
 

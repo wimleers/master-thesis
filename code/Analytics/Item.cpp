@@ -13,6 +13,7 @@ namespace Analytics {
     void registerBasicMetaTypes() {
         qRegisterMetaType<Analytics::ItemIDList>("ItemIDList");
         qRegisterMetaType<Analytics::FrequentItemset>("FrequentItemset");
+        qRegisterMetaType< QList<Analytics::AssociationRule> >("QList<Analytics::AssociationRule>");
     }
 
     uint qHash(const AssociationRule & r) {

@@ -11,6 +11,8 @@
 #include <QtConcurrentMap>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QWaitCondition>
+#include <Qtime>
 
 #include "QBrowsCap.h"
 #include "QGeoIP.h"
@@ -33,7 +35,6 @@ namespace EpisodesParser {
                                       const QString & geoIPISPDB,
                                       const QString & episodeDiscretizerCSV);
         static void clearParserHelperCaches();
-        int parse(const QString & fileName);
 
         // Processing logic.
         static EpisodesLogLine mapLineToEpisodesLogLine(const QString & line);
@@ -42,13 +43,25 @@ namespace EpisodesParser {
         static QList<QStringList> mapExpandedEpisodesLogLineToTransactions(const ExpandedEpisodesLogLine & line);
 
     signals:
-        void processedChunk(QList<QStringList> transactions, double transactionsPerEvent);
+        void parsing(bool);
+        void parsedDuration(int duration);
+        void parsedBatch(QList<QStringList> transactions, double transactionsPerEvent, Time start, Time end);
+
+    public slots:
+        void parse(const QString & fileName);
+        void continueParsing();
 
     protected slots:
         void processBatch(const QList<EpisodesLogLine> batch);
 
     protected:
         void processParsedChunk(const QStringList & chunk);
+
+        QMutex mutex;
+        QWaitCondition condition;
+        QTime timer;
+
+
         // QHashes that are used to minimize memory usage.
         static EpisodeNameIDHash episodeNameIDHash;
         static EpisodeIDNameHash episodeIDNameHash;

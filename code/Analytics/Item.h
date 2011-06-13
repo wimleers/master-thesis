@@ -72,6 +72,7 @@ namespace Analytics {
      */
     typedef QList<ItemID> ItemIDList;
     typedef QList<Item> ItemList;
+    typedef QList<ItemName> ItemNameList;
     typedef QList<Item> Transaction;
     struct FrequentItemset {
         FrequentItemset() : support(0) {}

@@ -77,6 +77,10 @@ namespace EpisodesParser {
         Parser::parserHelpersInitMutex.unlock();
     }
 
+    //---------------------------------------------------------------------------
+    // Protected methods.
+
+
     /**
      * Parse the given Episodes log file.
      *
@@ -86,19 +90,22 @@ namespace EpisodesParser {
      *
      * @param fileName
      *   The full path to an Episodes log file.
-     * @return
-     *   -1 if the log file could not be read. Otherwise: the number of lines
-     *   parsed.
      */
-    int Parser::parse(const QString & fileName) {
+    void Parser::parse(const QString & fileName) {
+        // Notify the UI.
+        emit parsing(true);
+
         QFile file;
         QStringList chunk;
         int numLines = 0;
 
         file.setFileName(fileName);
-        if (!file.open(QIODevice::ReadOnly | QIODevice::Text))
-            return -1;
+        if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+            // TODO: emit signal indicating parsing failure.
+            return;
+        }
         else {
+            this->timer.start();
             QTextStream in(&file);
             while (!in.atEnd()) {
                 chunk.append(in.readLine());
@@ -114,8 +121,16 @@ namespace EpisodesParser {
                 this->processParsedChunk(chunk);
             }
 
-            return numLines;
+            // Notify the UI.
+            emit parsing(false);
         }
+
+        Parser::clearParserHelperCaches();
+    }
+
+    void Parser::continueParsing() {
+        QMutexLocker(&this->mutex);
+        this->condition.wakeOne();
     }
 
 
@@ -443,6 +458,7 @@ namespace EpisodesParser {
 
         transactionsPerEvent = ((double) transactions.size()) / batch.size();
 
+        /*
         qDebug() << "Processed batch of" << batch.size() << "lines!"
                  << "Transactions generated:" << transactions.size() << "."
                  << "(" << transactionsPerEvent << "transactions/event)"
@@ -454,6 +470,19 @@ namespace EpisodesParser {
                  << QDateTime::fromTime_t(batch.first().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str()
                  << "and"
                  << QDateTime::fromTime_t(batch.last().time).toString("yyyy-MM-dd hh:mm:ss").toStdString().c_str();
+    */
+        emit parsedDuration(timer.elapsed());
+        emit parsedBatch(transactions, transactionsPerEvent, batch.first().time, batch.last().time);
+
+
+        // Pause the parsing until these transactions have been processed!
+        this->mutex.lock();
+        this->condition.wait(&this->mutex);
+        this->timer.start(); // Restart the timer.
+        this->mutex.unlock();
+    }
+
+
     //---------------------------------------------------------------------------
     // Protected methods.
 
@@ -461,7 +490,6 @@ namespace EpisodesParser {
         static unsigned int quarterID = 0;
         static QList<EpisodesLogLine> batch;
 
-        qDebug() << "STARTING CHUNK, remaining lines in previous batch" << batch.size();
 
         // Perform the mapping from strings to EpisodesLogLine concurrently.
 //        QList<EpisodesLogLine> mappedChunk = QtConcurrent::blockingMapped(chunk, Parser::mapLineToEpisodesLogLine);
@@ -480,7 +508,5 @@ namespace EpisodesParser {
 
             batch.append(line);
         }
-
-        qDebug() << "Processed chunk of" << CHUNK_SIZE << "lines!";
     }
 }

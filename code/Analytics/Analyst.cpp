@@ -7,7 +7,13 @@ namespace Analytics {
         this->maxSupportError = maxSupportError;
         this->minConfidence   = minConfidence;
 
+        // Stats for the UI.
+        this->allBatchesNumPageViews = 0;
+        this->allBatchesNumTransactions = 0;
+        this->allBatchesStartTime = 0;
+
         this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
+        connect(this->fpstream, SIGNAL(batchProcessed()), this, SLOT(fpstreamProcessedBatch()));
     }
 
     Analyst::~Analyst() {
@@ -59,12 +65,59 @@ namespace Analytics {
         this->fpstream->moveToThread(thread);
     }
 
+    /**
+     * Extract the episode from an itemset and convert all item IDs to item
+     * names. Essential for the UI.
+     *
+     * @param itemset
+     *   The itemset (of item IDs) from which to extract the episode.
+     * @return
+     *   A pair: the first parameter is the episode item, the second parameter
+     *   is a list that contains the remaining episode names.
+     */
+    QPair<ItemName, ItemNameList> Analyst::extractEpisodeFromItemset(ItemIDList itemset) const {
+        ItemNameList itemNames;
+        ItemName episodeName;
+
+        // First, map to item names.
+        foreach (ItemID id, itemset)
+            itemNames.append(this->itemIDNameHash[id]);
+
+        // Next, filter out the episode item.
+        foreach (ItemName name, itemNames) {
+            if (name.startsWith("episode")) {
+                episodeName = name;
+                itemNames.removeAll(name);
+                break;
+            }
+        }
+
+        return qMakePair(episodeName, itemNames);
+    }
+
 
     //------------------------------------------------------------------------
     // Public slots.
 
-    void Analyst::analyzeTransactions(const QList<QStringList> &transactions, double transactionsPerEvent) {
+    void Analyst::analyzeTransactions(const QList<QStringList> &transactions, double transactionsPerEvent, Time start, Time end) {
+        // Stats for the UI.
+        this->currentBatchStartTime = start;
+        this->currentBatchEndTime = end;
+        this->currentBatchNumPageViews = transactions.size() / transactionsPerEvent;
+        this->currentBatchNumTransactions = transactions.size();
+        this->timer.start();
+
+        // Notify the UI.
+        emit analyzing(true, this->currentBatchStartTime, this->currentBatchEndTime, this->currentBatchNumPageViews, this->currentBatchNumTransactions);
+
+        // Perform the actual mining.
         this->performMining(transactions, transactionsPerEvent);
+
+        // Since the mining above is performed asynchronously, this is NOT the
+        // place where we know the calculations end. Only FP-Stream can know,
+        // hence FP-Stream's processedBatch() signal is the correct indicator.
+        // This signal is then sent from the @function fpstreamProcessedBatch()
+        // slot.
     }
 
     /**
@@ -76,6 +129,11 @@ namespace Analytics {
      *   The range ends at this bucket.
      */
     void Analyst::mineRules(uint from, uint to) {
+        // Notify the UI.
+        emit mining(true);
+
+        this->timer.start();
+
         // First, consider each item for use with constraints.
         this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
 
@@ -94,13 +152,21 @@ namespace Analytics {
                 to
         );
 
-        qDebug() << "mining association rules complete, # association rules:" << associationRules.size();
-        qDebug() << associationRules;
+        int duration = this->timer.elapsed();
 
         emit minedRules(from, to, associationRules);
+
+        // Notify the UI.
+        emit mining(false);
+        emit minedDuration(duration);
     }
 
     void Analyst::mineAndCompareRules(uint fromOlder, uint toOlder, uint fromNewer, uint toNewer) {
+        // Notify the UI.
+        emit mining(true);
+
+        this->timer.start();
+
         // First, consider each item for use with constraints.
         this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
 
@@ -150,6 +216,8 @@ namespace Analytics {
             supportVariance.append((1.0 * newerRules[n].support / supportForNewerRange) - (1.0 * olderRules[o].support / supportForOlderRange));
         }
 
+        int duration = this->timer.elapsed();
+
         qDebug() << olderRules.size() << newerRules.size() << intersectedRules.size() << supportVariance;
         emit comparedMinedRules(fromOlder, toOlder,
                                 fromNewer, toNewer,
@@ -158,6 +226,37 @@ namespace Analytics {
                                 intersectedRules,
                                 confidenceVariance,
                                 supportVariance);
+
+        // Notify the UI.
+        emit mining(false);
+        emit minedDuration(duration);
+    }
+
+
+    //------------------------------------------------------------------------
+    // Protected slots.
+
+    void Analyst::fpstreamProcessedBatch() {
+        int duration = this->timer.elapsed();
+        if (this->allBatchesStartTime == 0)
+            this->allBatchesStartTime = this->currentBatchStartTime;
+        this->allBatchesNumPageViews += this->currentBatchNumPageViews;
+        this->allBatchesNumTransactions += this->currentBatchNumTransactions;
+        this->currentBatchNumPageViews = 0;
+        this->currentBatchNumTransactions = 0;
+
+        emit processedBatch();
+        emit analyzing(false, 0, 0, 0, 0);
+        emit analyzedDuration(duration);
+        emit stats(
+                    this->allBatchesStartTime,
+                    this->currentBatchEndTime,
+                    this->allBatchesNumPageViews,
+                    this->allBatchesNumTransactions,
+                    this->itemIDNameHash.size(),
+                    this->fpstream->getNumFrequentItems(),
+                    this->fpstream->getPatternTreeSize()
+        );
     }
 
 

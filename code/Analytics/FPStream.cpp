@@ -82,6 +82,8 @@ namespace Analytics {
             this->statusMutex.lock();
             this->processingBatch = false;
             this->statusMutex.unlock();
+
+            emit batchProcessed();
         }
         // Subsequent batches.
         else {
@@ -272,11 +274,13 @@ namespace Analytics {
             // is deleted.
             delete this->currentFPGrowth;
 
-#ifdef DEBUG
+#ifdef FPSTREAM_DEBUG
             qDebug() << "\tPatternTree size: " << this->patternTree.getNodeCount();
             qDebug() << "\tItemIDNameHash size: " << this->itemIDNameHash->size();
             qDebug() << "\tf_list size: " << this->f_list->size();
 #endif
+
+            emit batchProcessed();
         }
     }
 
