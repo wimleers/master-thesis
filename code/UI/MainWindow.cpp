@@ -78,7 +78,7 @@ void MainWindow::updateAnalyzingDuration(int duration) {
     QMutexLocker(&this->statusMutex);
     this->totalAnalyzingDuration += duration;
     this->status_performance_analyzing->setText(
-                QString("%1 s (%2 transactions/s)")
+                QString("%1 s (%2 episodes/s)")
                 .arg(QString::number(this->totalAnalyzingDuration / 1000.0, 'f', 2))
                 .arg(QString::number(this->totalTransactions / (this->totalAnalyzingDuration / 1000.0), 'f', 0))
     );
