@@ -15,6 +15,11 @@ namespace Analytics {
         // Browsable concept hierarchy.
         this->conceptHierarchyModel = new QStandardItemModel(this);
 
+#ifdef DEBUG
+        this->frequentItemsetItemConstraints.itemIDNameHash = &this->itemIDNameHash;
+        this->ruleConsequentItemConstraints.itemIDNameHash = &this->itemIDNameHash;
+#endif
+
         this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
         connect(this->fpstream, SIGNAL(batchProcessed()), this, SLOT(fpstreamProcessedBatch()));
     }

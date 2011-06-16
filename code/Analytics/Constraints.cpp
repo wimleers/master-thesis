@@ -2,6 +2,17 @@
 
 namespace Analytics {
 
+    const char * Constraints::ItemConstraintTypeName[4] = {
+        "CONSTRAINT_POSITIVE_MATCH_ALL",
+        "CONSTRAINT_POSITIVE_MATCH_ANY",
+        "CONSTRAINT_NEGATIVE_MATCH_ALL",
+        "CONSTRAINT_NEGATIVE_MATCH_ANY"
+    };
+
+
+    //--------------------------------------------------------------------------
+    // Public methods.
+
     Constraints::Constraints() {
         this->highestPreprocessedItemID = ROOT_ITEMID;
     }
@@ -305,4 +316,64 @@ namespace Analytics {
             this->preprocessedItemConstraints[type].insert(category, QSet<ItemID>());
         this->preprocessedItemConstraints[type][category].insert(id);
     }
+
+
+    //------------------------------------------------------------------------
+    // Other.
+
+#ifdef DEBUG
+
+    QDebug operator<<(QDebug dbg, const Constraints & constraints) {
+        // Item constraints.
+        // Stats.
+        unsigned int sum = 0;
+        foreach (ItemConstraintType key, constraints.itemConstraints.keys())
+            sum += constraints.itemConstraints[key].size();
+        // Display.
+        dbg.nospace() << "item constraints (" << sum << "):" << endl;
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            ItemConstraintType constraintType = (ItemConstraintType) i;
+            dbg.nospace() << "\t" << Constraints::ItemConstraintTypeName[i] << ":";
+            if (constraints.itemConstraints[constraintType].isEmpty())
+                dbg.space() << "none";
+            else
+                dbg.space() << constraints.itemConstraints[constraintType];
+            dbg.nospace() << endl;
+        }
+
+
+        // Preprocessed item constraints.
+        // Stats.
+        sum = 0;
+        foreach (ItemConstraintType key, constraints.itemConstraints.keys())
+            foreach (ItemName name, constraints.preprocessedItemConstraints[key].keys())
+                sum += constraints.preprocessedItemConstraints[key][name].size();
+        // Display.
+        dbg.nospace() << "preprocesseditem constraints (" << sum << "):" << endl;
+        for (int i = CONSTRAINT_POSITIVE_MATCH_ALL; i <= CONSTRAINT_NEGATIVE_MATCH_ANY; i++) {
+            ItemConstraintType constraintType = (ItemConstraintType) i;
+            dbg.nospace() << "\t" << Constraints::ItemConstraintTypeName[i] << ":";
+
+            if (constraints.preprocessedItemConstraints[constraintType].isEmpty())
+                dbg.space() << "none" << endl;
+            else
+                dbg.nospace() << endl;
+
+            foreach (ItemName name, constraints.preprocessedItemConstraints[constraintType].keys()) {
+                if (name == "non-wildcards") {
+                    foreach (ItemID itemID, constraints.preprocessedItemConstraints[constraintType][name])
+                        dbg.nospace() << "\t\t" << constraints.itemIDNameHash->value(itemID) << " (" << itemID << ")" << endl;
+                }
+                else {
+                    dbg.nospace() << "\t\t" << name << endl;
+                    foreach (ItemID itemID, constraints.preprocessedItemConstraints[constraintType][name])
+                        dbg.nospace() << "\t\t\t" << constraints.itemIDNameHash->value(itemID) << " (" << itemID << ")" << endl;
+                }
+            }
+        }
+
+        return dbg.maybeSpace();
+    }
+#endif
+
 }

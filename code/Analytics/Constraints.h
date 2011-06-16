@@ -4,6 +4,7 @@
 #include <QRegExp>
 #include <QList>
 #include <QSet>
+#include <QStringList>
 
 #include "Item.h"
 
@@ -18,6 +19,11 @@ namespace Analytics {
     };
 
     class Constraints {
+
+#ifdef DEBUG
+        friend QDebug operator<<(QDebug dbg, const Constraints & constraints);
+#endif
+
     public:
         Constraints();
 
@@ -37,6 +43,12 @@ namespace Analytics {
 
         bool matchItemset(const ItemIDList & itemset) const;
         bool matchSearchSpace(const ItemIDList & frequentItemset, const QHash<ItemID, SupportCount> & prefixPathsSupportCounts) const;
+
+#ifdef DEBUG
+        ItemIDNameHash * itemIDNameHash;
+#endif
+
+        static const char * ItemConstraintTypeName[4];
 
     protected:
         static bool matchItemsetHelper(const ItemIDList & itemset, ItemConstraintType type, const QSet<ItemID> & constraintItems);
