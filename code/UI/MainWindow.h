@@ -21,6 +21,9 @@
 #include <QTableWidgetItem>
 #include <QLabel>
 #include <QPushButton>
+#include <QLineEdit>
+
+#include "ConceptHierarchyCompleter.h"
 
 #include "../EpisodesParser/Parser.h"
 #include "../Analytics/Analyst.h"
@@ -123,6 +126,8 @@ private:
     QPushButton * causesMineLastWeekButton;
     QPushButton * causesMineLastMonthButton;
     QPushButton * causesMineAllTimeButton;
+    QLineEdit * causesFilter;
+    ConceptHierarchyCompleter * causesFilterCompleter;
     QTableWidget * causesTable;
 
     // Status groupbox.

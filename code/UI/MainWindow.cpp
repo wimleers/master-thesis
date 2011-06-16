@@ -376,10 +376,12 @@ void MainWindow::createStatsGroupbox() {
 void MainWindow::createCausesGroupbox() {
     this->causesGroupbox = new QGroupBox(tr("Causes"));
     QVBoxLayout * layout = new QVBoxLayout();
-    QHBoxLayout * controlLayout = new QHBoxLayout();
+    QHBoxLayout * mineLayout = new QHBoxLayout();
+    QHBoxLayout * filterLayout = new QHBoxLayout();
 
     // Add children to layout.
-    layout->addLayout(controlLayout);
+    layout->addLayout(mineLayout);
+    layout->addLayout(filterLayout);
     QStringList headerLabels;
     headerLabels << tr("Episode") << tr("Circumstances") << tr("Pct. slow") << tr("Occurrences");
     QList<int> columnWidths;
@@ -390,26 +392,36 @@ void MainWindow::createCausesGroupbox() {
         this->causesTable->setColumnWidth(c, columnWidths[c]);
     layout->addWidget(this->causesTable);
 
-    // Add children to "control" layout.
+    // Add children to "mine" layout.
     this->causesMineLastQuarterButton = new QPushButton(tr("Mine last quarter"));
     this->causesMineLastHourButton    = new QPushButton(tr("Mine last hour"));
     this->causesMineLastDayButton     = new QPushButton(tr("Mine last day"));
     this->causesMineLastWeekButton    = new QPushButton(tr("Mine last week"));
     this->causesMineLastMonthButton   = new QPushButton(tr("Mine last month"));
     this->causesMineAllTimeButton     = new QPushButton(tr("Mine all time"));
-    controlLayout->addWidget(this->causesMineLastQuarterButton);
-    controlLayout->addStretch();
-    controlLayout->addWidget(this->causesMineLastHourButton);
-    controlLayout->addStretch();
-    controlLayout->addWidget(this->causesMineLastDayButton);
-    controlLayout->addStretch();
-    controlLayout->addWidget(this->causesMineLastWeekButton);
-    controlLayout->addStretch();
-    controlLayout->addWidget(this->causesMineLastMonthButton);
-    controlLayout->addStretch();
-    controlLayout->addWidget(this->causesMineAllTimeButton);
-
+    mineLayout->addWidget(this->causesMineLastQuarterButton);
+    mineLayout->addStretch();
+    mineLayout->addWidget(this->causesMineLastHourButton);
+    mineLayout->addStretch();
+    mineLayout->addWidget(this->causesMineLastDayButton);
+    mineLayout->addStretch();
+    mineLayout->addWidget(this->causesMineLastWeekButton);
+    mineLayout->addStretch();
+    mineLayout->addWidget(this->causesMineLastMonthButton);
+    mineLayout->addStretch();
+    mineLayout->addWidget(this->causesMineAllTimeButton);
     this->updateMiningAbility(false);
+
+    // Add children to "filter" layout.
+    QLabel * filterLabel = new QLabel(tr("Filter") + ":");
+    this->causesFilterCompleter = new ConceptHierarchyCompleter();
+    this->causesFilterCompleter->setCaseSensitivity(Qt::CaseInsensitive);
+    this->causesFilterCompleter->setModel(this->analyst->getConceptHierarchyModel());
+    this->causesFilterCompleter->setModelSorting(QCompleter::CaseInsensitivelySortedModel);
+    this->causesFilter = new QLineEdit();
+    this->causesFilter->setCompleter(this->causesFilterCompleter);
+    filterLayout->addWidget(filterLabel);
+    filterLayout->addWidget(this->causesFilter);
 
     // Set layout for groupbox.
     this->causesGroupbox->setLayout(layout);

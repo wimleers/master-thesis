@@ -12,6 +12,9 @@ namespace Analytics {
         this->allBatchesNumTransactions = 0;
         this->allBatchesStartTime = 0;
 
+        // Browsable concept hierarchy.
+        this->conceptHierarchyModel = new QStandardItemModel(this);
+
         this->fpstream = new FPStream(this->minSupport, this->maxSupportError, &this->itemIDNameHash, &this->itemNameIDHash, &this->sortedFrequentItemIDs);
         connect(this->fpstream, SIGNAL(batchProcessed()), this, SLOT(fpstreamProcessedBatch()));
     }
@@ -106,6 +109,10 @@ namespace Analytics {
         this->currentBatchNumPageViews = transactions.size() / transactionsPerEvent;
         this->currentBatchNumTransactions = transactions.size();
         this->timer.start();
+
+        // Necessary to be able to update the browsable concept hierarchy in
+        // Analyst::fpstreamProcessedBatch().
+        this->uniqueItemsBeforeMining = this->itemIDNameHash.size();
 
         // Notify the UI.
         emit analyzing(true, this->currentBatchStartTime, this->currentBatchEndTime, this->currentBatchNumPageViews, this->currentBatchNumTransactions);
@@ -245,6 +252,9 @@ namespace Analytics {
         this->currentBatchNumPageViews = 0;
         this->currentBatchNumTransactions = 0;
 
+        // Update the browsable concept hierarchy.
+        this->updateConceptHierarchyModel(this->uniqueItemsBeforeMining);
+
         emit processedBatch();
         emit analyzing(false, 0, 0, 0, 0);
         emit analyzedDuration(duration);
@@ -310,4 +320,55 @@ namespace Analytics {
         }
     }
 
+    void Analyst::updateConceptHierarchyModel(int itemsAlreadyProcessed) {
+        if (this->itemIDNameHash.size() <= itemsAlreadyProcessed)
+            return;
+
+        ItemName item, parent, child;
+        QStringList parts;
+        for (int id = itemsAlreadyProcessed; id < this->itemIDNameHash.size(); id++) {
+            item = this->itemIDNameHash[(ItemID) id];
+            parts = item.split(':', QString::SkipEmptyParts);
+
+            // Ban "duration:*" from the concept hierarchy, since we only accept
+            // "duration:slow" in the first place.
+            if (parts[0].compare("duration") == 0)
+                continue;
+
+            // Ban "url:*" from the concept hierarchy, as it is fairly useless.
+            if (parts[0].compare("url") == 0)
+                continue;
+
+            // Update the concept hierarchy model.
+            parent = parts[0];
+            // Root level.
+            if (!this->conceptHierarchyHash.contains(parent)) {
+                QStandardItem * modelItem = new QStandardItem(parent);
+                modelItem->setData(parent.toUpper(), Qt::UserRole); // For sorting.
+
+                // Store in hierarchy.
+                this->conceptHierarchyHash.insert(parent, modelItem);
+                QStandardItem * root = this->conceptHierarchyModel->invisibleRootItem();
+                root->appendRow(modelItem);
+            }
+            // Subsequent levels.
+            for (int p = 1; p < parts.size(); p++) {
+                child = parent + ':' + parts[p];
+                if (!this->conceptHierarchyHash.contains(child)) {
+                    QStandardItem * modelItem = new QStandardItem(parts[p]);
+                    modelItem->setData(parts[p].toUpper(), Qt::UserRole); // For sorting.
+
+                    // Store in hierarchy.
+                    this->conceptHierarchyHash.insert(child, modelItem);
+                    QStandardItem * parentModelItem = this->conceptHierarchyHash[parent];
+                    parentModelItem->appendRow(modelItem);
+                }
+                parent = child;
+            }
+        }
+
+        // Sort the model case-insensitively.
+        this->conceptHierarchyModel->setSortRole(Qt::UserRole);
+        this->conceptHierarchyModel->sort(0, Qt::AscendingOrder);
+    }
 }

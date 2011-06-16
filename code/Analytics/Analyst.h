@@ -7,6 +7,8 @@
 #include <QHash>
 #include <QStringList>
 #include <QPair>
+#include <QStandardItemModel>
+#include <QStandardItem>
 
 #include <QThread>
 #include <QWaitCondition>
@@ -34,7 +36,8 @@ namespace Analytics {
         // Override moveToThread to also move the FPStream instance.
         void moveToThread(QThread * thread);
 
-        // Helper methods for UI.
+        // UI integration.
+        QStandardItemModel * getConceptHierarchyModel() const { return this->conceptHierarchyModel; }
         QPair<ItemName, ItemNameList> extractEpisodeFromItemset(ItemIDList itemset) const;
 
     signals:
@@ -66,6 +69,7 @@ namespace Analytics {
 
     protected:
         void performMining(const QList<QStringList> & transactions, double transactionsPerEvent);
+        void updateConceptHierarchyModel(int itemsAlreadyProcessed);
 
         FPStream * fpstream;
         double minSupport;
@@ -88,6 +92,11 @@ namespace Analytics {
         int allBatchesNumPageViews;
         int allBatchesNumTransactions;
         QTime timer;
+
+        // Browsable concept hierarchy for the UI.
+        int uniqueItemsBeforeMining;
+        QStandardItemModel * conceptHierarchyModel;
+        QHash<ItemName, QStandardItem *> conceptHierarchyHash;
     };
 }
 
