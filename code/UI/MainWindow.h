@@ -23,6 +23,11 @@
 #include <QPushButton>
 #include <QLineEdit>
 
+#include <QTableView>
+#include <QHeaderView>
+#include <QStandardItemModel>
+#include <QStandardItem>
+
 #include "ConceptHierarchyCompleter.h"
 
 #include "../EpisodesParser/Parser.h"
@@ -128,7 +133,8 @@ private:
     QPushButton * causesMineAllTimeButton;
     QLineEdit * causesFilter;
     ConceptHierarchyCompleter * causesFilterCompleter;
-    QTableWidget * causesTable;
+    QTableView * causesTable;
+    QStandardItemModel * causesTableModel;
 
     // Status groupbox.
     QGroupBox * statusGroupbox;

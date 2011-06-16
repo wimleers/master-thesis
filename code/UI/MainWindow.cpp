@@ -136,28 +136,49 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     this->totalPatternsExaminedWhileMining += associationRules.size();
     this->statusMutex.unlock();
 
-    this->causesTable->clearContents();
-    this->causesTable->setSortingEnabled(false);
-    this->causesTable->setRowCount(associationRules.size());
+    QAbstractItemModel * oldModel = this->causesTable->model();
+    if (oldModel != NULL)
+        delete oldModel;
+
+    QStandardItemModel * model = new QStandardItemModel(associationRules.size(), 5, this);
+
+    QStringList headerLabels;
+    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% slow (total)");
+    model->setHorizontalHeaderLabels(headerLabels);
 
     int row = 0;
     QPair<Analytics::ItemName, Analytics::ItemNameList> antecedent;
     foreach (Analytics::AssociationRule rule, associationRules) {
         antecedent = this->analyst->extractEpisodeFromItemset(rule.antecedent);
-        QTableWidgetItem * episode = new QTableWidgetItem(antecedent.first.section(':', 1));
-        this->causesTable->setItem(row, 0, episode);
-        QTableWidgetItem * circumstances = new QTableWidgetItem(((QStringList) antecedent.second).join(", "));
-        this->causesTable->setItem(row, 1, circumstances);
-        QTableWidgetItem * confidence = new QTableWidgetItem(QString("%1%").arg(QString::number(rule.confidence * 100, 'f', 2)));
-        this->causesTable->setItem(row, 2, confidence);
-        QTableWidgetItem * occurrences = new QTableWidgetItem(QString::number(rule.support));
-        this->causesTable->setItem(row, 3, occurrences);
-        QTableWidgetItem * relOccurrences = new QTableWidgetItem(QString("%1%").arg(QString::number(rule.support * 100.0 / eventsInTimeRange, 'f', 2)));
-        this->causesTable->setItem(row, 4, relOccurrences);
+        QString episode = antecedent.first.section(':', 1);
+        QStandardItem * episodeItem = new QStandardItem(episode);
+        episodeItem->setData(episode.toUpper(), Qt::UserRole);
+        model->setItem(row, 0, episodeItem);
+
+        QString circumstances = ((QStringList) antecedent.second).join(", ");
+        QStandardItem * circumstancesItem = new QStandardItem(circumstances);
+        circumstancesItem->setData(circumstances, Qt::UserRole);
+        model->setItem(row, 1, circumstancesItem);
+
+        QStandardItem * confidenceItem = new QStandardItem(QString("%1%").arg(QString::number(rule.confidence * 100, 'f', 2)));
+        confidenceItem->setData(rule.confidence, Qt::UserRole);
+        model->setItem(row, 2, confidenceItem);
+
+        QStandardItem * occurrencesItem = new QStandardItem(QString::number(rule.support));
+        occurrencesItem->setData(rule.support, Qt::UserRole);
+        model->setItem(row, 3, occurrencesItem);
+
+        double relOccurrences = rule.support * 100.0 / eventsInTimeRange;
+        QStandardItem * relOccurrencesItem = new QStandardItem(QString("%1%").arg(QString::number(relOccurrences, 'f', 2)));
+        relOccurrencesItem->setData(relOccurrences, Qt::UserRole);
+        model->setItem(row, 4, relOccurrencesItem);
+
         row++;
     }
+    model->setSortRole(Qt::UserRole);
 
-    this->causesTable->setSortingEnabled(true);
+    this->causesTable->setModel(model);
+    this->causesTable->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
 }
 
 
@@ -384,14 +405,9 @@ void MainWindow::createCausesGroupbox() {
     // Add children to layout.
     layout->addLayout(mineLayout);
     layout->addLayout(filterLayout);
-    QStringList headerLabels;
-    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% slow (total)");
-    QList<int> columnWidths;
-    columnWidths << 100 << 443 << 80 << 80 << 80;
-    this->causesTable = new QTableWidget(0, headerLabels.size(), this);
-    this->causesTable->setHorizontalHeaderLabels(headerLabels);
-    for (int c = 0; c < this->causesTable->columnCount(); c++)
-        this->causesTable->setColumnWidth(c, columnWidths[c]);
+    this->causesTable = new QTableView(this);
+    this->causesTable->setSortingEnabled(true);
+    this->causesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     layout->addWidget(this->causesTable);
 
     // Add children to "mine" layout.
