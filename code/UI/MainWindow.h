@@ -76,6 +76,7 @@ private:
     void assignLogicToThreads();
 
     // UI set-up.
+    void initUI();
     void createSparklineGroupbox();
     void createStatsGroupbox();
     void createCausesGroupbox();

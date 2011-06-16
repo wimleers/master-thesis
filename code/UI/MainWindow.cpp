@@ -3,25 +3,6 @@
 MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent)
 {
-//    this->createSparklineGroupbox();
-    this->createStatsGroupbox();
-    this->createCausesGroupbox();
-    this->createStatusGroupbox();
-
-    this->mainLayout = new QVBoxLayout();
-//    this->mainLayout->addWidget(this->sparklineGroupbox);
-//    this->mainLayout->addWidget(this->statsGroupbox);
-    this->mainLayout->addWidget(this->causesGroupbox);
-    this->mainLayout->addWidget(this->statusGroupbox);
-
-    QWidget * widget = new QWidget();
-    widget->setLayout(this->mainLayout);
-    this->setCentralWidget(widget);
-
-    this->setWindowTitle(tr("WPO Analytics"));
-    this->resize(780, 580);
-
-    // Initialize UI stuff.
     this->parsing = false;
     this->totalPatternsExaminedWhileMining = 0;
     this->totalParsingDuration = 0;
@@ -31,6 +12,7 @@ MainWindow::MainWindow(QWidget *parent) :
     // Logic + connections.
     this->initLogic();
     this->connectLogic();
+    this->initUI();
     this->connectUI();
     this->assignLogicToThreads();
 
@@ -93,7 +75,6 @@ void MainWindow::updateMiningDuration(int duration) {
                 .arg(QString::number(this->totalPatternsExaminedWhileMining / (this->totalMiningDuration / 1000.0), 'f', 0))
     );
 }
-
 
 void MainWindow::updateAnalyzingStatus(bool analyzing, Time start, Time end, int numPageViews, int numTransactions) {
     // Analysis started.
@@ -211,7 +192,7 @@ void MainWindow::mineTimeRange(uint from, uint to) {
 
 
 //------------------------------------------------------------------------------
-// Private methods.
+// Private methods: logic.
 
 void MainWindow::initLogic() {
     qRegisterMetaType< QList<QStringList> >("QList<QStringList>");
@@ -269,6 +250,10 @@ void MainWindow::assignLogicToThreads() {
     this->analystThread.start();
 }
 
+
+//------------------------------------------------------------------------------
+// Private methods: UI updating.
+
 void MainWindow::updateStatus(const QString & status) {
     if (!status.isNull())
         this->statusCurrentlyProcessing->setText(status);
@@ -288,6 +273,30 @@ void MainWindow::updateMiningAbility(bool enabled) {
     this->causesMineLastWeekButton->setEnabled(enabled);
     this->causesMineLastMonthButton->setEnabled(enabled);
     this->causesMineAllTimeButton->setEnabled(enabled);
+}
+
+
+//------------------------------------------------------------------------------
+// Private methods: UI set-up.
+
+void MainWindow::initUI() {
+//    this->createSparklineGroupbox();
+    this->createStatsGroupbox();
+    this->createCausesGroupbox();
+    this->createStatusGroupbox();
+
+    this->mainLayout = new QVBoxLayout();
+//    this->mainLayout->addWidget(this->sparklineGroupbox);
+//    this->mainLayout->addWidget(this->statsGroupbox);
+    this->mainLayout->addWidget(this->causesGroupbox);
+    this->mainLayout->addWidget(this->statusGroupbox);
+
+    QWidget * widget = new QWidget();
+    widget->setLayout(this->mainLayout);
+    this->setCentralWidget(widget);
+
+    this->setWindowTitle(tr("WPO Analytics"));
+    this->resize(780, 580);
 }
 
 void MainWindow::createSparklineGroupbox() {
@@ -421,9 +430,7 @@ void MainWindow::createStatusGroupbox() {
     layout->addWidget(performanceGroupbox);
 
     // Add children to "currently processing" layout.
-//    QLabel * cpl1 = new QLabel(tr("Currently processing measurements:"));
     this->statusCurrentlyProcessing = new QLabel(tr("Idle"));
-//    currentlyProcessingLayout->addWidget(cpl1);
     currentlyProcessingLayout->addWidget(this->statusCurrentlyProcessing);
     currentlyProcessingLayout->addStretch();
 
