@@ -147,6 +147,7 @@ namespace Analytics {
         this->timer.start();
 
         // First, consider each item for use with constraints.
+        this->frequentItemsetItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
         this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
 
         // Now, mine for association rules.
@@ -180,6 +181,7 @@ namespace Analytics {
         this->timer.start();
 
         // First, consider each item for use with constraints.
+        this->frequentItemsetItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
         this->ruleConsequentItemConstraints.preprocessItemIDNameHash(this->itemIDNameHash);
 
         // Now, mine the association rules for the "older" range.
