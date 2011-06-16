@@ -167,7 +167,7 @@ namespace Analytics {
 
         int duration = this->timer.elapsed();
 
-        emit minedRules(from, to, associationRules);
+        emit minedRules(from, to, associationRules, this->fpstream->getNumEventsInRange(from, to));
 
         // Notify the UI.
         emit mining(false);

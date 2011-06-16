@@ -50,7 +50,7 @@ namespace Analytics {
 
         // Signals for calculations.
         void processedBatch();
-        void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules);
+        void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange);
         void comparedMinedRules(uint fromOlder, uint toOlder,
                                 uint fromNewer, uint toNewer,
                                 QList<AssociationRule> olderRules,

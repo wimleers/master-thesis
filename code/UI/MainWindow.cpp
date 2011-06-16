@@ -128,7 +128,7 @@ void MainWindow::updateAnalyzingStats(Time start, Time end, int pageViews, int t
     );
 }
 
-void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules) {
+void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange) {
     Q_UNUSED(from);
     Q_UNUSED(to);
 
@@ -152,6 +152,8 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
         this->causesTable->setItem(row, 2, confidence);
         QTableWidgetItem * occurrences = new QTableWidgetItem(QString::number(rule.support));
         this->causesTable->setItem(row, 3, occurrences);
+        QTableWidgetItem * relOccurrences = new QTableWidgetItem(QString("%1%").arg(QString::number(rule.support * 100.0 / eventsInTimeRange, 'f', 2)));
+        this->causesTable->setItem(row, 4, relOccurrences);
         row++;
     }
 
@@ -235,7 +237,7 @@ void MainWindow::connectLogic() {
     connect(this->analyst, SIGNAL(analyzedDuration(int)), SLOT(updateAnalyzingDuration(int)));
     connect(this->analyst, SIGNAL(minedDuration(int)), SLOT(updateMiningDuration(int)));
     connect(this->analyst, SIGNAL(stats(Time,Time,int,int,int,int,int)), SLOT(updateAnalyzingStats(Time,Time,int,int,int,int,int)));
-    connect(this->analyst, SIGNAL(minedRules(uint,uint,QList<Analytics::AssociationRule>)), SLOT(minedRules(uint,uint,QList<Analytics::AssociationRule>)));
+    connect(this->analyst, SIGNAL(minedRules(uint,uint,QList<Analytics::AssociationRule>,Analytics::SupportCount)), SLOT(minedRules(uint,uint,QList<Analytics::AssociationRule>,Analytics::SupportCount)));
 
     // UI -> logic.
     connect(this, SIGNAL(parse(QString)), this->parser, SLOT(parse(QString)));
@@ -296,7 +298,7 @@ void MainWindow::initUI() {
     this->setCentralWidget(widget);
 
     this->setWindowTitle(tr("WPO Analytics"));
-    this->resize(780, 580);
+    this->resize(790, 580);
 }
 
 void MainWindow::createSparklineGroupbox() {
@@ -383,10 +385,10 @@ void MainWindow::createCausesGroupbox() {
     layout->addLayout(mineLayout);
     layout->addLayout(filterLayout);
     QStringList headerLabels;
-    headerLabels << tr("Episode") << tr("Circumstances") << tr("Pct. slow") << tr("Occurrences");
+    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% slow (total)");
     QList<int> columnWidths;
-    columnWidths << 100 << 448 << 80 << 80;
-    this->causesTable = new QTableWidget(0, 4, this);
+    columnWidths << 100 << 443 << 80 << 80 << 80;
+    this->causesTable = new QTableWidget(0, headerLabels.size(), this);
     this->causesTable->setHorizontalHeaderLabels(headerLabels);
     for (int c = 0; c < this->causesTable->columnCount(); c++)
         this->causesTable->setColumnWidth(c, columnWidths[c]);

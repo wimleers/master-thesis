@@ -39,6 +39,7 @@ namespace Analytics {
         // Stats for UI.
         int getNumFrequentItems() const { return this->f_list->size(); }
         int getPatternTreeSize() const { return this->patternTree.getNodeCount(); }
+        SupportCount getNumEventsInRange(uint from, uint to) const { return this->eventsPerBatch.getSupportForRange(from, to); }
 
         // Unit testing helper method.
         const PatternTree & getPatternTree() const { return this->patternTree; }

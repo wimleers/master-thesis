@@ -11,6 +11,7 @@ namespace Analytics {
      * and http://lists.trolltech.com/qt-interest/2007-11/thread00465-0.html
      */
     void registerBasicMetaTypes() {
+        qRegisterMetaType<Analytics::SupportCount>("Analytics::SupportCount");
         qRegisterMetaType<Analytics::ItemIDList>("ItemIDList");
         qRegisterMetaType<Analytics::FrequentItemset>("FrequentItemset");
         qRegisterMetaType< QList<Analytics::AssociationRule> >("QList<Analytics::AssociationRule>");

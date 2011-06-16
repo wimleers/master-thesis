@@ -61,7 +61,7 @@ public slots:
     // Analyst: mining.
     void updateMiningStatus(bool mining);
     void updateMiningDuration(int duration);
-    void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules);
+    void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange);
 
 protected slots:
     void mineLastQuarter();
