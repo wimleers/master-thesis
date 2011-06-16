@@ -118,7 +118,7 @@ struct Location{
                              << prefix + this->continent + s + this->country
                              << prefix + this->continent + s + this->country + s + this->region
                              // ISP per country (global ISP does not make sense).
-                             << prefix + "isp" + s + this->country + s + this->isp;
+                             << "isp" + s + this->country + s + this->isp;
     }
 };
 typedef quint32 LocationID;
