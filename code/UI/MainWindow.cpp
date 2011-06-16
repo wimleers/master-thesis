@@ -136,8 +136,8 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     this->totalPatternsExaminedWhileMining += associationRules.size();
     this->statusMutex.unlock();
 
-    QAbstractItemModel * oldModel = this->causesTable->model();
-    if (oldModel != NULL)
+    QAbstractItemModel * oldModel = this->causesTableProxyModel->sourceModel();
+    if (oldModel == (QObject *) NULL)
         delete oldModel;
 
     QStandardItemModel * model = new QStandardItemModel(associationRules.size(), 5, this);
@@ -177,13 +177,13 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     }
     model->setSortRole(Qt::UserRole);
 
-    this->causesTable->setModel(model);
+    this->causesTableProxyModel->setSourceModel(model);
     this->causesTable->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
 }
 
 
 //------------------------------------------------------------------------------
-// Protected slots.
+// Protected slots: UI-only.
 
 void MainWindow::mineLastQuarter() {
     this->mineTimeRange(0, 0);
@@ -205,9 +205,34 @@ void MainWindow::mineLastMonth() {
     this->mineTimeRange(59, 59);
 }
 
+void MainWindow::causesFilterChanged() {
+    this->causesTableProxyModel->invalidate();
+
+    QString filterString = this->causesFilter->text();
+    QString episodeFilter = QString::null;
+    QStringList circumstancesFilter;
+    foreach (QString f, filterString.split(", ", QString::SkipEmptyParts)) {
+        if (f.startsWith("episode:"))
+            episodeFilter = f.section(':', 1);
+        else
+            circumstancesFilter.append(f);
+    }
+
+    this->causesTableProxyModel->setEpisodeFilter(episodeFilter);
+    this->causesTableProxyModel->setCircumstancesFilter(circumstancesFilter);
+}
+
+
+//------------------------------------------------------------------------------
+// Protected slots: UI -> Analyst.
+
 void MainWindow::mineAllTime() {
     this->mineTimeRange(0, 71);
 }
+
+
+//------------------------------------------------------------------------------
+// Protected slots: Analyst -> UI.
 
 void MainWindow::mineTimeRange(uint from, uint to) {
     emit mine(from, to);
@@ -406,6 +431,12 @@ void MainWindow::createCausesGroupbox() {
     layout->addLayout(mineLayout);
     layout->addLayout(filterLayout);
     this->causesTable = new QTableView(this);
+    this->causesTableProxyModel = new CausesTableFilterProxyModel(this);
+    this->causesTableProxyModel->setSortRole(Qt::UserRole);
+    this->causesTableProxyModel->setFilterRole(Qt::DisplayRole);
+    this->causesTableProxyModel->setEpisodesColumn(0);
+    this->causesTableProxyModel->setCircumstancesColumn(1);
+    this->causesTable->setModel(this->causesTableProxyModel);
     this->causesTable->setSortingEnabled(true);
     this->causesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     layout->addWidget(this->causesTable);
@@ -534,4 +565,6 @@ void MainWindow::connectUI() {
     connect(this->causesMineLastWeekButton, SIGNAL(pressed()), SLOT(mineLastWeek()));
     connect(this->causesMineLastMonthButton, SIGNAL(pressed()), SLOT(mineLastMonth()));
     connect(this->causesMineAllTimeButton, SIGNAL(pressed()), SLOT(mineAllTime()));
+
+    connect(this->causesFilter, SIGNAL(textChanged(QString)), SLOT(causesFilterChanged()));
 }

@@ -27,8 +27,10 @@
 #include <QHeaderView>
 #include <QStandardItemModel>
 #include <QStandardItem>
+#include <QSortFilterProxyModel>
 
 #include "ConceptHierarchyCompleter.h"
+#include "CausesTableFilterProxyModel.h"
 
 #include "../EpisodesParser/Parser.h"
 #include "../Analytics/Analyst.h"
@@ -69,12 +71,18 @@ public slots:
     void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange);
 
 protected slots:
+    // UI-only.
     void mineLastQuarter();
     void mineLastHour();
     void mineLastDay();
     void mineLastWeek();
     void mineLastMonth();
+    void causesFilterChanged();
+
+    // UI -> Analyst.
     void mineAllTime();
+
+    // Analyst -> UI.
     void mineTimeRange(uint from, uint to);
 
 private:
@@ -135,6 +143,7 @@ private:
     ConceptHierarchyCompleter * causesFilterCompleter;
     QTableView * causesTable;
     QStandardItemModel * causesTableModel;
+    CausesTableFilterProxyModel * causesTableProxyModel;
 
     // Status groupbox.
     QGroupBox * statusGroupbox;
