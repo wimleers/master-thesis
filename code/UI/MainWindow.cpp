@@ -199,7 +199,7 @@ void MainWindow::mineLastDay() {
 }
 
 void MainWindow::mineLastWeek() {
-    this->mineTimeRange(28, 35);
+    this->mineTimeRange(28, 34);
 }
 
 void MainWindow::mineLastMonth() {
