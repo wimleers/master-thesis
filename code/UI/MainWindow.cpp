@@ -221,13 +221,13 @@ void MainWindow::mineLastMonth() {
     this->mineTimeRange(59, 59);
 }
 
-void MainWindow::causesFilterChanged() {
+void MainWindow::causesFilterChanged(QString filterString) {
     this->causesTableProxyModel->invalidate();
 
-    QString filterString = this->causesFilter->text();
     QString episodeFilter = QString::null;
     QStringList circumstancesFilter;
-    foreach (QString f, filterString.split(", ", QString::SkipEmptyParts)) {
+    foreach (QString f, filterString.split(",", QString::SkipEmptyParts)) {
+        f = f.trimmed();
         if (f.startsWith("episode:"))
             episodeFilter = f.section(':', 1);
         else
@@ -589,5 +589,5 @@ void MainWindow::connectUI() {
     connect(this->causesMineLastMonthButton, SIGNAL(pressed()), SLOT(mineLastMonth()));
     connect(this->causesMineAllTimeButton, SIGNAL(pressed()), SLOT(mineAllTime()));
 
-    connect(this->causesFilter, SIGNAL(textChanged(QString)), SLOT(causesFilterChanged()));
+    connect(this->causesFilter, SIGNAL(textChanged(QString)), SLOT(causesFilterChanged(QString)));
 }

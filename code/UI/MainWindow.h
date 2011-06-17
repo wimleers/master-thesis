@@ -78,7 +78,7 @@ protected slots:
     void mineLastDay();
     void mineLastWeek();
     void mineLastMonth();
-    void causesFilterChanged();
+    void causesFilterChanged(QString filterString);
 
     // UI -> Analyst.
     void mineAllTime();
