@@ -112,6 +112,7 @@ private:
     // Stats.
     QMutex statusMutex;
     bool parsing;
+    int patternTreeSize;
     int totalPageViews;
     int totalTransactions;
     int totalPatternsExaminedWhileMining;

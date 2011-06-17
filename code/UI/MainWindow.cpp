@@ -103,6 +103,7 @@ void MainWindow::updateAnalyzingStats(Time start, Time end, int pageViews, int t
     this->statusMutex.lock();
     this->totalPageViews = pageViews;
     this->totalTransactions = transactions;
+    this->patternTreeSize = patternTreeSize;
     this->statusMutex.unlock();
 
     this->status_measurements_startDate->setText(QDateTime::fromTime_t(start).toString("yyyy-MM-dd hh:mm:ss"));
@@ -133,7 +134,7 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     Q_UNUSED(to);
 
     this->statusMutex.lock();
-    this->totalPatternsExaminedWhileMining += associationRules.size();
+    this->totalPatternsExaminedWhileMining += this->patternTreeSize;
     this->statusMutex.unlock();
 
     QAbstractItemModel * oldModel = this->causesTableProxyModel->sourceModel();
