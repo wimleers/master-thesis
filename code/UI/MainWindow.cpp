@@ -104,6 +104,8 @@ void MainWindow::updateAnalyzingStats(Time start, Time end, int pageViews, int t
     this->totalPageViews = pageViews;
     this->totalTransactions = transactions;
     this->patternTreeSize = patternTreeSize;
+    this->startTime = start;
+    this->endTime = end;
     this->statusMutex.unlock();
 
     this->status_measurements_startDate->setText(QDateTime::fromTime_t(start).toString("yyyy-MM-dd hh:mm:ss"));
@@ -133,8 +135,21 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     Q_UNUSED(from);
     Q_UNUSED(to);
 
+    Time latestAnalyzedTime = this->endTime - (this->endTime % 900) + 900;
+    Time endTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(from, false) * 900);
+    Time startTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(to, true) * 900);
+    if (startTime < this->startTime)
+        startTime = this->startTime;
+
     this->statusMutex.lock();
     this->totalPatternsExaminedWhileMining += this->patternTreeSize;
+    this->causesDescription->setText(
+                QString(tr("%1 causes mined from %2 page views (from %3 until %4)"))
+                .arg(associationRules.size())
+                .arg(eventsInTimeRange)
+                .arg(QDateTime::fromTime_t(startTime).toString("yyyy-MM-dd hh:mm:ss"))
+                .arg(QDateTime::fromTime_t(endTime).toString("yyyy-MM-dd hh:mm:ss"))
+    );
     this->statusMutex.unlock();
 
     QAbstractItemModel * oldModel = this->causesTableProxyModel->sourceModel();
@@ -144,7 +159,7 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     QStandardItemModel * model = new QStandardItemModel(associationRules.size(), 5, this);
 
     QStringList headerLabels;
-    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% slow (total)");
+    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% of page views");
     model->setHorizontalHeaderLabels(headerLabels);
 
     int row = 0;
@@ -427,10 +442,11 @@ void MainWindow::createCausesGroupbox() {
     QVBoxLayout * layout = new QVBoxLayout();
     QHBoxLayout * mineLayout = new QHBoxLayout();
     QHBoxLayout * filterLayout = new QHBoxLayout();
+    QHBoxLayout * descriptionLayout = new QHBoxLayout();
 
     // Add children to layout.
     layout->addLayout(mineLayout);
-    layout->addLayout(filterLayout);
+    layout->addLayout(descriptionLayout);
     this->causesTable = new QTableView(this);
     this->causesTableProxyModel = new CausesTableFilterProxyModel(this);
     this->causesTableProxyModel->setSortRole(Qt::UserRole);
@@ -441,6 +457,7 @@ void MainWindow::createCausesGroupbox() {
     this->causesTable->setSortingEnabled(true);
     this->causesTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     layout->addWidget(this->causesTable);
+    layout->addLayout(filterLayout);
 
     // Add children to "mine" layout.
     this->causesMineLastQuarterButton = new QPushButton(tr("Mine last quarter"));
@@ -472,6 +489,11 @@ void MainWindow::createCausesGroupbox() {
     this->causesFilter->setCompleter(this->causesFilterCompleter);
     filterLayout->addWidget(filterLabel);
     filterLayout->addWidget(this->causesFilter);
+
+    // Add children to "description" layout.
+    this->causesDescription = new QLabel(tr("No causes have been mined yet."));
+    descriptionLayout->addWidget(this->causesDescription);
+    descriptionLayout->addStretch();
 
     // Set layout for groupbox.
     this->causesGroupbox->setLayout(layout);

@@ -83,6 +83,30 @@ namespace Analytics {
 
 
     //--------------------------------------------------------------------------
+    // Public static methods.
+
+    uint TiltedTimeWindow::quarterDistanceToBucket(uint bucket, bool includeBucketItself) {
+        uint quarters = 0;
+
+        Granularity g = (Granularity) 1;
+        uint nextOffset = GranularityBucketOffset[g];
+        uint quartersIncrement = 1;
+        for (uint i = 0; i < bucket || (includeBucketItself && i == bucket); i++) {
+            // Ensure we're working with the right quarters increment.
+            while (i >= nextOffset) {
+                quartersIncrement *= GranularityBucketCount[(Granularity) (g - 1)];
+                g = (Granularity) (g + 1);
+                nextOffset = GranularityBucketOffset[g];
+            }
+
+            quarters += quartersIncrement;
+        }
+
+        return quarters;
+    }
+
+
+    //--------------------------------------------------------------------------
     // Private methods.
 
     /**

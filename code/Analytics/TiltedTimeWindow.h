@@ -40,6 +40,9 @@ namespace Analytics {
         SupportCount buckets[TTW_NUM_BUCKETS];
         int oldestBucketFilled;
 
+        // Static methods.
+        static uint quarterDistanceToBucket(uint bucket, bool includeBucketItself);
+
         // Static properties
         static uint GranularityBucketCount[TTW_NUM_GRANULARITIES];
         static uint GranularityBucketOffset[TTW_NUM_GRANULARITIES];

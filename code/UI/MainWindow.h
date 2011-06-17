@@ -34,6 +34,7 @@
 
 #include "../EpisodesParser/Parser.h"
 #include "../Analytics/Analyst.h"
+#include "../Analytics/TiltedTimeWindow.h"
 
 
 #define STATS_ITEM_ESTIMATED_AVG_BYTES 20 * 4
@@ -113,6 +114,8 @@ private:
     QMutex statusMutex;
     bool parsing;
     int patternTreeSize;
+    Time startTime;
+    Time endTime;
     int totalPageViews;
     int totalTransactions;
     int totalPatternsExaminedWhileMining;
@@ -142,6 +145,7 @@ private:
     QPushButton * causesMineAllTimeButton;
     QLineEdit * causesFilter;
     ConceptHierarchyCompleter * causesFilterCompleter;
+    QLabel * causesDescription;
     QTableView * causesTable;
     QStandardItemModel * causesTableModel;
     CausesTableFilterProxyModel * causesTableProxyModel;
