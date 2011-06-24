@@ -3606,7 +3606,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream natural tilted-time window model.png
+	filename figures/stream mining/fp-stream natural tilted-time window model.png
 	width 50text%
 
 \end_inset
@@ -6487,7 +6487,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream frequent patterns.png
+	filename figures/stream mining/fp-stream frequent patterns.png
 	width 50text%
 
 \end_inset
@@ -6543,7 +6543,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream pattern-tree.png
+	filename figures/stream mining/fp-stream pattern-tree.png
 	width 50text%
 
 \end_inset
@@ -6599,7 +6599,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/stream mining/fp-stream tilted-time windows embedded in pattern-tree.png
+	filename figures/stream mining/fp-stream tilted-time windows embedded in pattern-tree.png
 	width 50text%
 
 \end_inset
@@ -12622,7 +12622,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/iris-histogram-1D.png
+	filename figures/OLAP/data cube/iris-histogram-1D.png
 	width 45text%
 
 \end_inset
@@ -12658,7 +12658,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/iris-histogram-2D.png
+	filename figures/OLAP/data cube/iris-histogram-2D.png
 	width 45text%
 
 \end_inset
@@ -20300,7 +20300,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/data cube/relative prefix sum.png
+	filename figures/OLAP/data cube/relative prefix sum.png
 	scale 40
 
 \end_inset
@@ -21510,7 +21510,7 @@ status collapsed
 \noindent
 \align center
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/OLAP/stream cube/critical layers.png
+	filename figures/OLAP/stream cube/critical layers.png
 	width 80text%
 
 \end_inset
@@ -25737,11 +25737,11 @@ reference "fig:mining:concept-hierarchy"
 \begin_inset Float figure
 wide false
 sideways false
-status collapsed
+status open
 
 \begin_layout Plain Layout
 \begin_inset Graphics
-	filename /Users/wimleers/School/masterthesis/git/literature study/figures/mining/concept hierarchy.png
+	filename figures/mining/concept hierarchy.png
 	width 100text%
 
 \end_inset
