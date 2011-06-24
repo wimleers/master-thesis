@@ -355,6 +355,12 @@ a lot
 \begin_layout Standard
 Finally, I would like to thank my parents Etienne & Noëlla and my brother
  Tim, whose support has been invaluable.
+ For the second part of my master thesis (the implementation phase), I have
+ been fortunate enough to also enjoy the support of my awesome girlfriend
+ Anneleen, her parents Geert & Daniëlla and her brother Gertjan.
+ 
+\emph on
+Thanks!
 \end_layout
 
 \begin_layout Standard
@@ -615,7 +621,7 @@ key "File Conveyor"
 
 \end_inset
 
-—the daemon that I wrote to automatically sync files to any CDN, regardlesss
+—the daemon that I wrote to automatically sync files to any CDN, regardless
  of the file transfer protocol used—when integrated with a Drupal web site
  and thus providing CDN integration for that web site, had a positive impact:
  the test web site consistently loaded about 
@@ -1131,8 +1137,8 @@ Anomaly Detection
 \end_layout
 
 \begin_layout Standard
-Data stream mining can only find frequently occuring patterns, because that
- is exactly what frequent pattern mining is about.
+Data stream mining can only find frequently occurring patterns, because
+ that is exactly what frequent pattern mining is about.
  However, we also want to be able to detect occasional spikes instead of
  just the persistent problems.
  For example, spikes may occur only on the first day of the month (because
@@ -1224,7 +1230,7 @@ The goal of this thesis is to automate the detection of web performance
 \emph on
 Episodes log mining
 \emph default
-, as discusssed above.
+, as discussed above.
 \end_layout
 
 \begin_layout Subsubsection
@@ -3728,7 +3734,7 @@ reference "sub:stream-mining:frequent-item-mining:plc"
 ).
  In general, they use 1) a fixed or bounded number of counters for tracking
  the size of frequent elements and 2) a condition to periodically delete
- or reallocate counters of infrequent elments.
+ or reallocate counters of infrequent elements.
 \begin_inset Newline newline
 \end_inset
 
@@ -6012,7 +6018,7 @@ Space
 \begin_layout Standard
 The worst-case memory bounds for PLC are the same as those for LC.
  The average case has the potential to use far less space though, thanks
- to the more aggresive pruning step.
+ to the more aggressive pruning step.
 \end_layout
 
 \begin_layout Subsubsection*
@@ -7265,8 +7271,8 @@ name "sec:anomaly-detection"
 \end_layout
 
 \begin_layout Quotation
-Data stream mining can only find frequently occuring patterns, because that
- is exactly what frequent pattern mining is about.
+Data stream mining can only find frequently occurring patterns, because
+ that is exactly what frequent pattern mining is about.
  However, we also want to be able to detect occasional spikes instead of
  just the persistent problems.
  For example, spikes may occur only on the first day of the month (because
@@ -9450,7 +9456,7 @@ discretized
 \begin_inset Formula $[0,\infty[$
 \end_inset
 
- (in centimers) that have been discretized to the intervals 
+ (in centimeters) that have been discretized to the intervals 
 \begin_inset Formula $[0,0.75]\rightarrow"low"$
 \end_inset
 
@@ -15145,7 +15151,7 @@ Color
  as the rows.
  Then we can reuse the results for the roll-up example.
  But for roll-up, we didn't aggregate sales by color—this is why roll-up
- is called assymetric.
+ is called asymmetric.
 \begin_inset Newline newline
 \end_inset
 
@@ -15674,7 +15680,7 @@ As should be clear by now, the data cube operator was not absolutely necessary
  in the strictest sense: anything that can be achieved with the data cube
  operator can be achieved without it.
  But thanks to the data cube operator, it is no longer necessary to apply
- the same patterns repeatingly: the necessary SQL becomes much less daunting
+ the same patterns repeatedly: the necessary SQL becomes much less daunting
  (e.g.
  a 6D cross tabulation would require a 
 \begin_inset Formula $2^{6}=64$
@@ -15929,7 +15935,7 @@ Data cube of 3D data
 \end_layout
 
 \begin_layout Standard
-In this section, we consider all three categorical attribues of table 
+In this section, we consider all three categorical attributes of table 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "tab:datacube-iris-example"
@@ -19240,21 +19246,6 @@ GROUP BY
  statements in sequence.
 \end_layout
 
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-May require more detail.
- See link to paper with more detail at 97MAR-CD.pdf, page 5, end of section
- 2.
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
 \begin_layout Subsubsection
 Precomputing for Speed: Storage Explosion
 \begin_inset CommandInset label
@@ -19744,16 +19735,6 @@ key "data cube updates: Prefix Sum"
 \end_inset
 
 .
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Remove or substantiate cost.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Subsubsection
@@ -21008,20 +20989,6 @@ avoids the storage of empty regions
 \end_layout
 
 \begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-An exact numerical example could be added here, based on the example in
- the conclusion (page 42 of 99DEC-CD.pdf).
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -21164,7 +21131,7 @@ reference "sub:OLAP:data-cube:updates"
 \end_inset
 
 ), a stream data cube must be as well.
- Since the input data streams are possibly inifinite, it is impossible to
+ Since the input data streams are possibly infinite, it is impossible to
  reconstruct the stream data cube from scratch: the stream data cube 
 \emph on
 must
@@ -21184,7 +21151,7 @@ The time required for an incremental update of a stream data cube must be
 \begin_layout Enumerate
 Fast online drilling along any single dimension or along a combination of
  a small number of dimensions is also a requirement, to allow for efficient
- analysis of the data by an analyist.
+ analysis of the data by an analyst.
  Materialization of some portion of the data cube will facilitate that.
 \end_layout
 
@@ -21365,7 +21332,7 @@ The study's performance analysis shows that this method works fairly well:
 \begin_inset Quotes eld
 \end_inset
 
-a resonable trade-off between space, computation time, and flexibility,
+a reasonable trade-off between space, computation time, and flexibility,
  and has both quick aggregation time and exception detection time
 \begin_inset Quotes erd
 \end_inset
@@ -21428,7 +21395,7 @@ The study's goal is closely aligned with ours, but is obviously more generic:
 
 \begin_layout Quotation
 Our task is to support efficient, high-level, on-line multi-dimensional
- analysis of such data streams in order to find unusal (exceptional) changes
+ analysis of such data streams in order to find unusual (exceptional) changes
  of trends, according to users' interest, based on multi-dimensional numerical
  measures.
 \end_layout
@@ -21635,7 +21602,7 @@ above
 some
 \emph default
  layers between the m- and o-layer have been materialized: those along the
- popuar path.
+ popular path.
  The popular path is the path the analyst is most likely interested in to
  follow, to dig deeper into the data stream (to achieve a deeper understanding)
  while analyzing the stream.
@@ -21876,10 +21843,10 @@ reference "sub:olap:stream-cube:architecture:popular-path-cubing"
 
 \end_inset
 
-, we already explained the H-tree datastructure by using the FP-tree datastructu
-re.
+, we already explained the H-tree data structure by using the FP-tree data
+ structure.
  So an obvious result is to attempt to combine both data structures and
- the accompanying algorithms into a single datastructure with an accompanying
+ the accompanying algorithms into a single data structure with an accompanying
  set of algorithms, to be able to 
 \emph on
 answer both OLAP queries and perform frequent itemset mining using a single
@@ -21889,8 +21856,8 @@ answer both OLAP queries and perform frequent itemset mining using a single
 \begin_inset Newline newline
 \end_inset
 
-Instead of having separate datastructures (and thus combined space and time
- requirements), we may be able to significantly improve performance.
+Instead of having separate data structures (and thus combined space and
+ time requirements), we may be able to significantly improve performance.
 \end_layout
 
 \begin_layout Standard
@@ -21911,33 +21878,10 @@ reference "sub:stream-mining:frequent-itemset-mining:fp-stream"
 \begin_layout Standard
 
 \emph on
-This was attempted by first writing an FP-stream implementation and then
- retrofitting a Stream Cube on top/inside of it.
-\end_layout
-
-\begin_layout Subsubsection*
-Introduction
-\end_layout
-
-\begin_layout Standard
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Subsubsection*
-Problems
-\end_layout
-
-\begin_layout Subsubsection*
-Conclusion
+The plan was to to attempt this by first writing an FP-stream implementation
+ and then retrofitting a Stream Cube on top/inside of it.
+ Unfortunately, due to time constraints, no OLAP functionality has been
+ implemented, and hence this was not further researched.
 \end_layout
 
 \begin_layout Standard
@@ -22338,16 +22282,6 @@ any
  website.
  This interface also significantly simplifies the interpretation of the
  resulting data.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO!
-\end_layout
-
-\end_inset
-
- (TODO)
 \end_layout
 
 \end_deeper
@@ -22532,16 +22466,6 @@ The Process
 \begin_inset CommandInset label
 LatexCommand label
 name "sec:process"
-
-\end_inset
-
-
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: update
-\end_layout
 
 \end_inset
 
@@ -23791,8 +23715,14 @@ UI + visualizations
 \begin_layout Plain Layout
 
 \series bold
-\size tiny
-to be implemented
+section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sub:implementation:ui"
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -23970,7 +23900,7 @@ usage data
 .
  Although web mining uses many data mining techniques, it is n
 \series bold
-ot purely an application of traditional data mining due to the hetereogeneity
+ot purely an application of traditional data mining due to the heterogeneity
  and semi-structured or unstructured nature of the web data
 \series default
 .
@@ -24087,19 +24017,9 @@ reference "sub:episodes-log-mining:detection-advanced:preloading-typical-navigat
 
 \begin_layout Standard
 That is why Episodes was developed.
- As explained earlier
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO
-\end_layout
-
-\end_inset
-
-, Episodes records the durations of the various episodes during the loading
- of the page and when the page has finished loading, it sends this information
- to a web server log.
+ As explained earlier, Episodes records the durations of the various episodes
+ during the loading of the page and when the page has finished loading,
+ it sends this information to a web server log.
  It does this by means of a specially formatted URL—this URL contains the
  names and durations of the recorded episodes (in the same order as they
  occurred) as a single (
@@ -24414,19 +24334,6 @@ reference "sec:anomaly-detection"
 \end_inset
 
 , but unfortunately, this was not implemented due to time constraints.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-
-\emph on
-TODO: basic anomaly detection by detecting variances in confidence of found
- association rules?
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_deeper
@@ -24460,7 +24367,8 @@ y detected web performance issues.
 
 
 \emph on
-This visualization tool has been implemented as part of this master thesis.
+This analysis tool has been implemented (although without any visualizations)
+ as part of this master thesis.
  It was planned to use OLAP for this—see section 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -24469,18 +24377,6 @@ reference "sec:OLAP"
 \end_inset
 
 , but due to time constraints, I was unable to implement this.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-
-\emph on
-TODO: update this upon implementation completion
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \end_deeper
@@ -24548,9 +24444,9 @@ DrupalBehaviors:47,frontend:8015" 200 "http:// driverpacks.net/applications"
 \end_layout
 
 \begin_layout Standard
-Each such log entry (of which there is one for each pageview!) can be transforme
-d into a long list of categorical attributes: IP address, location (by mapping
- the IP address to a location), date, episode names, browser, operating
+Each such log entry (of which there is one for each page view!) can be transform
+ed into a long list of categorical attributes: IP address, location (by
+ mapping the IP address to a location), date, episode names, browser, operating
  system, and so on.
  There also is an important list of numerical attributes: the episode durations.
 \end_layout
@@ -25737,7 +25633,7 @@ reference "fig:mining:concept-hierarchy"
 \begin_inset Float figure
 wide false
 sideways false
-status open
+status collapsed
 
 \begin_layout Plain Layout
 \begin_inset Graphics
@@ -26282,23 +26178,12 @@ EpisodesParser
 \family typewriter
 UI
 \family default
-: the user interface that provides a more easy to interpet presentation
+: the user interface that provides a more easy to interpret presentation
  of the results found by 
 \family typewriter
 Analytics
 \family default
 .
- (TODO) 
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-TODO: update when the UI is complete.
-\end_layout
-
-\end_inset
-
- 
 \end_layout
 
 \begin_layout Subsection
@@ -26494,7 +26379,7 @@ ExpandedEpisodesLogLine
 \family typewriter
 ExpandedEpisodesLogLine
 \family default
- only stores an identifier which can be looked up in a hashtable.
+ only stores an identifier which can be looked up in a hash table.
  Thanks to this optimization, 
 \family typewriter
 ExpandedEpisodesLogLine
@@ -29795,14 +29680,14 @@ a frequent itemset is frequent if its occurs
 
 .
  For example, an itemset is frequent if it occurs 5% of the time.
- Suppose there are 1000 pageviews and 10 episodes per pageview on average.
+ Suppose there are 1000 page views and 10 episodes per page view on average.
  That means there 10.000 transactions will have been generated.
  This now means that an itemset must occur 
 \begin_inset Formula $minSupAbs=0.05\times10.000=500$
 \end_inset
 
  times.
- Since there are only 1,000 pageviews, each episode can only occur 1,000
+ Since there are only 1,000 page views, each episode can only occur 1,000
  times at most, so clearly, our calculation must be wrong, since we are
  now requiring an effective 50% minimum support.
  Now, if we use the adjusted formula, we get 
@@ -29855,7 +29740,7 @@ not
 \end_layout
 
 \begin_layout Standard
-My promotor pointed me to a paper on constrainted frequent pattern mining
+My promotor pointed me to a paper on constrained frequent pattern mining
  by one of the authors of FP-Growth 
 \begin_inset CommandInset citation
 LatexCommand cite
@@ -29882,16 +29767,6 @@ key "interactive constrained association rule mining"
 
 I searched for many more potentially relevant papers and read them all,
  but unfortunately, none of them could provide the answer I sought.
-\begin_inset Note Note
-status open
-
-\begin_layout Plain Layout
-Should I reference all of these? It's ±10 more papers.
-\end_layout
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
@@ -31495,7 +31370,7 @@ The
 PatternTree
 \family default
  class maintains which quarter of an hour we are currently at (we always
- process a batch of transactions which all ocurred in the same quarter,
+ process a batch of transactions which all occurred in the same quarter,
  so all 
 \family typewriter
 TiltedTimeWindow
@@ -31856,8 +31731,8 @@ potential
 
 \begin_layout Itemize
 the above two remarks imply that there are three cases in which either something
- was found (a frequent itemset that matches the contraints), something may
- be found upon further mining (there is a possibility that in the superset
+ was found (a frequent itemset that matches the constraints), something
+ may be found upon further mining (there is a possibility that in the superset
  of this itemset, there is also or 
 \emph on
 still
@@ -32110,7 +31985,7 @@ reference "sub:analytics-phase2:program-flow:batch-subsequent"
 
 \end_inset
 
-, when the FP-Growth algorithm has found a frequent iemset, the 
+, when the FP-Growth algorithm has found a frequent itemset, the 
 \family typewriter
 FPGrowth::minedFrequentItemset()
 \family default
@@ -32235,7 +32110,7 @@ reference "sub:analytics-phase1:obstacles:antecedents"
 \end_inset
 
 .
- The problem described in this subsection is strongly remiscent (and of
+ The problem described in this subsection is strongly reminiscent (and of
  course, correlated) to the problem described in that previous subsection.
  The solution, however, is completely different.
 \end_layout
@@ -32366,7 +32241,7 @@ NULL
 .
  The reasoning behind this is that possible antecedents should also be stored
  in the Pattern Tree (i.e.
- when the constraints aren't matched, but the conditonal FP-Tree does not
+ when the constraints aren't matched, but the conditional FP-Tree does not
  equal 
 \family typewriter
 NULL
@@ -33095,6 +32970,13 @@ no
 
 \end_layout
 
+\begin_layout Standard
+\begin_inset Newpage clearpage
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 UI
 \begin_inset CommandInset label
@@ -33107,12 +32989,157 @@ name "sub:implementation:ui"
 \end_layout
 
 \begin_layout Standard
-(TODO)
-\begin_inset Note Note
+The UI was built with 3 purposes in mind:
+\end_layout
+
+\begin_layout Itemize
+make the application built for this thesis (as discussed in the preceding
+ sections) actually 
+\emph on
+usable
+\end_layout
+
+\begin_layout Itemize
+make the association rules that are found easy to interpret and analyze
+ (i.e.
+ sorting, filtering and comparing association rules)
+\end_layout
+
+\begin_layout Itemize
+provide status and performance indicators (to allow the user to monitor
+ the algorithm, but also to show off the performance)
+\end_layout
+
+\begin_layout Standard
+The UI serves a purely functional and demonstrational purpose, and is not
+ particularly user friendly nor usable (no usability tests have been conducted).
+ A blissful UI was not the purpose of this master thesis, and hence this
+ rough UI is sufficient.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/implementation/1. analysis done.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+All data is analyzed.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/implementation/2. sorted and filtered.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Sorted causes by amount of slow page loads (descendingly), simultaneously
+ filtering by both episode and a substring of a circumstance.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
+status collapsed
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/implementation/3. concept hierarchy autocomplete.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+The filtering provides auto completion support for all items encountered
+ so far in the data stream's concept hierarchy.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\begin_inset Float figure
+wide false
+sideways false
 status open
 
 \begin_layout Plain Layout
-update when UI is complete
+\begin_inset Graphics
+	filename figures/implementation/4. compared.png
+	width 100text%
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+It is also possible to compare the causes of two different time ranges (note
+ that the filter is still active).
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_inset
@@ -33348,7 +33375,49 @@ reference "sub:analytics-phase2:obstacles"
 \begin_layout Standard
 Since the results are very satisfying (especially given the preceding section
  that discusses applicability), I think it's fair to conclude that overall,
- the implementation went well!
+ the implementation is very satisfactory!
+\end_layout
+
+\begin_layout Subsubsection
+Vision
+\begin_inset CommandInset label
+LatexCommand label
+name "sub:implementation:conclusion:vision"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Now that an application has been built (and is free for everybody to use
+ — see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:overview-of-work-performed"
+
+\end_inset
+
+) that is capable of automatically pinpointing causes of slow page loads,
+ the next step is getting in as many hands as possible.
+\end_layout
+
+\begin_layout Standard
+The most effective way to ensure this happens, is by providing a web service
+ capable of storing Episodes log files.
+ 
+\begin_inset Newline newline
+\end_inset
+
+Instructions should be provided on how to integrate Episodes (or a similar
+ library) with any given web site.
+ Then, Episodes should be configured to send the log data to this web service.
+\begin_inset Newline newline
+\end_inset
+
+Finally, the application that was built for this master thesis could be
+ used to perform the analysis over the Episodes log files stored in the
+ web service, to then show the found causes to the user.
 \end_layout
 
 \begin_layout Section
@@ -33362,16 +33431,136 @@ name "sec:wpo-attention"
 
 \end_layout
 
-\begin_layout Subsection
-News During the Implementation Phase
+\begin_layout Standard
+It is interesting to see how WPO has gained attention over the course of
+ this master thesis (started in December 2009, ended in June 2011).
+ While it was still a relatively unknown term at the start of my master
+ thesis, it is well on its way to become one of the next 
+\emph on
+buzzwords
+\emph default
+ in June 2011.
 \end_layout
 
-\begin_layout Subsection
-Facebook Internship
+\begin_layout Standard
+For example, almost a year ago, at the end of June in 2010, Microsoft announced
+ they were the first to support the Web Timing spec 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "WPO proposal web timing"
+
+\end_inset
+
+ (now renamed to 
+\begin_inset Quotes eld
+\end_inset
+
+Navigation Timing
+\begin_inset Quotes erd
+\end_inset
+
+) in their then upcoming Internet Explorer 9 release.
+ This has pushed Google Chrome and Mozilla Firefox to also implement this
+ specification.
+\begin_inset Newline newline
+\end_inset
+
+This is great news, because this will allow Episodes 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "white paper Episodes"
+
+\end_inset
+
+ to work in a much more accurate manner for the most important episodes,
+ which implies that the application written for this master thesis can perform
+ a more accurate analysis as well.
 \end_layout
 
-\begin_layout Section
-Conclusion
+\begin_layout Standard
+New Relic is a company that provides real-time performance monitoring of
+ websites and web applications.
+ Their services are used by tens of thousands of large websites.
+ On May 17, 2011, they announced their new Real User Monitoring (RUM) functional
+ity 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "New Relic RUM"
+
+\end_inset
+
+.
+\begin_inset Newline newline
+\end_inset
+
+However, their offering cannot match what my master thesis is capable of:
+ they only show pretty charts indicating total page load time, as well as
+ a map indicating each country's average page load time and a chart indicating
+ average page load time per browser.
+ They're not yet able to automatically deduce in which exact 
+\emph on
+circumstances
+\emph default
+ page loads (or just some episodes) are slow!
+\end_layout
+
+\begin_layout Standard
+Finally, Google is also driving the adoption of 'WPO' as a buzzword: on
+ May 4, 2011, they announced 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Google Analytics WPO"
+
+\end_inset
+
+ a new 
+\begin_inset Quotes eld
+\end_inset
+
+Site Speed Analytics Report
+\begin_inset Quotes erd
+\end_inset
+
+ for their free Google Analytics product (which — ironically —was the goal
+ I outlined more than one and a half year ago: 
+\begin_inset Quotes eld
+\end_inset
+
+to build something like Google Analytics, but for web performance instead
+ of just page loads
+\begin_inset Quotes erd
+\end_inset
+
+, see section 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "sec:introduction"
+
+\end_inset
+
+).
+\begin_inset Newline newline
+\end_inset
+
+Unfortunately, they're doing it in a quite incorrect and even biased manner:
+ they're not doing it for 
+\emph on
+all
+\emph default
+ visitors, or not even for a randomly chosen subset of them, but for those
+ who use the Google Toolbar, Google Chrome or browsers that support the
+ Web Timing (Navigation Timing) spec.
+ That means Internet Explorer 6, 7 and 8 are excluded from measurements,
+ as well as many modern browsers such as Safari 5, Firefox 3, 4 and 5, and
+ virtually 
+\emph on
+all
+\emph default
+ mobile browsers.
+\end_layout
+
+\begin_layout Standard
+One thing should be clear though: WPO has become big business!
 \end_layout
 
 \begin_layout Standard
@@ -35641,6 +35830,56 @@ Efficient Mining of Constrained Frequent Patterns from Streams
 \emph on
 Proc.
  IDEAS'06
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "New Relic RUM"
+
+\end_inset
+
+
+\emph on
+How we provide real user monitoring: A quick technical review
+\emph default
+, New Relic, May 17, 2011, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://blog.newrelic.com/2011/05/17/how-rum-works/
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Bibliography
+\begin_inset CommandInset bibitem
+LatexCommand bibitem
+key "Google Analytics WPO"
+
+\end_inset
+
+
+\emph on
+Measure Page Load Time with Site Speed Analytics Report
+\emph default
+, Google Analytics, May 4, 2011, 
+\begin_inset Flex URL
+status collapsed
+
+\begin_layout Plain Layout
+
+http://analytics.blogspot.com/2011/05/measure-page-load-time-with-site-speed.html
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \end_body
