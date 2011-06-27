@@ -4,14 +4,27 @@
 \begin_header
 \textclass article
 \begin_preamble
-\pagenumbering{roman}
-\let\myTOC\tableofcontents
+\let\stdcleardoublepage\cleardoublepage
+\renewcommand\cleardoublepage{\clearpage\pagestyle{empty}\stdcleardoublepage\pagestyle{plain}}
+
+\let\stdsection\section
+\renewcommand\section{\cleardoublepage\stdsection}
+
+\let\stdTOC\tableofcontents
 \renewcommand\tableofcontents{%
-\myTOC
-\clearpage
+\pagestyle{plain}
+\setcounter{page}{1}
+\pagenumbering{roman}
+\stdTOC
+\cleardoublepage
 \pagenumbering{arabic}
 }
 \setcounter{page}{0}
+
+\oddsidemargin 31pt
+\evensidemargin 31pt
+
+\pagestyle{empty}
 \end_preamble
 \use_default_options true
 \language english
@@ -51,7 +64,7 @@
 \defskip medskip
 \quotes_language english
 \papercolumns 1
-\papersides 1
+\papersides 2
 \paperpagestyle default
 \tracking_changes false
 \output_changes false
@@ -171,10 +184,30 @@ Hasselt University
 Academic years 2009—2010 & 2010—2011
 \end_layout
 
-\begin_layout Section*
-\begin_inset Newpage clearpage
+\begin_layout Standard
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
 \end_inset
 
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section*
 Abstract
 \end_layout
 
@@ -278,7 +311,23 @@ data cube
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage clearpage
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
 \end_inset
 
 
@@ -364,7 +413,23 @@ Thanks!
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage clearpage
+\begin_inset ERT
+status open
+
+\begin_layout Plain Layout
+
+
+\backslash
+thispagestyle{empty}
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Newpage cleardoublepage
 \end_inset
 
 
@@ -374,13 +439,6 @@ Thanks!
 \begin_inset CommandInset toc
 LatexCommand tableofcontents
 
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Newpage clearpage
 \end_inset
 
 
@@ -975,7 +1033,7 @@ could
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage clearpage
+\begin_inset Newpage cleardoublepage
 \end_inset
 
 
@@ -1030,7 +1088,7 @@ thispagestyle{empty}
 \end_layout
 
 \begin_layout Standard
-\begin_inset Newpage clearpage
+\begin_inset Newpage cleardoublepage
 \end_inset
 
 
