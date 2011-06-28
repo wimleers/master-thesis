@@ -15,10 +15,6 @@ MainWindow::MainWindow(QWidget *parent) :
     this->initUI();
     this->connectUI();
     this->assignLogicToThreads();
-
-    // Temporary demo.
-    QString file("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.first-chunk.log");
-    emit parse(file);
 }
 
 MainWindow::~MainWindow() {
@@ -37,6 +33,7 @@ void MainWindow::updateParsingStatus(bool parsing) {
     QMutexLocker(&this->statusMutex);
     this->parsing = parsing;
     this->updateStatus();
+    this->menuFileImport->setEnabled(!parsing);
     if (!parsing)
         this->mineOrCompare();
 }
@@ -327,6 +324,16 @@ void MainWindow::causesFilterChanged(QString filterString) {
     this->causesTableProxyModel->setCircumstancesFilter(circumstancesFilter);
 }
 
+void MainWindow::importFile() {
+    static QString lastDirectory = "~/Desktop";
+    QString logFile = QFileDialog::getOpenFileName(this, tr("Open Episodes log file"), lastDirectory, tr("Episodes log files (*.log)"), NULL, QFileDialog::ReadOnly);
+
+    if (!logFile.isEmpty()) {
+        lastDirectory = QFileInfo(logFile).path();
+        emit parse(logFile);
+    }
+}
+
 
 //------------------------------------------------------------------------------
 // Private methods: logic.
@@ -477,6 +484,7 @@ void MainWindow::initUI() {
     this->createStatsGroupbox();
     this->createCausesGroupbox();
     this->createStatusGroupbox();
+    this->createMenuBar();
 
     this->mainLayout = new QVBoxLayout();
 //    this->mainLayout->addWidget(this->sparklineGroupbox);
@@ -715,9 +723,23 @@ void MainWindow::createStatusGroupbox() {
     this->statusGroupbox->setLayout(layout);
 }
 
+void MainWindow::createMenuBar() {
+    QMenuBar * menuBar = this->menuBar();
+
+    this->menuFile = new QMenu(tr("File"), menuBar);
+    this->menuFileImport = new QAction(tr("Import"), this->menuFile);
+    this->menuFileImport->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
+    this->menuFile->addAction(this->menuFileImport);
+
+    menuBar->addMenu(this->menuFile);
+}
+
 void MainWindow::connectUI() {
     connect(this->causesActionChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesActionChanged(int)));
     connect(this->causesMineTimerangeChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesTimerangeChanged()));
     connect(this->causesCompareTimerangeChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesTimerangeChanged()));
     connect(this->causesFilter, SIGNAL(textChanged(QString)), SLOT(causesFilterChanged(QString)));
+
+    // Menus.
+    connect(this->menuFileImport, SIGNAL(triggered()), SLOT(importFile()));
 }

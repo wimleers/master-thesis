@@ -12,6 +12,9 @@
 
 #include <QMainWindow>
 #include <QMenuBar>
+#include <QMenu>
+#include <QAction>
+#include <QKeySequence>
 #include <QStatusBar>
 #include <QGroupBox>
 #include <QHBoxLayout>
@@ -23,12 +26,15 @@
 #include <QLabel>
 #include <QPushButton>
 #include <QLineEdit>
+#include <QFileDialog>
 
 #include <QTableView>
 #include <QHeaderView>
 #include <QStandardItemModel>
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
+
+#include <QFileInfo>
 
 #include "ConceptHierarchyCompleter.h"
 #include "CausesTableFilterProxyModel.h"
@@ -89,6 +95,8 @@ protected slots:
     void causesTimerangeChanged();
     void causesFilterChanged(QString filterString);
 
+    void importFile();
+
 private:
     // Logic.
     void initLogic();
@@ -101,6 +109,7 @@ private:
     void createStatsGroupbox();
     void createCausesGroupbox();
     void createStatusGroupbox();
+    void createMenuBar();
     void connectUI();
 
     // UI updating.
@@ -166,6 +175,10 @@ private:
     QLabel * status_mining_uniqueItems;
     QLabel * status_mining_frequentItems;
     QLabel * status_mining_patternTree;
+
+    // Menu bar.
+    QMenu * menuFile;
+    QAction * menuFileImport;
 };
 
 #endif // MAINWINDOW_H
