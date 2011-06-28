@@ -73,6 +73,7 @@ namespace EpisodesParser {
         Parser::parserHelpersInitMutex.unlock();
     }
 
+
     //---------------------------------------------------------------------------
     // Protected methods.
 
@@ -495,6 +496,15 @@ namespace EpisodesParser {
             line = Parser::mapLineToEpisodesLogLine(rawLine);
 
             // Create a batch for each quarter (900 seconds) and process it.
+            // TRICKY: this also ensures that quarters that have already been
+            // processed are not processed again (if it is attempted to parse
+            // the same file multiple times), plus it forces the user to parse
+            // older files first.
+            // FIXME: if file A does not end with a full quarter, i.e. a file B
+            // contains the remaining episodes of a quarter, these episodes are
+            // ignored. Considering that this only affects quarters, this bug
+            // is ignored for now. It doesn't significantly influence the
+            // results of the data set used for testing this master thesis.
             if (line.time / 900 > quarterID) {
                 quarterID = line.time / 900;
                 if (!batch.isEmpty())
