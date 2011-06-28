@@ -58,9 +58,6 @@ namespace EpisodesParser {
      * Clear parser helpers' caches.
      *
      * This clears as many parser helpers' caches as possible:
-     * - QGeoIP's databases are closed (but this unfortunately doesn't affect
-     *   memory usage significantly, due to problems with the underlying
-     *   libGeoIP library of MaxMind)
      * - QBrowsCap's in-memory cache is cleared
      *
      * Call this function whenever the Parser will not be used for long
@@ -69,7 +66,6 @@ namespace EpisodesParser {
     void Parser::clearParserHelperCaches() {
         Parser::parserHelpersInitMutex.lock();
         if (Parser::parserHelpersInitialized) {
-            Parser::geoIP.closeDatabases();
             Parser::browsCap.resetCache();
 
             Parser::parserHelpersInitialized = false;
