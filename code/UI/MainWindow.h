@@ -7,6 +7,7 @@
 #include <QDateTime>
 #include <QMutex>
 #include <QMutexLocker>
+#include <QChar>
 #include <QDebug>
 
 #include <QMainWindow>
@@ -54,6 +55,7 @@ public:
 signals:
     void parse(QString file);
     void mine(uint from, uint to);
+    void mineAndCompare(uint fromOlder, uint toOlder, uint fromNewer, uint toNewer);
 
 public slots:
     // Parser.
@@ -70,21 +72,22 @@ public slots:
     void updateMiningStatus(bool mining);
     void updateMiningDuration(int duration);
     void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange);
+    void comparedMinedRules(uint fromOlder, uint toOlder,
+                            uint fromNewer, uint toNewer,
+                            QList<Analytics::AssociationRule> intersectedRules,
+                            QList<Analytics::AssociationRule> olderRules,
+                            QList<Analytics::AssociationRule> newerRules,
+                            QList<Analytics::AssociationRule> comparedRules,
+                            QList<Analytics::Confidence> confidenceVariance,
+                            QList<float> supportVariance,
+                            Analytics::SupportCount eventsInIntersectedTimeRange,
+                            Analytics::SupportCount eventsInOlderTimeRange,
+                            Analytics::SupportCount eventsInNewerTimeRange);
 
 protected slots:
-    // UI-only.
-    void mineLastQuarter();
-    void mineLastHour();
-    void mineLastDay();
-    void mineLastWeek();
-    void mineLastMonth();
+    void causesActionChanged(int action);
+    void causesTimerangeChanged();
     void causesFilterChanged(QString filterString);
-
-    // UI -> Analyst.
-    void mineAllTime();
-
-    // Analyst -> UI.
-    void mineTimeRange(uint from, uint to);
 
 private:
     // Logic.
@@ -102,7 +105,9 @@ private:
 
     // UI updating.
     void updateStatus(const QString & status = QString::null);
-    void updateMiningAbility(bool enabled);
+    void updateCausesComparisonAbility(bool able);
+    void mineOrCompare();
+    static QPair<uint, uint> mapTimerangeChoiceToBucket(int choice);
 
     // Logic.
     EpisodesParser::Parser * parser;
@@ -137,12 +142,10 @@ private:
 
     // Causes groupbox.
     QGroupBox * causesGroupbox;
-    QPushButton * causesMineLastQuarterButton;
-    QPushButton * causesMineLastHourButton;
-    QPushButton * causesMineLastDayButton;
-    QPushButton * causesMineLastWeekButton;
-    QPushButton * causesMineLastMonthButton;
-    QPushButton * causesMineAllTimeButton;
+    QComboBox * causesActionChoice;
+    QComboBox * causesMineTimerangeChoice;
+    QLabel * causesCompareLabel;
+    QComboBox * causesCompareTimerangeChoice;
     QLineEdit * causesFilter;
     ConceptHierarchyCompleter * causesFilterCompleter;
     QLabel * causesDescription;

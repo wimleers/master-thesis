@@ -19,12 +19,6 @@ MainWindow::MainWindow(QWidget *parent) :
     // Temporary demo.
     QString file("/Users/wimleers/School/masterthesis/logs/driverpacks.net.episodes.first-chunk.log");
     emit parse(file);
-
-    /*
-    analyst->mineRules(0, (uint) TTW_NUM_BUCKETS - 1); // Rules over the entire dataset.
-    analyst->mineRules(4, 4); // Rules over the past hour.
-    analyst->mineAndCompareRules(0, 10, 4, 4);
-    */
 }
 
 MainWindow::~MainWindow() {
@@ -43,7 +37,8 @@ void MainWindow::updateParsingStatus(bool parsing) {
     QMutexLocker(&this->statusMutex);
     this->parsing = parsing;
     this->updateStatus();
-    this->updateMiningAbility(!this->parsing);
+    if (!parsing)
+        this->mineOrCompare();
 }
 
 void MainWindow::updateParsingDuration(int duration) {
@@ -132,9 +127,6 @@ void MainWindow::updateAnalyzingStats(Time start, Time end, int pageViews, int t
 }
 
 void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange) {
-    Q_UNUSED(from);
-    Q_UNUSED(to);
-
     Time latestAnalyzedTime = this->endTime - (this->endTime % 900) + 900;
     Time endTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(from, false) * 900);
     Time startTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(to, true) * 900);
@@ -156,10 +148,10 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
     if (oldModel == (QObject *) NULL)
         delete oldModel;
 
-    QStandardItemModel * model = new QStandardItemModel(associationRules.size(), 5, this);
+    QStandardItemModel * model = new QStandardItemModel(associationRules.size(), 4, this);
 
     QStringList headerLabels;
-    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow") << tr("% of page views");
+    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("# slow");
     model->setHorizontalHeaderLabels(headerLabels);
 
     int row = 0;
@@ -180,14 +172,117 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
         confidenceItem->setData(rule.confidence, Qt::UserRole);
         model->setItem(row, 2, confidenceItem);
 
-        QStandardItem * occurrencesItem = new QStandardItem(QString::number(rule.support));
+        double relOccurrences = rule.support * 100.0 / eventsInTimeRange;
+        QStandardItem * occurrencesItem = new QStandardItem(
+                    QString("%1 (%2%)")
+                    .arg(QString::number(rule.support))
+                    .arg(QString::number(relOccurrences, 'f', 2))
+        );
         occurrencesItem->setData(rule.support, Qt::UserRole);
         model->setItem(row, 3, occurrencesItem);
 
-        double relOccurrences = rule.support * 100.0 / eventsInTimeRange;
-        QStandardItem * relOccurrencesItem = new QStandardItem(QString("%1%").arg(QString::number(relOccurrences, 'f', 2)));
-        relOccurrencesItem->setData(relOccurrences, Qt::UserRole);
-        model->setItem(row, 4, relOccurrencesItem);
+        row++;
+    }
+    model->setSortRole(Qt::UserRole);
+
+    this->causesTableProxyModel->setSourceModel(model);
+    this->causesTable->horizontalHeader()->setResizeMode(1, QHeaderView::Stretch);
+}
+
+void MainWindow::comparedMinedRules(uint fromOlder, uint toOlder,
+                        uint fromNewer, uint toNewer,
+                        QList<Analytics::AssociationRule> intersectedRules,
+                        QList<Analytics::AssociationRule> olderRules,
+                        QList<Analytics::AssociationRule> newerRules,
+                        QList<Analytics::AssociationRule> comparedRules,
+                        QList<Analytics::Confidence> confidenceVariance,
+                        QList<float> supportVariance,
+                        Analytics::SupportCount eventsInIntersectedTimeRange,
+                        Analytics::SupportCount eventsInOlderTimeRange,
+                        Analytics::SupportCount eventsInNewerTimeRange)
+{
+    // Currently unused in the causes description.
+    /*
+    uint from = (fromOlder <= fromNewer) ? fromOlder : fromNewer;
+    uint to = (toOlder >= toNewer) ? toOlder : toNewer;
+
+    Time latestAnalyzedTime = this->endTime - (this->endTime % 900) + 900;
+    Time endTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(from, false) * 900);
+    Time startTime = latestAnalyzedTime - (Analytics::TiltedTimeWindow::quarterDistanceToBucket(to, true) * 900);
+    if (startTime < this->startTime)
+        startTime = this->startTime;
+    */
+    Q_UNUSED(fromOlder)
+    Q_UNUSED(toOlder)
+    Q_UNUSED(fromNewer)
+    Q_UNUSED(toNewer)
+
+    this->statusMutex.lock();
+    this->totalPatternsExaminedWhileMining += this->patternTreeSize * 2;
+    this->causesDescription->setText(
+                QString(tr("Mined %1 and %2 causes, of which %3 occurred in both time granularities, thus totalling %4 unique causes"))
+                .arg(olderRules.size())
+                .arg(newerRules.size())
+                .arg(intersectedRules.size())
+                .arg(comparedRules.size())
+    );
+    this->statusMutex.unlock();
+
+    QAbstractItemModel * oldModel = this->causesTableProxyModel->sourceModel();
+    if (oldModel == (QObject *) NULL)
+        delete oldModel;
+
+    QStandardItemModel * model = new QStandardItemModel(comparedRules.size(), 6, this);
+
+    QStringList headerLabels;
+    headerLabels << tr("Episode") << tr("Circumstances") << tr("% slow") << tr("% slow change") << tr("# slow") << tr("# slow change");
+    model->setHorizontalHeaderLabels(headerLabels);
+
+    int row = 0;
+    QPair<Analytics::ItemName, Analytics::ItemNameList> antecedent;
+    for (int i = 0; i < comparedRules.size(); i++) {
+        Analytics::AssociationRule rule = comparedRules.at(i);
+
+        antecedent = this->analyst->extractEpisodeFromItemset(rule.antecedent);
+        QString episode = antecedent.first.section(':', 1);
+        QStandardItem * episodeItem = new QStandardItem(episode);
+        episodeItem->setData(episode.toUpper(), Qt::UserRole);
+        model->setItem(row, 0, episodeItem);
+
+        QString circumstances = ((QStringList) antecedent.second).join(", ");
+        QStandardItem * circumstancesItem = new QStandardItem(circumstances);
+        circumstancesItem->setData(circumstances, Qt::UserRole);
+        model->setItem(row, 1, circumstancesItem);
+
+        QStandardItem * confidenceItem = new QStandardItem(QString("%1%").arg(QString::number(rule.confidence * 100, 'f', 2)));
+        confidenceItem->setData(rule.confidence, Qt::UserRole);
+        model->setItem(row, 2, confidenceItem);
+
+        QChar plusOrEmpty = (confidenceVariance[i] > 0) ? QChar('+') : QChar(QChar::Null);
+        QStandardItem * confidenceVarianceItem = new QStandardItem(QString("%1%2%").arg(plusOrEmpty).arg(QString::number(confidenceVariance[i] * 100, 'f', 2)));
+        confidenceItem->setData(confidenceVariance[i], Qt::UserRole);
+        model->setItem(row, 3, confidenceVarianceItem);
+
+        Analytics::SupportCount eventCount;
+        if (supportVariance[i] == -1) // This only existed in the "older" time range.
+            eventCount = eventsInOlderTimeRange;
+        else if (supportVariance[i] == 1) // This only existed in the "newer" time range.
+            eventCount = eventsInNewerTimeRange;
+        else // This existed in both time ranges.
+            eventCount = eventsInIntersectedTimeRange;
+        double relOccurrences = rule.support * 100.0 / eventCount;
+        QStandardItem * occurrencesItem = new QStandardItem(
+                    QString("%1 (%2%)")
+                    .arg(QString::number(rule.support))
+                    .arg(QString::number(relOccurrences, 'f', 2))
+        );
+        occurrencesItem->setData(rule.support, Qt::UserRole);
+        model->setItem(row, 4, occurrencesItem);
+
+        QChar plusOrEmpty2 = (supportVariance[i] > 0) ? QChar('+') : QChar(QChar::Null);
+        QStandardItem * supportVarianceItem = new QStandardItem(QString("%1%2%").arg(plusOrEmpty2).arg((QString::number(supportVariance[i] * 100, 'f', 2))));
+        supportVarianceItem->setData(supportVariance[i], Qt::UserRole);
+        model->setItem(row, 5, supportVarianceItem);
 
         row++;
     }
@@ -198,27 +293,21 @@ void MainWindow::minedRules(uint from, uint to, QList<Analytics::AssociationRule
 }
 
 
+
 //------------------------------------------------------------------------------
 // Protected slots: UI-only.
 
-void MainWindow::mineLastQuarter() {
-    this->mineTimeRange(0, 0);
+void MainWindow::causesActionChanged(int action) {
+    if (action == 0)
+        this->updateCausesComparisonAbility(false); // Mine.
+    else
+        this->updateCausesComparisonAbility(true); // Compare.
+
+    this->mineOrCompare();
 }
 
-void MainWindow::mineLastHour() {
-    this->mineTimeRange(4, 4);
-}
-
-void MainWindow::mineLastDay() {
-    this->mineTimeRange(28, 28);
-}
-
-void MainWindow::mineLastWeek() {
-    this->mineTimeRange(28, 34);
-}
-
-void MainWindow::mineLastMonth() {
-    this->mineTimeRange(59, 59);
+void MainWindow::causesTimerangeChanged() {
+    this->mineOrCompare();
 }
 
 void MainWindow::causesFilterChanged(QString filterString) {
@@ -240,26 +329,11 @@ void MainWindow::causesFilterChanged(QString filterString) {
 
 
 //------------------------------------------------------------------------------
-// Protected slots: UI -> Analyst.
-
-void MainWindow::mineAllTime() {
-    this->mineTimeRange(0, 71);
-}
-
-
-//------------------------------------------------------------------------------
-// Protected slots: Analyst -> UI.
-
-void MainWindow::mineTimeRange(uint from, uint to) {
-    emit mine(from, to);
-}
-
-
-//------------------------------------------------------------------------------
 // Private methods: logic.
 
 void MainWindow::initLogic() {
     qRegisterMetaType< QList<QStringList> >("QList<QStringList>");
+    qRegisterMetaType< QList<float> >("QList<float>");
     qRegisterMetaType<Time>("Time");
     Analytics::registerBasicMetaTypes();
 
@@ -297,13 +371,20 @@ void MainWindow::connectLogic() {
     connect(this->parser, SIGNAL(parsedDuration(int)), SLOT(updateParsingDuration(int)));
     connect(this->analyst, SIGNAL(analyzing(bool,Time,Time,int,int)), SLOT(updateAnalyzingStatus(bool,Time,Time,int,int)));
     connect(this->analyst, SIGNAL(analyzedDuration(int)), SLOT(updateAnalyzingDuration(int)));
+    connect(this->analyst, SIGNAL(mining(bool)), SLOT(updateMiningStatus(bool)));
     connect(this->analyst, SIGNAL(minedDuration(int)), SLOT(updateMiningDuration(int)));
     connect(this->analyst, SIGNAL(stats(Time,Time,int,int,int,int,int)), SLOT(updateAnalyzingStats(Time,Time,int,int,int,int,int)));
     connect(this->analyst, SIGNAL(minedRules(uint,uint,QList<Analytics::AssociationRule>,Analytics::SupportCount)), SLOT(minedRules(uint,uint,QList<Analytics::AssociationRule>,Analytics::SupportCount)));
+    connect(
+                this->analyst,
+                SIGNAL(comparedMinedRules(uint,uint,uint,uint,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::Confidence>,QList<float>,Analytics::SupportCount,Analytics::SupportCount,Analytics::SupportCount)),
+                SLOT(comparedMinedRules(uint,uint,uint,uint,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::AssociationRule>,QList<Analytics::Confidence>,QList<float>,Analytics::SupportCount,Analytics::SupportCount,Analytics::SupportCount))
+    );
 
     // UI -> logic.
     connect(this, SIGNAL(parse(QString)), this->parser, SLOT(parse(QString)));
     connect(this, SIGNAL(mine(uint,uint)), this->analyst, SLOT(mineRules(uint,uint)));
+    connect(this, SIGNAL(mineAndCompare(uint,uint,uint,uint)), this->analyst, SLOT(mineAndCompareRules(uint,uint,uint,uint)));
 }
 
 void MainWindow::assignLogicToThreads() {
@@ -330,13 +411,61 @@ void MainWindow::updateStatus(const QString & status) {
     }
 }
 
-void MainWindow::updateMiningAbility(bool enabled) {
-    this->causesMineLastQuarterButton->setEnabled(enabled);
-    this->causesMineLastHourButton->setEnabled(enabled);
-    this->causesMineLastDayButton->setEnabled(enabled);
-    this->causesMineLastWeekButton->setEnabled(enabled);
-    this->causesMineLastMonthButton->setEnabled(enabled);
-    this->causesMineAllTimeButton->setEnabled(enabled);
+void MainWindow::updateCausesComparisonAbility(bool able) {
+    if (!able) {
+        this->causesCompareLabel->hide();
+        this->causesCompareTimerangeChoice->hide();
+    }
+    else {
+        this->causesCompareLabel->show();
+        this->causesCompareTimerangeChoice->show();
+    }
+}
+
+void MainWindow::mineOrCompare() {
+    if (this->causesActionChoice->currentIndex() == 0) {
+        QPair<uint, uint> buckets = MainWindow::mapTimerangeChoiceToBucket(this->causesMineTimerangeChoice->currentIndex());
+        emit mine(buckets.first, buckets.second);
+    }
+    else {
+        QPair<uint, uint> older = MainWindow::mapTimerangeChoiceToBucket(this->causesMineTimerangeChoice->currentIndex());
+        QPair<uint, uint> newer = MainWindow::mapTimerangeChoiceToBucket(this->causesCompareTimerangeChoice->currentIndex());
+
+        // Don't compare identical time ranges.
+        if (older.first != newer.first || older.second != newer.second)
+            emit mineAndCompare(older.first, older.second, newer.first, newer.second);
+    }
+}
+
+QPair<uint, uint> MainWindow::mapTimerangeChoiceToBucket(int choice) {
+    uint from, to;
+
+    switch (choice) {
+    case 0: // last quarter
+        from = to = 0;
+        break;
+    case 1: // last hour
+        from = to = 4;
+        break;
+    case 2: // last day
+        from = to = 28;
+        break;
+    case 3: // last week
+        from = 28; to = 34;
+        break;
+    case 4: // last month
+        from = to = 59;
+        break;
+    case 5: // last year
+        from = to = 71;
+        break;
+    case 6:
+    default: // entire data set
+        from = 0; to = 71;
+        break;
+    }
+
+    return qMakePair(from, to);
 }
 
 
@@ -460,24 +589,29 @@ void MainWindow::createCausesGroupbox() {
     layout->addLayout(filterLayout);
 
     // Add children to "mine" layout.
-    this->causesMineLastQuarterButton = new QPushButton(tr("Mine last quarter"));
-    this->causesMineLastHourButton    = new QPushButton(tr("Mine last hour"));
-    this->causesMineLastDayButton     = new QPushButton(tr("Mine last day"));
-    this->causesMineLastWeekButton    = new QPushButton(tr("Mine last week"));
-    this->causesMineLastMonthButton   = new QPushButton(tr("Mine last month"));
-    this->causesMineAllTimeButton     = new QPushButton(tr("Mine all time"));
-    mineLayout->addWidget(this->causesMineLastQuarterButton);
+    QStringList timeRanges = QStringList() << "last quarter"
+                                           << "last hour"
+                                           << "last day"
+                                           << "last week"
+                                           << "last month"
+                                           << "last year"
+                                           << "entire data set";
+    this->causesActionChoice = new QComboBox(this);
+    this->causesActionChoice->addItem(tr("Mine"));
+    this->causesActionChoice->addItem(tr("Compare"));
+    QLabel * cm1 = new QLabel(tr("causes in the"));
+    this->causesMineTimerangeChoice = new QComboBox(this);
+    this->causesMineTimerangeChoice->addItems(timeRanges);
+    this->causesCompareLabel = new QLabel(tr("with those in the"));
+    this->causesCompareTimerangeChoice = new QComboBox(this);
+    this->causesCompareTimerangeChoice->addItems(timeRanges);
+    mineLayout->addWidget(this->causesActionChoice);
+    mineLayout->addWidget(cm1);
+    mineLayout->addWidget(this->causesMineTimerangeChoice);
+    mineLayout->addWidget(this->causesCompareLabel);
+    mineLayout->addWidget(this->causesCompareTimerangeChoice);
     mineLayout->addStretch();
-    mineLayout->addWidget(this->causesMineLastHourButton);
-    mineLayout->addStretch();
-    mineLayout->addWidget(this->causesMineLastDayButton);
-    mineLayout->addStretch();
-    mineLayout->addWidget(this->causesMineLastWeekButton);
-    mineLayout->addStretch();
-    mineLayout->addWidget(this->causesMineLastMonthButton);
-    mineLayout->addStretch();
-    mineLayout->addWidget(this->causesMineAllTimeButton);
-    this->updateMiningAbility(false);
+    this->updateCausesComparisonAbility(false);
 
     // Add children to "filter" layout.
     QLabel * filterLabel = new QLabel(tr("Filter") + ":");
@@ -582,12 +716,8 @@ void MainWindow::createStatusGroupbox() {
 }
 
 void MainWindow::connectUI() {
-    connect(this->causesMineLastQuarterButton, SIGNAL(pressed()), SLOT(mineLastQuarter()));
-    connect(this->causesMineLastHourButton, SIGNAL(pressed()), SLOT(mineLastHour()));
-    connect(this->causesMineLastDayButton, SIGNAL(pressed()), SLOT(mineLastDay()));
-    connect(this->causesMineLastWeekButton, SIGNAL(pressed()), SLOT(mineLastWeek()));
-    connect(this->causesMineLastMonthButton, SIGNAL(pressed()), SLOT(mineLastMonth()));
-    connect(this->causesMineAllTimeButton, SIGNAL(pressed()), SLOT(mineAllTime()));
-
+    connect(this->causesActionChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesActionChanged(int)));
+    connect(this->causesMineTimerangeChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesTimerangeChanged()));
+    connect(this->causesCompareTimerangeChoice, SIGNAL(currentIndexChanged(int)), SLOT(causesTimerangeChanged()));
     connect(this->causesFilter, SIGNAL(textChanged(QString)), SLOT(causesFilterChanged(QString)));
 }

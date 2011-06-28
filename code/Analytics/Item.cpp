@@ -12,8 +12,10 @@ namespace Analytics {
      */
     void registerBasicMetaTypes() {
         qRegisterMetaType<Analytics::SupportCount>("Analytics::SupportCount");
+        qRegisterMetaType<Analytics::Confidence>("Analytics::Confidence");
         qRegisterMetaType<Analytics::ItemIDList>("ItemIDList");
         qRegisterMetaType<Analytics::FrequentItemset>("FrequentItemset");
+        qRegisterMetaType< QList<Analytics::Confidence> >("QList<Analytics::Confidence>");
         qRegisterMetaType< QList<Analytics::AssociationRule> >("QList<Analytics::AssociationRule>");
     }
 

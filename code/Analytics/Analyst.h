@@ -53,11 +53,15 @@ namespace Analytics {
         void minedRules(uint from, uint to, QList<Analytics::AssociationRule> associationRules, Analytics::SupportCount eventsInTimeRange);
         void comparedMinedRules(uint fromOlder, uint toOlder,
                                 uint fromNewer, uint toNewer,
-                                QList<AssociationRule> olderRules,
-                                QList<AssociationRule> newerRules,
-                                QList<AssociationRule> intersectedRules,
-                                QList<Confidence> confidenceVariance,
-                                QList<float> supportVariance);
+                                QList<Analytics::AssociationRule> intersectedRules,
+                                QList<Analytics::AssociationRule> olderRules,
+                                QList<Analytics::AssociationRule> newerRules,
+                                QList<Analytics::AssociationRule> comparedRules,
+                                QList<Analytics::Confidence> confidenceVariance,
+                                QList<float> supportVariance,
+                                Analytics::SupportCount eventsInIntersectedTimeRange,
+                                Analytics::SupportCount eventsInOlderTimeRange,
+                                Analytics::SupportCount eventsInNewerTimeRange);
 
     public slots:
         void analyzeTransactions(const QList<QStringList> & transactions, double transactionsPerEvent, Time start, Time end);

@@ -218,28 +218,67 @@ namespace Analytics {
         TiltedTimeWindow const * const eventsPerBatch = this->fpstream->getEventsPerBatch();
         SupportCount supportForNewerRange = eventsPerBatch->getSupportForRange(fromNewer, toNewer);
         SupportCount supportForOlderRange = eventsPerBatch->getSupportForRange(fromOlder, toOlder);
+        // Calculate the number of events in the intersected range. The two time
+        // ranges may either overlap (i.e. have an intersection) or not (i.e. be
+        // disjoint).
+        // e.g.:
+        //   * 2-4, 5-8 or 5-8, 2-4 -> disjoint
+        //   * 2-5, 4-8 or 4-8, 2-5 -> intersection
+        bool olderTimeRangeIsActuallyOlder = (fromOlder <= fromNewer);
+        uint actualOlderFrom = (olderTimeRangeIsActuallyOlder) ? fromOlder : fromNewer;
+        uint actualOlderTo   = (olderTimeRangeIsActuallyOlder) ? toOlder : toNewer;
+        uint actualNewerFrom = (olderTimeRangeIsActuallyOlder) ? fromNewer : fromOlder;
+        uint actualNewerTo   = (olderTimeRangeIsActuallyOlder) ? toNewer : toOlder;
+        SupportCount supportForIntersectedRange;
+        if (actualOlderTo > actualNewerFrom) // Overlap
+            supportForIntersectedRange = eventsPerBatch->getSupportForRange(actualOlderFrom, actualNewerTo);
+        else
+            supportForIntersectedRange = supportForOlderRange + supportForNewerRange;
 
-        QList<AssociationRule> intersectedRules = newerRules.toSet().intersect(olderRules.toSet()).toList();
+        QList<AssociationRule> comparedRules;
         QList<Confidence> confidenceVariance;
         QList<float> supportVariance;
+
+        // Intersected rules.
+        QList<AssociationRule> intersectedRules = newerRules.toSet().intersect(olderRules.toSet()).toList();
+        comparedRules.append(intersectedRules);
         int n, o;
-        foreach (AssociationRule rule, intersectedRules) {
+        foreach (const AssociationRule & rule, intersectedRules) {
             n = newerRules.indexOf(rule);
             o = olderRules.indexOf(rule);
             confidenceVariance.append(newerRules[n].confidence - olderRules[o].confidence);
             supportVariance.append((1.0 * newerRules[n].support / supportForNewerRange) - (1.0 * olderRules[o].support / supportForOlderRange));
         }
 
+        // Newer-only rules.
+        QList<AssociationRule> newerOnlyRules = newerRules.toSet().subtract(intersectedRules.toSet()).toList();
+        comparedRules.append(newerOnlyRules);
+        for (int i = 0; i < newerOnlyRules.size(); i++) {
+            confidenceVariance.append(1.0);
+            supportVariance.append(1.0);
+        }
+
+        // Older-only rules.
+        QList<AssociationRule> olderOnlyRules = olderRules.toSet().subtract(intersectedRules.toSet()).toList();
+        comparedRules.append(olderOnlyRules);
+        for (int i = 0; i < olderOnlyRules.size(); i++) {
+            confidenceVariance.append(-1.0);
+            supportVariance.append(-1.0);
+        }
+
         int duration = this->timer.elapsed();
 
-        qDebug() << olderRules.size() << newerRules.size() << intersectedRules.size() << supportVariance;
         emit comparedMinedRules(fromOlder, toOlder,
                                 fromNewer, toNewer,
+                                intersectedRules,
                                 olderRules,
                                 newerRules,
-                                intersectedRules,
+                                comparedRules,
                                 confidenceVariance,
-                                supportVariance);
+                                supportVariance,
+                                supportForIntersectedRange,
+                                supportForNewerRange,
+                                supportForOlderRange);
 
         // Notify the UI.
         emit mining(false);
