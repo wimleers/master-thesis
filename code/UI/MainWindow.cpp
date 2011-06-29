@@ -336,6 +336,13 @@ void MainWindow::importFile() {
     }
 }
 
+void MainWindow::settingsDialog() {
+    SettingsDialog * settingsDialog = new SettingsDialog(this);
+    settingsDialog->show();
+    settingsDialog->raise();
+    settingsDialog->activateWindow();
+}
+
 
 //------------------------------------------------------------------------------
 // Private methods: logic.
@@ -358,7 +365,11 @@ void MainWindow::initLogic() {
 
     // TODO: when these parameters have been figured out, they should be the defaults
     // and therefor they should be moved to the Analyst constructor.
-    this->analyst = new Analytics::Analyst(0.05, 0.04, 0.2);
+    QSettings settings;
+    double minSupport = settings.value("analyst/minimumSupport", 0.05).toDouble();
+    double minPatternTreeSupport = settings.value("analyst/minimumPatternTreeSupport", 0.04).toDouble();
+    double minConfidence = settings.value("analyst/minimumConfidence", 0.2).toDouble();
+    this->analyst = new Analytics::Analyst(minSupport, minPatternTreeSupport, minConfidence);
 
     // Set constraints. This defines which associations will be found. By
     // default, only causes for slow episodes will be searched.
@@ -733,6 +744,9 @@ void MainWindow::createMenuBar() {
     this->menuFileImport->setShortcut(QKeySequence(Qt::CTRL + Qt::Key_I));
     this->menuFile->addAction(this->menuFileImport);
 
+    this->menuFileSettings = new QAction(tr("Settings"), this->menuFile);
+    this->menuFile->addAction(this->menuFileSettings);
+
     menuBar->addMenu(this->menuFile);
 }
 
@@ -744,4 +758,5 @@ void MainWindow::connectUI() {
 
     // Menus.
     connect(this->menuFileImport, SIGNAL(triggered()), SLOT(importFile()));
+    connect(this->menuFileSettings, SIGNAL(triggered()), SLOT(settingsDialog()));
 }

@@ -28,6 +28,7 @@
 #include <QLineEdit>
 #include <QFileDialog>
 #include <QDesktopServices>
+#include <QDialog>
 
 #include <QTableView>
 #include <QHeaderView>
@@ -40,6 +41,7 @@
 
 #include "ConceptHierarchyCompleter.h"
 #include "CausesTableFilterProxyModel.h"
+#include "SettingsDialog.h"
 
 #include "../EpisodesParser/Parser.h"
 #include "../Analytics/Analyst.h"
@@ -98,6 +100,7 @@ protected slots:
     void causesFilterChanged(QString filterString);
 
     void importFile();
+    void settingsDialog();
 
 private:
     // Logic.
@@ -181,6 +184,7 @@ private:
     // Menu bar.
     QMenu * menuFile;
     QAction * menuFileImport;
+    QAction * menuFileSettings;
 };
 
 #endif // MAINWINDOW_H
