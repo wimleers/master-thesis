@@ -9,7 +9,11 @@
 #include <QDoubleSpinBox>
 #include <QPushButton>
 #include <QGroupBox>
+#include <QTableWidget>
+#include <QLineEdit>
+#include <QFileDialog>
 #include <QSettings>
+#include <QApplication>
 
 class SettingsDialog : public QDialog {
 
@@ -22,25 +26,33 @@ public:
     static double absoluteToErrorMargin(double minSupport, double minPatternTreeSupport);
 
 signals:
-
-public slots:
+    void settingsChanged();
 
 protected slots:
     void minSupportChanged(double value);
     void minConfidenceChanged(double value);
     void patternTreeSupportErrorMarginChanged(double value);
 
+    void browseForFile();
+
     void buttonRestoreDefaults();
     void buttonCancel();
     void buttonSave();
 
 protected:
+    QWidget * createAnalystTab();
+    QWidget * createParserTab();
+
+    // Analyst settings tab.
     QDoubleSpinBox * minSupport;
     QDoubleSpinBox * minConfidence;
     QDoubleSpinBox * patternTreeSupportErrorMargin;
     QLabel * resultingParametersMinSupport;
     QLabel * resultingParametersMinConfidence;
     QLabel * resultingParametersMinPatternTreeSupport;
+
+    // Parser settings tab.
+    QLineEdit * parserEpisodesDiscretizerFileLineEdit;
 };
 
 #endif // SETTINGSDIALOG_H

@@ -353,20 +353,21 @@ void MainWindow::initLogic() {
     qRegisterMetaType<Time>("Time");
     Analytics::registerBasicMetaTypes();
 
+    QSettings settings;
     QString basePath = QCoreApplication::applicationDirPath();
+    QString defaultValue = basePath + "/config/EpisodesSpeeds.csv";
+    QString episodeDiscretizerCSV = settings.value("parser/episodeDiscretizerCSVFile", defaultValue).toString();
+
     EpisodesParser::Parser::initParserHelpers(basePath + "/config/browscap.csv",
                                               basePath + "/config/browscap-index.db",
                                               basePath + "/config/GeoIPCity.dat",
                                               basePath + "/config/GeoIPASNum.dat",
-                                              basePath + "/config/EpisodesSpeeds.csv"
+                                              episodeDiscretizerCSV
                                               );
 
     // Instantiate the EpisodesParser and the Analytics. Then connect them.
     this->parser = new EpisodesParser::Parser();
 
-    // TODO: when these parameters have been figured out, they should be the defaults
-    // and therefor they should be moved to the Analyst constructor.
-    QSettings settings;
     double minSupport = settings.value("analyst/minimumSupport", 0.05).toDouble();
     double minPatternTreeSupport = settings.value("analyst/minimumPatternTreeSupport", 0.04).toDouble();
     double minConfidence = settings.value("analyst/minimumConfidence", 0.2).toDouble();

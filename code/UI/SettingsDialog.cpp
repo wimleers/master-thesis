@@ -3,7 +3,102 @@
 SettingsDialog::SettingsDialog(QWidget * parent) :
     QDialog(parent)
 {
+    QTabWidget * mainWidget = new QTabWidget(this);
+
+    mainWidget->addTab(this->createAnalystTab(), tr("Analysis"));
+    mainWidget->addTab(this->createParserTab(), tr("Parser"));
+
+    // Buttons.
+    QDialogButtonBox * buttonBox = new QDialogButtonBox(this);
+    buttonBox->setOrientation(Qt::Horizontal);
+    buttonBox->addButton(QDialogButtonBox::RestoreDefaults);
+    buttonBox->addButton(QDialogButtonBox::Cancel);
+    buttonBox->addButton(QDialogButtonBox::Save);
+    buttonBox->button(QDialogButtonBox::RestoreDefaults)->setAutoDefault(false);
+
+    // Layout.
+    QVBoxLayout * mainLayout = new QVBoxLayout();
+    this->setLayout(mainLayout);
+    mainLayout->addWidget(mainWidget);
+    mainLayout->addWidget(buttonBox);
+
+    // Connections.
+    connect(this->minSupport, SIGNAL(valueChanged(double)), SLOT(minSupportChanged(double)));
+    connect(this->minConfidence, SIGNAL(valueChanged(double)), SLOT(minConfidenceChanged(double)));
+    connect(this->patternTreeSupportErrorMargin, SIGNAL(valueChanged(double)), SLOT(patternTreeSupportErrorMarginChanged(double)));
+    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(buttonRestoreDefaults()));
+    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(buttonCancel()));
+    connect(buttonBox->button(QDialogButtonBox::Save), SIGNAL(clicked()), SLOT(buttonSave()));
+}
+
+double SettingsDialog::errorMarginToAbsolute(double minSupport, double errorMargin) {
+    double sigma = minSupport / 100.0;
+    double e = errorMargin / 100.0;
+    return sigma * (1 - e) * 100.0;
+}
+
+double SettingsDialog::absoluteToErrorMargin(double minSupport, double minPatternTreeSupport) {
+    double sigma = minSupport / 100.0;
+    double epsilon = minPatternTreeSupport / 100.0;
+    return (1.0 - (epsilon / sigma)) * 100.0;
+}
+
+void SettingsDialog::minSupportChanged(double value) {
+    this->resultingParametersMinSupport->setText(QString("%1%").arg(QString::number(value, 'f', 2)));
+    this->resultingParametersMinPatternTreeSupport->setText(QString("%1%").arg(QString::number(SettingsDialog::errorMarginToAbsolute(value, this->patternTreeSupportErrorMargin->value()), 'f', 2)));
+}
+
+void SettingsDialog::minConfidenceChanged(double value) {
+    this->resultingParametersMinConfidence->setText(QString("%1%").arg(QString::number(value, 'f', 2)));
+}
+
+void SettingsDialog::patternTreeSupportErrorMarginChanged(double value) {
+    this->resultingParametersMinPatternTreeSupport->setText(QString("%1%").arg(QString::number(SettingsDialog::errorMarginToAbsolute(this->minSupport->value(), value), 'f', 2)));
+}
+
+void SettingsDialog::browseForFile() {
+    QString episodesDiscretizerCSVFile = QFileDialog::getOpenFileName(this, tr("Open Episodes Discretizer settings file"), "", tr("Episodes Discretizer settings file (*.csv)"), NULL, QFileDialog::ReadOnly);
+    if (!episodesDiscretizerCSVFile.isEmpty()) {
+        this->parserEpisodesDiscretizerFileLineEdit->setText(episodesDiscretizerCSVFile);
+    }
+}
+
+void SettingsDialog::buttonRestoreDefaults() {
     QSettings settings;
+    settings.remove("analyst");
+    settings.remove("parser");
+
+    this->close();
+
+    emit this->settingsChanged();
+}
+
+void SettingsDialog::buttonCancel() {
+    this->close();
+}
+
+void SettingsDialog::buttonSave() {
+    QSettings settings;
+
+    settings.beginGroup("analyst");
+    settings.setValue("minimumSupport", this->minSupport->value() / 100.0);
+    settings.setValue("minimumPatternTreeSupport", SettingsDialog::errorMarginToAbsolute(this->minSupport->value(), this->patternTreeSupportErrorMargin->value()) / 100.0);
+    settings.setValue("minimumConfidence", this->minConfidence->value() / 100.0);
+    settings.endGroup();
+
+    settings.beginGroup("parser");
+    settings.setValue("episodeDiscretizerCSVFile", this->parserEpisodesDiscretizerFileLineEdit->text());
+    settings.endGroup();
+
+    this->close();
+
+    emit this->settingsChanged();
+}
+
+QWidget * SettingsDialog::createAnalystTab() {
+    QSettings settings;
+
+    QWidget * tab = new QWidget();
 
     QLabel * descriptionLabel = new QLabel(tr("Find causes for all problems that:"));
 
@@ -76,77 +171,37 @@ SettingsDialog::SettingsDialog(QWidget * parent) :
     rpMinConfidenceLayout->addStretch();
     resultingParametersLayout->addLayout(rpMinConfidenceLayout);
 
-    // Buttons.
-    QDialogButtonBox * buttonBox = new QDialogButtonBox(this);
-    buttonBox->setOrientation(Qt::Horizontal);
-    buttonBox->addButton(QDialogButtonBox::RestoreDefaults);
-    buttonBox->addButton(QDialogButtonBox::Cancel);
-    buttonBox->addButton(QDialogButtonBox::Save);
-    buttonBox->button(QDialogButtonBox::RestoreDefaults)->setAutoDefault(false);
-
     // Layout.
     QVBoxLayout * mainLayout = new QVBoxLayout();
-    this->setLayout(mainLayout);
+    tab->setLayout(mainLayout);
     mainLayout->addWidget(descriptionLabel);
     mainLayout->addLayout(minSupLayout);
     mainLayout->addLayout(minPatternTreeSupLayout);
     mainLayout->addLayout(minConfidenceLayout);
     mainLayout->addWidget(resultingParameters);
-    mainLayout->addWidget(buttonBox);
 
-    connect(this->minSupport, SIGNAL(valueChanged(double)), SLOT(minSupportChanged(double)));
-    connect(this->minConfidence, SIGNAL(valueChanged(double)), SLOT(minConfidenceChanged(double)));
-    connect(this->patternTreeSupportErrorMargin, SIGNAL(valueChanged(double)), SLOT(patternTreeSupportErrorMarginChanged(double)));
-    connect(buttonBox->button(QDialogButtonBox::RestoreDefaults), SIGNAL(clicked()), SLOT(buttonRestoreDefaults()));
-    connect(buttonBox->button(QDialogButtonBox::Cancel), SIGNAL(clicked()), SLOT(buttonCancel()));
-    connect(buttonBox->button(QDialogButtonBox::Save), SIGNAL(clicked()), SLOT(buttonSave()));
+    return tab;
 }
 
-double SettingsDialog::errorMarginToAbsolute(double minSupport, double errorMargin) {
-    double sigma = minSupport / 100.0;
-    double e = errorMargin / 100.0;
-    return sigma * (1 - e) * 100.0;
-}
-
-double SettingsDialog::absoluteToErrorMargin(double minSupport, double minPatternTreeSupport) {
-    double sigma = minSupport / 100.0;
-    double epsilon = minPatternTreeSupport / 100.0;
-    return (1.0 - (epsilon / sigma)) * 100.0;
-}
-
-void SettingsDialog::minSupportChanged(double value) {
-    this->resultingParametersMinSupport->setText(QString("%1%").arg(QString::number(value, 'f', 2)));
-    this->resultingParametersMinPatternTreeSupport->setText(QString("%1%").arg(QString::number(SettingsDialog::errorMarginToAbsolute(value, this->patternTreeSupportErrorMargin->value()), 'f', 2)));
-}
-
-void SettingsDialog::minConfidenceChanged(double value) {
-    this->resultingParametersMinConfidence->setText(QString("%1%").arg(QString::number(value, 'f', 2)));
-}
-
-void SettingsDialog::patternTreeSupportErrorMarginChanged(double value) {
-    this->resultingParametersMinPatternTreeSupport->setText(QString("%1%").arg(QString::number(SettingsDialog::errorMarginToAbsolute(this->minSupport->value(), value), 'f', 2)));
-}
-
-void SettingsDialog::buttonRestoreDefaults() {
-
-}
-
-void SettingsDialog::buttonCancel() {
-    this->close();
-}
-
-void SettingsDialog::buttonSave() {
+QWidget * SettingsDialog::createParserTab() {
     QSettings settings;
 
-    settings.beginGroup("analyst");
-    settings.setValue("minimumSupport", this->minSupport->value() / 100.0);
-    qDebug() << "epsilon" << SettingsDialog::errorMarginToAbsolute(this->minSupport->value(), this->patternTreeSupportErrorMargin->value());
-    settings.setValue("minimumPatternTreeSupport", SettingsDialog::errorMarginToAbsolute(this->minSupport->value(), this->patternTreeSupportErrorMargin->value()) / 100.0);
-    settings.setValue("minimumConfidence", this->minConfidence->value() / 100.0);
-    settings.endGroup();
+    QWidget * tab = new QWidget();
 
-    settings.beginGroup("parser");
-    settings.endGroup();
+    QHBoxLayout * mainLayout = new QHBoxLayout();
 
-    this->close();
+    mainLayout->addWidget(new QLabel(tr("Episodes discretizer settings")));
+    QString basePath = QCoreApplication::applicationDirPath();
+    QString defaultValue = basePath + "/config/EpisodesSpeeds.csv";
+    this->parserEpisodesDiscretizerFileLineEdit = new QLineEdit(settings.value("parser/episodeDiscretizerCSVFile", defaultValue).toString());
+    mainLayout->addWidget(this->parserEpisodesDiscretizerFileLineEdit);
+    QPushButton * browseButton = new QPushButton(tr("Browse"));
+    browseButton->setAutoDefault(false);
+    mainLayout->addWidget(browseButton);
+
+    connect(browseButton, SIGNAL(pressed()), SLOT(browseForFile()));
+
+    tab->setLayout(mainLayout);
+
+    return tab;
 }
