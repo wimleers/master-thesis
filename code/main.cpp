@@ -1,12 +1,7 @@
-#include "QCachingLocale.h"
-#include "Parser.h"
-#include "Analyst.h"
-#include <QObject>
-#include <QTime>
-
 #include <QApplication>
-#include "UI/MainWindow.h"
 
+#include "UI/MainWindow.h"
+#include "EpisodesParser/QCachingLocale/QCachingLocale.h"
 
 int main(int argc, char *argv[]) {
     QCachingLocale cl;
