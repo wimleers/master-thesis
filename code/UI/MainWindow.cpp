@@ -353,11 +353,12 @@ void MainWindow::initLogic() {
     qRegisterMetaType<Time>("Time");
     Analytics::registerBasicMetaTypes();
 
-    EpisodesParser::Parser::initParserHelpers("./config/browscap.csv",
-                                              "./config/browscap-index.db",
-                                              "./config/GeoIPCity.dat",
-                                              "./config/GeoIPASNum.dat",
-                                              "./config/EpisodesSpeeds.csv"
+    QString basePath = QCoreApplication::applicationDirPath();
+    EpisodesParser::Parser::initParserHelpers(basePath + "/config/browscap.csv",
+                                              basePath + "/config/browscap-index.db",
+                                              basePath + "/config/GeoIPCity.dat",
+                                              basePath + "/config/GeoIPASNum.dat",
+                                              basePath + "/config/EpisodesSpeeds.csv"
                                               );
 
     // Instantiate the EpisodesParser and the Analytics. Then connect them.

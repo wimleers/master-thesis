@@ -36,6 +36,7 @@
 #include <QStandardItem>
 #include <QSortFilterProxyModel>
 
+#include <QCoreApplication>
 #include <QFileInfo>
 #include <QSettings>
 
