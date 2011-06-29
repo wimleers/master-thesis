@@ -23,6 +23,7 @@ SettingsDialog::SettingsDialog(QWidget * parent) :
     mainLayout->addWidget(buttonBox);
 
     // Connections.
+    connect(this, SIGNAL(settingsChanged()), SLOT(restart()));
     connect(this->minSupport, SIGNAL(valueChanged(double)), SLOT(minSupportChanged(double)));
     connect(this->minConfidence, SIGNAL(valueChanged(double)), SLOT(minConfidenceChanged(double)));
     connect(this->patternTreeSupportErrorMargin, SIGNAL(valueChanged(double)), SLOT(patternTreeSupportErrorMarginChanged(double)));
@@ -93,6 +94,15 @@ void SettingsDialog::buttonSave() {
     this->close();
 
     emit this->settingsChanged();
+}
+
+void SettingsDialog::restart() {
+    // @see main.cpp
+    // exit()ing the application with this return code will simply restart the
+    // application!
+    // FIXME: this is *very* unelegant. Especially since the threads of
+    // MainWindow are not properly deleted.
+    qApp->exit(1000);
 }
 
 QWidget * SettingsDialog::createAnalystTab() {

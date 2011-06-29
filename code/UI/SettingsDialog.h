@@ -39,6 +39,8 @@ protected slots:
     void buttonCancel();
     void buttonSave();
 
+    void restart();
+
 protected:
     QWidget * createAnalystTab();
     QWidget * createParserTab();

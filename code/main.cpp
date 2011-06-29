@@ -11,14 +11,21 @@ int main(int argc, char *argv[]) {
     // compiler warnings.
     Q_UNUSED(cl);
 
-    QApplication app(argc, argv);
+    const int RESTART_CODE = 1000;
+    int r;
 
-    QCoreApplication::setOrganizationName("WimLeers");
-    QCoreApplication::setOrganizationDomain("wimleers.com");
-    QCoreApplication::setApplicationName("WPO Analytics");
+    do {
+        QApplication app(argc, argv);
 
-    MainWindow * mainWindow = new MainWindow();
-    mainWindow->show();
+        QCoreApplication::setOrganizationName("WimLeers");
+        QCoreApplication::setOrganizationDomain("wimleers.com");
+        QCoreApplication::setApplicationName("WPO Analytics");
 
-    return app.exec();
+        MainWindow * mainWindow = new MainWindow();
+        mainWindow->show();
+
+        r = app.exec();
+    } while (r == RESTART_CODE);
+
+    return r;
 }
