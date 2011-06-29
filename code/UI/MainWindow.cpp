@@ -325,11 +325,13 @@ void MainWindow::causesFilterChanged(QString filterString) {
 }
 
 void MainWindow::importFile() {
-    static QString lastDirectory = "~/Desktop";
+    QSettings settings;
+    QString lastDirectory = settings.value("UI/lastImportDirectory", QDesktopServices::storageLocation(QDesktopServices::DesktopLocation)).toString();
+
     QString logFile = QFileDialog::getOpenFileName(this, tr("Open Episodes log file"), lastDirectory, tr("Episodes log files (*.log)"), NULL, QFileDialog::ReadOnly);
 
     if (!logFile.isEmpty()) {
-        lastDirectory = QFileInfo(logFile).path();
+        settings.setValue("UI/lastImportDirectory", QFileInfo(logFile).path());
         emit parse(logFile);
     }
 }

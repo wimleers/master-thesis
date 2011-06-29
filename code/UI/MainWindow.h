@@ -27,6 +27,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QFileDialog>
+#include <QDesktopServices>
 
 #include <QTableView>
 #include <QHeaderView>
@@ -35,6 +36,7 @@
 #include <QSortFilterProxyModel>
 
 #include <QFileInfo>
+#include <QSettings>
 
 #include "ConceptHierarchyCompleter.h"
 #include "CausesTableFilterProxyModel.h"
