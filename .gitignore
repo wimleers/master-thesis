@@ -1,4 +1,3 @@
-*.pdf
 *build-desktop
 *.pro.user.*
 config
